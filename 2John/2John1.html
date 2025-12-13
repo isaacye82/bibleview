@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰二书：真理的接待与拒绝</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Truth Azure (Clarity) & Boundary Red (Protection) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Sky 50 - Clear atmosphere */
+            color: #0C4A6E; /* Sky 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Truth Azure */
+        .active-tab {
+            color: #0369A1; /* Sky 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0369A1;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Boundary Red */
+        .verse-card:hover {
+            border-left-color: #BE123C; /* Rose 700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(3, 105, 161, 0.1), 0 4px 6px -2px rgba(3, 105, 161, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0F2FE; /* Sky 100 */
+            color: #075985; /* Sky 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #7DD3FC; /* Sky 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-truth-boundary {
+            background: linear-gradient(135deg, #E0F2FE 0%, #FFE4E6 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-900 serif">
+                        <i class="fas fa-door-closed mr-2 text-rose-600"></i> 约翰二书
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">真理的门户：爱与界限</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-950 text-sky-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"若有人到你们那里，不是传这教训，不要接他到家里，也不要问他的安。" (v10)</p>
+            <p class="text-xs text-sky-400 mt-3">交互式研经工具 | 聚焦：接待的伦理与信仰的持守</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "爱心必须有围墙",
+                summary: "约翰二书是新约篇幅最短的书卷之一，但其信息却如钢铁般坚硬。这封信写给“蒙拣选的太太”，核心在于处理“真理”与“爱”的张力。约翰在前6节强调在真理中彼此相爱，紧接着在7-11节发出严厉警告：面对周游传道的假教师，爱心必须设立界限。真正的爱不是无原则的包容，而是为了保护真理而拒绝虚假。",
+                highlights: [
+                    { icon: "fas fa-check-circle", color: "text-sky-600", text: "真理中行" },
+                    { icon: "fas fa-exclamation-triangle", color: "text-rose-600", text: "越过教训" },
+                    { icon: "fas fa-door-closed", color: "text-slate-700", text: "闭门谢客" }
+                ]
+            },
+            sections: [
+                {
+                    id: "salutation",
+                    title: "问安：真理的内住 (1-3节)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "1-3",
+                            text: "作长老的写信给蒙拣选的太太...就是一切认识真理的人...爱你们是为真理的缘故...",
+                            academic: {
+                                title: "蒙拣选的太太 (Eklektē Kyria)",
+                                keywords: ["Kyria (太太/主母)", "Aletheia (真理)"],
+                                content: "关于“太太”有三种解释：1.名叫Kyria的妇女；2.名叫Eklekte的妇女；3.对某地方教会的拟人化称呼（主流观点，因末尾提到“你姊妹的儿女”指另一教会）。约翰在短短3节中5次提到“真理”，强调信徒之间的爱不是基于情感或社交，而是基于共同拥有的真理。"
+                            },
+                            devotional: {
+                                title: "爱的根基",
+                                content: "我们为什么爱教会的弟兄姊妹？不是因为他们性格可爱，也不是因为聊得来，而是因为“真理存在我们里面”。真理是团契的粘合剂。如果你与某人的关系建立在八卦、兴趣或利益上，那不是属灵的爱。只有真理能让爱存到永远。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "commandment",
+                    title: "命令：在真理中相爱 (4-6节)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "4-6",
+                            text: "我见你的儿女...照...命令遵行真理...我们大家要彼此相爱...这就是爱。",
+                            academic: {
+                                title: "行真理 (Peripatountas en aletheia)",
+                                keywords: ["Peripateō (行走/生活方式)", "Entolē (命令)"],
+                                content: "“遵行”原文是“行走”。约翰将真理从认知层面拉到生活层面。第6节给出了爱的循环定义：爱 = 照祂的命令行；命令 = 彼此相爱。这反驳了当时可能的异端思想——认为爱只是一种神秘体验或知识，而不需要道德上的顺服。"
+                            },
+                            devotional: {
+                                title: "爱是顺服",
+                                content: "在这个时代，“爱”常被定义为感觉或无条件的接纳。但圣经说“爱就是照他的命令行”。顺服神的话语，就是爱神的最高表达；按神的真理对待人，就是爱人的最高形式。没有真理的爱是溺爱，没有爱的真理是定罪。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "warning",
+                    title: "警告：防备敌基督者 (7-11节)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "7-9",
+                            text: "因为世上有许多迷惑人的出来...凡越过基督教训不常守着的，就没有神...要省察...得着满足的赏赐。",
+                            academic: {
+                                title: "越过教训 (Proagōn)",
+                                keywords: ["Proagōn (越过/前行)", "Antichristos (敌基督)"],
+                                content: "“越过”原文意为“向前走、激进、进步”。这可能是当时诺斯替异端的自称，他们认为自己是“进步派”，超越了使徒原始的、简单的关于耶稣道成肉身的教导。约翰讽刺说：谁“进步”越过了基督的教训，谁就失去了神。真正的信仰是“常守”（Abide/Remain）在起初的教导中，而不是不断创新。"
+                            },
+                            devotional: {
+                                title: "不要太“进步”",
+                                content: "我们喜欢新鲜事物，喜欢“新启示”。但如果这种“新”越过了圣经的界限，偏离了耶稣基督的十字架，那就是倒退，甚至是用灵魂冒险。保守自己哪怕被视为“守旧”，也要留在基督的教训里，因为那里才有生命。"
+                            }
+                        },
+                        {
+                            ref: "10-11",
+                            text: "若有人到你们那里...不要接他到家里，也不要问他的安；因为问他安的，就在他的恶行上有份。",
+                            academic: {
+                                title: "接待的伦理",
+                                keywords: ["Oikia (家/家庭教会)", "Chairein (问安/欢迎)"],
+                                content: "在第一世纪，巡回传道人依赖信徒家庭的接待（当时旅店名声很差）。“接待”不仅是给饭吃，更意味着提供讲台和背书。约翰禁止这种接待，不是让人没爱心，而是为了切断异端的传播渠道。“问安”在当时意味着正式的团契接纳。支持假教师（即使只是礼貌性的问候）就是共犯。"
+                            },
+                            devotional: {
+                                title: "爱心有围墙",
+                                content: "你的善良需要带有锋芒。当我们以“包容”为名，为错误的教导提供平台或资源时，我们就是在资助属灵的恐怖主义。拒绝接待传播异端的人，不是冷漠，而是对羊群的保护，是对真理的忠诚。我们不能为了通过“好人卡”的测试，而牺牲真理的原则。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "conclusion",
+                    title: "结语：纸墨之外的团契 (12-13节)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "12-13",
+                            text: "我还有许多事要写给你们，却不愿意用纸墨写出来，但盼望到你们那里...使我们的喜乐满足。",
+                            academic: {
+                                title: "面对面的价值",
+                                keywords: ["Chartēs (纸/莎草纸)", "Melan (墨)", "Stoma pros stoma (面对面/口对口)"],
+                                content: "书信虽然重要，但约翰强调“面对面”（原文作“口对口”）的交流才是团契的极致。这反映了早期教会对肉身相交的重视（反驳诺斯替的灵肉二元论）。"
+                            },
+                            devotional: {
+                                title: "真实的连接",
+                                content: "在这个数字化时代，我们习惯了屏幕上的交流。但有些深度的沟通、生命的传递，必须“面对面”才能完成。不要让“纸墨”（或微信）取代了真实的拥抱和注视。去见面吧，那里有满足的喜乐。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-slate-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Door -->
+                    <div class="gradient-truth-boundary p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-sky-100">
+                        <div class="mb-4">
+                            <i class="fas fa-dungeon text-4xl text-rose-500 mb-2"></i>
+                            <h3 class="text-xl font-bold text-slate-800">接待的原则</h3>
+                        </div>
+                        
+                        <div class="space-y-3 w-full text-sm">
+                            <div class="bg-white/60 p-2 rounded border-l-4 border-sky-500 text-left">
+                                <span class="font-bold text-sky-800"><i class="fas fa-check mr-1"></i> 持守教训者</span>
+                                <span class="block text-xs text-slate-500 ml-5">彼此相爱，在真理中行</span>
+                            </div>
+                            <div class="bg-white/60 p-2 rounded border-l-4 border-rose-500 text-left">
+                                <span class="font-bold text-rose-800"><i class="fas fa-times mr-1"></i> 越过教训者</span>
+                                <span class="block text-xs text-slate-500 ml-5">不要接他，也不要问安</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Truth-Love Balance Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-sky-100">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">信仰的健康象限 (v3)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="balanceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">目标：在真理和爱心中行 (右上象限)</p>
+                    </div>
+
+                    <!-- Spiritual Gatekeeping Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-rose-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">属灵安检流程 (v7-11)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="gateChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">辨别核心：是否认耶稣是成了肉身来的</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-sky-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-sky-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：爱与界限</h2>
+                        <p class="text-slate-600">
+                            约翰二书虽然简短，却精准地处理了爱心的边界问题。解经需要平衡“命令”（彼此相爱）与“警告”（拒绝异端）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：历史与原文</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 历史背景还原。理解“蒙拣选的太太”作为教会的隐喻，以及第一世纪巡回传道的接待文化。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词义分析（"越过"与"常守"的对比）。
+                                    <br>2. 异端背景（幻影说对道成肉身的否定）。
+                                </li>
+                                <li><strong>目的：</strong> 确立正统教义的保护机制，防止爱心被滥用。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-sky-900 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：分辨与原则</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 处境化应用。将“不接待”的原则应用在现代的媒体消费、社交关系和教会管理中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 自我省察（我的爱心是否有真理的骨架？）。
+                                    <br>2. 边界设定（为了保护真理，我需要对什么说“不”？）。
+                                </li>
+                                <li><strong>目的：</strong> 培养既有爱心温度、又有真理锋芒的成熟信徒。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Truth-Love Balance Chart (Scatter)
+            const ctxBalance = document.getElementById('balanceChart').getContext('2d');
+            new Chart(ctxBalance, {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: '信徒状态',
+                            data: [
+                                {x: 10, y: 90, label: '滥情 (Sentimentalism)'},
+                                {x: 90, y: 10, label: '律法主义 (Legalism)'},
+                                {x: 90, y: 90, label: '健康 (Biblical)'},
+                                {x: 10, y: 10, label: '冷漠 (Apathy)'}
+                            ],
+                            backgroundColor: (ctx) => {
+                                const val = ctx.raw;
+                                if (!val) return '#94A3B8';
+                                if (val.x > 50 && val.y > 50) return '#0EA5E9'; // Sky Blue (Goal)
+                                return '#F43F5E'; // Rose (Warning)
+                            },
+                            pointRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            title: { display: true, text: '真理 (Truth)' },
+                            min: 0, max: 100,
+                            grid: { color: '#E0F2FE' }
+                        },
+                        y: { 
+                            title: { display: true, text: '爱心 (Love)' },
+                            min: 0, max: 100,
+                            grid: { color: '#E0F2FE' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.raw.label;
+                                }
+                            }
+                        },
+                        annotation: {
+                            // Can add lines here if plugin available, simplifying for base Chart.js
+                        }
+                    }
+                }
+            });
+
+            // Gatekeeping Chart (Pie/Doughnut)
+            const ctxGate = document.getElementById('gateChart').getContext('2d');
+            new Chart(ctxGate, {
+                type: 'doughnut',
+                data: {
+                    labels: ['合神心意的接待 (常守教训)', '危险的接待 (越过教训)'],
+                    datasets: [{
+                        data: [70, 30],
+                        backgroundColor: [
+                            '#0284C7', // Sky 600
+                            '#E11D48'  // Rose 600
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 1) return "就在恶行上有份 (共犯)";
+                                    return "得着满足的赏赐";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

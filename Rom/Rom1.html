@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第一章：福音的大能</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFF5F5; /* Very light red/warm tint */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .active-tab {
+            color: #742A2A; /* Red 900 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #742A2A;
+            border-radius: 2px;
+        }
+
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #9B2C2C; /* Red 700 */
+            transform: translateX(4px);
+        }
+
+        /* Custom scrollbar for better UX */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; 
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-t-4 border-red-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-red-900 serif"><i class="fas fa-scroll mr-2 text-red-700"></i> 罗马书 1章</span>
+                </div>
+                <div class="flex space-x-4 md:space-x-6 items-center overflow-x-auto">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm whitespace-nowrap">总览：福音与忿怒</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-red-700 whitespace-nowrap">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-red-700 whitespace-nowrap">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-900 text-red-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic mb-2">"我不以福音为耻；这福音本是神的大能，要救一切相信的..." (1:16)</p>
+            <div class="w-24 h-1 bg-red-700 mx-auto my-4"></div>
+            <p class="text-xs text-red-300">交互式研经工具 | 聚焦：神的义、普遍启示与人类的败坏</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "福音的大能与神的公义",
+                summary: "罗马书第一章是整卷书的宏伟序曲。保罗首先确立了自己的使徒权柄和福音的核心（1-17节），随后立即转入对人类普遍罪恶和神圣洁忿怒的严厉宣告（18-32节）。本章揭示了两个关键的启示：福音显明了“神的义”（God's Righteousness），而受造界显明了“神的永能”（God's Power）。人类的悲剧在于压抑真理，导致神“任凭”他们陷入罪恶的深渊。",
+                highlights: [
+                    { icon: "fas fa-bible", color: "text-red-600", text: "神的义 (Dikaiosyne)" },
+                    { icon: "fas fa-globe-americas", color: "text-amber-600", text: "普遍启示" },
+                    { icon: "fas fa-gavel", color: "text-slate-600", text: "神的忿怒 (Orgē)" }
+                ]
+            },
+            sections: [
+                {
+                    id: "greeting",
+                    title: "问候与福音的定义 (1:1-7)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "1:1",
+                            text: "耶稣基督的仆人保罗，奉召为使徒，特派传神的福音。",
+                            academic: {
+                                title: "双重身份：奴仆与大使",
+                                content: "“仆人”原文是 <b>doulos (奴隶)</b>，指完全的归属权，甚至生杀大权都在主人手中，这在罗马文化中是极卑微的。但“使徒” (<b>apostolos</b>) 是全权特使，代表差遣者的最高权威。保罗将这两个截然相反的身份结合，表明他在基督面前的绝对顺服，以及在人面前的神圣权柄。"
+                            },
+                            devotional: {
+                                title: "身份的确据",
+                                content: "我们常通过职业或成就来定义自己，但保罗的自我认知建立在与基督的关系上。你首先是基督的“奴仆”（完全属于祂），然后才是被差遣去做某事的“使徒”。若没有先在内室做顺服的奴仆，我们在外面的事奉就没有属灵的权柄。"
+                            }
+                        },
+                        {
+                            ref: "1:2-4",
+                            text: "这福音...论到他儿子...按肉体说...按圣善的灵说...以大能显明是神的儿子。",
+                            academic: {
+                                title: "早期信经与二性论",
+                                content: "这几节经文被学者认为引用了早期教会的信经。这里清晰展示了基督论的雏形：<b>按肉体</b>（kata sarka）是大卫的后裔，通过以色列的历史线索；<b>按圣灵</b>（kata pneuma）通过复活显明神儿子的权能。这是“应验神学”的核心——福音不是新发明，而是旧约的实现。"
+                            },
+                            devotional: {
+                                title: "复活是信仰的支点",
+                                content: "基督教不只是一套道德教训，而是建立在一个历史事实之上——基督的复活。复活“显明”（Horizo，界定/宣告）了耶稣的身份。当你在生活中感到软弱时，记得你所信的那位不仅是历史人物，更是战胜死亡、掌管万有的复活主。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "theme",
+                    title: "全书主题：福音的大能 (1:16-17)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "1:16",
+                            text: "我不以福音为耻；这福音本是神的大能，要救一切相信的...",
+                            academic: {
+                                title: "荣誉与羞耻文化中的宣告",
+                                content: "在崇尚权力和荣耀的罗马，“被钉十字架的救主”是极其愚拙和羞耻的概念。保罗使用“曲言法”（Litotes，用否定反义词来表达强烈肯定），“不以...为耻”意味着“以...为极大的荣耀”。<b>Dynamis</b>（大能）是炸药（Dynamite）的词根，指神改变生命的爆炸性力量，而非仅仅是静态的教义。"
+                            },
+                            devotional: {
+                                title: "战胜福音的羞耻感",
+                                content: "在这个高举科学和多元主义的时代，宣扬“唯一的救法”常被视为落伍或狭隘。我们是否在潜意识里“以福音为耻”，不敢在公共场合谈论基督？保罗提醒我们，福音不是一种观点的辩论，而是神的大能。当我们凭信心分享时，神的能力就会彰显。"
+                            }
+                        },
+                        {
+                            ref: "1:17",
+                            text: "因为神的义正在这福音上显明出来；这义是本于信，以致于信...",
+                            academic: {
+                                title: "路德的突破：神的义",
+                                content: "“神的义”（<b>Dikaiosyne Theou</b>）曾困扰马丁路德，他以为这是指神用来惩罚罪人的“公义属性”。后来他领悟到，在福音里，这指的是神赐给人的“义的地位”（Gift of Righteousness）。“本于信，以致于信”强调救恩从始至终只依靠信心，引用哈巴谷书2:4确立了“因信称义”的旧约根基。"
+                            },
+                            devotional: {
+                                title: "不是努力，而是礼物",
+                                content: "宗教让人努力爬梯子去够着神的标准，但福音宣告神的义从天而降赐给我们。我们不需要通过积攒功德来换取神的接纳。你的灵性生活是建立在“我做得多好”的焦虑上，还是建立在“基督已完成”的安息上？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "wrath",
+                    title: "神的忿怒与普遍启示 (1:18-23)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "1:18-20",
+                            text: "原来，神的忿怒从天上显明在一切不虔不义的人身上...叫人无可推诿。",
+                            academic: {
+                                title: "Orgē：圣洁的敌对",
+                                content: "神的“忿怒”（<b>Orgē</b>）不同于人的“暴怒”（Thymos）。它不是情绪失控，而是圣洁的神对罪恶这一“非神性”存在的一种定意的、必然的敌对反应。19-20节阐述了<b>自然神学/普遍启示</b>：通过受造之物，即使没有圣经的人，也能认知神的存在和永能，因此无知不能作为借口。"
+                            },
+                            devotional: {
+                                title: "大自然是神的指纹",
+                                content: "当我们观看星空、山川或微观细胞时，应该产生敬畏感。无神论不仅是理智的误区，在保罗看来，更是道德的压抑（阻挡真理）。神不需要被证明，祂已经被显明。让我们恢复对创造主的敬畏，不要让习惯麻木了我们对神荣耀的感知。"
+                            }
+                        },
+                        {
+                            ref: "1:21-23",
+                            text: "他们虽然知道神，却不当作神荣耀他，也不感谢他...将不能朽坏之神的荣耀变为偶像。",
+                            academic: {
+                                title: "罪的根源：拜偶像",
+                                content: "罪的核心不仅仅是外在的行为（如杀人偷盗），而是内在的<b>敬拜错位</b>。人类无法停止敬拜，如果不敬拜神，就会敬拜受造物（偶像）。这里的“偶像”不仅指雕像，更指任何取代神地位的东西（自我、金钱、权力）。这是人类堕落的起点：理性的昏暗始于内心的背叛。"
+                            },
+                            devotional: {
+                                title: "不感恩是堕落的开始",
+                                content: "注意保罗指出的第一宗罪：“不感谢祂”。当我们将神赐予的恩典视为理所当然，甚至归功于自己或运气时，我们的心就开始昏暗了。感恩是灵魂的防腐剂。检视你的生活：你最在意什么？你为了什么而活？那就是你的敬拜对象。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "judgment",
+                    title: "审判：神任凭他们 (1:24-32)",
+                    themeColor: "dark-red",
+                    verses: [
+                        {
+                            ref: "1:24, 26, 28",
+                            text: "所以，神任凭他们... 神任凭他们... 神任凭他们...",
+                            academic: {
+                                title: "Paradidomi：司法性的放弃",
+                                content: "三次出现的“任凭”（<b>Paradidomi</b>）是一个可怕的司法术语，意为“移交”或“放弃”。这表明神的审判有时不是降下雷火，而是<b>撤去恩典的拦阻</b>，让人类自由地去行他们想行的恶，从而自食其果。这是“被动的忿怒”——让人得到他们想要的，就是最大的惩罚。"
+                            },
+                            devotional: {
+                                title: "当神放手的时候",
+                                content: "最可怕的事莫过于我们在罪中享乐，神却保持沉默。如果我们坚持犯罪而没有管教，那可能意味着神“任凭”了我们。不仅要警惕显而易见的罪（如情欲），更要警惕29-31节列出的“社交罪”（嫉妒、争竞、背约）。如果你现在还能感受到圣灵的责备，那是因为神还没有放弃你，要赶紧悔改。"
+                            }
+                        },
+                        {
+                            ref: "1:26-27",
+                            text: "因此，神任凭他们放纵可羞耻的情欲。他们的女人把顺性的用处变为逆性的用处...",
+                            academic: {
+                                title: "逆性的罪与创造秩序",
+                                content: "保罗在此处提及同性性行为，是将其作为“拜偶像”导致“秩序颠倒”的终极例证。就像拜偶像颠倒了造物主与受造物的关系（属灵秩序），逆性的性行为颠倒了男女的自然关系（生理秩序）。这里的重点不仅是性伦理，更是神学上的因果关系：属灵的背叛必然导致肉体的混乱。"
+                            },
+                            devotional: {
+                                title: "身体是灵魂的镜子",
+                                content: "我们的身体如何使用，反映了我们灵魂的光景。在这个性混乱的时代，基督徒被呼召活出另一种圣洁的生活，不是出于律法的压制，而是为了尊荣那位创造身体的主。顺服神的创造设计，就是对造物主最高的敬拜。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-md border-t-4 border-red-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm flex-wrap">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-gray-700 mt-2 mr-4">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Statistic / Concept -->
+                    <div class="bg-gradient-to-br from-red-900 to-slate-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+                        <i class="fas fa-balance-scale text-5xl mb-6 text-amber-500"></i>
+                        <h3 class="text-xl font-bold mb-2 serif">核心神学张力</h3>
+                        <p class="text-red-100 text-sm italic mb-6">"神的义在福音上显明... 神的忿怒在天上显明"</p>
+                        
+                        <div class="w-full flex items-center justify-between text-xs font-mono">
+                            <span class="text-amber-400">FAITH (信)</span>
+                            <span class="text-red-400">SIN (罪)</span>
+                        </div>
+                        <div class="w-full bg-white/10 h-2 rounded-full mt-1 mb-1 overflow-hidden flex">
+                            <div class="bg-amber-500 h-full w-1/2"></div>
+                            <div class="bg-red-700 h-full w-1/2"></div>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-2">只有福音能调和这两者的显明</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Spiral Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2 serif">
+                            <i class="fas fa-sort-amount-down text-red-800 mr-2"></i>罪的螺旋：神的三次"任凭"
+                        </h3>
+                        <div class="chart-wrapper">
+                            <canvas id="spiralChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">对应经文：1:24, 1:26, 1:28</p>
+                    </div>
+
+                    <!-- Revelation Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2 serif">
+                            <i class="fas fa-lightbulb text-amber-600 mr-2"></i>启示的双翼
+                        </h3>
+                        <div class="chart-wrapper">
+                            <canvas id="revelationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">普遍启示定罪，特殊启示救赎</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filters
+            const filterControls = `
+                <div class="sticky top-16 md:top-20 z-40 bg-[#FFF5F5]/95 backdrop-blur py-4 mb-8 border-b border-red-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto px-2">
+                        <h2 class="text-2xl font-bold text-gray-800 serif mb-4 md:mb-0">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-red-800 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">全部视角</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-700 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅学术/神学</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅灵修/应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let colorClass = 'text-red-900 border-red-200';
+                if (section.themeColor === 'amber') colorClass = 'text-amber-700 border-amber-200';
+                if (section.themeColor === 'slate') colorClass = 'text-slate-700 border-slate-200';
+                if (section.themeColor === 'dark-red') colorClass = 'text-red-950 border-red-900';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden group">
+                        <div class="p-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100 relative">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-gray-200 group-hover:bg-red-800 transition-colors"></div>
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50 transition relative">
+                                <div class="absolute top-4 right-4 text-slate-200 text-4xl opacity-20"><i class="fas fa-university"></i></div>
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-book-open mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 font-serif">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-50 transition relative">
+                                <div class="absolute top-4 right-4 text-amber-200 text-4xl opacity-20"><i class="fas fa-praying-hands"></i></div>
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 font-serif">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${colorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${colorClass.split(' ')[0]} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-red-900">双轨解经法总结</h2>
+                        <p class="text-gray-600">
+                            罗马书第一章是神学最深奥的篇章之一，必须结合严谨的学术研究与火热的灵性追求。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                        <!-- Connecting Line for desktop -->
+                        <div class="hidden md:block absolute left-1/2 top-10 bottom-10 w-px bg-gray-200 -ml-px"></div>
+
+                        <!-- Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-700 relative z-10">
+                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-700 text-2xl mb-4 mx-auto md:mx-0">
+                                <i class="fas fa-glasses"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4 text-center md:text-left">学术性/释经学 (Exegetical)</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-600 uppercase">核心原则</h4>
+                                    <p class="text-sm text-gray-600">"作者原意" (Authorial Intent)。挖掘保罗在一世纪语境下想表达什么，而非现代读者的主观感受。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-600 uppercase">关键工具</h4>
+                                    <p class="text-sm text-gray-600">希腊文法分析 (如 Passive Voice in 1:16)、历史背景 (罗马教会的构成)、修辞分析 (Diatribe)。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-slate-600 uppercase">适用范围</h4>
+                                    <p class="text-sm text-gray-600">确立教义基础，防止异端，理解神学逻辑链条 (如：为何拜偶像会导致性堕落)。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600 relative z-10">
+                             <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 text-2xl mb-4 mx-auto md:mx-0">
+                                <i class="fas fa-fire"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-4 text-center md:text-left">灵修性/应用学 (Devotional)</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <h4 class="font-bold text-sm text-amber-600 uppercase">核心原则</h4>
+                                    <p class="text-sm text-gray-600">"圣灵光照" (Illumination)。将客观真理内化为主观体验，省察内心，回应神的呼召。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-amber-600 uppercase">关键工具</h4>
+                                    <p class="text-sm text-gray-600">默想 (Meditation)、祷告式读经 (Lectio Divina)、自我省察 (Examination)。</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-sm text-amber-600 uppercase">适用范围</h4>
+                                    <p class="text-sm text-gray-600">个人成圣，敬拜赞美，生活伦理的实践，情感与意志的降服。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-red-50 p-6 rounded-lg border border-red-100 text-center">
+                        <i class="fas fa-quote-left text-red-300 text-2xl block mb-2"></i>
+                        <p class="text-red-900 font-serif text-lg">
+                            没有学术，灵修易沦为感性的自言自语；<br>
+                            没有灵修，学术只是冰冷的理性游戏。<br>
+                            <span class="text-sm font-sans text-red-500 mt-2 block">—— 真正的研经是头脑与心灵的同时跪下。</span>
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+        function initCharts() {
+            // Spiral Chart (God Gave Them Up)
+            const ctxSpiral = document.getElementById('spiralChart').getContext('2d');
+            new Chart(ctxSpiral, {
+                type: 'bar',
+                data: {
+                    labels: ['心中的偶像 (1:21-23)', '身体的情欲 (1:24-27)', '邪僻的心思 (1:28-32)'],
+                    datasets: [{
+                        label: '人类堕落的深度',
+                        data: [100, 75, 40], // Descending values to visualize "sinking"
+                        backgroundColor: [
+                            '#CBD5E0', // Light Gray
+                            '#ED8936', // Orange
+                            '#742A2A'  // Dark Red
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal bar chart looks like layers
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false, max: 100 },
+                        y: { 
+                            grid: { display: false },
+                            ticks: { font: { family: "'Noto Serif SC', serif", size: 12 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const desc = [
+                                        "不敬拜神 -> 虚妄",
+                                        "玷污身体 -> 逆性",
+                                        "存邪僻的心 -> 各样不义"
+                                    ];
+                                    return desc[context.dataIndex];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revelation Chart (Radar)
+            const ctxRev = document.getElementById('revelationChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'radar',
+                data: {
+                    labels: ['显明神的永能', '定人的罪', '提供救赎', '显明神的义', '普世性'],
+                    datasets: [
+                        {
+                            label: '普遍启示 (自然)',
+                            data: [90, 85, 0, 20, 100],
+                            backgroundColor: 'rgba(113, 128, 150, 0.2)', // Slate
+                            borderColor: '#718096',
+                            pointBackgroundColor: '#718096'
+                        },
+                        {
+                            label: '特殊启示 (福音)',
+                            data: [100, 100, 100, 100, 100], // Gospel fulfills all
+                            backgroundColor: 'rgba(214, 158, 46, 0.2)', // Amber
+                            borderColor: '#D69E2E',
+                            pointBackgroundColor: '#D69E2E'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#EDF2F7' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" } },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

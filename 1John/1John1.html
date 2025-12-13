@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰一书第一章：生命之道与相交的光</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Radiant Gold (Light) & Crimson Red (Blood/Cleansing) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFBEB; /* Amber 50 - Warm light feel */
+            color: #451A03; /* Amber 950 - Deep warm text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Radiant Gold */
+        .active-tab {
+            color: #B45309; /* Amber 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #B45309;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Crimson for contrast */
+        .verse-card:hover {
+            border-left-color: #BE123C; /* Rose 700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(180, 83, 9, 0.1), 0 4px 6px -2px rgba(180, 83, 9, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FEF3C7; /* Amber 100 */
+            color: #92400E; /* Amber 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FCD34D; /* Amber 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-light-life {
+            background: linear-gradient(135deg, #FFF7ED 0%, #FEF2F2 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-900 serif">
+                        <i class="fas fa-sun mr-2 text-amber-500"></i> 约翰一书 1章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">光中行走：相交与洁净</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-amber-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-amber-950 text-amber-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"我们若在光明中行，如同神在光明中，就彼此相交。" (1:7)</p>
+            <p class="text-xs text-amber-400 mt-3">交互式研经工具 | 聚焦：真实的团契与认罪的自由</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "可触摸的生命与神圣的相交",
+                summary: "约翰一书第一章是对“诺斯替主义”（Gnosticism）及其虚假灵性的强力反击。约翰以证人的身份开篇，强调“生命之道”是亲眼看过、亲手摸过的实体（1-4节）。他不仅宣告了神的本质——“神就是光”（5节），更阐明了与神相交（Koinonia）的条件：在光明中行，并诚实地承认自己的罪（6-10节）。本章揭示了真实的灵性不是神秘的知识，而是透明的生活与持续的洁净。",
+                highlights: [
+                    { icon: "fas fa-hand-holding", color: "text-amber-600", text: "亲手摸过" },
+                    { icon: "fas fa-lightbulb", color: "text-yellow-500", text: "神就是光" },
+                    { icon: "fas fa-tint", color: "text-rose-600", text: "宝血洁净" }
+                ]
+            },
+            sections: [
+                {
+                    id: "word_of_life",
+                    title: "生命之道的实存性 (1:1-4)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "1:1",
+                            text: "论到从起初原有的生命之道，就是我们所听见、所看见、亲眼看过、亲手摸过的。",
+                            academic: {
+                                title: "反幻影说 (Anti-Docetism)",
+                                keywords: ["Pselaphaō (触摸/抚摸)", "Logos (道)"],
+                                content: "当时的异端（幻影说）认为物质是恶的，基督没有真实的肉身。约翰连用四个感官动词——听见、看见、凝视（theaomai）、触摸（pselaphaō，指仔细的抚摸，如路24:39复活后的验证），以此强调道成肉身的物质真实性。基督教信仰不是抽象哲学，而是基于历史事实的见证。"
+                            },
+                            devotional: {
+                                title: "你摸过耶稣吗？",
+                                content: "约翰的信仰是第一手的（First-hand）。许多基督徒的问题在于，他们的信仰是“听来的”（二手知识），从未在灵里真实地“遇见”和“触摸”过这位主。没有这种亲身的经历，我们的喜乐就无法“充足”。不要满足于神学概念，要去寻求那位活生生的主。"
+                            }
+                        },
+                        {
+                            ref: "1:3-4",
+                            text: "我们将所看见、所听见的传给你们，使你们与我们相交...乃是与父并他儿子耶稣基督相交。",
+                            academic: {
+                                title: "相交的垂直与水平",
+                                keywords: ["Koinonia (相交/团契/伙伴关系)"],
+                                content: "Koinonia 意为“共同分享生命”。这里揭示了团契的结构：使徒传扬福音 -> 信徒接受 -> 与使徒相交（水平） -> 最终进入使徒与父和子的关系中（垂直）。没有垂直的关系，水平的聚会只是社交；没有真理（使徒的见证）为基础，团契就是空谈。"
+                            },
+                            devotional: {
+                                title: "孤独的解药",
+                                content: "真正的“团契”不是喝茶聊天，而是分享共同的生命（Share Life）。当你感到孤独时，不仅要寻找人，更要确认你是否接通了那个垂直的源头。我们在基督里的连接，比血缘关系更深，因为我们共享的是永恒的生命。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "god_is_light",
+                    title: "神就是光：行在光明中 (1:5-7)",
+                    themeColor: "gold",
+                    verses: [
+                        {
+                            ref: "1:5",
+                            text: "神就是光，在他毫无黑暗。这是我们从主所听见...报给你们的信息。",
+                            academic: {
+                                title: "神性的绝对定义",
+                                keywords: ["Phōs (光)", "Skotia (黑暗)"],
+                                content: "“神就是光”不仅指理智上的启示，更指道德上的绝对圣洁和纯全。希腊文中用双重否定（Ouk... Oudemia）强调“毫无黑暗”，意即神里面没有任何隐晦、邪恶或欺骗的成分。这是约翰伦理学的基石：我们要像祂。"
+                            },
+                            devotional: {
+                                title: "无死角的圣洁",
+                                content: "光不仅照亮道路，也显露灰尘。当我们靠近神时，我们生命中的污点会变得清晰可见。不要逃避这种显露，因为那正是神同在的证明。一个没有黑暗的神，要求祂的儿女过一种透明（Transparent）的生活。"
+                            }
+                        },
+                        {
+                            ref: "1:6-7",
+                            text: "我们若说与神相交，却仍在黑暗里行，就是说谎话...我们若在光明中行...他儿子耶稣的血也洗净我们一切的罪。",
+                            academic: {
+                                title: "若...就 (Conditional Clauses)",
+                                keywords: ["Peripatōmen (行走/生活方式)", "Katharizei (洁净/持续洗净)"],
+                                content: "约翰使用“我们若说”（If we say）来驳斥诺斯替主义者的虚假宣称。这里强调的是生活方式（行走）与口头宣称的一致性。“在光明中行”不是指完美无罪，而是指活在神的真理光照下，不隐藏罪。只要我们在光中，耶稣的血就“持续地”（现在时态）洁净我们。"
+                            },
+                            devotional: {
+                                title: "暴露就是医治",
+                                content: "不管是伤口还是罪，要想得医治/洁净，首先要暴露在光（医生/神）面前。隐藏罪恶不仅阻断了与神的相交，也让我们活在虚假中。只要你愿意走到光中承认它，宝血的功效是即时且完全的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "confession",
+                    title: "罪的真实与认罪的自由 (1:8-10)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "1:8, 10",
+                            text: "我们若说自己无罪，便是自欺...我们若说自己没有犯过罪，便是以神为说谎的...",
+                            academic: {
+                                title: "反驳无罪论",
+                                keywords: ["Hamartian (罪性)", "Planamen (迷惑/走偏)"],
+                                content: "当时有些异端主张灵性高深的人已经超脱了罪（无罪论）。约翰严厉指出：否认罪性（8节）是自欺（心理层面），否认罪行（10节）是亵渎神（神学层面，因神说世人都犯了罪）。真理（Truth）和神的道（Word）都不在这样的人心里。"
+                            },
+                            devotional: {
+                                title: "别再装了",
+                                content: "没有什么比一个假装完美的基督徒更让人反感的了。承认自己“有病”，是得医治的前提。自义是通往恩典最大的障碍。我们需要每天承认：我是一个蒙恩的罪人，我依然需要救主。"
+                            }
+                        },
+                        {
+                            ref: "1:9",
+                            text: "我们若认自己的罪，神是信实的，是公义的，必要赦免我们的罪，洗净我们一切的不义。",
+                            academic: {
+                                title: "认罪的机制",
+                                keywords: ["Homologeō (认/说同样的话)", "Pistos (信实)", "Dikaios (公义)"],
+                                content: "“认罪”的希腊文 Homologeō 意为“说同样的话”。认罪不是通知神（祂早就知道），而是同意神对我们行为的判决（神说这是罪，我也承认这是罪）。赦免的基础不是我们的痛悔程度，而是神的“信实”（守约）和“公义”（基督已付代价）。"
+                            },
+                            devotional: {
+                                title: "确据的磐石",
+                                content: "当你认罪后，为什么还觉得不平安？因为你在看自己的感觉，而不是看神的属性。这节经文是给良心的定心丸：神必须赦免你，因为祂是公义的——祂不能让基督替你付了代价，却又向你追债。这是何等坚固的保障！"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-amber-900">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-800">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Koinonia Network -->
+                    <div class="gradient-light-life text-amber-900 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-amber-100">
+                        <div class="mb-4">
+                            <i class="fas fa-project-diagram text-4xl text-amber-600 mb-2"></i>
+                            <h3 class="text-xl font-bold">团契 (Koinonia) 结构</h3>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-2 text-sm w-full">
+                            <div class="bg-white/80 px-4 py-1 rounded-full border border-amber-200 shadow-sm font-bold text-amber-700">父与子</div>
+                            <div class="h-4 w-0.5 bg-amber-400"></div>
+                            <div class="bg-white/80 px-4 py-1 rounded-full border border-amber-200 shadow-sm font-bold text-amber-700">使徒 (见证人)</div>
+                            <div class="h-4 w-0.5 bg-amber-400"></div>
+                            <div class="flex items-center space-x-2 w-full justify-center">
+                                <span class="text-xs text-rose-500">相交</span>
+                                <div class="bg-amber-100 px-6 py-2 rounded-lg border border-amber-300 w-2/3 shadow-inner">
+                                    我们 (信徒)
+                                </div>
+                                <span class="text-xs text-rose-500">喜乐</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-stone-500">垂直关系决定水平关系</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- The Lie Detector Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-200">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">自欺的模式 (1:6, 8, 10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="lieChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">"我们若说..." (言语) vs 事实 (真相)</p>
+                    </div>
+
+                    <!-- Fellowship Conditions Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-200">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">行在光中的果效 (1:7, 9)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="lightChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">认罪带来洁净与相交的良性循环</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFFBEB]/95 backdrop-blur py-4 mb-8 border-b border-amber-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-stone-500 hover:bg-amber-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-stone-600 text-white font-bold' : 'text-stone-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-stone-500 hover:bg-amber-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'gold') titleColorClass = 'text-yellow-700 border-yellow-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-stone-700 border-stone-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-amber-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-amber-100">
+                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-amber-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-stone-50/50 transition">
+                                <h4 class="text-stone-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-amber-900">解经原则：光照与洗净</h2>
+                        <p class="text-stone-600">
+                            约翰一书第一章将“高深的神学”（神是光）与“实际的生活”（认罪）完美结合。解经需同时把握这两个维度。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：反异端与语法</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 历史背景与语法分析。必须了解诺斯替主义/幻影说的背景，才能明白为何约翰强调“摸过”和“认罪”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 条件句分析（"我们若说" vs "事实"）。
+                                    <br>2. 动词时态（"洗净"是现在持续时态，表明持续的功效）。
+                                </li>
+                                <li><strong>目的：</strong> 确立基督的人性与神性，驳斥虚假的完美主义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：透明度与确据</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 诚实面对神。经文不仅是教义，更是对良心的审视。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 团契体检（我的信仰是孤立的还是相交的？）。
+                                    <br>2. 认罪操练（将模糊的罪具体化，经历神的信实）。
+                                </li>
+                                <li><strong>目的：</strong> 消除伪善，享受在光中无拘无束的自由。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Lie Detector Chart (Bar Chart)
+            const ctxLie = document.getElementById('lieChart').getContext('2d');
+            new Chart(ctxLie, {
+                type: 'bar',
+                data: {
+                    labels: ['宣称与神相交', '宣称无罪(性)', '宣称没犯过罪(行)'],
+                    datasets: [
+                        {
+                            label: '口头宣称 (Say)',
+                            data: [100, 100, 100],
+                            backgroundColor: '#FCD34D', // Light Amber
+                            borderWidth: 1
+                        },
+                        {
+                            label: '属灵实质 (Truth)',
+                            data: [0, 0, 0], // Represents "The Truth is not in us"
+                            backgroundColor: '#1C1917', // Black/Dark
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            display: false 
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label.includes("实质")) return "真理不在心里/以神为说谎的";
+                                    return context.dataset.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Light & Fellowship Chart (Radar or Polar)
+            const ctxLight = document.getElementById('lightChart').getContext('2d');
+            new Chart(ctxLight, {
+                type: 'radar',
+                data: {
+                    labels: ['彼此相交', '宝血洁净', '真理掌权', '喜乐充足', '毫无黑暗'],
+                    datasets: [{
+                        label: '在光中行 (Walking in Light)',
+                        data: [100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber
+                        borderColor: '#B45309',
+                        pointBackgroundColor: '#B45309',
+                        pointBorderColor: '#fff',
+                    },
+                    {
+                        label: '在黑暗中行 (Walking in Darkness)',
+                        data: [10, 0, 0, 20, 0],
+                        backgroundColor: 'rgba(28, 25, 23, 0.2)', // Dark Stone
+                        borderColor: '#44403C',
+                        pointBackgroundColor: '#44403C',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#78350F' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

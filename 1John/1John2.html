@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰一书第二章：中保、爱与末后的时刻</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Twilight Blue (Passing World) & Morning Star Yellow (True Light/Anointing) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 - Cool neutral */
+            color: #0F172A; /* Slate 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Twilight Blue */
+        .active-tab {
+            color: #1E3A8A; /* Blue 900 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1E3A8A;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Morning Star Yellow for contrast */
+        .verse-card:hover {
+            border-left-color: #EAB308; /* Yellow 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.1), 0 4px 6px -2px rgba(30, 58, 138, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #EFF6FF; /* Blue 50 */
+            color: #1E40AF; /* Blue 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #DBEAFE; /* Blue 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-twilight {
+            background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-star mr-2 text-yellow-500"></i> 约翰一书 2章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">中保与恩膏：爱与分辨</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-900">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-900">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-yellow-400">"这世界和其上的情欲都要过去，惟独遵行神旨意的，是永远常存。" (2:17)</p>
+            <p class="text-xs text-slate-500 mt-3">交互式研经工具 | 聚焦：抵挡世界的诱惑与持守真理</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "末时信徒的生存指南",
+                summary: "约翰一书第二章是一份给“末时”信徒的生存指南。约翰首先解决了罪的问题——我们有耶稣基督作中保（1-2节）。接着，他提出“认识神”的两个试金石：遵守诫命（3-6节）与爱弟兄（7-11节）。随后，他转向信徒的成长阶段（12-14节），并发出严厉的警告：不可爱世界（15-17节）以及要提防敌基督者（18-27节）。本章以“住在主里面”的呼召结束，鼓励信徒在恩膏的教训中坦然无惧。",
+                highlights: [
+                    { icon: "fas fa-gavel", color: "text-blue-600", text: "中保与挽回祭" },
+                    { icon: "fas fa-globe-americas", color: "text-slate-600", text: "不要爱世界" },
+                    { icon: "fas fa-oil-can", color: "text-yellow-600", text: "恩膏的教训" }
+                ]
+            },
+            sections: [
+                {
+                    id: "advocate",
+                    title: "罪的处理方案 (2:1-2)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "2:1-2",
+                            text: "我将这些话写给你们，是要叫你们不犯罪。若有人犯罪，在父那里我们有一位中保，就是那义者耶稣基督。他为我们的罪作了挽回祭...",
+                            academic: {
+                                title: "法庭上的辩护",
+                                keywords: ["Paraklētos (中保/辩护律师)", "Hilasmos (挽回祭/平息愤怒)"],
+                                content: "Paraklētos 意为“被召到旁边协助的人”，在法庭语境下指辩护律师。当撒旦控告我们时，耶稣不否认我们的罪，而是展示祂自己作为 Hilasmos（挽回祭）。这词源于旧约赎罪日的施恩座，意味着借着献祭平息了神的义怒，使神与人和好。这不是一种“廉价恩典”，因为代价是基督自己。"
+                            },
+                            devotional: {
+                                title: "你有最好的律师",
+                                content: "基督徒生活的目标是“不犯罪”，但现实是我们“若”犯罪。这时不要绝望，也不要逃避。我们有一位从未输过官司的律师——耶稣。祂为你辩护的理由不是“他没做”，而是“我已经付了”。这是我们在跌倒后能重新站立的唯一根基。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "obedience_love",
+                    title: "真认识神的凭据 (2:3-11)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "2:3-6",
+                            text: "我们若遵守他的诫命，就晓得是认识他...人若说他住在主里面，就该自己照主所行的去行。",
+                            academic: {
+                                title: "认识 (Ginōskō) 的实证",
+                                keywords: ["Ginōskō (经历性地认识)", "Meno (住/停留)"],
+                                content: "诺斯替主义强调理性的“知识”（Gnosis），但约翰强调“认识”是道德性的顺服。这里提出一个新的概念：“住在主里面”（Meno）。这是一种持续的、有机的联合关系。检验这种神秘联合的唯一可见标准，就是模仿耶稣的生活方式（Imitatio Christi）。"
+                            },
+                            devotional: {
+                                title: "你是耶稣的复印件吗？",
+                                content: "如果有人跟踪你一周，记录你的言行，他能从你身上认出耶稣的影子吗？“认识神”不是神学考试拿满分，而是像镜子一样反射出耶稣的性情。信仰如果不落实到“行”上，就只是头脑的游戏。"
+                            }
+                        },
+                        {
+                            ref: "2:9-11",
+                            text: "人若说自己在光明中，却恨他的弟兄，他到如今还是在黑暗里...惟独恨弟兄的，是在黑暗里...",
+                            academic: {
+                                title: "光与爱的绑定",
+                                keywords: ["Skantia (黑暗)", "Skandalon (绊脚石)"],
+                                content: "约翰再次使用“人若说”来反驳虚假宣称。在约翰的神学中，光（真理）与爱（伦理）是不可分割的。恨弟兄不仅仅是情绪问题，更是属灵瞎眼（在黑暗里）的证据。这种恨会让人迷失方向，不知道往哪里去。"
+                            },
+                            devotional: {
+                                title: "属灵的路盲",
+                                content: "恨意会让人变瞎。当你对某人心怀苦毒时，你不仅伤害了对方，更弄瞎了自己的眼睛。你会在人生的选择上失去判断力，因为你离开了爱的光明。饶恕不仅是释放别人，更是为了让自己能看清脚下的路。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "growth_stages",
+                    title: "属灵成长的阶段 (2:12-14)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "2:12-14",
+                            text: "小子们哪...父老啊...少年人啊...你们刚强，神的道常存在你们心里，你们也胜了那恶者。",
+                            academic: {
+                                title: "三重奏的称呼",
+                                keywords: ["Teknia (小子/孩子们)", "Neaniskoi (少年人)", "Pateres (父老)"],
+                                content: "这不仅是年龄的划分，更是灵命成熟度的隐喻。1. 孩子们：核心体验是“罪得赦免”和“认识父”（关系的确据）。2. 少年人：核心特征是“刚强”和“争战”（胜过恶者）。3. 父老：核心特征是“认识那起初原有的”（深度的相交）。这是教会牧养的完整图景。"
+                            },
+                            devotional: {
+                                title: "你在哪个阶段？",
+                                content: "属灵生命不是静止的。你是否从仅仅享受“罪得赦免”的婴孩阶段，成长为能靠神的话语“胜过恶者”的属灵战士？又是否正在向深知神心意的“父老”迈进？不要满足于做一个永远长不大的“老信徒”。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "world_antichrist",
+                    title: "世界的诱惑与敌基督 (2:15-27)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "2:15-17",
+                            text: "不要爱世界和世界上的事...肉体的情欲、眼目的情欲，并今生的骄傲...这世界和其上的情欲都要过去...",
+                            academic: {
+                                title: "世界的解剖学",
+                                keywords: ["Kosmos (世界体系)", "Alazoneia (骄傲/夸耀)"],
+                                content: "这里的“世界”并非指自然界或世人，而是指以此世为中心、反抗神统治的价值体系。约翰将其解剖为三部分：1.肉体的情欲（感官满足）；2.眼目的情欲（贪婪/外在吸引）；3.今生的骄傲（对地位财富的虚荣夸耀）。这三者对应了夏娃在伊甸园受的试探（好作食物、悦人的眼目、能使人有智慧）。"
+                            },
+                            devotional: {
+                                title: "正在沉没的泰坦尼克",
+                                content: "爱世界最大的问题在于“投资回报率”——因为世界“正在过去”（现在进行时）。把生命投资在世界，就像在沉船上装修头等舱。唯有遵行神旨意的人，能穿越时间的废墟，存留到永远。你的心在哪里安家？"
+                            }
+                        },
+                        {
+                            ref: "2:18-20, 27",
+                            text: "如今是末时了...你们从那圣者受了恩膏...自有主的恩膏在凡事上教训你们...",
+                            academic: {
+                                title: "恩膏与教导",
+                                keywords: ["Antichristos (敌基督)", "Chrisma (恩膏/涂油)"],
+                                content: "“敌基督”不仅指末后出现的一个人物，更指一种“灵”或原则（否定耶稣是基督）。为了抵挡这种欺骗，信徒领受了“恩膏”（指圣灵）。这不是指某种特殊的神秘体验，而是指圣灵在信徒心中对真理的照明和印证，使他们能分辨真伪。"
+                            },
+                            devotional: {
+                                title: "内在的测谎仪",
+                                content: "在这个异端邪说和假新闻满天飞的时代，我们不需要到处寻找“大师”来告诉我们什么是真理。圣灵住在你里面，只要你熟悉圣经并保持敏锐，祂会像直觉一样提醒你分辨谬误。相信并顺从你里面那位最好的老师。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "abide",
+                    title: "住在主里面 (2:28-29)",
+                    themeColor: "yellow",
+                    verses: [
+                        {
+                            ref: "2:28",
+                            text: "小子们哪，你们要住在主里面。这样，他若显现，我们就可以坦然无惧；当他来的时候，在他面前也不至于惭愧。",
+                            academic: {
+                                title: "末世的自信",
+                                keywords: ["Parrhēsia (坦然无惧/大胆)", "Aischynō (羞愧)"],
+                                content: "“住在主里面”是全章的总结。这里的动力是末世论的：基督必再来（Parousia）。信徒现在与主的关系（住），决定了将来见主时的状态。Parrhēsia 原指希腊公民在公共集会中自由发言的权利，这里指在审判者面前因良心无亏而有的确信。"
+                            },
+                            devotional: {
+                                title: "你是怕祂来，还是盼祂来？",
+                                content: "如果耶稣今天下午回来，你是会兴奋地跑去迎接，还是会想找个地缝钻进去？如果你现在就“住”在祂里面，与祂有亲密的关系，那么祂的再来就是老友重逢；如果你与祂疏远，那将是陌生人面对法官的时刻。现在就预备那一刻吧。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-900">
+                        <h2 class="text-3xl font-bold mb-6 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-slate-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Three Lusts -->
+                    <div class="gradient-twilight p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-slate-700">
+                        <div class="mb-4">
+                            <i class="fas fa-globe-americas text-4xl text-blue-300 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">世界的构成 (2:16)</h3>
+                        </div>
+                        <div class="chart-wrapper" style="height: 150px;">
+                            <canvas id="worldLustChart"></canvas>
+                        </div>
+                        <p class="text-xs mt-3 text-slate-300">这一切都不是从父来的</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Spiritual Growth Stages Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-blue-900 w-full border-b border-blue-100 pb-2">属灵生命周期 (2:12-14)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="growthChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">从得救确据(小子) -> 属灵争战(少年) -> 深度相交(父老)</p>
+                    </div>
+
+                    <!-- Abiding vs World Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-700 w-full border-b border-yellow-100 pb-2">永恒 vs 短暂 (2:17)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="eternalChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">世界正在过去，遵行神旨意的永远常存</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-900 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-yellow-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'yellow') titleColorClass = 'text-yellow-700 border-yellow-200';
+                else titleColorClass = 'text-slate-800 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-slate-50 border-b border-slate-100">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-blue-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-yellow-50/30 transition">
+                                <h4 class="text-yellow-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经原则：辨别与确据</h2>
+                        <p class="text-slate-600">
+                            约翰一书第二章教导我们在错谬的世代中如何分辨真假（教义与伦理），并确信自己“住在主里面”。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：末世论与反异端</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 危机回应原则。必须了解约翰是在应对“分离主义”的异端（那些离开教会的人，2:19）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词汇对比（"世界" vs "父"；"谎言" vs "恩膏"）。
+                                    <br>2. 动词时态（"过去"是现在进行时，表明世界正在瓦解的过程中）。
+                                </li>
+                                <li><strong>目的：</strong> 揭露世界的本质，确立正统信仰（耶稣是基督）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                            <div class="text-yellow-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：关系的确据与爱</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 生命验证。用“遵守主道”和“爱弟兄”来检验自己的信仰真实性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 价值观重置（停止对沉没世界的投资）。
+                                    <br>2. 依靠内住圣灵（恩膏）进行日常抉择。
+                                </li>
+                                <li><strong>目的：</strong> 在末世活出坦然无惧的生命，不致羞愧。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // World Components Chart (Pie)
+            const ctxWorld = document.getElementById('worldLustChart').getContext('2d');
+            new Chart(ctxWorld, {
+                type: 'pie',
+                data: {
+                    labels: ['肉体的情欲 (感官)', '眼目的情欲 (贪婪)', '今生的骄傲 (虚荣)'],
+                    datasets: [{
+                        data: [33, 33, 33],
+                        backgroundColor: [
+                            '#EF4444', // Red (Flesh)
+                            '#3B82F6', // Blue (Eyes)
+                            '#F59E0B'  // Yellow (Pride)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: 'white', boxWidth: 10 } }
+                    }
+                }
+            });
+
+            // Spiritual Growth Chart (Line/Step)
+            const ctxGrowth = document.getElementById('growthChart').getContext('2d');
+            new Chart(ctxGrowth, {
+                type: 'line',
+                data: {
+                    labels: ['小子 (Forgiven)', '少年 (Strong)', '父老 (Know Him)'],
+                    datasets: [{
+                        label: '属灵深度',
+                        data: [30, 60, 100],
+                        borderColor: '#1E3A8A', // Blue 900
+                        backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: true,
+                        pointBackgroundColor: '#EAB308', // Yellow point
+                        pointRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true, max: 120 },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Eternal vs Temporal Chart (Bar)
+            const ctxEternal = document.getElementById('eternalChart').getContext('2d');
+            new Chart(ctxEternal, {
+                type: 'bar',
+                data: {
+                    labels: ['这世界', '神的旨意'],
+                    datasets: [{
+                        label: '存留时间',
+                        data: [20, 100],
+                        backgroundColor: [
+                            '#94A3B8', // Slate (Fading)
+                            '#EAB308'  // Yellow (Eternal)
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataIndex === 0 ? "都要过去" : "永远常存";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

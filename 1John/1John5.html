@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰一书第五章：得胜的信心与确据</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Victory Gold (Overcoming) & Testimony Blue (Assurance) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Sky 50 - Clear, assured background */
+            color: #0C4A6E; /* Sky 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Victory Gold */
+        .active-tab {
+            color: #B45309; /* Amber 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #B45309;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Testimony Blue */
+        .verse-card:hover {
+            border-left-color: #0284C7; /* Sky 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.1), 0 4px 6px -2px rgba(2, 132, 199, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FEF3C7; /* Amber 100 */
+            color: #92400E; /* Amber 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FCD34D; /* Amber 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-victory {
+            background: linear-gradient(135deg, #FFFBEB 0%, #E0F2FE 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-900 serif">
+                        <i class="fas fa-crown mr-2 text-amber-500"></i> 约翰一书 5章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">得胜与确据</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-950 text-sky-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"使我们胜了世界的，就是我们的信心。" (5:4)</p>
+            <p class="text-xs text-sky-400 mt-3">交互式研经工具 | 聚焦：永生的确据与真实的知识</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "信心的凯旋与最终的确据",
+                summary: "约翰一书第五章是全书的总结与高潮。约翰将前几章关于“爱”、“顺服”和“真理”的讨论汇聚于“得胜的信心”（1-5节）。他提出了关于耶稣基督无可辩驳的见证——水、血与圣灵（6-12节），目的是要让信徒“知道”自己有永生（13节）。随后，他论述了这种确据如何转化为祷告的胆量（14-17节）。全书结束于三个强有力的“我们知道”（Oidamen），宣告了信徒在真理中的稳固地位，并发出最后的警戒：“远避偶像”（18-21节）。",
+                highlights: [
+                    { icon: "fas fa-trophy", color: "text-amber-600", text: "胜过世界" },
+                    { icon: "fas fa-water", color: "text-blue-600", text: "水血见证" },
+                    { icon: "fas fa-check-double", color: "text-emerald-600", text: "三个知道" }
+                ]
+            },
+            sections: [
+                {
+                    id: "victory_faith",
+                    title: "信心的得胜逻辑 (5:1-5)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "5:1-3",
+                            text: "凡信耶稣是基督的，都是从神而生...我们遵守神的诫命，这就是爱他了，并且他的诫命不是难守的。",
+                            academic: {
+                                title: "轻省的轭",
+                                keywords: ["Gennaō (生)", "Bareiai (沉重/难守)"],
+                                content: "约翰建立了一个逻辑链：信耶稣 -> 从神生 -> 爱父神 -> 爱神的儿女 -> 守诫命。律法主义者觉得诫命“沉重”（Bareiai），因为他们试图靠肉体去守；但对于重生的人，因着爱和新生命的能力，顺服变成了一种自然的渴望，而非重担。这就是“他的诫命不是难守的”。"
+                            },
+                            devotional: {
+                                title: "因为爱，所以不累",
+                                content: "你觉得读经、祷告、爱人很累吗？如果是，可能你是在用“雇工”的心态，而不是“儿子”的心态。就像母亲照顾婴儿虽然辛苦却不觉得是重担，爱能让责任变得轻省。求神复兴你对祂的爱，顺服自然就会变得像呼吸一样轻快。"
+                            }
+                        },
+                        {
+                            ref: "5:4-5",
+                            text: "因为凡从神生的，就胜过世界；使我们胜了世界的，就是我们的信心。",
+                            academic: {
+                                title: "信心的得胜本质",
+                                keywords: ["Nikaō (得胜/征服)", "Kosmos (世界体系)"],
+                                content: "“胜过”使用了动词 *Nikaō*（Nike的词根）。这不仅是一次性的胜利，而是重生生命的持续状态。得胜的关键不是我们的意志力，而是“我们的信心”——即对耶稣是神儿子的认信。这种信心使我们与基督（终极的得胜者）联合，从而分享祂的胜利。"
+                            },
+                            devotional: {
+                                title: "你已经是赢家",
+                                content: "面对世界的诱惑和压力，我们常觉得自己是失败者。但神说：只要你有信心，你就是得胜者。得胜不是看你现在的感觉，而是看你的身份（从神生的）。不要以乞丐的心态生活，要活出王子的尊荣。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "witness",
+                    title: "神儿子的三重见证 (5:6-12)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "5:6-8",
+                            text: "这藉着水和血而来的，就是耶稣基督...作见证的原来有三：就是圣灵、水，与血，这三样也都归于一。",
+                            academic: {
+                                title: "反驳克林妥主义 (Cerinthianism)",
+                                keywords: ["Hydōr (水)", "Haima (血)", "Martureō (作见证)"],
+                                content: "这是全书最难解的经文之一。针对当时的异端克林妥（认为“基督”灵体在受洗时降在“耶稣”身上，在受死前离开），约翰强调耶稣基督是“藉着水（受洗开启事工）和血（受死完成事工）”而来的。祂从始至终都是神人二性的基督。圣灵在信徒心中印证这一历史事实。"
+                            },
+                            devotional: {
+                                title: "历史的锚点",
+                                content: "我们的信仰不是建立在神话或哲学上，而是建立在耶稣受洗和受死的历史事实（水与血）上。当我们怀疑时，回头看十字架（血）和约旦河（水），那是神在历史中留下的不可磨灭的指纹。圣灵会在你心里说：“这是真的。”"
+                            }
+                        },
+                        {
+                            ref: "5:11-12",
+                            text: "这见证就是神赐给我们永生，这永生也是在他儿子里面。人有了神的儿子就有生命...",
+                            academic: {
+                                title: "生命与儿子的绑定",
+                                keywords: ["Zōē (生命/永生)", "Echō (拥有/持有)"],
+                                content: "永生不是一个独立于基督之外的“礼物包”，永生就在基督“里面”。你不能只要永生而不要耶稣。这里用了极简的逻辑公式：有子 = 有命；没子 = 没命。基督教的排他性在此显露无遗，但也提供了最简单的确据。"
+                            },
+                            devotional: {
+                                title: "你有儿子吗？",
+                                content: "很多人在寻找人生的意义、平安或福气，却忽略了核心。神把一切丰盛都藏在祂儿子里面。如果你拥有了耶稣，你就拥有了一切；如果你失去了耶稣，即使拥有全世界，也是一无所有。检查你的心：耶稣在里面吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "confidence",
+                    title: "知道的确据与祈求 (5:13-17)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "5:13",
+                            text: "我将这些话写给你们信奉神儿子之名的人，要叫你们知道自己有永生。",
+                            academic: {
+                                title: "写作目的：确据 (Assurance)",
+                                keywords: ["Eidēte (知道/感知)", "Zōēn Aiōnion (永生)"],
+                                content: "这是约翰一书的“目的节”（对比约翰福音20:31是为了叫人“信”）。约翰书信是为了叫已经信的人“知道”（Eidēte，直觉性的知晓）自己拥有永生。救恩的确据不是傲慢，而是神希望祂儿女拥有的正常状态。不确定的救恩无法产生得胜的生活。"
+                            },
+                            devotional: {
+                                title: "不要活在也许中",
+                                content: "你还在为“我到底得救了没”而焦虑吗？神写这本书就是为了治愈你的怀疑。祂不想让你每天猜谜语。如果你信奉神儿子的名，你“现在”就有永生。把这个确据当作你脚下的磐石，而不是飘忽的云彩。"
+                            }
+                        },
+                        {
+                            ref: "5:14-15",
+                            text: "我们若照他的旨意求什么，他就听我们...就知道所求于他的，无不得着。",
+                            academic: {
+                                title: "祷告的胆量",
+                                keywords: ["Parrhēsia (坦然无惧/胆量)", "Thelēma (旨意)"],
+                                content: "确据带来祷告的“胆量”（Parrhēsia）。祷告蒙应允的条件是“照他的旨意”。这并不是限制，而是保障。因为神的旨意总是比我们的意愿更完美。真正的祷告不是改变神的旨意来迁就我们，而是调整我们进入神的旨意中。"
+                            },
+                            devotional: {
+                                title: "与神同频的祷告",
+                                content: "最有效的祷告不是大声喊叫，而是把我们的心调频到神的频道上。当你求神所想求的（公义、灵魂得救、圣洁），你会发现神不仅听，而且乐意成就。如果你不知道求什么，就先求：“主啊，愿你的旨意成就在我身上。”"
+                            }
+                        },
+                        {
+                            ref: "5:16-17",
+                            text: "人若看见弟兄犯了不至于死的罪...至于死的罪，我不说当为这罪祈求。",
+                            academic: {
+                                title: "至于死的罪",
+                                keywords: ["Hamartia Pros Thanaton (至于死的罪)"],
+                                content: "这节经文争议很大。在约翰的语境下，最合理的解释是指“拒绝基督的背教行为”（如诺斯替主义者所为），因为拒绝了唯一的救赎源头，故“至于死”（属灵的永死）。对于一般的软弱犯罪（不至于死），信徒有责任彼此代求，使其得生命。"
+                            },
+                            devotional: {
+                                title: "代求的责任",
+                                content: "看到弟兄软弱跌倒，不要急着论断，要急着代求。你的祷告可以成为输送生命的管道。我们是属灵的祭司，有责任为身体中受伤的肢体守望。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "conclusion",
+                    title: "三个“我们知道”与最后通牒 (5:18-21)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "5:18-20",
+                            text: "我们知道凡从神生的，必不犯罪...我们知道我们是属神的...我们知道神的儿子已经来到...",
+                            academic: {
+                                title: "知识的凯歌",
+                                keywords: ["Oidamen (我们知道 - 既定事实)"],
+                                content: "书信以三个铿锵有力的“我们知道”结束，总结了全书核心：<br>1. 道德的确据：重生者必不习惯性犯罪，且受神保护（那恶者无法害他）。<br>2. 身份的确据：我们属于神，虽全世界卧在恶者手下。<br>3. 真理的确据：基督已来，赐给我们智慧认识真神。这是一种排他性的真理宣告。"
+                            },
+                            devotional: {
+                                title: "在这个不可知论的世界中",
+                                content: "世界告诉我们“没有绝对真理”，但约翰说“我们知道”。这不是骄傲，这是启示带来的确定性。当世界动荡不安时，紧紧抓住这三个“知道”：我知道我的生命改变了，我知道我属于谁，我知道耶稣是谁。"
+                            }
+                        },
+                        {
+                            ref: "5:21",
+                            text: "小子们哪，你们要自守，远避偶像！",
+                            academic: {
+                                title: "突兀的结尾？",
+                                keywords: ["Eidōlon (偶像)", "Phylaxate (保守/防备)"],
+                                content: "这句结尾看似突兀，实则画龙点睛。“真神”（20节）的反面就是“偶像”。在当时的背景下，偶像不仅指雕像，更指诺斯替主义臆想出来的“假基督”。在现代，任何替代神在我们心中地位的事物（金钱、自我、错误的教义）都是偶像。"
+                            },
+                            devotional: {
+                                title: "最后的防线",
+                                content: "既然我们认识了真神，并拥有永生，那么人生唯一的风险就是——偶像。偶像会窃取你的敬拜，模糊你的视线。要像防备病毒一样防备偶像。保守你的心，单单敬拜那位真实的上帝。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-800">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Witness Triangle -->
+                    <div class="gradient-victory p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-amber-200">
+                        <div class="mb-4">
+                            <i class="fas fa-fingerprint text-4xl text-sky-600 mb-2"></i>
+                            <h3 class="text-xl font-bold text-sky-900">神的见证</h3>
+                        </div>
+                        
+                        <div class="relative w-40 h-40 mx-auto mt-2">
+                            <!-- Visualizing the Three Witnesses -->
+                            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-sky-200 flex items-center justify-center border-2 border-sky-500">
+                                    <i class="fas fa-wind text-sky-700"></i>
+                                </div>
+                                <span class="text-xs font-bold text-sky-800 mt-1">圣灵</span>
+                            </div>
+                            <div class="absolute bottom-0 left-0 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-200 flex items-center justify-center border-2 border-blue-500">
+                                    <i class="fas fa-water text-blue-700"></i>
+                                </div>
+                                <span class="text-xs font-bold text-blue-800 mt-1">水</span>
+                            </div>
+                            <div class="absolute bottom-0 right-0 flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-rose-200 flex items-center justify-center border-2 border-rose-500">
+                                    <i class="fas fa-tint text-rose-700"></i>
+                                </div>
+                                <span class="text-xs font-bold text-rose-800 mt-1">血</span>
+                            </div>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/3 text-xs text-slate-500 font-bold">
+                                归于一
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Victory Cycle Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">得胜的循环 (5:1-5)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="victoryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">信 -> 生 -> 爱 -> 行 -> 胜</p>
+                    </div>
+
+                    <!-- The Three 'We Knows' Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-sky-100">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">真理的确据 (5:18-20)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="knowledgeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">三个不可动摇的"我们知道"(Oidamen)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-sky-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-sky-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-sky-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-sky-50/30 transition">
+                                <h4 class="text-sky-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：历史与确据</h2>
+                        <p class="text-slate-600">
+                            约翰一书第五章是教义护教与灵性牧养的完美结合。解经需要从历史的争辩（水与血）进入到个人的确据（我知道）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：反异端与逻辑</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 历史背景还原。必须理解第一世纪的克林妥异端，才能解开“水与血”的谜题。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 逻辑链分析（信->生->爱->行->胜）。
+                                    <br>2. 关键词对比（"求"与"妄求"的界限）。
+                                </li>
+                                <li><strong>目的：</strong> 捍卫基督的神人二性，确立救恩的客观基础。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-sky-900 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：确据与胆量</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 确据内化。将教义的“知道”转化为祷告的“胆量”和生活的“得胜”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 自我身份确认（我是有神儿子的，所以我已经有永生）。
+                                    <br>2. 祷告校准（按照神的旨意祈求）。
+                                </li>
+                                <li><strong>目的：</strong> 消除属灵的疑虑，过一个在地如在天的得胜生活。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Victory Cycle Chart (Doughnut/Pie)
+            const ctxVictory = document.getElementById('victoryChart').getContext('2d');
+            new Chart(ctxVictory, {
+                type: 'doughnut',
+                data: {
+                    labels: ['信耶稣是基督', '从神而生', '爱神', '守诫命(不难)', '胜过世界'],
+                    datasets: [{
+                        data: [20, 20, 20, 20, 20],
+                        backgroundColor: [
+                            '#0EA5E9', // Sky 500
+                            '#0284C7', // Sky 600
+                            '#F59E0B', // Amber 500
+                            '#D97706', // Amber 600
+                            '#B45309'  // Amber 700 (Victory)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    }
+                }
+            });
+
+            // The Three "We Knows" Chart (Bar)
+            const ctxKnowledge = document.getElementById('knowledgeChart').getContext('2d');
+            new Chart(ctxKnowledge, {
+                type: 'bar',
+                data: {
+                    labels: ['道德确据(不犯罪)', '身份确据(属神)', '真理确据(真神)'],
+                    datasets: [{
+                        label: '确信程度',
+                        data: [100, 100, 100],
+                        backgroundColor: [
+                            '#38BDF8', // Light Blue
+                            '#FBBF24', // Amber
+                            '#0C4A6E'  // Dark Blue
+                        ],
+                        borderRadius: 4,
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 0) return "必保守自己，恶者无法害他";
+                                    if(context.dataIndex === 1) return "世界卧在恶者手下，我们却不同";
+                                    if(context.dataIndex === 2) return "认识那位真实的，在祂里面";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

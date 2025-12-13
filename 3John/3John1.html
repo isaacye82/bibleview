@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰三书：真理、接待与教会领袖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Prosperity Teal (Health/Truth) & Hospitality Gold (Service) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0FDFA; /* Teal 50 - Fresh/Prosperous background */
+            color: #134E4A; /* Teal 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Prosperity Teal */
+        .active-tab {
+            color: #0D9488; /* Teal 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0D9488;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Hospitality Gold */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.1), 0 4px 6px -2px rgba(13, 148, 136, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #CCFBF1; /* Teal 100 */
+            color: #115E59; /* Teal 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #99F6E4; /* Teal 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-prosperity {
+            background: linear-gradient(135deg, #CCFBF1 0%, #FEF3C7 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-teal-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-teal-900 serif">
+                        <i class="fas fa-hand-holding-heart mr-2 text-amber-500"></i> 约翰三书
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">三个领袖：接待与权力</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-teal-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-teal-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-teal-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"亲爱的兄弟啊，不要效法恶，只要效法善。" (v11)</p>
+            <p class="text-xs text-teal-400 mt-3">交互式研经工具 | 聚焦：教会政治与接待同工</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "一间教会，三种人生",
+                summary: "约翰三书就像一部微型的教会情景剧，舞台上出现了三个性格迥异的人物：该犹（Gaius）、丢特腓（Diotrephes）和低米丢（Demetrius）。本书的核心不是教义辩论，而是关于“影响力”的使用。该犹用影响力去支持和接待客旅，成为真理的同工；丢特腓用影响力去排挤异己，成为教会的霸主；低米丢则有着众人的善行见证。约翰教导我们：接待不仅仅是好客，更是对真理的实际支持。",
+                highlights: [
+                    { icon: "fas fa-heartbeat", color: "text-teal-600", text: "凡事兴盛" },
+                    { icon: "fas fa-door-open", color: "text-amber-600", text: "接待客旅" },
+                    { icon: "fas fa-crown", color: "text-slate-600", text: "好为首领" }
+                ]
+            },
+            sections: [
+                {
+                    id: "prosperity",
+                    title: "祝愿：身心灵的兴盛 (1-4节)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "1-2",
+                            text: "亲爱的该犹...我愿你凡事兴盛，身体健壮，正如你的灵魂兴盛一样。",
+                            academic: {
+                                title: "三维兴盛 (Euodousthai)",
+                                keywords: ["Euodoō (兴盛/上路顺利)", "Hugiainō (健壮/健康)"],
+                                content: "这句著名的问候语常被误解为“成功神学”的应许，但实际上它是一种标准的书信问候格式。然而，约翰将其升华，建立了一个优先次序：灵魂的兴盛（属灵状况）是基础和标准（Just as），身体和事务的兴盛应当与灵性相匹配。Euodoō 原意是“旅途顺利”，指在生活的各个层面都亨通。"
+                            },
+                            devotional: {
+                                title: "如果你的身体像你的灵魂？",
+                                content: "这是一个大胆的祝愿。如果你的身体健康程度完全取决于你的灵性健康程度，你会变得更强壮，还是会立刻住进ICU？我们常追求外在的成功，却忽略了内在的贫瘠。真正的成功是里外一致的健康。"
+                            }
+                        },
+                        {
+                            ref: "3-4",
+                            text: "有弟兄来证明你心里存的真理...我听见我的儿女们按真理而行，我的喜乐就没有比这个大的。",
+                            academic: {
+                                title: "真理的行路人",
+                                keywords: ["Peripateō (行走)", "Martureō (见证/证明)"],
+                                content: "该犹不仅“存”真理（持有正统教义），而且“行”真理（生活实践）。这再次呼应了约翰书信的一贯主题：真理不是静止的知识，而是动态的生活方式。长老最大的喜乐不是教会人数增长，而是信徒在真理中行走。"
+                            },
+                            devotional: {
+                                title: "牧者的喜乐",
+                                content: "对于属灵父母来说，没有什么比看到属灵儿女活出真理更令人欣慰的了。你的生活方式是否给了你的牧者或属灵长辈安慰？还是让他们担忧？按真理而行，是对带领者最好的报答。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "hospitality",
+                    title: "该犹的榜样：为真理同工 (5-8节)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "5-8",
+                            text: "你向弟兄所行的...都是忠心的...请你照神所喜悦的，资助他们前行...我们应当接待这样的人，叫我们与他们一同为真理做工。",
+                            academic: {
+                                title: "配得过神的送行",
+                                keywords: ["Propempō (资助前行/送行)", "Axiōs (配得过/相称)"],
+                                content: "“资助前行”是一个技术术语，指为宣教士提供下一站旅程所需的粮食、金钱和交通工具。标准是“配得过神”（Worthy of God），即要把他们当作是神亲自差派的使者来款待。约翰提出了“合作宣教”的神学：后方接待者与前方传道者是“Synergoi”（同工），共享真理工作的奖赏。"
+                            },
+                            devotional: {
+                                title: "你的钱包参与宣教了吗？",
+                                content: "也许你不能去远方传道，但你可以通过你的钱包去。当你资助一位宣教士，或是接待一位为主劳苦的仆人时，你就成为了他们事工的“股东”。你的那一杯凉水，在神的账本上算为与真理同工。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "conflict",
+                    title: "丢特腓的恶行：权力的滥用 (9-10节)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "9-10",
+                            text: "那在教会中好为首的丢特腓不接待我们...用恶言妄论我们...还不接待弟兄，并把那些愿意接待的人赶出教会。",
+                            academic: {
+                                title: "好为首领 (Philoprōteuōn)",
+                                keywords: ["Philoprōteuōn (爱第一名/好为首)", "Phluareō (妄论/喷泡沫空话)"],
+                                content: "这是新约中唯一一次使用 Philoprōteuōn。丢特腓的问题不是教义异端，而是生命问题——权力欲。他的罪行步步升级：1.拒绝使徒权柄；2.恶言中伤；3.拒绝接待宣教士；4.将异议者逐出教会（绝罚滥用）。这展示了一个以自我为中心的领袖如何摧毁教会的合一与宣教。"
+                            },
+                            devotional: {
+                                title: "教会里的霸凌",
+                                content: "教会领袖最大的试探不是钱或色，而是权力——想要说了算，想要“为首”。当你开始排挤那些比你强、或者意见不同的人时，丢特腓的灵就在你里面发动了。领袖是仆人，不是老板。要警惕那种想要控制一切的欲望。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "imitation",
+                    title: "低米丢的见证与结语 (11-15节)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "11-12",
+                            text: "不要效法恶，只要效法善...低米丢行善，有众人给他作见证，又有真理给他作见证...",
+                            academic: {
+                                title: "三重见证",
+                                keywords: ["Mimeomai (效法/模仿)", "Martureō (见证)"],
+                                content: "面对教会中的坏榜样（丢特腓），约翰给出的解药是“效法善”。低米丢可能是这封信的送信人。他拥有无可辩驳的三重背书：1.众人的口碑；2.真理本身（生活与真理一致）；3.使徒的推荐。这构成了完美的基督徒品格画像。"
+                            },
+                            devotional: {
+                                title: "你要模仿谁？",
+                                content: "在教会中，我们会看到各种人，有像该犹的，也有像丢特腓的。约翰说：要有分辨力，不要因为看到坏榜样就跌倒，也不要模仿他们的强势。要将眼光转向那些默默行善、有真理见证的人。选择正确的榜样，是你成长的关键。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-teal-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-teal-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-teal-800">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Three Men -->
+                    <div class="gradient-prosperity p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-teal-200">
+                        <h3 class="text-xl font-bold text-teal-900 mb-4">教会人物档案</h3>
+                        
+                        <div class="space-y-3 w-full">
+                            <div class="bg-white/80 p-2 rounded flex items-center justify-between shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold">G</div>
+                                    <span class="ml-2 font-bold text-teal-800">该犹</span>
+                                </div>
+                                <span class="text-xs text-teal-600 bg-teal-100 px-2 py-1 rounded">真理接待者</span>
+                            </div>
+                            
+                            <div class="bg-slate-100/80 p-2 rounded flex items-center justify-between shadow-sm border-l-4 border-slate-500">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-slate-600 text-white flex items-center justify-center font-bold">D</div>
+                                    <span class="ml-2 font-bold text-slate-700">丢特腓</span>
+                                </div>
+                                <span class="text-xs text-slate-600 bg-slate-200 px-2 py-1 rounded">好为首领</span>
+                            </div>
+
+                            <div class="bg-white/80 p-2 rounded flex items-center justify-between shadow-sm">
+                                <div class="flex items-center">
+                                    <div class="w-8 h-8 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold">Dm</div>
+                                    <span class="ml-2 font-bold text-amber-800">低米丢</span>
+                                </div>
+                                <span class="text-xs text-amber-700 bg-amber-100 px-2 py-1 rounded">行善榜样</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Character Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-teal-100">
+                        <h3 class="text-lg font-bold mb-2 text-teal-800 w-full border-b border-teal-100 pb-2">领袖品格对比</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="characterChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">真理与爱心 vs 野心与排他</p>
+                    </div>
+
+                    <!-- Hospitality Alchemy Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">接待的属灵转化 (v8)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="hospitalityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">物质付出 + 爱心接待 = 真理同工 (Synergoi)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0FDFA]/95 backdrop-blur py-4 mb-8 border-b border-teal-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-teal-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-teal-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-teal-600 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'teal') titleColorClass = 'text-teal-800 border-teal-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else titleColorClass = 'text-slate-800 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-teal-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-teal-50 border-b border-teal-100">
+                            <span class="inline-block px-2 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-teal-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-teal-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-50/30 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-teal-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-teal-900">解经原则：治理与榜样</h2>
+                        <p class="text-slate-600">
+                            约翰三书虽然简短，却是教会治理的微观案例。解经需要从人物的对比中提炼出普世的领袖原则。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：历史背景与社会学</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 历史重构。通过有限的经文重建当时的教会网络、巡回传道制度以及地方教会与使徒权威的张力。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词汇研究（"好为首" Philoproteuon 的独特性）。
+                                    <br>2. 赞助人关系（Patronage System）在接待中的体现。
+                                </li>
+                                <li><strong>目的：</strong> 理解早期教会的组织形式与冲突根源。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-teal-900 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：品格与影响力</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 榜样效法。将三个人的生命作为镜子，反照自己的事奉动机。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 资源管理（我的钱财是否用于真理？）。
+                                    <br>2. 权力省察（我有"好为首"的倾向吗？）。
+                                </li>
+                                <li><strong>目的：</strong> 培养谦卑、慷慨且支持真理的国度胸怀。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Character Comparison Chart (Bar - Grouped)
+            const ctxChar = document.getElementById('characterChart').getContext('2d');
+            new Chart(ctxChar, {
+                type: 'bar',
+                data: {
+                    labels: ['接待同工', '真理见证', '顺服权柄', '教会合一', '自我野心'],
+                    datasets: [
+                        {
+                            label: '该犹 (Gaius)',
+                            data: [100, 100, 90, 100, 10],
+                            backgroundColor: '#0D9488', // Teal 600
+                            borderRadius: 3
+                        },
+                        {
+                            label: '丢特腓 (Diotrephes)',
+                            data: [-50, 20, -100, -80, 100], // Negative values for destructive traits
+                            backgroundColor: '#475569', // Slate 600
+                            borderRadius: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { 
+                            beginAtZero: true, 
+                            min: -100, max: 100,
+                            grid: { color: '#CCFBF1' }
+                        },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Hospitality Alchemy Chart (Pie)
+            const ctxHosp = document.getElementById('hospitalityChart').getContext('2d');
+            new Chart(ctxHosp, {
+                type: 'pie',
+                data: {
+                    labels: ['物质支持 (Food/Money)', '爱心服侍 (Care)', '真理同工 (Fellow Worker)'],
+                    datasets: [{
+                        data: [30, 30, 40], // The outcome is the largest share conceptually
+                        backgroundColor: [
+                            '#FCD34D', // Amber 300
+                            '#F59E0B', // Amber 500
+                            '#0F766E'  // Teal 700 (The Result)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 2) return "转化结果：属灵的合伙人";
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

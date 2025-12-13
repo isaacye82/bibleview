@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>犹大书：为真道竭力争辩</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Storm Slate (Judgment) & Rescue Orange (Urgency) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F1F5F9; /* Slate 100 */
+            color: #0F172A; /* Slate 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Rescue Orange */
+        .active-tab {
+            color: #EA580C; /* Orange 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #EA580C;
+            border-radius: 2px;
+        }
+
+        /* Verse Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            background-color: #FFFFFF;
+        }
+        .verse-card:hover {
+            border-left-color: #0F172A; /* Slate 900 - Judgment */
+            transform: translateX(4px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FFF7ED; /* Orange 50 */
+            color: #9A3412; /* Orange 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FFEDD5; /* Orange 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-900 serif">
+                        <i class="fas fa-fire-extinguisher mr-2 text-orange-600"></i> 犹大书
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：火中抢救</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-orange-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-orange-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"要从火中抢出来，搭救他们。" (v23)</p>
+            <p class="text-xs text-orange-500 mt-2">交互式研经工具 | 聚焦：末世的背道与信仰的坚守</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "新约的火警：抵挡渗透",
+                summary: "犹大书是一封极其紧迫的信。犹大本想写信论“共同得救的恩典”，但因发现假教师（“偷着进来的人”）已经渗透教会，不得不紧急转笔，呼吁信徒“为真道竭力争辩”。这卷书使用了大量旧约典故（如所多玛、可拉）甚至经外文献（以诺书）来描绘背道者的结局。全书充满了强烈的视觉冲击力和末世的审判氛围，最后以伟大的颂赞（24-25节）宣告神保守的能力。",
+                highlights: [
+                    { icon: "fas fa-user-ninja", color: "text-slate-600", text: "偷着进来" },
+                    { icon: "fas fa-meteor", color: "text-orange-600", text: "流荡的星" },
+                    { icon: "fas fa-shield-alt", color: "text-blue-600", text: "保守不失脚" }
+                ]
+            },
+            sections: [
+                {
+                    id: "intro",
+                    title: "问安与写作目的 (1-4节)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "1-2",
+                            text: "耶稣基督的仆人...写信给那被召、在父神里蒙爱、为耶稣基督保守的人...",
+                            academic: {
+                                title: "三重身份保障",
+                                keywords: ["Tēreō (保守/看守)", "Klētois (被召的)"],
+                                content: "在面对危险的异端前，犹大首先确立信徒的安全感：被召（过去）、蒙爱（现在状态）、被保守（未来保障）。Tēreō（保守）是全书的关键词（出现了5次）。这与第6节不守本位的天使被“拘留”（同字根）在黑暗中形成鲜明对比：神保守圣徒，也拘留恶人。"
+                            },
+                            devotional: {
+                                title: "你被锁在保险箱里",
+                                content: "在这个充满诱惑和谬误的世界，我们为什么没有跌倒？不是因为我们聪明，而是因为我们是被神“保守”的。就像珍宝被锁在保险箱里，我们的生命藏在基督里。这不是让我们懈怠，而是让我们在争战中有底气。"
+                            }
+                        },
+                        {
+                            ref: "3-4",
+                            text: "...不得不写信劝你们，要为从前一次交付圣徒的真道竭力争辩...因为有些人偷着进来...",
+                            academic: {
+                                title: "竭力争辩 (Epagōnizomai)",
+                                keywords: ["Epagōnizomai (摔跤/搏斗)", "Hapax (一次性/一劳永逸)"],
+                                content: "“竭力争辩”源于竞技场术语，指为了胜利而进行的殊死搏斗。信仰（The Faith）不是主观的“信”，而是客观的“教义内容”，且是“一次交付”（Once for all）的，意味着不需要新的启示或删改。针对“偷着进来”的假教师，必须正面迎战。"
+                            },
+                            devotional: {
+                                title: "真理值得流汗",
+                                content: "我们常以为信仰是岁月静好，但犹大告诉我们信仰是摔跤场。当核心真理被攻击时，沉默不是谦卑，而是背叛。我们需要有一种属灵的“尚武精神”，为保护羊群和真理而战。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "apostates",
+                    title: "背道者的画像与结局 (5-16节)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "5-7",
+                            text: "...从前主救了百姓出埃及地，后来就把那些不信的灭绝了...又有不守本位...的天使...又如所多玛...",
+                            academic: {
+                                title: "三大历史鉴戒",
+                                keywords: ["Hypomimnēskō (提醒)", "Deigma (鉴戒/样本)"],
+                                content: "犹大列举了三个审判先例：1.出埃及后的不信者（得救后仍可能受审判）；2.堕落天使（高位者也会跌落）；3.所多玛蛾摩拉（淫乱逆性的结局）。这针对了假教师的三种错误：不信、背叛权柄、道德败坏。这表明：过去的特权不能豁免将来的审判。"
+                            },
+                            devotional: {
+                                title: "不要以为稳了",
+                                content: "如果你以为受了洗、在教会服侍就有了“免死金牌”，请看这些例子。连见过红海分开的以色列人、连在天上服侍的天使，如果背离神，都面临审判。敬畏神是信心的刹车片，防止我们在恩典中坠落。"
+                            }
+                        },
+                        {
+                            ref: "11",
+                            text: "他们有祸了！因为走了该隐的道路，又为利往巴兰的错谬里直奔，并在可拉的背叛中灭亡了。",
+                            academic: {
+                                title: "三个坏榜样",
+                                keywords: ["Ouai (有祸了)", "Planē (错谬/流荡)"],
+                                content: "犹大用三个旧约人物以此勾勒假教师的特征：1.该隐（嫉妒、恨弟兄、无爱）；2.巴兰（贪财、利用恩赐牟利）；3.可拉（反叛权柄、制造分裂）。这是对假教师动机（贪财）和行为（分裂）的心理侧写。"
+                            },
+                            devotional: {
+                                title: "属灵的癌症",
+                                content: "嫉妒（该隐）、贪婪（巴兰）、叛逆（可拉），这三样是属灵的致癌物。它们往往披着“事奉”的外衣潜伏在教会领袖或信徒心中。要时常做属灵体检，看自己是否在走这三条死路。"
+                            }
+                        },
+                        {
+                            ref: "12-13",
+                            text: "这样的人...是没雨的云彩...是秋天没有果子的树...是海里的狂浪...是流荡的星...",
+                            academic: {
+                                title: "自然界的隐喻",
+                                keywords: ["Spilades (暗礁)", "Nephelai Anydroi (无雨之云)"],
+                                content: "这是一组极其震撼的隐喻：1.暗礁（隐藏的危险）；2.无雨的云（有声势无实质，不能滋润生命）；3.死树（彻底无果，连根拔出）；4.狂浪（制造噪音和泡沫）；5.流荡的星（无轨道，结局是黑暗）。揭示了假教师的虚空、欺骗与危险。"
+                            },
+                            devotional: {
+                                title: "辨别空壳",
+                                content: "有些讲员或领袖看起来像“云彩”一样高大，但如果他们不能降下真理的雨水滋润人心，只是带来情感的狂浪，他们就是“无雨的云”。不要被名气、口才或舞台效果迷惑，要看果子。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "strategy",
+                    title: "信徒的建设与救援 (17-23节)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "20-21",
+                            text: "亲爱的弟兄...要在至圣的真道上造就自己，在圣灵里祷告，保守自己常在神的爱中，仰望...永生。",
+                            academic: {
+                                title: "属灵建设四部曲",
+                                keywords: ["Epoikodomeō (建造)", "Tēreō (保守)"],
+                                content: "信徒的对策是“建造”。这是一个分词结构支撑一个主要命令（Keep yourselves）：1.根基：至圣真道（客观）；2.动力：圣灵里祷告（主观）；3.核心：保守在爱中（主要命令）；4.盼望：仰望怜悯（未来导向）。"
+                            },
+                            devotional: {
+                                title: "先戴好自己的氧气面罩",
+                                content: "在飞机失压时，要先戴好自己的氧气面罩，再救别人。同样，要从火中抢救人，首先要自己站得稳。在真道上扎根，在圣灵里呼吸（祷告）。只有当你是一个“被爱充满”的人，你才有力量去面对那些危险的人。"
+                            }
+                        },
+                        {
+                            ref: "22-23",
+                            text: "有些人存疑心，你们要怜悯他们；有些人你们要从火中抢出来...有些人...连那被情欲沾染的衣服也当厌恶。",
+                            academic: {
+                                title: "怜悯的分诊法 (Triage)",
+                                keywords: ["Eleaō (怜悯)", "Harpazō (抢救/抓取)"],
+                                content: "对待受影响的人要分三类：1.存疑者（Doubters）：用温柔的怜悯去挽回。2.遇险者（In Fire）：用紧急的行动“抢救”（暴力动词）。3.污染者（Defiled）：保持距离的怜悯（惧怕中怜悯），恨恶罪，爱罪人。"
+                            },
+                            devotional: {
+                                title: "属灵的消防员",
+                                content: "救人需要勇气，更需要智慧。对于那些深度陷入罪中的人，要穿上防护服（厌恶罪），以免把自己也搭进去。不要因为怜悯而对罪妥协，要在“惧怕”中施怜悯。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "doxology",
+                    title: "荣耀的颂赞 (24-25节)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "24-25",
+                            text: "那能保守你们不失脚...愿荣耀...归与他...",
+                            academic: {
+                                title: "终极的安全感",
+                                keywords: ["Aptaistous (不失脚)", "Amōmous (无瑕疵)"],
+                                content: "犹大以警告开始，却以确据结束。尽管假教师危险，信徒软弱，但神“能”（Dynamenō）保守。不但保守“不跌倒”（过程），还能使人“无瑕疵”（终局）。这是在严峻属灵争战中的终极保障。"
+                            },
+                            devotional: {
+                                title: "祂能，祂以此",
+                                content: "如果你读完犹大书感到害怕（怕跌倒、怕异端），请多读几遍最后两节。不是你能保守自己不跌倒，是祂能。那位创造宇宙的神，此刻正用祂的大能托住你。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-slate-700">
+                        <h2 class="text-3xl font-bold mb-6 serif text-slate-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-slate-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: Apostate Nature -->
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-slate-700">
+                        <div class="mb-4">
+                            <i class="fas fa-exclamation-triangle text-4xl text-orange-500 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">背道者的本质</h3>
+                        </div>
+                        
+                        <div class="space-y-3 w-full text-sm">
+                            <div class="bg-white/10 p-2 rounded flex items-center">
+                                <i class="fas fa-cloud text-slate-300 mr-3"></i>
+                                <span>无雨的云 (虚空)</span>
+                            </div>
+                            <div class="bg-white/10 p-2 rounded flex items-center">
+                                <i class="fas fa-tree text-orange-300 mr-3"></i>
+                                <span>死树 (无果/双重死)</span>
+                            </div>
+                            <div class="bg-white/10 p-2 rounded flex items-center">
+                                <i class="fas fa-water text-blue-300 mr-3"></i>
+                                <span>狂浪 (羞耻)</span>
+                            </div>
+                            <div class="bg-white/10 p-2 rounded flex items-center">
+                                <i class="fas fa-star text-yellow-300 mr-3"></i>
+                                <span>流荡星 (黑暗)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Apostate Traits Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-slate-800 w-full border-b border-slate-100 pb-2">假教师特征雷达 (v16)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="apostateChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">属肉体、无圣灵、引人结党</p>
+                    </div>
+
+                    <!-- Mercy Strategy Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-orange-100">
+                        <h3 class="text-lg font-bold mb-2 text-orange-800 w-full border-b border-orange-100 pb-2">怜悯的分诊策略 (v22-23)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="mercyChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">根据受影响程度采取不同行动</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F1F5F9]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-slate-800 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-orange-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'orange') titleColorClass = 'text-orange-800 border-orange-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else titleColorClass = 'text-slate-800 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-slate-50 border-b border-slate-100">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-900">解经原则：鉴戒与应用</h2>
+                        <p class="text-slate-600">
+                            犹大书的解经难点在于处理大量的典故引用，以及如何将严厉的审判信息转化为对信徒的建设性劝勉。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：互文性与背景</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 经外文献处理。犹大引用《以诺一书》和《摩西升天记》并非确认其正典地位，而是借用其真理（Truth）或当时流行的观念来驳斥假教师。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 类型学分析（该隐、巴兰、可拉作为三种背道原型）。
+                                    <br>2. 词汇对比（"保守"与"拘留"的对比）。
+                                </li>
+                                <li><strong>目的：</strong> 揭示假教师的本质，确立审判的必然性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-600">
+                            <div class="text-orange-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：警醒与建设</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 警戒内化。将对他人的审判转化为对自我的警醒，而非仅仅作为攻击异端的武器。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 属灵建造（如何在至圣真道上造就自己？）。
+                                    <br>2. 救援行动（如何智慧地对待周围迷失的人？）。
+                                </li>
+                                <li><strong>目的：</strong> 在末世的混乱中站立得稳，并成为他人的祝福。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Apostate Traits Chart (Radar)
+            const ctxApostate = document.getElementById('apostateChart').getContext('2d');
+            new Chart(ctxApostate, {
+                type: 'radar',
+                data: {
+                    labels: ['发怨言/不满', '随从情欲', '口说夸大话', '谄媚人/谋利', '引人结党', '没有圣灵'],
+                    datasets: [
+                        {
+                            label: '假教师特征',
+                            data: [90, 100, 85, 95, 90, 100], // High negative traits
+                            backgroundColor: 'rgba(234, 88, 12, 0.2)', // Orange
+                            borderColor: '#EA580C',
+                            pointBackgroundColor: '#EA580C',
+                            pointBorderColor: '#fff',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#1E293B' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Mercy Strategy Chart (Doughnut)
+            const ctxMercy = document.getElementById('mercyChart').getContext('2d');
+            new Chart(ctxMercy, {
+                type: 'doughnut',
+                data: {
+                    labels: ['温柔挽回 (存疑者)', '火中抢救 (遇险者)', '厌恶沾染 (污染者)'],
+                    datasets: [{
+                        data: [33, 33, 34], 
+                        backgroundColor: [
+                            '#3B82F6', // Blue (Gentle)
+                            '#F97316', // Orange (Urgent)
+                            '#EF4444'  // Red (Caution)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

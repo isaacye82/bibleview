@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约翰一书第三章：神的儿女与彼此相爱</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Royal Violet (Identity) & Action Red (Love in Deed) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAF5FF; /* Purple 50 - Gentle Royal background */
+            color: #3B0764; /* Purple 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Royal Violet */
+        .active-tab {
+            color: #7E22CE; /* Purple 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #7E22CE;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Action Red */
+        .verse-card:hover {
+            border-left-color: #E11D48; /* Rose 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(126, 34, 206, 0.1), 0 4px 6px -2px rgba(126, 34, 206, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F3E8FF; /* Purple 100 */
+            color: #6B21A8; /* Purple 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #D8B4FE; /* Purple 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-royal-action {
+            background: linear-gradient(135deg, #F3E8FF 0%, #FFE4E6 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-purple-900 serif">
+                        <i class="fas fa-crown mr-2 text-purple-600"></i> 约翰一书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">身份与行动：爱在真理中</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-800">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-purple-950 text-purple-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"小子们哪，我们相爱，不要只在言语和舌头上，总要在行为和诚实上。" (3:18)</p>
+            <p class="text-xs text-purple-400 mt-3">交互式研经工具 | 聚焦：儿女的生命特征与舍己的爱</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "家族特征：像祂一样的洁净与爱",
+                summary: "约翰一书第三章是全书的核心，深刻阐述了“神的儿女”这一身份意味着什么。约翰首先惊叹于父神赐给我们的慈爱（1-3节），随即通过鲜明的对比——犯罪的与行义的、神的儿女与魔鬼的儿女——来界定这一身份（4-10节）。这种身份的必然结果是彼此相爱，这爱不是口头上的，而是像该隐的反面——像基督为弟兄舍命（11-18节）。最后，本章处理了良心的安稳与在神面前的坦然无惧（19-24节）。",
+                highlights: [
+                    { icon: "fas fa-child", color: "text-purple-600", text: "神的儿女" },
+                    { icon: "fas fa-ban", color: "text-red-600", text: "不惯犯罪" },
+                    { icon: "fas fa-hand-holding-heart", color: "text-rose-500", text: "舍命的爱" }
+                ]
+            },
+            sections: [
+                {
+                    id: "identity",
+                    title: "荣耀的身份与洁净的盼望 (3:1-3)",
+                    themeColor: "purple",
+                    verses: [
+                        {
+                            ref: "3:1",
+                            text: "你看父赐给我们是何等的慈爱，使我们得称为神的儿女...世人所以不认识我们，是因未曾认识他。",
+                            academic: {
+                                title: "异质的爱",
+                                keywords: ["Potapēn (何等/哪一种)", "Tekna Theou (神的儿女)"],
+                                content: "“何等”原文 *Potapēn* 原意指“来自哪一个国家/种族”，暗示这种爱是“外星”的、非尘世的。约翰呼吁读者“看”（Idete），去凝视这种不可思议的地位提升：从罪人变为神的儿女。这也是信徒与世界隔阂的根源——本质（Nature）已经改变。"
+                            },
+                            devotional: {
+                                title: "你不属于这里",
+                                content: "当你不被世界理解、甚至被排斥时，不要感到奇怪。这反而证明了你的身份。你是皇室的成员流落在异乡。天父给你的爱不是一点点施舍，而是把祂的名分和家产都给了你。每天早上醒来，先对着镜子说：“我是神的儿女。”"
+                            }
+                        },
+                        {
+                            ref: "3:2-3",
+                            text: "主若显现，我们必要像他...凡向他有这指望的，就洁净自己，像他洁净一样。",
+                            academic: {
+                                title: "终末论的伦理动力",
+                                keywords: ["Hagnizei (洁净/纯洁)", "Homios (像/相似)"],
+                                content: "约翰将未来的盼望（Be like Him）直接连接到现在的伦理要求（Purify oneself）。这不是靠律法驱动的洁净，而是靠“盼望”驱动的。因为知道我们要去哪里（见主面），所以现在就开始预备行装。这种洁净是主动语态，强调信徒的责任。"
+                            },
+                            devotional: {
+                                title: "你会怎么打扮？",
+                                content: "如果你知道今晚要参加国王的宴会，你会穿着脏衣服在泥地里打滚吗？既然我们确信将来要完全像耶稣，现在我们就不可能安于罪中。每一次拒绝诱惑，都是在为那场永恒的见面会整理衣冠。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sin_righteousness",
+                    title: "DNA检测：神的儿女不犯罪 (3:4-10)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "3:4-6",
+                            text: "凡犯罪的，就是违背律法...凡住在他里面的，就不犯罪；凡犯罪的，是未曾看见他...",
+                            academic: {
+                                title: "现在时态的关键",
+                                keywords: ["Hamartian (犯罪)", "Anomia (不法/违背律法)"],
+                                content: "这里希腊文的动词时态（Present Tense）至关重要。约翰不是说信徒绝对不会犯任何罪（那会与1:8矛盾），而是指“习惯性地、持续地生活在罪中”（Practice Sinning）。“违背律法”指对神主权的根本性叛逆。住在主里面的人，不可能安于这种叛逆状态。"
+                            },
+                            devotional: {
+                                title: "你对罪的态度变了吗？",
+                                content: "基督徒会跌倒吗？会。但基督徒会以此为乐、长久赖在坑里不出来吗？不会。因为你的新生命（神的种）会让你在罪中感到极度痛苦。如果你犯罪后毫无感觉，那才是最可怕的信号。成圣不是不跌倒，而是跌倒后必定会爬向光。"
+                            }
+                        },
+                        {
+                            ref: "3:9-10",
+                            text: "凡从神生的，就不犯罪，因神的道存在他心里...从此就显出谁是神的儿女，谁是魔鬼的儿女。",
+                            academic: {
+                                title: "神的种 (Sperma)",
+                                keywords: ["Sperma (种/精子/道)", "Poieō (行/制造)"],
+                                content: "“神的道”原文是“神的种”（God's Seed/Sperma）。这指重生的生命原则或圣灵的内住。这颗种子的性质决定了果实。就像苹果树不能结出毒刺，拥有神生命的人不能“制造”（Poieō）罪恶的生活方式。这是本体论上的不可能性。"
+                            },
+                            devotional: {
+                                title: "基因决定生命",
+                                content: "如果你种下的是向日葵，它一定会追随太阳。如果你的生命里有神的DNA，你一定会倾向于义。不要只看外在行为的纠正，要问自己内在的生命源头是什么。真正的改变是由内而外的基因表达。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "love_action",
+                    title: "爱的实测：该隐与基督 (3:11-18)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "3:11-15",
+                            text: "不可像该隐...凡恨他弟兄的，就是杀人的...我们因为爱弟兄，就晓得是已经出死入生了。",
+                            academic: {
+                                title: "恨即杀人",
+                                keywords: ["Anthropoktonos (杀人犯)", "Metabebēkamen (已经出离...进入)"],
+                                content: "约翰沿用了耶稣登山宝训的教导，将恨意等同于谋杀。该隐之所以杀兄弟，是因为嫉妒义行。爱弟兄不仅是命令，更是“出死入生”的验证（Sign），而非得救的条件。没有爱，就证明仍住在死中。"
+                            },
+                            devotional: {
+                                title: "你的心里藏着刀吗？",
+                                content: "我们可能从未拿刀杀人，但我们的冷漠、嫉妒、恶毒言语，在神眼中就是谋杀。当我们拒绝帮助弟兄，或者希望某人消失时，我们就是该隐的后代。爱是生命的脉搏，恨是死亡的尸斑。"
+                            }
+                        },
+                        {
+                            ref: "3:16-18",
+                            text: "主为我们舍命，我们从此就知道何为爱...凡有世上财物的，看见弟兄穷乏，却塞住怜恤的心...总要在行为和诚实上。",
+                            academic: {
+                                title: "爱的定义与实践",
+                                keywords: ["Tithēmi (舍/放下)", "Splanchna (心肠/内脏)", "Alētheia (诚实/真理)"],
+                                content: "爱（Agape）被重新定义为“替别人死”。约翰迅速将这个崇高的定义落地到极具体的行动：打开钱包。“塞住怜恤的心”原文是“关闭内脏”，指强行压抑对他人的同情。真爱必须包含物质的付出（有世上财物的）。"
+                            },
+                            devotional: {
+                                title: "爱是昂贵的",
+                                content: "Talk is cheap（空谈廉价）。如果你的爱不需要你付代价（时间、金钱、面子），那可能不是基督的爱。当我们看见弟兄的需要时，那个“想帮忙”的感动是圣灵的敲门声，千万不要硬生生把它“塞住”。打开手，心就开了。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "assurance",
+                    title: "在神面前的安稳 (3:19-24)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "3:19-22",
+                            text: "我们的心若责备我们，神比我们的心大...心若不责备我们，就可以向神坦然无惧了。",
+                            academic: {
+                                title: "胜过良心的控告",
+                                keywords: ["Kataginōskō (责备/定罪)", "Parrhēsia (坦然无惧)"],
+                                content: "这是一个牧养性的难题：当信徒虽然行善但良心仍敏感自责时怎么办？约翰的答案是：神是终极法官，祂比我们有限、多变的良心更大，祂全知（知道我们虽有软弱但真心爱祂，参约21:17彼得的回答）。这种确据带来祷告的通畅。"
+                            },
+                            devotional: {
+                                title: "神比你的感觉大",
+                                content: "你的良心有时候会变成一个过度敏感的暴君，不断控告你“不够好”。这时要抬起头看神。如果你的方向是爱弟兄、信耶稣，即使你做得不完美，全知的神也知道你的心。不要让过度的内疚感瘫痪了你的祷告生活。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-purple-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-purple-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-purple-800">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Father's Love -->
+                    <div class="gradient-royal-action p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-purple-200">
+                        <div class="mb-4">
+                            <i class="fas fa-gift text-4xl text-rose-500 mb-2"></i>
+                            <h3 class="text-xl font-bold text-purple-900">你看！(Idete)</h3>
+                        </div>
+                        <p class="text-sm text-purple-800 mb-4">何等的慈爱赐给我们</p>
+                        <div class="bg-white/60 p-3 rounded-lg border border-purple-100 shadow-inner">
+                            <span class="block text-xs uppercase tracking-wide text-slate-500">身份变更</span>
+                            <div class="flex items-center justify-center space-x-2 mt-1">
+                                <span class="text-slate-400 line-through">罪的奴仆</span>
+                                <i class="fas fa-arrow-right text-purple-500"></i>
+                                <span class="font-bold text-purple-700">神的儿女</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Spiritual DNA Test Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-purple-100">
+                        <h3 class="text-lg font-bold mb-2 text-purple-900 w-full border-b border-purple-100 pb-2">属灵 DNA 检测 (3:9-10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="dnaChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">神的种(Sperma) vs 犯罪的习惯</p>
+                    </div>
+
+                    <!-- Love Meter Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-purple-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">爱心实测仪 (3:18)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="loveChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">言语舌头(轻) vs 行为诚实(重)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAF5FF]/95 backdrop-blur py-4 mb-8 border-b border-purple-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-purple-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-purple-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-purple-700 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'purple') titleColorClass = 'text-purple-800 border-purple-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-slate-800 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-purple-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-purple-50 border-b border-purple-100">
+                            <span class="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-purple-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-purple-50/30 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-purple-900">解经原则：身份与果子</h2>
+                        <p class="text-slate-600">
+                            约翰一书第三章使用了极端的二元对立语言（不犯罪 vs 犯罪）。解经的关键在于理解“现在持续时态”的含义以及约翰对“生命本质”的强调。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：语法时态与神学张力</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 语法分析与上下文一致性。解释3:9（不犯罪）时必须参照1:8（若说无罪便是自欺），避免完美主义异端。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 动词时态分析（现在式表习惯性动作）。
+                                    <br>2. 词汇隐喻分析（“种子”指圣灵/新生命）。
+                                </li>
+                                <li><strong>目的：</strong> 确立重生的必然证据，区分真假信徒。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-purple-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：良心确据与具体行动</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 爱心具体化。将“舍命”的高调降低到“财物分享”的低调实践中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 身份认同（每日宣告神儿女的地位）。
+                                    <br>2. 良心安抚（当感觉不好时，用真理校准良心）。
+                                </li>
+                                <li><strong>目的：</strong> 激发信徒过一个有安全感且乐于奉献的生活。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Spiritual DNA Chart (Bar - Diverging)
+            const ctxDna = document.getElementById('dnaChart').getContext('2d');
+            new Chart(ctxDna, {
+                type: 'bar',
+                data: {
+                    labels: ['生活方向', '内在种子', '对罪反应', '爱弟兄'],
+                    datasets: [
+                        {
+                            label: '魔鬼的儿女',
+                            data: [-90, -100, -80, -95], // Negative traits
+                            backgroundColor: '#94A3B8', // Slate
+                            borderRadius: 4
+                        },
+                        {
+                            label: '神的儿女',
+                            data: [90, 100, 85, 100], // Positive traits
+                            backgroundColor: '#7E22CE', // Purple
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { display: false },
+                            min: -120, max: 120
+                        },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ": " + Math.abs(context.raw) + "%";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Love Meter Chart (Doughnut)
+            const ctxLove = document.getElementById('loveChart').getContext('2d');
+            new Chart(ctxLove, {
+                type: 'doughnut',
+                data: {
+                    labels: ['言语和舌头 (Words)', '行为和诚实 (Deeds)'],
+                    datasets: [{
+                        data: [15, 85], // Emphasis on deeds
+                        backgroundColor: [
+                            '#E9D5FF', // Light Purple (Words - minimal weight)
+                            '#E11D48'  // Rose 600 (Deeds - heavy weight)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw + '% 重要性';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
