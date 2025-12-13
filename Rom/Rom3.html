@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第三章：普世定罪与因信称义</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Judgment Obsidian (Sin/Law) & Justification Gold (Grace/Righteousness) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 - Neutral/Solemn background */
+            color: #0F172A; /* Slate 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Justification Gold */
+        .active-tab {
+            color: #D97706; /* Amber 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #D97706;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Judgment Obsidian */
+        .verse-card:hover {
+            border-left-color: #1E293B; /* Slate 800 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(30, 41, 59, 0.1), 0 4px 6px -2px rgba(30, 41, 59, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FFFBEB; /* Amber 50 */
+            color: #92400E; /* Amber 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FCD34D; /* Amber 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans3 {
+            background: linear-gradient(135deg, #0F172A 0%, #D97706 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-balance-scale-left mr-2 text-amber-600"></i> 罗马书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">定罪与称义</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-400">"因为世人都犯了罪，亏缺了神的荣耀；如今却蒙神的恩典...白白地称义。" (3:23-24)</p>
+            <p class="text-xs text-slate-400 mt-3">交互式研经工具 | 聚焦：人类的绝境与神的解决方案</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "法庭上的大反转",
+                summary: "罗马书第3章是整本圣经中关于“罪”与“救赎”最透彻的论述之一。保罗首先回答了关于犹太人特权的质疑（1-8节），然后如同法官宣判一般，引用旧约经文证实全人类——无论是犹太人还是外邦人——都伏在罪的权势之下，“没有义人，连一个也没有”（9-20节）。就在这绝望的背景下，21节的“但如今”开启了惊天动地的反转：神的义在律法以外显明出来，藉着基督的挽回祭，使信的人得称为义（21-31节）。",
+                highlights: [
+                    { icon: "fas fa-gavel", color: "text-slate-700", text: "普世定罪" },
+                    { icon: "fas fa-gift", color: "text-amber-600", text: "白白称义" },
+                    { icon: "fas fa-tint", color: "text-red-600", text: "挽回祭" }
+                ]
+            },
+            sections: [
+                {
+                    id: "objections",
+                    title: "对神公义的质疑与辩护 (3:1-8)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "3:1-4",
+                            text: "这样说来，犹太人有什么长处？...即便有不信的，这有何妨呢？...神是真实的，人都是虚谎的。",
+                            academic: {
+                                title: "神的信实 (Pistis Theou)",
+                                keywords: ["Logia (圣言/神谕)", "Pistis (信实/信)", "Pseudēs (虚谎)"],
+                                content: "保罗采用激烈的辩论体。如果犹太人也被定罪（如第2章所述），那神的选召还有意义吗？有！他们受托了神的“圣言”（Logia）。即便人失信（不信弥赛亚），神的信实（守约）也不会废掉。神的审判反倒显明了祂的公义。引用诗篇51:4表明：当人受审判时，神总是对的。"
+                            },
+                            devotional: {
+                                title: "神总是对的",
+                                content: "当我们遭遇困境或看到教会的软弱时，容易质疑神的信实。但经文告诉我们：问题永远不在神这边。即使全世界都背叛了，神依然守约。让这句话成为你信心的锚：“神是真实的，人都是虚谎的。”"
+                            }
+                        },
+                        {
+                            ref: "3:5-8",
+                            text: "我且照着人的常话说...若我们的不义显出神的义来...我们可以作恶以成善吗？",
+                            academic: {
+                                title: "诡辩的驳斥",
+                                keywords: ["Adikos (不义)", "Krinō (审判)"],
+                                content: "保罗预见了一个反律法主义的诡辩：如果我的罪越深，神赦免我时就越显出祂的恩典浩大，那我岂不是在帮神的忙？保罗断然拒绝这种逻辑（Mē Genoito! 断乎不可）。如果神不能审判罪恶，祂就无法审判世界。把恩典当作放纵借口的人，定罪是该当的。"
+                            },
+                            devotional: {
+                                title: "不要试探底线",
+                                content: "我们有时会有这种危险的念头：“反正神会赦免，那我再犯一次也没关系。”这是对恩典的亵渎。神的恩典是为了让我们脱离罪，而不是让我们在罪中安营扎寨。不要把神的宽容当作放纵的许可证。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "universal_guilt",
+                    title: "全人类的绝境：没有义人 (3:9-20)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "3:9-12",
+                            text: "这却怎么样呢？我们比他们强吗？决不是的！...没有义人，连一个也没有...",
+                            academic: {
+                                title: "罪的串珠 (Catena of Sin)",
+                                keywords: ["Hamartia (罪)", "Synkleiō (圈在...之下)"],
+                                content: "保罗在此汇集了旧约多处经文（主要来自诗篇和以赛亚书），构成了一串“罪的珍珠项链”，全面控告人类的败坏：1. 状态：没有义人，没有寻求神的；2. 范围：一同变为无用；3. 程度：连一个也没有。这是对人类全然败坏（Total Depravity）最系统的圣经论述。"
+                            },
+                            devotional: {
+                                title: "你也在名单上",
+                                content: "当圣经说“连一个也没有”时，它包括了特蕾莎修女，包括了你的牧师，也包括了你。我们不需要为了“我是好人还是坏人”争辩，因为在神的标准下，我们都是“无用”的（原文指变质的牛奶）。承认这一点，是得救的第一步。"
+                            }
+                        },
+                        {
+                            ref: "3:19-20",
+                            text: "好塞住各人的口，叫普世的人都伏在神审判之下...凡有血气的，没有一个因行律法能在神面前称义...",
+                            academic: {
+                                title: "律法的功能：知罪",
+                                keywords: ["Epignōsis Hamartias (罪的知识/确知)", "Phrassō (塞住/堵嘴)"],
+                                content: "律法不是梯子（让人爬向神），而是镜子（让人看见污秽）和X光机（显出内在病灶）。律法的终极目的是“塞住口”（没有任何辩护理由），使人伏在神的审判之下。如果律法能救人，基督就不必死了。律法是诊断书，不是处方药。"
+                            },
+                            devotional: {
+                                title: "别再辩解了",
+                                content: "面对神的审判，我们本能的反应是找借口：“我只是犯了小错”，“环境所迫”。但律法让我们无话可说。在法庭上，最明智的做法不是自我辩护，而是承认有罪，然后寻求怜悯。当你的嘴闭上时，你的心才能向恩典打开。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "justification",
+                    title: "神的义显明：因信称义 (3:21-26)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "3:21-22",
+                            text: "但如今，神的义在律法以外已经显明出来...就是神的义，因信耶稣基督加给一切相信的人...",
+                            academic: {
+                                title: "但如今 (But Now)",
+                                keywords: ["Dikaiosynē Theou (神的义)", "Chōris Nomou (律法以外)"],
+                                content: "“但如今”是救赎历史的转折点。神的义不再要求人通过守律法来获得（那是不可能的），而是作为礼物“加给”（Imputed）信的人。这是“律法以外”的途径，却有“律法和先知为证”（即旧约早已预言）。"
+                            },
+                            devotional: {
+                                title: "绝处逢生",
+                                content: "如果你在绝望的深渊中，这句“但如今”就是救命的绳索。无论你的过去多么糟糕，无论你多么无力自救，神开辟了一条新路。这不是修补旧路，这是一条全新的、恩典的路。只要信，这义就是你的。"
+                            }
+                        },
+                        {
+                            ref: "3:23-24",
+                            text: "因为世人都犯了罪，亏缺了神的荣耀；如今却蒙神的恩典，因基督耶稣的救赎，就白白地称义。",
+                            academic: {
+                                title: "救赎的三重奏",
+                                keywords: ["Dōrean (白白地/无故地)", "Apolutrōsis (救赎/赎回)", "Dikaioō (称义/宣判无罪)"],
+                                content: "这里有三个关键神学概念：1. **亏缺**（Hysterountai）：如同射箭未中靶心，达不到神的标准；2. **救赎**（Redemption）：这是奴隶市场用语，指支付赎价使奴隶获得自由；3. **称义**（Justification）：这是法庭用语，指法官宣判被告无罪释放。这一切都是“白白地”（Gift），不需要我们付费，因为基督付了。"
+                            },
+                            devotional: {
+                                title: "免费的最贵",
+                                content: "救恩对我们是免费的（白白地），但对神却是极昂贵的（儿子的血）。不要因为它是免费的就轻看它。你被称为义，不是因为你没有罪，而是因为有人替你付了赎金。这就是恩典的算术题：你的罪 + 耶稣的死 = 你的义。"
+                            }
+                        },
+                        {
+                            ref: "3:25-26",
+                            text: "神设立耶稣作挽回祭，是凭着耶稣的血，藉着人的信...好在今时显明他的义，使人知道他自己为义，也称信耶稣的人为义。",
+                            academic: {
+                                title: "挽回祭 (Hilastērion)",
+                                keywords: ["Hilastērion (挽回祭/施恩座)", "Endeixis (显明/展示)"],
+                                content: "Hilastērion 指约柜上的施恩座，是赎罪日洒血的地方。这不仅是覆盖罪，更是平息神的义怒（Propitiation）。十字架解决了神的两难：如何既公义（惩罚罪）又慈爱（赦免人）？通过让耶稣代受惩罚，神“自己为义”（公义得到满足），同时也“称信耶稣的人为义”（慈爱得到彰显）。"
+                            },
+                            devotional: {
+                                title: "公义与慈爱的拥抱",
+                                content: "十字架是宇宙中唯一一个公义和慈爱完美结合的地方。神没有从后门把你偷偷放进去（那是不公义），祂堂堂正正地为你付清了罪债。所以，你的得救是合法的、稳固的。魔鬼不能控告你，因为法官已经敲锤了。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "boasting_excluded",
+                    title: "夸口的排除与律法的坚立 (3:27-31)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "3:27-28",
+                            text: "既是这样，哪里能夸口呢？没有可夸的了...人称义是因着信，不在乎遵行律法。",
+                            academic: {
+                                title: "信之律 (Nomos Pisteōs)",
+                                keywords: ["Kauchēsis (夸口)", "Chōris Ergōn (在行为以外)"],
+                                content: "如果救恩哪怕有1%是靠我们的行为，我们就有1%的可夸之处。但既然是100%的恩典，夸口就被彻底排除了（Shut out）。“信主之法”是一种新的原则，它不废除责任，但改变了动因——依靠神而非自己。"
+                            },
+                            devotional: {
+                                title: "没什么好炫耀的",
+                                content: "教会里没有“优等生”，只有“蒙恩的罪人”。任何形式的属灵骄傲（无论是关于道德、知识还是经历）都是对恩典的无知。我们能站立得住，全靠耶稣。把所有的荣耀都归给祂吧，我们只是乞丐告诉乞丐哪里有面包。"
+                            }
+                        },
+                        {
+                            ref: "3:31",
+                            text: "这样，我们因信废了律法吗？断乎不是！更是坚固律法。",
+                            academic: {
+                                title: "坚固律法 (Histanomen)",
+                                keywords: ["Katargeō (废掉/使失效)", "Histanomen (坚立/确立)"],
+                                content: "这是对反律法主义的预防针。因信称义并没有让律法失效，反而是成全了律法。因为：1. 基督替我们受了律法的咒诅（满足了律法的惩罚要求）；2. 基督替我们活出了律法的义（满足了律法的道德要求）；3. 圣灵使信徒能从心里顺服律法。因此，信心是律法的真正归宿。"
+                            },
+                            devotional: {
+                                title: "为了爱而守法",
+                                content: "因为不用守律法来得救，我们就可以随便犯罪吗？当然不是！就像结婚不是为了得到结婚证，而是为了爱。我们守律法不再是为了赚取天堂的门票，而是为了回应爱我们的神。信心让我们第一次有可能发自内心地去爱神的律法。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-slate-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Great Reversal -->
+                    <div class="gradient-romans3 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-slate-700">
+                        <div class="mb-4">
+                            <i class="fas fa-balance-scale text-4xl text-amber-300 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">法庭大反转</h3>
+                        </div>
+                        
+                        <div class="relative w-full h-24 flex justify-between items-center text-white text-xs">
+                            <div class="flex flex-col items-center opacity-70">
+                                <span class="text-lg">⚖️</span>
+                                <span>被告: 全人类</span>
+                                <span class="font-bold text-red-400">有罪</span>
+                            </div>
+                            
+                            <div class="flex-grow border-t-2 border-dashed border-white/50 mx-2 relative">
+                                <div class="absolute top-[-12px] left-1/2 transform -translate-x-1/2 bg-amber-600 px-2 rounded text-[10px]">但如今</div>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg">✝️</span>
+                                <span>中保: 基督</span>
+                                <span class="font-bold text-amber-300">称义</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-2 text-slate-300">神的义在律法以外显明</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Universal Guilt Radar -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-slate-800 w-full border-b border-slate-100 pb-2">普世定罪扫描 (v9-18)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="guiltChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">犹太人与希腊人，都在罪恶之下</p>
+                    </div>
+
+                    <!-- Justification Mechanism Flow -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">称义的运作机制 (v24-26)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="justificationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">恩典 -> 救赎 -> 挽回祭 -> 称义</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-slate-700 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-500 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'slate') titleColorClass = 'text-slate-800 border-slate-200';
+                else if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-stone-700 border-stone-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-slate-50 border-b border-slate-100">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-indigo-50/20 transition">
+                                <h4 class="text-indigo-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-50/20 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经原则：法庭与恩典</h2>
+                        <p class="text-stone-600">
+                            罗马书第三章使用了大量的法庭术语（称义、救赎、挽回祭）。解经需准确把握这些词汇的法律背景，并将其转化为恩典的体验。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：神学逻辑与词源</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 逻辑链分析。追踪保罗如何从"普世定罪"推导至"因信称义"的必然性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 关键词研究（"神的义"既是神的属性，也是神赐给人的地位）。
+                                    <br>2. 旧约串珠（Catena）分析（v10-18如何拼凑出人的全然败坏）。
+                                </li>
+                                <li><strong>目的：</strong> 确立"唯独信心、唯独恩典"的教义根基。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：谦卑与感恩</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 自我破碎。让律法"塞住"我们的口，承认自己的无助，从而完全投靠恩典。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 罪观重塑（不再为自己辩护）。
+                                    <br>2. 恩典内化（确信"白白称义"的真实性，消除定罪感）。
+                                </li>
+                                <li><strong>目的：</strong> 产生对神极深的感恩，并消除一切属灵的骄傲。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Universal Guilt Radar
+            const ctxGuilt = document.getElementById('guiltChart').getContext('2d');
+            new Chart(ctxGuilt, {
+                type: 'radar',
+                data: {
+                    labels: ['义人(无)', '明白(无)', '寻求神(无)', '行善(无)', '平安(无)', '畏惧神(无)'],
+                    datasets: [{
+                        label: '人类的光景 (v10-18)',
+                        data: [0, 0, 0, 0, 0, 0], // The point is emptiness
+                        backgroundColor: 'rgba(15, 23, 42, 0.5)', // Slate 900
+                        borderColor: '#0F172A',
+                        pointBackgroundColor: '#EF4444', // Red dots indicating "None"
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 10, // Arbitrary max to show the "zero" clearly
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#1E293B' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return "没有，连一个也没有";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Justification Mechanism Chart (Doughnut)
+            const ctxJustification = document.getElementById('justificationChart').getContext('2d');
+            new Chart(ctxJustification, {
+                type: 'doughnut',
+                data: {
+                    labels: ['神的恩典 (Source)', '基督救赎 (Basis)', '挽回祭 (Means)', '人的信心 (Instrument)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#F59E0B', // Amber (Grace)
+                            '#BE123C', // Rose (Redemption)
+                            '#4338CA', // Indigo (Propitiation)
+                            '#10B981'  // Emerald (Faith)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
