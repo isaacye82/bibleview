@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得后书第二章：假教师的判决与义人的搭救</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #1a1a1a; /* Very Dark Grey Background */
+            color: #e5e5e5; /* Light Grey Text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #EA580C; /* Orange 600 */
+            font-weight: 700;
+            border-bottom: 2px solid #EA580C;
+        }
+
+        .academic-card {
+            border-left: 4px solid #525252; /* Neutral Grey */
+            background-color: #262626;
+        }
+        
+        .devotional-card {
+            border-left: 4px solid #EA580C; /* Warning Orange */
+            background-color: #2d1b14; /* Dark Orange Tint */
+        }
+
+        /* Fade Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Obsidian (#1a1a1a) for Darkness/Depth, Magma Orange (#EA580C) for Judgment/Warning. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Anatomy of Apostasy". Visualizing the characteristics of false teachers and God's dual action (Rescue/Judgment).
+         2. Verse Study: Grouped by "The Prediction" (1-3), "Historical Precedents" (4-10a), "Character Profile" (10b-16), "Empty Promises" (17-22).
+         3. Methodology: Summary of Hermeneutical approaches used.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Radar Chart: "Profile of a False Teacher" (Greed, Lust, Arrogance, Deception, Instability).
+         2. Bar Chart: "Divine Precedents" (Angels/Tartarus, Flood/Noah, Sodom/Lot).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-black/90 backdrop-blur shadow-md sticky top-0 z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-orange-600"><i class="fas fa-exclamation-triangle"></i></span>
+                    <span class="text-xl font-bold text-gray-200 serif">彼得后书 2章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-orange-500">总览：异端警报</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-orange-500">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-400 hover:text-orange-500">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-gray-500 mt-auto border-t border-gray-900">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-orange-700 mb-2">"主知道搭救敬虔的人脱离试探，把不义的人留在刑罚之下..."</p>
+            <p class="text-xs text-gray-600 uppercase tracking-widest">交互式研经工具 | 聚焦：分辨真伪与神的公义</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "面对内部的狼群：分辨与审判",
+                summary: "彼得后书第二章语气骤变，从第一章的正面教导转向对假教师的猛烈抨击。彼得不再温柔，而是像一位守护羊群的牧人，面对闯入的狼群发出怒吼。本章详细解剖了假教师的运作模式（私自引进异端）、内在动机（贪婪与情欲）以及注定的结局（速速的灭亡）。同时，通过挪亚和罗得的例子，彼得向信徒保证：神既有能力审判恶人，也有能力搭救义人。",
+                stats: [
+                    { label: "历史鉴戒", value: "3个" },
+                    { label: "动物比喻", value: "3种" }, // Dog, Pig, Brute Beasts
+                    { label: "核心罪行", value: "贪婪" }
+                ]
+            },
+            sections: [
+                {
+                    id: "prediction",
+                    title: "假教师的出现与动机 (2:1-3)",
+                    icon: "fas fa-mask",
+                    theme: "academic",
+                    verses: [
+                        {
+                            ref: "2:1",
+                            text: "从前在百姓中有假先知起来，将来在你们中间也必有假师傅，私自引进陷害人的异端，连买他们的主他们也不承认...",
+                            academic: {
+                                title: "私自引进 (Pareisaxousin) 与 异端 (Haireseis)",
+                                content: "“私自引进”意为秘密地、从旁边偷运进来，暗示假教师不会公开反对真理，而是混合真假。“异端”（Haireseis）原意为“选择”或“派别”，后来演变为指毁灭性的教义偏差。核心错误是否认“买他们的主”（Despoten，绝对的主宰），这可能指否认基督的神性或救赎的排他性。"
+                            },
+                            devotional: {
+                                title: "警惕糖衣炮弹",
+                                content: "假教导从来不会贴着“我是毒药”的标签出现。它们往往披着属灵的外衣，用“自由”、“新启示”等词汇包装。我们需要警惕那些在核心教义（基督的主权、救赎）上打折扣，却迎合人私欲的教导。分辨的关键在于：这个教导是否让人更敬畏主，还是让人觉得可以随心所欲？"
+                            }
+                        },
+                        {
+                            ref: "2:2-3",
+                            text: "将有许多人随从他们邪淫的行为...他们因有贪心，要用捏造的言语在你们身上取利...",
+                            academic: {
+                                title: "动机分析：贪婪 (Pleonexia) 与 捏造 (Plastois)",
+                                content: "彼得一针见血地指出假教师的两个驱动力：1. **性放纵**（Aselgeia，邪淫），他们将恩典当作放纵情欲的机会；2. **经济贪婪**。他们使用“捏造的言语”（Plastois logois，即塑料/塑形的话，指精心编造的故事）来以此“取利”（Emporeusontai，把你当作商品交易）。宗教成了他们的生意。"
+                            },
+                            devotional: {
+                                title: "信仰不是生意",
+                                content: "当讲台变成了敛财的工具，当福音变成了满足欲望的借口，这就是异端的信号。我们要省察自己：我跟随某个教导，是因为它扎心、叫我悔改，还是因为它听起来很舒服、承诺给我物质利益？真理往往是免费但昂贵的（付上生命代价），异端往往是收费但廉价的（迎合肉体）。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "history",
+                    title: "历史的鉴戒：审判与搭救 (2:4-10a)",
+                    icon: "fas fa-history",
+                    theme: "devotional",
+                    verses: [
+                        {
+                            ref: "2:4",
+                            text: "就是天使犯了罪，神也没有宽容，曾把他们丢在地狱，交在黑暗坑中，等候审判。",
+                            academic: {
+                                title: "塔塔鲁斯 (Tartarosas) - 地狱",
+                                content: "这是新约圣经中唯一一次使用希腊神话词汇“Tartarus”（音译：他塔鲁斯）作为动词，指把天使打入深渊。这可能指创世记6章“神的儿子们”的堕落，或撒但原本的背叛。重点在于：连尊贵的天使犯罪都难逃审判，何况人呢？这确立了神审判的不可避免性。"
+                            },
+                            devotional: {
+                                title: "神不宽容罪，但宽容罪人",
+                                content: "这节经文让我们战兢。神是公义的，祂对罪恶不仅是“不喜欢”，而是有具体的审判行动。这提醒我们不要把神的恩典当作放纵的资本。恩典是让我们断开罪，而不是在罪中享受安全感。"
+                            }
+                        },
+                        {
+                            ref: "2:5-9",
+                            text: "神也没有宽容上古的世代...惟独保护了...挪亚...又判定所多玛、蛾摩拉...只搭救了那常为恶人淫行忧伤的义人罗得。",
+                            academic: {
+                                title: "双重先例：洪水与火",
+                                content: "彼得举了两个极端的例子：洪水灭世和天火焚城。在普世的毁灭中，神展示了祂“微观操作”的能力——精确地搭救义人。罗得被称为“义人”，且为恶行“忧伤”（Kataponeo，被折磨/精疲力竭），这与创世记中罗得的软弱形象形成对比，表明彼得侧重于他在道德败坏环境中的挣扎与被神算为义的地位。"
+                            },
+                            devotional: {
+                                title: "主知道如何搭救",
+                                content: "当整个社会都颠倒黑白时，作为少数派的基督徒常感到绝望。但这里有一个极大的安慰：“主知道搭救敬虔的人”。即使全世界都被洪水淹没，神也有办法为你造一艘方舟；即使全城都被火焚烧，神也会把你拉出来。你的痛苦神都看见了，祂的拯救虽迟但必到。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "profile",
+                    title: "假教师的画像：禽兽与枯井 (2:10b-16)",
+                    icon: "fas fa-paw",
+                    theme: "academic",
+                    verses: [
+                        {
+                            ref: "2:10-12",
+                            text: "他们胆大任性，毁谤在尊位的也不知惧怕...好像没有灵性，生来就是畜类，以备捉拿宰杀的。",
+                            academic: {
+                                title: "无理性的畜类 (Aloga Zoa)",
+                                content: "假教师轻视属灵权柄（在尊位的，可能指天使或教会领袖）。彼得形容他们为“没有理性/灵性的畜类”，意指他们完全被本能驱动（食欲、性欲），失去了作为人应有的道德判断力。这种生活方式的结局就是像野兽一样“被捉拿宰杀”（灭亡）。"
+                            },
+                            devotional: {
+                                title: "被本能驱使的悲哀",
+                                content: "人之所以为人，是因为有灵性，能克制本能顺服真理。当人抛弃道德底线，只随从欲望生活时，虽然自以为自由，其实已经退化到了动物的层面。这种“自由”最终通向的是毁灭的网罗。"
+                            }
+                        },
+                        {
+                            ref: "2:15-16",
+                            text: "他们离弃正路...随从毕珥之子巴兰的路。巴兰就是那贪爱不义之工价的先知...",
+                            academic: {
+                                title: "巴兰的道路",
+                                content: "巴兰（民数记22-24章）是圣经中典型的“唯利是图的宗教人士”。他虽然口称耶和华，心却向往巴勒的赏金。最后他教唆以色列人犯奸淫。假教师正是走了这条路：利用宗教恩赐来换取金钱，并引诱人进入道德败坏。驴子开口说话的神迹是对这位“疯狂先知”的讽刺——畜生比先知更看见灵界的真实。"
+                            },
+                            devotional: {
+                                title: "你的事奉为了什么？",
+                                content: "巴兰的悲剧在于他试图在事奉神的同时赚取世界的财富。这是一个永恒的试探。当我们把事奉看作晋升阶梯或谋利手段时，我们就在走巴兰的路。有时候神会借着最卑微的事物（如驴子）来拦阻我们的疯狂，那是祂的怜悯。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "emptiness",
+                    title: "虚空的应许与属灵的倒退 (2:17-22)",
+                    icon: "fas fa-wind",
+                    theme: "devotional",
+                    verses: [
+                        {
+                            ref: "2:17-19",
+                            text: "这些人是无水的井，是狂风催逼的雾气...他们应许人得自由，自己却作败坏的奴仆...",
+                            academic: {
+                                title: "欺骗性的自由",
+                                content: "“无水的井”和“狂风催逼的雾气”都形容**令人失望的虚假承诺**（看着有水/雨，实际没有）。假教师的核心卖点是“自由”（Eleutherian），但这是一种脱离道德律的放纵。彼得提出一个属灵原则：“人被谁制伏就是谁的奴仆”。放纵情欲不是自由，而是被情欲制伏，成为败坏的奴仆。"
+                            },
+                            devotional: {
+                                title: "真自由 vs 假自由",
+                                content: "世界定义的自由是“我想做什么就做什么”，圣经定义的自由是“我有能力不做什么（不犯罪）”。假教师承诺的自由是通往成瘾和毁灭的快车道。真正的自由是在基督里，不再被罪恶捆绑。不要被那些空洞的口号欺骗，要看如果随从他们，结果是更圣洁还是更败坏？"
+                            }
+                        },
+                        {
+                            ref: "2:20-22",
+                            text: "倘若他们因认识主...得以脱离世上的污秽，后来又在其中被缠住、制伏，他们末后的景况就比先前更不好了...俗语说得真不错：狗所吐的，它转过来又吃...",
+                            academic: {
+                                title: "背道者的结局与箴言引用",
+                                content: "这段经文常引发关于“一次得救永远得救”的争论。彼得描述的是一种深刻的属灵倒退。他们曾有某种程度的“认识”（Epignosei）和“脱离”，但最终被旧生活“制伏”。彼得引用箴言26:11（狗）和俗语（猪），极其粗鄙地描绘这种回归罪恶的恶心本质——说明他们的生命本质（狗/猪）其实从未真正改变（变成羊）。"
+                            },
+                            devotional: {
+                                title: "不要回头",
+                                content: "这句俗语听起来令人作呕，但罪恶本身就是如此令人作呕。当我们蒙恩得救后，如果再回到过去的罪中打滚，就像猪洗净了又回到泥里。这是一个严厉的警告：属灵的倒退是可怕的，结局比未信之时更惨。珍惜你的救恩，不要让那洁净的白衣再沾染污秽。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-orange-500');
+                btn.classList.add('text-gray-400');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-orange-500');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-400');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; 
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-gray-900 p-8 rounded-xl shadow-lg border-t-4 border-orange-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl text-orange-500"><i class="fas fa-biohazard"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-orange-500">${chapterData.intro.title}</h2>
+                        <p class="text-gray-300 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-gray-800 px-4 py-2 rounded border border-gray-700">
+                                    <span class="block text-xl font-bold text-orange-500">${stat.value}</span>
+                                    <span class="text-xs text-gray-400 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Radar Chart: False Teacher Profile -->
+                    <div class="bg-gray-900 p-6 rounded-xl shadow-lg flex flex-col items-center justify-center border border-gray-800">
+                        <h3 class="text-lg font-bold mb-4 text-gray-300 w-full text-center border-b border-gray-700 pb-2">假教师特征画像</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="profileChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 text-center italic">"他们是无水的井，是狂风催逼的雾气"</p>
+                    </div>
+                </div>
+
+                <!-- Historical Precedents Chart Section -->
+                <div class="bg-gray-900 p-8 rounded-xl shadow-lg border-l-4 border-gray-600 mb-8 cursor-pointer hover:bg-gray-800 transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-200 mb-4 serif"><i class="fas fa-balance-scale mr-2 text-orange-600"></i> 神的公义判例 (2:4-9)</h3>
+                            <p class="text-gray-400 mb-4">
+                                彼得引用了三个历史事件来证明神对恶人的审判和对义人的拯救是必然的。
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="flex items-center"><i class="fas fa-gavel text-red-600 mr-3"></i> <strong>天使：</strong> 丢在地狱 (Tartarus)</li>
+                                <li class="flex items-center"><i class="fas fa-water text-blue-500 mr-3"></i> <strong>上古世代：</strong> 洪水 vs 挪亚</li>
+                                <li class="flex items-center"><i class="fas fa-fire text-orange-500 mr-3"></i> <strong>所多玛：</strong> 焚烧成灰 vs 罗得</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="historyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isAcademic = section.theme === 'academic';
+                const borderColor = isAcademic ? 'border-gray-600' : 'border-orange-600';
+                const titleColor = isAcademic ? 'text-gray-300' : 'text-orange-500';
+                const cardClass = isAcademic ? 'academic-card' : 'devotional-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="rounded-xl shadow-md mb-6 ${cardClass} overflow-hidden group hover:shadow-lg transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-black/20 border-b border-gray-700 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-800 text-orange-400 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-gray-900 p-1 rounded border border-gray-700">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-600 text-white' : 'text-gray-400 hover:bg-gray-800'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-orange-700 text-white' : 'text-gray-400 hover:bg-gray-800'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-800 bg-opacity-50">
+                            <p class="text-lg text-gray-300 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-200 mb-2 border-l-4 border-gray-500 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-400 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-orange-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-orange-200 mb-2 border-l-4 border-orange-600 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-300 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b border-gray-800">
+                            <div class="w-10 h-10 rounded-full bg-gray-800 text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#1a1a1a]/95 backdrop-blur py-4 mb-8 border-b border-gray-800 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-gray-900 rounded-lg p-1 border border-gray-700 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-600 text-white shadow' : 'text-gray-400 hover:bg-gray-800'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-orange-700 text-white shadow' : 'text-gray-400 hover:bg-gray-800'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-gray-600 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-400 hover:bg-gray-800";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-400 hover:bg-gray-800";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-orange-700 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-orange-500">解经方法论总结</h2>
+                        <p class="text-gray-400">
+                            第二章要求我们直面神审判的严厉性。学术解经帮助我们辨别异端的历史根源，灵修解经则警示我们在恩典中不要坠落。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-gray-900 p-8 rounded-xl shadow-lg border-t-4 border-gray-500">
+                            <div class="mb-4 text-gray-400 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-gray-200 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-400 list-disc list-inside">
+                                <li><strong>字义研究：</strong> 深入 <i>Haireseis</i> (异端), <i>Tartarosas</i> (地狱), <i>Pleonexia</i> (贪婪) 的希腊文背景。</li>
+                                <li><strong>旧约引用：</strong> 分析巴兰、挪亚、罗得等旧约人物作为“原型”在彼得论证中的作用。</li>
+                                <li><strong>修辞分析：</strong> 识别彼得使用的动物比喻（狗、猪、畜类）背后的修辞目的（极度厌恶）。</li>
+                                <li><strong>原则：</strong> 揭示异端的本质特征和神学错误。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-gray-900 p-8 rounded-xl shadow-lg border-t-4 border-orange-600">
+                            <div class="mb-4 text-orange-600 text-3xl"><i class="fas fa-heart-broken"></i></div>
+                            <h3 class="text-xl font-bold text-orange-500 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-400 list-disc list-inside">
+                                <li><strong>自我省察：</strong> 检视自己的信仰动机，是否混杂了贪婪或放纵。</li>
+                                <li><strong>警醒守望：</strong> 学习分辨当代的假教导，不被“自由”的口号迷惑。</li>
+                                <li><strong>盼望确据：</strong> 在看到“罗得”被搭救的例子中，重获神必看顾义人的信心。</li>
+                                <li><strong>原则：</strong> 保持清洁的良心，远离属灵的倒退。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Profile Radar Chart
+            const ctxProfile = document.getElementById('profileChart').getContext('2d');
+            new Chart(ctxProfile, {
+                type: 'radar',
+                data: {
+                    labels: ['贪婪 (Greed)', '情欲 (Lust)', '傲慢 (Arrogance)', '欺骗 (Deception)', '善变 (Instability)'],
+                    datasets: [{
+                        label: '假教师指数',
+                        data: [95, 90, 85, 95, 80],
+                        fill: true,
+                        backgroundColor: 'rgba(234, 88, 12, 0.2)', // Orange transparent
+                        borderColor: '#EA580C',
+                        pointBackgroundColor: '#EA580C',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#EA580C'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#374151' },
+                            grid: { color: '#374151' },
+                            pointLabels: {
+                                font: { size: 12 },
+                                color: '#9CA3AF' // Light Grey
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // History Bar Chart
+            const ctxHistory = document.getElementById('historyChart').getContext('2d');
+            new Chart(ctxHistory, {
+                type: 'bar',
+                data: {
+                    labels: ['天使 (Angels)', '洪水世代 (Flood)', '所多玛 (Sodom)'],
+                    datasets: [
+                        {
+                            label: '受审判者',
+                            data: [-100, -100, -100], // Negative to show judgment/downward
+                            backgroundColor: '#374151' // Dark Grey
+                        },
+                        {
+                            label: '被搭救者',
+                            data: [0, 80, 60], // Positive for rescue (Noah, Lot) - Angels have no rescue here
+                            backgroundColor: '#EA580C' // Orange
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            grid: { display: false, color: '#374151' },
+                            ticks: { color: '#9CA3AF' }
+                        },
+                        y: { 
+                            grid: { color: '#374151' },
+                            ticks: { display: false },
+                            min: -120,
+                            max: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#9CA3AF' } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y < 0) {
+                                        return "丢在黑暗坑中/灭亡";
+                                    } else if (context.parsed.y > 0) {
+                                        return "搭救/保护";
+                                    }
+                                    return "无";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

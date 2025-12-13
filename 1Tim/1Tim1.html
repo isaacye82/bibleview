@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第一章：真理与恩典</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F7F5F0; /* Soft beige/paper tone */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict adherence to requirements */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #2C5282; /* Blue for Ch 1 distinction */
+            color: #2C5282;
+            font-weight: bold;
+        }
+
+        .verse-card {
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Scholarly Blue (#2C5282) & Warm Paper (#F7F5F0) with Gold Accents -->
+    <!-- Application Structure Plan:
+         1. Dashboard: Overview of Chapter 1 - "The Charge". Focus on Pure Doctrine vs. False Teaching.
+         2. Verse Study: Grouped logically (Salutation, Warning, Law, Grace, Charge). Toggle between Exegesis and Devotion.
+         3. Methodology: Explanation of the two hermeneutical approaches used.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "The Goal of the Commandment" components (Love, Heart, Conscience, Faith).
+         2. Bar Chart: Contrast between "Lawful Use of Law" vs "False Teaching".
+         3. Interactive Cards: Detailed text analysis.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-800 serif"><i class="fas fa-scroll mr-2 text-blue-800"></i> 提摩太前书 1章</span>
+                </div>
+                <div class="flex space-x-8 items-center overflow-x-auto">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm font-medium whitespace-nowrap">总览：命令的总归</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 whitespace-nowrap">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-auto border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <p class="text-center text-xs text-gray-500">
+                交互式研经工具 | 聚焦：纯正教义与清洁的良心
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "抵挡异教与坚守真道",
+                summary: "提摩太前书第一章是保罗写给年轻牧者提摩太的“战斗手册”。面对以弗所教会中兴起的异端（主要涉及对律法的误用和荒渺的家谱），保罗确立了真理的标准。本章的核心在于对比“虚浮的空谈”与“清洁的爱”，并以保罗自身蒙恩的见证作为福音大能的最高证据。",
+                stats: [
+                    { label: "关键经文", value: "1:15" },
+                    { label: "核心主题", value: "正统信仰" },
+                    { label: "情感基调", value: "严肃与感恩" }
+                ]
+            },
+            verses: [
+                {
+                    ref: "1:1-2",
+                    text: "奉我们救主神和我们的盼望基督耶稣之命，作基督耶稣使徒的保罗，写信给那因信主作我真儿子的提摩太...",
+                    group: "问候与职分",
+                    academic: {
+                        title: "使徒权柄与属灵父子关系",
+                        content: "保罗强调他是“奉命”（kat epitagen）作使徒，表明他的权柄直接来自神的皇家命令，而非人的委任。这在对抗假教师时至关重要。称神为“救主”（Soter）反映了希腊化背景下对抗罗马皇帝崇拜的意图。提摩太被称为“真儿子”（gnesio tekno），强调了他在信仰传承上的合法性与亲密性。"
+                    },
+                    devotional: {
+                        title: "属灵的传承与身份",
+                        content: "我们是否不仅有信仰的同伴，也有属灵的父亲或儿子？在事奉中，我们需要确信自己的呼召（奉命），同时也需要深厚的关系（真儿子）。保罗展示了权柄与亲密可以并存。对于今日的信徒，这意味着我们不应独自在这个世界争战，而应在属灵家族中彼此联结。"
+                    }
+                },
+                {
+                    ref: "1:3-4",
+                    text: "我往马其顿去的时候，曾劝你仍住在以弗所，好嘱咐那几个人不可传异教，也不可听从荒渺无凭的话语和无穷的家谱...",
+                    group: "警告假教师",
+                    academic: {
+                        title: "异教的本质：荒渺与空谈",
+                        content: "“异教”（heterodidaskalein）指教导“不同的、奇怪的”教义。当时的异端可能混合了犹太教的律法主义和早期的诺斯替主义神话（“无穷的家谱”）。保罗指出这些东西只生“辩论”（ekzeteseis），不能建成神在信上所立的“章程”（oikonomian，指神的救赎计划或管家职分）。"
+                    },
+                    devotional: {
+                        title: "分辨无益的争辩",
+                        content: "在信息爆炸的时代，我们容易被各种新奇的理论吸引。试金石是：这个教导是建立信心和爱心，还是仅仅引发无休止的争辩？属灵的成熟表现为拒绝那些虽然听起来深奥但对生命建造无益的“空谈”。我们需要专注于神救赎计划的核心。"
+                    }
+                },
+                {
+                    ref: "1:5-7",
+                    text: "但命令的总归就是爱；这爱是从清洁的心和无亏的良心，无伪的信心生出来的...",
+                    group: "命令的目的",
+                    academic: {
+                        title: "神学的终极目标（Telos）",
+                        content: "这是本章的核心。保罗定义了律法和使徒教导的“总归”（telos，目的/终点）是爱（agape）。这里的爱有三个源头：1. 清洁的心（道德动机纯正）；2. 无亏的良心（内在无控告）；3. 无伪的信心（对神真诚的信靠）。假教师的问题在于他们偏离了这些，转向了“虚浮的话”。"
+                    },
+                    devotional: {
+                        title: "检视你的信仰果子",
+                        content: "如果我们的神学知识增加了，但爱心却减少了，我们就走偏了。真正的教义必然产生爱。我们可以自我省察：我的服侍是出于清洁的心吗？我的良心是否敏锐？我的信心是否真诚？若失去了爱，一切的宗教活动都只是噪音。"
+                    }
+                },
+                {
+                    ref: "1:8-11",
+                    text: "我们知道律法原是好的，只要人用得合宜；因为律法不是为义人设立的，乃是为不法和不服的...",
+                    group: "律法的功用",
+                    academic: {
+                        title: "律法的正当功用",
+                        content: "保罗在此反驳对律法的误用。律法本身是“好”的（kalos），但其主要功能是定罪和显明罪（usuc elenchticus）。列表中的罪行（9-10节）大致对应十诫的顺序。律法是为了显明那些违背“正道”（hygiainouse didaskalia，健康的教义）之人的罪，引导他们通过福音悔改。"
+                    },
+                    devotional: {
+                        title: "律法是诊断书，不是药方",
+                        content: "律法像一面镜子，照出我们的污秽，但它不能清洗我们。我们需要明白，依靠遵守规条不能使我们称义。律法的存在提醒我们人性的败坏和对救主的绝对需要。一个健康的基督徒生活不是活在律法的恐惧下，而是活在福音的恩典中，同时尊重律法所揭示的道德标准。"
+                    }
+                },
+                {
+                    ref: "1:12-17",
+                    text: "基督耶稣降世，为要拯救罪人。这话是可信的，是十分可佩服的。在罪人中我是个罪魁...",
+                    group: "保罗的见证",
+                    academic: {
+                        title: "罪魁蒙恩与可信之言",
+                        content: "这是一段早期的信条（Pistis ho logos）。“罪魁”（protos）意为第一、首要的。保罗不是在假谦卑，而是深刻认知到他曾逼迫教会的严重性。他的蒙恩成为了一个“榜样”（hypotyposin），证明神的忍耐是无限的。第17节以尊荣的颂赞（Doxology）作为神学反思的高潮。"
+                    },
+                    devotional: {
+                        title: "恩典的深度",
+                        content: "我们是否像保罗一样，对自己的罪有深刻的认识，从而对恩典有极深的感激？当我们认为自己“还不错”时，福音就失去了光彩。只有当我们承认自己是“罪人中的罪魁”时，神的怜悯才显得无比宝贵。这是真谦卑的源头，也是敬拜的动力。"
+                    }
+                },
+                {
+                    ref: "1:18-20",
+                    text: "我儿提摩太啊...你要打那美好的仗...其中有许米乃和亚力山大；我已经把他们交给撒但...",
+                    group: "最后的嘱咐",
+                    academic: {
+                        title: "属灵争战与管教",
+                        content: "“打仗”（strateuē）是军事用语。争战的武器是信心和良心。丢弃良心会导致信心“破坏”（nauagesantes，直译为船破/海难）。“交给撒但”通常被解释为一种严厉的教会纪律（逐出教会），将其置于教会的属灵保护之外，目的是“使他们受责罚（paideuthōsi，受管教/教育）就不再谤渎了”，终极目的是挽回。"
+                    },
+                    devotional: {
+                        title: "良心的护卫战",
+                        content: "信心和良心是相连的。如果你违背良心行事，最终你的信仰也会崩溃（像船触礁一样）。我们要警惕那些微小的妥协。对于教会纪律，我们需要明白其严厉背后的爱——那是为了唤醒沉睡的灵魂。打美好的仗，意味着在真理和道德上都不妥协。"
+                    }
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-blue-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-blue-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear content
+            container.classList.remove('fade-in');
+            void container.offsetWidth; // Trigger reflow
+            container.classList.add('fade-in');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Intro Card -->
+                    <div class="bg-white p-8 rounded-lg shadow-md border-t-4 border-blue-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-8 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="grid grid-cols-3 gap-6 pt-4 border-t border-gray-100">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="text-center">
+                                    <span class="block text-2xl font-bold text-blue-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide mt-1">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Theme Chart -->
+                    <div class="bg-white p-8 rounded-lg shadow-md flex flex-col items-center justify-center">
+                        <h3 class="text-xl font-bold mb-6 text-gray-700 w-full text-left border-b pb-4">命令的总归 (1:5)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="goalChart"></canvas>
+                        </div>
+                        <p class="text-sm text-gray-400 mt-6 text-center italic">
+                            "但命令的总归就是爱..." — 这爱源自三个要素
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Highlight Section -->
+                <div class="bg-blue-900 rounded-xl p-8 shadow-lg text-white mb-8 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 opacity-10 text-9xl font-serif transform translate-x-10 -translate-y-10">Ω</div>
+                    <div class="relative z-10 max-w-3xl">
+                        <h3 class="text-2xl font-bold mb-4 serif">可信之言 (1:15)</h3>
+                        <p class="text-2xl italic font-serif leading-relaxed opacity-90">
+                            "基督耶稣降世，为要拯救罪人。这话是可信的，是十分可佩服的。在罪人中我是个罪魁。"
+                        </p>
+                        <div class="mt-6 flex gap-4">
+                            <button onclick="navigate('study')" class="bg-white text-blue-900 px-6 py-2 rounded-full font-bold hover:bg-blue-50 transition">
+                                进入经文研读
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initGoalChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let versesHtml = chapterData.verses.map((verse, index) => `
+                <div class="verse-card bg-white rounded-lg shadow-sm mb-8 overflow-hidden border border-gray-200">
+                    <div class="p-5 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between">
+                        <div class="flex items-center mb-2 md:mb-0">
+                            <span class="flex-shrink-0 px-3 py-1 bg-blue-100 text-blue-800 rounded-full font-bold text-xs font-mono mr-3">
+                                ${verse.ref}
+                            </span>
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">${verse.group}</span>
+                        </div>
+                    </div>
+                    <div class="p-6 bg-white border-b border-gray-100">
+                        <p class="text-xl text-gray-800 font-serif leading-relaxed">
+                            "${verse.text}"
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                        <!-- Academic Column -->
+                        <div class="p-8 hover:bg-slate-50 transition ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-4">
+                                <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 mr-3">
+                                    <i class="fas fa-university text-sm"></i>
+                                </div>
+                                <h4 class="font-bold text-slate-700 text-sm uppercase tracking-wider">权威/学术性解经</h4>
+                            </div>
+                            <h5 class="font-bold text-lg text-gray-900 mb-3">${verse.academic.title}</h5>
+                            <p class="text-gray-600 leading-loose text-justify">
+                                ${verse.academic.content}
+                            </p>
+                        </div>
+
+                        <!-- Devotional Column -->
+                        <div class="p-8 hover:bg-blue-50 transition ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-4">
+                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-3">
+                                    <i class="fas fa-heart text-sm"></i>
+                                </div>
+                                <h4 class="font-bold text-blue-800 text-sm uppercase tracking-wider">灵修/个人应用</h4>
+                            </div>
+                            <h5 class="font-bold text-lg text-gray-900 mb-3">${verse.devotional.title}</h5>
+                            <p class="text-gray-600 leading-loose text-justify">
+                                ${verse.devotional.content}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="sticky top-20 z-40 bg-[#F7F5F0]/95 backdrop-blur py-4 mb-6 border-b border-gray-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto px-4">
+                        <h2 class="text-2xl font-bold serif text-gray-800 mb-4 md:mb-0">逐节研读室</h2>
+                        
+                        <div class="inline-flex bg-white rounded-lg shadow-sm border p-1">
+                            <button onclick="updateStudyFilter('all')" class="${appState.studyFilter === 'all' ? 'bg-blue-100 text-blue-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                                对照阅读
+                            </button>
+                            <button onclick="updateStudyFilter('academic')" class="${appState.studyFilter === 'academic' ? 'bg-slate-100 text-slate-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                                仅学术
+                            </button>
+                            <button onclick="updateStudyFilter('devotional')" class="${appState.studyFilter === 'devotional' ? 'bg-blue-50 text-blue-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                                仅灵修
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-5xl mx-auto">
+                    ${versesHtml}
+                </div>
+            `;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论对比</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto text-lg">
+                            如何平衡理性认知与属灵感悟？本页分析了两种主要的研经进路。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+                        <!-- Academic Approach -->
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="bg-slate-800 p-6 text-white">
+                                <h3 class="text-xl font-bold flex items-center"><i class="fas fa-university mr-3"></i> 权威/学术性解经</h3>
+                                <p class="text-slate-300 text-sm mt-1">Exegesis (释经)</p>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-slate-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">核心原则：</strong>
+                                            <p class="text-sm text-gray-600">挖掘作者的原意（Original Intent）。受限于历史背景、文法结构和词汇原文。</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-bullseye text-slate-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">适用范围：</strong>
+                                            <p class="text-sm text-gray-600">教义制定、神学辩论、处理异端、圣经翻译。</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-exclamation-triangle text-slate-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">潜在风险：</strong>
+                                            <p class="text-sm text-gray-600">若缺乏圣灵光照，可能变成干枯的知识主义，由于过于理性化而失去生命力。</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Devotional Approach -->
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="bg-blue-700 p-6 text-white">
+                                <h3 class="text-xl font-bold flex items-center"><i class="fas fa-heart mr-3"></i> 灵修性/应用解经</h3>
+                                <p class="text-blue-200 text-sm mt-1">Application (应用)</p>
+                            </div>
+                            <div class="p-6">
+                                <ul class="space-y-4">
+                                    <li class="flex items-start">
+                                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">核心原则：</strong>
+                                            <p class="text-sm text-gray-600">寻求当下的意义（Contemporary Significance）。强调圣灵对读者内心的感动和生活实践。</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-bullseye text-blue-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">适用范围：</strong>
+                                            <p class="text-sm text-gray-600">个人祷告、灵命成长、教牧辅导、日常伦理抉择。</p>
+                                        </div>
+                                    </li>
+                                    <li class="flex items-start">
+                                        <i class="fas fa-exclamation-triangle text-blue-500 mt-1 mr-3"></i>
+                                        <div>
+                                            <strong class="text-gray-800">潜在风险：</strong>
+                                            <p class="text-sm text-gray-600">若脱离学术根基，可能导致私意解经（Eisegesis），将个人的想法强加于经文之上。</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparison Table -->
+                    <div class="bg-white p-8 rounded-lg shadow-sm">
+                        <h4 class="font-bold text-gray-800 mb-6 text-center text-lg">两者在提摩太前书第1章的应用示例</h4>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left text-gray-600">
+                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3">经文重点</th>
+                                        <th class="px-6 py-3 text-slate-700">学术性关注</th>
+                                        <th class="px-6 py-3 text-blue-700">灵修性关注</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100">
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-6 py-4 font-bold">1:4 "家谱"</td>
+                                        <td class="px-6 py-4">研究当时诺斯替主义或犹太拉比传统的具体背景。</td>
+                                        <td class="px-6 py-4">反省自己是否被无益的琐事分心，忽略了福音核心。</td>
+                                    </tr>
+                                    <tr class="bg-white border-b hover:bg-gray-50">
+                                        <td class="px-6 py-4 font-bold">1:15 "罪魁"</td>
+                                        <td class="px-6 py-4">分析"Protos"的词义及保罗自称的修辞目的。</td>
+                                        <td class="px-6 py-4">真实的谦卑与悔改，在神面前承认自己的败坏。</td>
+                                    </tr>
+                                    <tr class="bg-white hover:bg-gray-50">
+                                        <td class="px-6 py-4 font-bold">1:20 "交给撒但"</td>
+                                        <td class="px-6 py-4">探讨早期教会的除教仪式及其犹太背景。</td>
+                                        <td class="px-6 py-4">警惕罪的后果，为了挽回弟兄而实行严厉的爱。</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initGoalChart() {
+            const ctx = document.getElementById('goalChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['清洁的心 (动机)', '无亏的良心 (内在)', '无伪的信心 (关系)', '爱 (总归/目标)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#4299E1', // Blue 400
+                            '#2B6CB0', // Blue 700
+                            '#90CDF4', // Blue 300
+                            '#C53030'  // Red 600 (Love - distinct)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: "'Noto Sans SC', sans-serif" }, padding: 20 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ": 缺一不可";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

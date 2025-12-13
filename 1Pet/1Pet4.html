@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得前书第四章：火炼的试验与管家的忠心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F7F7F7; /* Light Gray */
+            color: #1F2937; /* Gray 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #C2410C; /* Orange 700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: #C2410C;
+            border-radius: 2px;
+        }
+
+        .fire-card {
+            border-left: 4px solid #C2410C; /* Ember Orange */
+        }
+        
+        .stone-card {
+            border-left: 4px solid #374151; /* Dark Gray */
+        }
+
+        /* Fade Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Ember Orange (#C2410C) for Fiery Trial, Basalt Gray (#374151) for Judgment/Firmness. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The End is Near". Overview of the urgency, the "Mind of Christ", and stewardship.
+         2. Verse Study: Grouped by "The Mind of Christ" (1-6), "The End Times Ethics" (7-11), "The Fiery Trial" (12-19).
+         3. Methodology: Summary comparing Exegetical (Contextual) vs Devotional (Personal) approaches.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "Stewardship of Grace" (Speaking vs Serving gifts).
+         2. Bar Chart: "Judgment Sequence" (House of God vs Those who don't believe).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-orange-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-orange-700"><i class="fas fa-fire"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif">彼得前书 4章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-orange-800">总览：万物的结局</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-orange-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-orange-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 mt-auto border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-orange-400 mb-2">"亲爱的弟兄啊，有火炼的试验临到你们，不要以为奇怪..."</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">交互式研经工具 | 聚焦：受苦的心志与神家的审判</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "末世的管家与受苦的荣耀",
+                summary: "彼得前书第四章充满了紧迫感。彼得提醒信徒“万物的结局近了”，因此必须用受苦的心志武装自己，与过去的罪恶生活彻底决裂。他教导教会在末世应当如何生活：彼此切实相爱，作神百般恩赐的好管家。最后，他安慰正经历“火炼试验”的信徒，指出审判要从神的家开始，受苦是荣耀的印记，应当将自己交托给信实的造化之主。",
+                stats: [
+                    { label: "关键隐喻", value: "武装/管家" },
+                    { label: "核心神学", value: "审判从神家开始" },
+                    { label: "生活准则", value: "彼此相爱" }
+                ]
+            },
+            sections: [
+                {
+                    id: "mind",
+                    title: "受苦的心志与断绝罪恶 (4:1-6)",
+                    icon: "fas fa-shield-alt",
+                    theme: "stone",
+                    verses: [
+                        {
+                            ref: "4:1-2",
+                            text: "基督既在肉身受苦，你们也当将这样的心志作为兵器，因为在肉身受过苦的，就已经与罪断绝了...",
+                            academic: {
+                                title: "受苦的心志 (Ennoian)",
+                                content: "“心志”（Ennoian）指一种坚定的意念或决断。“作为兵器”（Hoplisasthe）是军事术语，意为全副武装。这里有一个神学难题：“受过苦的就已经与罪断绝了”。这并非指受苦本身能赎罪（只有基督的血能），而是指信徒若以此心志（愿意像基督一样受苦）去生活，就表明他已在这个道德抉择上与罪的世界划清界限。受苦是与过去生活方式决裂的标志。"
+                            },
+                            devotional: {
+                                title: "向罪死，向神活",
+                                content: "我们常把“受苦”看作要逃避的灾难，彼得却说它是“兵器”。当你下定决心“为了跟随主，哪怕受苦也在所不惜”时，罪的诱惑就失去了力量。一个不怕死、不怕苦的士兵是无法被收买的。你是否已经武装好了这种心志？这是胜过试探的秘诀。"
+                            }
+                        },
+                        {
+                            ref: "4:3-6",
+                            text: "因为往日随从外邦人的心意...就是死人也曾有福音传给他们...",
+                            academic: {
+                                title: "外邦人的放纵与死人的福音",
+                                content: "第3节列出了异教社会的典型罪恶（邪情、醉酒、宴乐等）。信徒不再参与这些，因此被毁谤。第6节“死人也曾有福音传给他们”也是难解经文。结合上下文，最合理的解释是：指那些生前听过福音并信主，但现在已经离世（肉体受审判/死亡）的信徒。彼得安慰读者，虽然这些信徒死了（看似受了人的审判），但他们在神面前灵性是活着的（靠神活着）。"
+                            },
+                            devotional: {
+                                title: "不合群的勇气",
+                                content: "当你不愿同流合污时，世界会觉得你“奇怪”并毁谤你。这是基督徒的常态。不要因为害怕被孤立而妥协。我们终将面对的是神的审判，而不是人的评价。即使我们在世人眼中是失败的（甚至死了），在神眼中却是永活的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "steward",
+                    title: "万物的结局与管家的忠心 (4:7-11)",
+                    icon: "fas fa-hourglass-half",
+                    theme: "fire",
+                    verses: [
+                        {
+                            ref: "4:7-9",
+                            text: "万物的结局近了。所以，你们要谨慎自守，警醒祷告。最要紧的是彼此切实相爱，因为爱能遮掩许多的罪。",
+                            academic: {
+                                title: "末世伦理学",
+                                content: "“结局”（Telos）指目标的达成或终点的来到。末世感带来的不应是恐慌，而是“谨慎自守”（Sophronesate，头脑清醒）和“祷告”。“爱能遮掩许多的罪”引用自箴言10:12，意为爱不计较人的恶，能平息纷争，而非指爱能赎罪。这是维持受逼迫群体内部团结的关键。"
+                            },
+                            devotional: {
+                                title: "越是末后，越要相爱",
+                                content: "如果你知道明天就是世界末日，你会做什么？彼得的建议不是去囤积物资，而是去“祷告”和“相爱”。在压力之下，人容易变得暴躁和自私。唯有“切实的爱”（原文指肌肉紧绷的、用力的爱）能像一层保护膜，遮盖肢体的软弱和过犯，防止教会分裂。"
+                            }
+                        },
+                        {
+                            ref: "4:10-11",
+                            text: "各人要照所得的恩赐彼此服事，作神百般恩赐的好管家...叫神在凡事上得荣耀。",
+                            academic: {
+                                title: "管家 (Oikonomoi) 与恩赐分类",
+                                content: "恩赐（Charisma）来自恩典（Charis）。彼得将恩赐归纳为两类：1. **讲道的**（若有讲道的）：必须像神的话语（Logia）一样准确、严肃；2. **服事的**（若有服事人的）：必须依靠神赐的力量（Ischyos）。做管家的核心原则是“不归荣耀给自己”，而是通过耶稣基督归荣耀给神。"
+                            },
+                            devotional: {
+                                title: "你不是恩赐的主人",
+                                content: "你的才干、金钱、时间都不是你的，你只是“管家”。管家的职责是按着主人的意思使用资源。无论是台上的讲道，还是台下的饭食服事，没有高低之分，只有忠心与否。当我们依靠自己的力量服事时，我们会疲惫或骄傲；依靠神的力量，神就得荣耀。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "trial",
+                    title: "火炼的试验与神家的审判 (4:12-19)",
+                    icon: "fas fa-fire-alt",
+                    theme: "fire",
+                    verses: [
+                        {
+                            ref: "4:12-14",
+                            text: "亲爱的弟兄啊，有火炼的试验临到你们，不要以为奇怪...若为基督的名受辱骂，便是有福的...",
+                            academic: {
+                                title: "火炼 (Pyrosei) 与荣耀的灵",
+                                content: "“火炼”暗示了当时逼迫的残酷性（可能涉及尼禄的火刑或严重的社会排斥），同时也指向炼金的隐喻。彼得告诉他们这“不奇怪”（Xenizesthe，不要觉得是外来的/陌生的事）。受苦是“荣耀的灵”停在身上的记号，正如上帝的荣光（Shekinah）停在会幕上。"
+                            },
+                            devotional: {
+                                title: "受苦是荣耀的勋章",
+                                content: "基督徒受苦是常态，不是意外。如果我们从未因信仰受过任何苦，反倒要问自己是否真的是基督徒。当世界辱骂你时，天上的灵正以此为荣耀停在你身上。不要浪费你的痛苦，要把它变成与基督同在的亲密时刻。"
+                            }
+                        },
+                        {
+                            ref: "4:17-19",
+                            text: "因为时候到了，审判要从神的家起首...那照神旨意受苦的人，要一心为善，将自己灵魂交与那信实的造化之主。",
+                            academic: {
+                                title: "神家的审判",
+                                content: "彼得引用以西结书9:6，指出神的审判原则：先从内部开始。今生的苦难对信徒而言是神洁净的审判（Disciplina），为要炼净教会；而对不信者而言，将来的审判是定罪（Condemnatio）。“交与”（Paratithesthosan）是银行术语（存款），也是耶稣在十字架上的最后一句话（路23:46）。"
+                            },
+                            devotional: {
+                                title: "最安全的托付",
+                                content: "神在审判世界之前，先借着苦难洁净祂的教会。这虽然痛苦，却是爱的管教。在极度的试炼中，我们要做的只有一件事：继续行善，并将灵魂“存”在造物主那里。祂是造我们的，也是爱我们的，祂绝对信实，必不遗失我们。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-orange-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-orange-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-orange-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-orange-900"><i class="fas fa-hourglass-end"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                    <span class="block text-xl font-bold text-orange-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Stewardship Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-center border-b pb-2">百般恩赐的好管家 (4:10-11)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="stewardChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"叫神在凡事上得荣耀"</p>
+                    </div>
+                </div>
+
+                <!-- Judgment Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-gray-700 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 serif"><i class="fas fa-gavel mr-2"></i> 审判的次序 (4:17)</h3>
+                            <p class="text-gray-600 mb-4">
+                                彼得给出了一个令人警醒的对比。审判不是遥远的未来，而是从现在、从我们开始。
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center"><i class="fas fa-check-circle text-orange-500 mr-2"></i> <strong>神的家：</strong> 首先受审（炼净/管教）</li>
+                                <li class="flex items-center"><i class="fas fa-times-circle text-gray-500 mr-2"></i> <strong>不信者：</strong> 结局何等难堪</li>
+                                <li class="flex items-center"><i class="fas fa-shield-alt text-blue-500 mr-2"></i> <strong>义人：</strong> 仅仅得救（Be saved with difficulty）</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="judgmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isFire = section.theme === 'fire';
+                const borderColor = isFire ? 'border-orange-200' : 'border-gray-200';
+                const iconBg = isFire ? 'bg-orange-600' : 'bg-gray-600';
+                const titleColor = isFire ? 'text-orange-900' : 'text-gray-800';
+                const cardClass = isFire ? 'fire-card' : 'stone-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 ${cardClass} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-gray-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-orange-600 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-gray-400 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-orange-400 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F7F7F7]/95 backdrop-blur py-4 mb-8 border-b border-gray-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-orange-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-gray-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-orange-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            彼得前书第四章要求我们正视末世的紧迫性。学术解经帮助我们理清“死人福音”等难题，灵修解经则武装我们面对火炼的试验。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-gray-700">
+                            <div class="mb-4 text-gray-700 text-3xl"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>字义研究：</strong> 深入 <i>Hoplisasthe</i> (武装), <i>Xenizesthe</i> (以为奇怪), <i>Oikonomoi</i> (管家) 的军事与社会背景。</li>
+                                <li><strong>神学难题：</strong> 在上下文中合理解释“死人有福音传给他们”（指已故信徒）。</li>
+                                <li><strong>旧约引用：</strong> 识别“审判从神家开始”（结9:6）和“爱遮掩罪”（箴10:12）的引用意图。</li>
+                                <li><strong>原则：</strong> 发现第一世纪教会的生存处境与彼得的教导逻辑。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-600">
+                            <div class="mb-4 text-orange-600 text-3xl"><i class="fas fa-fire-alt"></i></div>
+                            <h3 class="text-xl font-bold text-orange-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>心志武装：</strong> 如何具体地在生活中应用“受苦的心志”来断绝罪。</li>
+                                <li><strong>社群生活：</strong> 操练“彼此切实相爱”和“不发怨言的款待”。</li>
+                                <li><strong>信心交托：</strong> 在试炼中学习像耶稣一样将灵魂交托给信实的造化之主。</li>
+                                <li><strong>原则：</strong> 将末世的紧迫感转化为圣洁生活的动力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Stewardship Doughnut Chart
+            const ctxSteward = document.getElementById('stewardChart').getContext('2d');
+            new Chart(ctxSteward, {
+                type: 'doughnut',
+                data: {
+                    labels: ['讲道的 (Speaking)', '服事的 (Serving)'],
+                    datasets: [{
+                        data: [50, 50],
+                        backgroundColor: [
+                            '#374151', // Gray
+                            '#C2410C'  // Orange
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { family: "'Noto Sans SC', sans-serif" } } },
+                        title: { display: true, text: '恩赐的分类 (4:11)' }
+                    }
+                }
+            });
+
+            // Judgment Bar Chart
+            const ctxJudge = document.getElementById('judgmentChart').getContext('2d');
+            new Chart(ctxJudge, {
+                type: 'bar',
+                data: {
+                    labels: ['神的家 (The Church)', '不信者 (Ungodly)'],
+                    datasets: [
+                        {
+                            label: '审判次序',
+                            data: [1, 2], // Order: 1st, 2nd
+                            backgroundColor: ['#C2410C', '#4B5563'],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataIndex === 0 ? "起首 (First)" : "结局 (End)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

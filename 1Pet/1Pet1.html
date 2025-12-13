@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得前书第一章：活泼的盼望与火炼的信心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 */
+            color: #1E293B; /* Slate 800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #1E3A8A; /* Blue 900 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #D97706; /* Amber 600 */
+            border-radius: 2px;
+        }
+
+        .hope-card {
+            border-left: 4px solid #1E3A8A; /* Royal Blue */
+        }
+        
+        .holy-card {
+            border-left: 4px solid #D97706; /* Gold */
+        }
+
+        /* Toggle Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .gold-text {
+            color: #B45309;
+        }
+    </style>
+
+    <!-- Chosen Palette: Royal Navy (#1E3A8A) for Depth/Authority, Refined Gold (#D97706) for Faith/Glory. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Pilgrim's Map". Overview of the chapter themes: Salvation, Sanctification, and Suffering.
+         2. Verse Study: Grouped by "Salutation" (1-2), "Living Hope" (3-9), "Salvation's Mystery" (10-12), "Call to Holiness" (13-21), "The Word" (22-25).
+         3. Methodology: Summary of the Hermeneutical approach.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "The Trinitarian Work" (Election, Sanctification, Sprinkling).
+         2. Bar Chart: "The Trial of Faith" (Gold vs Faith).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-blue-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-blue-900"><i class="fas fa-anchor"></i></span>
+                    <span class="text-xl font-bold text-slate-800 serif">彼得前书 1章</span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-blue-900">总览：活泼盼望</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-blue-900">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-blue-900">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-blue-100 mt-auto border-t border-blue-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-500 mb-2">"叫你们的信心既被试验，就比那被火试验仍然能坏的金子更显宝贵..."</p>
+            <p class="text-xs text-blue-300 uppercase tracking-widest">交互式研经工具 | 聚焦：寄居者的身份与荣耀的归宿</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "客旅的盼望与圣洁的呼召",
+                summary: "彼得前书第一章是给那些分散在小亚细亚、面临社会排斥和逼迫的基督徒的安慰信。彼得没有否认他们的苦难，而是提升了他们的视线，让他们看到重生的确据、天上的基业以及苦难的炼金性质。本章从神学上的“活泼盼望”转向伦理上的“圣洁生活”，根基在于那是“不能朽坏的种子”——神永活常存的道。",
+                stats: [
+                    { label: "关键主题", value: "活泼的盼望" },
+                    { label: "核心隐喻", value: "火炼的金子" },
+                    { label: "身份定义", value: "寄居的客旅" }
+                ]
+            },
+            sections: [
+                {
+                    id: "salutation",
+                    title: "三一神的拣选与寄居者 (1:1-2)",
+                    icon: "fas fa-map-signs",
+                    theme: "hope",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "耶稣基督的使徒彼得，写信给那分散在...寄居的...就是照父神的先见被拣选，藉着圣灵得成圣洁，以致顺服耶稣基督，又蒙他血所洒的人...",
+                            academic: {
+                                title: "分散 (Diaspora) 与三一公式",
+                                content: "“分散”（Diaspora）原指被掳犹太人的流散，彼得将其转喻为教会在世上的属灵状态——我们在世界是异乡人。第2节包含了一个精妙的三一神论公式：1. **父神的先见**（Prognosin，预知/预爱）：救恩的源头；2. **圣灵的成圣**（Hagiasmo）：救恩的实施过程；3. **耶稣的血**（Haimati）：立约的凭据。这确立了信徒虽然在社会边缘，但在神眼中处于中心地位。"
+                            },
+                            devotional: {
+                                title: "无家可归者的归宿",
+                                content: "当你觉得在这个世界格格不入，感到孤独或被排斥时，彼得告诉你：这很正常，因为你本是“寄居的”。但你的身份不是由世界定义的，而是由三一神定义的。父拣选了你，圣灵洁净了你，子为你流血。你是天上的公民，暂住地上。这种“尊贵的流放感”是我们力量的源泉。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "livinghope",
+                    title: "活泼的盼望与信心的试验 (1:3-9)",
+                    icon: "fas fa-fire",
+                    theme: "holy",
+                    verses: [
+                        {
+                            ref: "1:3-5",
+                            text: "他曾照自己的大怜悯，藉耶稣基督从死里复活，重生了我们，叫我们有活泼的盼望，可以得着...不能朽坏...的基业...",
+                            academic: {
+                                title: "活泼的盼望 (Elpida Zosan)",
+                                content: "“重生”（Anagennesas）是彼得神学的核心，意味着生命本质的改变。这盼望之所以是“活的”（Zosan），因为它基于基督的复活。基业（Kleronomian）用了三个否定词来形容：不能朽坏（Aphtharton，不受死亡侵蚀）、不能玷污（Amianton，不受罪恶污染）、不能衰残（Amaranton，不受时间影响）。这是与当时希腊罗马世界追求的易逝荣耀形成的鲜明对比。"
+                            },
+                            devotional: {
+                                title: "盼望不仅是愿望",
+                                content: "世人的盼望往往是“我希望如此”（Wishful thinking），但基督徒的盼望是“确信如此”（Certainty）。我们的未来已经锁定在天上，那里没有通货膨胀，没有衰退，也没有盗贼。既然遗产已经确立，现在的旅程无论多艰难，我们都能忍受，因为知道终点是荣耀的家。"
+                            }
+                        },
+                        {
+                            ref: "1:6-9",
+                            text: "因此，你们是大有喜乐；但如今...在百般的试炼中暂时忧愁...叫你们的信心既被试验，就比...金子更显宝贵...",
+                            academic: {
+                                title: "试炼 (Peirasmois) 与验证 (Dokimion)",
+                                content: "“试炼”不仅是受苦，更是“测试”。“试验”（Dokimion）是冶金术语，指通过火烧去除杂质，验证金属的纯度。彼得对比了“能坏的金子”与“永恒的信心”。受苦的目的是为了“显露”信心的真实性，从而在基督显现时带来称赞、荣耀和尊贵。"
+                            },
+                            devotional: {
+                                title: "火窑中的信心",
+                                content: "苦难不是神不在场的证据，而是神正在炼金的证据。金匠将金子放入火中，直到能从金子表面清晰地看到自己的倒影。同样，神允许试炼临到，是为了除去我们生命中的杂质（骄傲、自靠），直到基督的形象成形在我们里面。你的痛苦不是徒然的，它正在提炼永恒的财富。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mystery",
+                    title: "先知与天使的察看 (1:10-12)",
+                    icon: "fas fa-binoculars",
+                    theme: "hope",
+                    verses: [
+                        {
+                            ref: "1:10-12",
+                            text: "论到这救恩，那预先说你们要得恩典的众先知早已详细地寻求考察...天使也愿意详细察看这些事。",
+                            academic: {
+                                title: "救恩历史的特权",
+                                content: "彼得强调新约信徒的特权地位。旧约先知虽然预言了弥赛亚的受苦和荣耀，但他们不明白具体的时间（Kairos）和方式。他们是为“我们”服务的。连天使都“愿意详细察看”（Parakupsai，意为弯腰窥探，形容极度好奇）。这表明现在的信徒处于救恩历史的高峰，拥有先知渴望看见、天使渴望明白的启示。"
+                            },
+                            devotional: {
+                                title: "你比天使更蒙恩",
+                                content: "我们常羡慕旧约的先知能行神迹，或羡慕天使能见神的面。但经文告诉我们，他们反而羡慕我们！因为我们亲身经历了基督的救赎，这是天使无法体验的（因为天使没有救恩）。我们生活在神计划实现的时代，拥有完整的福音，这应当激发我们何等的感恩和敬畏。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "holiness",
+                    title: "圣洁生活的呼召 (1:13-21)",
+                    icon: "fas fa-balance-scale-right",
+                    theme: "holy",
+                    verses: [
+                        {
+                            ref: "1:13-16",
+                            text: "所以要约束你们的心...那召你们的既是圣洁，你们在一切所行的事上也要圣洁...",
+                            academic: {
+                                title: "约束心 (Gird up the loins of mind)",
+                                content: "这是一个生动的东方隐喻。古人穿长袍，干活或打仗前需要将长袍撩起束在腰间，以便行动敏捷。“约束你们的心”意为“思维上的战备状态”，消除散漫。引用的利未记11:44“你们要圣洁，因为我是圣洁的”，表明新约伦理的根基是神的属性（Imitatio Dei）。圣洁（Hagios）的核心意义是“分别出来”。"
+                            },
+                            devotional: {
+                                title: "思维的纪律",
+                                content: "圣洁的生活始于圣洁的思维。如果我们的头脑充满了世界的焦虑、娱乐或情欲，我们就不可能过圣洁的生活。我们需要“束腰”，即对进入头脑的信息进行严格的过滤和管理。不要让你的思想“散着发”乱跑，要将它们聚焦在基督再来的盼望上。"
+                            }
+                        },
+                        {
+                            ref: "1:17-21",
+                            text: "就当存敬畏的心度你们在世寄居的日子，知道你们得赎...不是凭着能坏的金银...乃是凭着基督的宝血...",
+                            academic: {
+                                title: "得赎 (Elutrothete) 的代价",
+                                content: "“得赎”是奴隶市场术语，指付出赎金使奴隶获得自由。赎价不是金银（当时赎奴的通用货币），而是“基督的宝血”。“无瑕疵、无玷污的羔羊”指向逾越节的羔羊。这里强调救恩的昂贵代价，目的是激发信徒“敬畏的心”（Phobo），这不是奴隶的恐惧，而是儿子对父亲的尊荣。"
+                            },
+                            devotional: {
+                                title: "你身价几何？",
+                                content: "一个物品的价值取决于买主愿意付出的价格。神为了买赎你，付出了祂儿子的生命。这意味着你在神眼中是无价的。既然我们是如此重价买来的，就不应再贱卖给罪恶。每一次面对试探时，提醒自己：“我是基督宝血买来的，我太贵重了，不能做这卑贱的事。”"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "word",
+                    title: "永存的道与彼此相爱 (1:22-25)",
+                    icon: "fas fa-scroll",
+                    theme: "hope",
+                    verses: [
+                        {
+                            ref: "1:22-25",
+                            text: "你们...爱弟兄没有虚假，就当从心里彼此切实相爱...因为凡有血气的，尽都如草...惟有主的道是永存的。",
+                            academic: {
+                                title: "道 (Logos) 与爱 (Agape)",
+                                content: "重生的结果必然是爱。彼得将“洁净了心”与“爱弟兄”联系起来。“切实相爱”（Ektenos）意为“热切地”或“拉伸到极限”，形容运动员肌肉紧绷的状态。这种爱不是基于情感，而是基于共同的新生命（种子）。彼得引用以赛亚书40:6-8，对比了人类生命的短暂（草）与神话语的永恒。因为我们是由永恒的道重生的，所以我们能活出永恒的爱。"
+                            },
+                            devotional: {
+                                title: "永恒的种子，永恒的爱",
+                                content: "在这个瞬息万变、人情冷暖的世界里，什么才是永恒的？彼得说是“神的道”和“基于道的爱”。肉体的生命像草一样枯干，名利像花一样凋谢，唯有神的话语立定在天。因为我们拥有这不朽坏的种子，我们就被呼召去在这个暂时的世界里，活出一种不朽坏的爱——一种在压力下依然热切、不虚假的爱。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-blue-900');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-blue-900');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-blue-800 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-blue-900"><i class="fas fa-anchor"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
+                                    <span class="block text-xl font-bold text-blue-800">${stat.value}</span>
+                                    <span class="text-xs text-slate-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Trial of Faith Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-slate-100">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700 w-full text-center border-b pb-2">信心的试验 (1:7)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="faithChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center italic">"比那被火试验仍然能坏的金子更显宝贵"</p>
+                    </div>
+                </div>
+
+                <!-- Trinity Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-yellow-500 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-blue-900 mb-4 serif"><i class="fas fa-users-cog mr-2"></i> 三一神的救赎工作 (1:2)</h3>
+                            <p class="text-slate-600 mb-4">
+                                彼得在开篇就确立了宏大的神学框架。我们的救恩不是偶然的，而是三一神共同工作的结晶。
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li class="flex items-center"><i class="fas fa-eye text-blue-500 mr-2"></i> <strong>父神：</strong> 照着先见拣选（源头）</li>
+                                <li class="flex items-center"><i class="fas fa-wind text-green-500 mr-2"></i> <strong>圣灵：</strong> 藉着成圣（过程）</li>
+                                <li class="flex items-center"><i class="fas fa-tint text-red-500 mr-2"></i> <strong>耶稣：</strong> 蒙血所洒（凭据）</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="trinityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isHoly = section.theme === 'holy';
+                const borderColor = isHoly ? 'border-yellow-200' : 'border-blue-200';
+                const iconBg = isHoly ? 'bg-yellow-600' : 'bg-blue-800';
+                const titleColor = isHoly ? 'text-yellow-800' : 'text-blue-900';
+                const cardClass = isHoly ? 'holy-card' : 'hope-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 ${cardClass} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-slate-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-blue-900 text-white' : 'text-slate-500 hover:bg-slate-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white' : 'text-slate-500 hover:bg-slate-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-slate-50">
+                            <p class="text-lg text-slate-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-blue-900 mb-2 border-l-4 border-blue-300 pl-3">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-yellow-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2 border-l-4 border-yellow-400 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-blue-100 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-blue-900 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-blue-900 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-yellow-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">解经方法论总结</h2>
+                        <p class="text-slate-600">
+                            彼得前书第一章展示了深奥的教义与迫切的实践如何完美结合。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-800">
+                            <div class="mb-4 text-blue-800 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>三一论架构：</strong> 识别第2节中父、子、圣灵工作的精密分工。</li>
+                                <li><strong>字义研究：</strong> 深入 <i>Diaspora</i> (分散), <i>Dokimion</i> (试验), <i>Elutrothete</i> (得赎) 的希腊文背景。</li>
+                                <li><strong>旧约引用：</strong> 追踪利未记（圣洁）、以赛亚书（草与花）在彼得神学中的应用。</li>
+                                <li><strong>原则：</strong> 明白经文的神学深度和历史意义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                            <div class="mb-4 text-yellow-600 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>身份重塑：</strong> 将“寄居者”从社会边缘的羞耻转化为属天公民的荣耀。</li>
+                                <li><strong>苦难转化：</strong> 将生活中的“试炼”视为神炼金的火，寻找其中的积极意义。</li>
+                                <li><strong>生活成圣：</strong> 操练“约束思维”，在日常思想中过滤世俗杂质。</li>
+                                <li><strong>原则：</strong> 将真理内化为盼望和圣洁的动力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Faith Chart
+            const ctxFaith = document.getElementById('faithChart').getContext('2d');
+            new Chart(ctxFaith, {
+                type: 'bar',
+                data: {
+                    labels: ['金子 (Gold)', '信心 (Faith)'],
+                    datasets: [
+                        {
+                            label: '耐久性',
+                            data: [20, 100], // Illustrative
+                            backgroundColor: '#94A3B8' // Slate
+                        },
+                        {
+                            label: '价值',
+                            data: [50, 100], 
+                            backgroundColor: '#D97706' // Gold
+                        },
+                        {
+                            label: '火炼后结果',
+                            data: [10, 100], // Gold eventually perishes, Faith results in glory
+                            backgroundColor: '#1E3A8A' // Blue
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Trinity Chart
+            const ctxTrinity = document.getElementById('trinityChart').getContext('2d');
+            new Chart(ctxTrinity, {
+                type: 'doughnut',
+                data: {
+                    labels: ['父：先见/拣选', '灵：成圣', '子：血/顺服'],
+                    datasets: [{
+                        data: [33.3, 33.3, 33.3],
+                        backgroundColor: [
+                            '#1E3A8A', // Blue
+                            '#10B981', // Green (Spirit/Life)
+                            '#EF4444'  // Red (Blood)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, padding: 15, font: { family: "'Noto Sans SC', sans-serif" } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

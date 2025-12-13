@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第三章：教会的领袖与根基</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F4F4; /* Light Teal/Grey tint */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .active-tab {
+            background-color: #2C7A7B; /* Deep Teal */
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(44, 122, 123, 0.3);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E6FFFA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38B2AC;
+            border-radius: 4px;
+        }
+    </style>
+
+    <!-- Chosen Palette: Deep Teal (#2C7A7B) represents stability/truth; Warm Gray (#F0F4F4) represents the foundation. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Household of God". Visualizing the qualifications of leaders (Character vs Skill).
+         2. Verse Study: Sectioned into "Overseers (1-7)", "Deacons (8-13)", and "The Mystery (14-16)".
+         3. Methodology: Comparing how we interpret cultural mandates vs eternal principles.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Radar Chart: "Qualifications Profile" - Highlighting that 90% of requirements are character-based, not skill-based.
+         2. Comparison Cards: Side-by-side view of Academic vs Devotional text.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 backdrop-blur-md bg-opacity-95">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-teal-800 serif"><i class="fas fa-church mr-2"></i> 提摩太前书 3章</span>
+                </div>
+                <div class="flex space-x-4 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-4 py-2 rounded-lg text-sm font-medium">总览：神的家</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-gray-600 hover:text-teal-700 px-4 py-2 rounded-lg text-sm font-medium">领袖与奥秘</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-gray-600 hover:text-teal-700 px-4 py-2 rounded-lg text-sm font-medium">解经原则</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-teal-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center">
+            <div class="mb-4 md:mb-0">
+                <h4 class="font-bold serif text-lg">真理的柱石和根基</h4>
+                <p class="text-sm opacity-80">大哉，敬虔的奥秘！</p>
+            </div>
+            <p class="text-xs opacity-60">
+                交互式研经工具 | 聚焦：属灵领袖的资格与教会的本质
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "属灵领袖的资格与教会的本质",
+                summary: "提摩太前书第三章从公共敬拜转向教会的治理结构。保罗详细列出了监督（长老）和执事的资格。值得注意的是，这些资格几乎完全集中在道德品格和家庭管理上，而非职业技能或社会地位。本章的高潮在于对教会本质的定义——“真理的柱石和根基”，以及那首著名的关于基督道成肉身的早期赞美诗。",
+                stats: [
+                    { label: "监督的要求", value: "15项" },
+                    { label: "执事的要求", value: "9项" },
+                    { label: "核心重点", value: "无可指责" }
+                ]
+            },
+            sections: [
+                {
+                    id: "overseers",
+                    title: "监督的资格 (3:1-7)",
+                    verses: [
+                        {
+                            ref: "3:1",
+                            text: "“人若想要得监督的职分，就是羡慕善工。”这话是可信的。",
+                            academic: {
+                                title: "监督 (Episkopēs) 的定义",
+                                content: "“监督”一词在希腊文中意为“监护者”或“管理者”。在新约中，监督与“长老”（Presbyteros）通常指同一职分（参徒20:17, 28）。保罗肯定这种“羡慕”（oregetai，意为伸出手去抓、渴慕）是好的，前提是动机为了“善工”而非地位。"
+                            },
+                            devotional: {
+                                title: "圣洁的野心",
+                                content: "在教会中寻求服侍的机会是值得鼓励的。然而，我们必须省察自己的动机：我是为了头衔和权力，还是为了服侍和牺牲？真正的领袖不仅是职位的占有者，更是善工的执行者。"
+                            }
+                        },
+                        {
+                            ref: "3:2-7",
+                            text: "作监督的，必须无可指责，只作一个妇人的丈夫，有节制，自守，端正，乐意接待远人，善于教导...",
+                            academic: {
+                                title: "品格清单与“一个妇人的丈夫”",
+                                content: "“无可指责”是总纲。最具争议的是“只作一个妇人的丈夫”（mias gynaikos andra，直译：一女之男）。学术界主要有四种解释：1. 必须已婚；2. 反对多妻制；3. 反对再婚（即使丧偶）；4. （最被广泛接受）指婚姻上的忠诚，无论是外在行为还是内在情感，都专一于妻子。此外，“善于教导”是监督唯一区别于执事的功能性要求。"
+                            },
+                            devotional: {
+                                title: "领袖的生命就是信息",
+                                content: "神对领袖的首要考核不是恩赐或学历，而是品格。家庭是领袖的第一个禾场；若在家里失败，在教会也难成功。“无可指责”不是完美，而是没有明显的道德把柄。这提醒我们，属灵权柄建立在圣洁的生活见证之上。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "deacons",
+                    title: "执事的资格 (3:8-13)",
+                    verses: [
+                        {
+                            ref: "3:8-10, 12-13",
+                            text: "作执事的，也是如此：必须端庄，不一口两舌，不好喝酒，不贪不义之财...",
+                            academic: {
+                                title: "执事 (Diakonous) 的角色",
+                                content: "“执事”原意为佣人或侍者。虽然经文未详述其职责，但从《使徒行传》6章推测，他们主要负责教会的行政和慈善事务。“不一口两舌”（dilogous）指不向不同人说两样话，这是处理人际和钱财事务的关键品质。第13节提到优秀的执事能获得“美好的地步”，指属灵的尊荣和胆量。"
+                            },
+                            devotional: {
+                                title: "服侍中的尊贵",
+                                content: "在神眼中，管理饭食的执事与教导真理的长老同样重要，都要求极高的道德标准。诚实（不一口两舌）和廉洁（不贪财）是服侍者的底线。通过忠心的服侍，我们在神和人面前赢得了属灵的信誉，这本身就是极大的奖赏。"
+                            }
+                        },
+                        {
+                            ref: "3:11",
+                            text: "女执事（原文是女人）也是如此：必须端庄，不说谗言，有节制，凡事忠心。",
+                            academic: {
+                                title: "女执事还是执事的妻子？",
+                                content: "希腊文“Gynaikas”既可指“女人”也可指“妻子”。因为没有代词“他们的”（像第12节那样），且有“也是如此”的平行结构，许多学者（如F.F. Bruce）认为这里指的是女性执事（Deaconesses），而非执事的妻子。这表明女性在早期教会的慈善事工中扮演了正式角色。"
+                            },
+                            devotional: {
+                                title: "女性的忠心服侍",
+                                content: "无论这是指女执事还是领袖的妻子，神都看重女性在教会中的影响。特别是“不说谗言”，因为在探访和关怀中容易接触隐私。敬虔的女性通过言语的节制和凡事的忠心，成为教会稳定的力量。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mystery",
+                    title: "敬虔的奥秘 (3:14-16)",
+                    verses: [
+                        {
+                            ref: "3:14-15",
+                            text: "...你也可以知道在神的家中当怎样行。这家就是永生神的教会，真理的柱石和根基。",
+                            academic: {
+                                title: "教会的本体论定义",
+                                content: "保罗给出了教会的三个隐喻：1. 家（Oiko）：强调关系与亲密；2. 永生神的教会（Ekklesia）：强调被召集出来的群体；3. 真理的柱石和根基（Stylos kai Hedraioma）：强调教会在异教世界中高举并支撑真理的功能。不是教会创造真理，而是教会承载并展示真理。"
+                            },
+                            devotional: {
+                                title: "我们是真理的展示台",
+                                content: "教会不仅是聚会的地方，更是属灵的家。我们在教会中的行为举止（怎样行）直接影响真理在世人眼中的可信度。如果我们生活混乱，真理的柱子就歪斜了。作为家里的一员，维护这个家的圣洁是我们的责任。"
+                            }
+                        },
+                        {
+                            ref: "3:16",
+                            text: "大哉，敬虔的奥秘！无人不以为然：就是神在肉身显现，被圣灵称义，被天使看见，被传于外邦，被世人信服，被接在荣耀里。",
+                            academic: {
+                                title: "早期基督赞美诗 (Christ Hymn)",
+                                content: "这是一首极具文学美的早期诗歌，包含六行平行的诗句，描述了基督的工作。它可能采用了“天地对比”或“降下与升高”的结构。核心是“道成肉身”（显现）和“复活升天”（荣耀）。“奥秘”指神救赎计划中曾隐藏现已显明的真理。"
+                            },
+                            devotional: {
+                                title: "福音的宏大叙事",
+                                content: "当我们陷入教会琐事时，需要抬头仰望这宏大的福音奥秘。我们的信仰不是一套道德规条，而是一个位格——耶稣基督。从卑微的马槽到荣耀的宝座，这首赞美诗应当常常激起我们的敬畏之心。这就是我们事奉的动力源泉。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all', // all, academic, devotional
+            activeSection: 'all'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-600', 'hover:text-teal-700');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-600', 'hover:text-teal-700');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-8 border-teal-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-8 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex justify-between items-center bg-teal-50 p-4 rounded-lg">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="text-center px-2">
+                                    <span class="block text-2xl font-bold text-teal-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide mt-1">${stat.label}</span>
+                                </div>
+                            `).join('<div class="h-8 w-px bg-teal-200"></div>')}
+                        </div>
+                    </div>
+
+                    <!-- Character vs Skill Chart -->
+                    <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                        <h3 class="text-xl font-bold mb-2 text-gray-700 w-full text-center">属灵领袖资格分析</h3>
+                        <p class="text-xs text-gray-400 mb-6">经文中提到的各项要求分类权重</p>
+                        <div class="chart-wrapper">
+                            <canvas id="qualChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verse Highlights Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="navigate('study')" class="cursor-pointer card-hover bg-white p-6 rounded-lg shadow border-l-4 border-teal-500">
+                        <div class="text-teal-600 text-3xl mb-4"><i class="fas fa-user-tie"></i></div>
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">监督的资格</h3>
+                        <p class="text-sm text-gray-500">为何“羡慕善工”是好的？“一个妇人的丈夫”究竟指什么？</p>
+                    </div>
+                    <div onclick="navigate('study')" class="cursor-pointer card-hover bg-white p-6 rounded-lg shadow border-l-4 border-teal-700">
+                        <div class="text-teal-800 text-3xl mb-4"><i class="fas fa-hands-helping"></i></div>
+                        <h3 class="font-bold text-lg mb-2 text-gray-800">执事的标准</h3>
+                        <p class="text-sm text-gray-500">行政事务与属灵品格的关系。女执事的角色探讨。</p>
+                    </div>
+                    <div onclick="navigate('study')" class="cursor-pointer card-hover bg-teal-800 p-6 rounded-lg shadow border-l-4 border-teal-300">
+                        <div class="text-teal-200 text-3xl mb-4"><i class="fas fa-star"></i></div>
+                        <h3 class="font-bold text-lg mb-2 text-white">敬虔的奥秘</h3>
+                        <p class="text-sm text-teal-100">教会是真理的柱石。早期教会最古老的赞美诗解析。</p>
+                    </div>
+                </div>
+            `;
+
+            initQualChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Build content based on all sections
+            let contentHtml = chapterData.sections.map(section => {
+                const versesHtml = section.verses.map(verse => `
+                    <div class="mb-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="bg-gray-50 p-4 border-b border-gray-100 flex items-start">
+                            <span class="inline-block bg-teal-100 text-teal-800 text-xs px-2 py-1 rounded font-bold mr-3 mt-1">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg italic leading-relaxed">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                                <h4 class="text-teal-800 font-bold text-sm uppercase tracking-wide mb-3 flex items-center">
+                                    <i class="fas fa-book-reader mr-2"></i> 学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 bg-teal-50/30 ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                                <h4 class="text-orange-700 font-bold text-sm uppercase tracking-wide mb-3 flex items-center">
+                                    <i class="fas fa-pray mr-2"></i> 灵修性应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12">
+                        <h3 class="text-2xl font-bold text-teal-900 mb-6 border-b-2 border-teal-100 pb-2 inline-block">
+                            ${section.title}
+                        </h3>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Header for Controls -->
+                <div class="sticky top-20 z-40 bg-[#F0F4F4]/95 backdrop-blur py-4 mb-6 shadow-sm border-b border-gray-200 -mx-4 px-4 md:mx-0 md:px-0 rounded-b-lg">
+                    <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4 md:mb-0"><i class="fas fa-list-alt mr-2 text-teal-600"></i> 逐节研读</h2>
+                        
+                        <div class="flex bg-white rounded-lg shadow-sm border border-gray-200 p-1">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-teal-600 text-white font-medium shadow-sm' : 'text-gray-500 hover:bg-gray-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-teal-600 text-white font-medium shadow-sm' : 'text-gray-500 hover:bg-gray-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-teal-600 text-white font-medium shadow-sm' : 'text-gray-500 hover:bg-gray-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    ${contentHtml}
+                </div>
+            `;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经原则：文化与永恒</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            第三章充满具体的资格列表。我们如何区分哪些是当时的文化要求，哪些是永恒的属灵原则？
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-gray-600">
+                            <h3 class="text-xl font-bold mb-4 flex items-center text-gray-800">
+                                <span class="bg-gray-200 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">1</span>
+                                学术性原则：历史语法分析
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                <strong>任务：</strong> 确定作者对当时读者的原意。
+                            </p>
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>字义研究：</strong> 例如“监督”并非现代意义上的行政管理者，而是牧养性的监护人。</li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>文化背景：</strong> 理解“多妻制”在第一世纪的背景，从而准确解释“一个妇人的丈夫”。</li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-1 mr-2"></i> <strong>文体分析：</strong> 识别 3:16 为“赞美诗”，其语言是诗意和神学性的，而非简单的叙事。</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-600">
+                            <h3 class="text-xl font-bold mb-4 flex items-center text-teal-800">
+                                <span class="bg-teal-100 w-8 h-8 rounded-full flex items-center justify-center mr-3 text-sm">2</span>
+                                灵修性原则：原则化与应用
+                            </h3>
+                            <p class="text-gray-600 mb-4 text-sm leading-relaxed">
+                                <strong>任务：</strong> 提取超越文化的属灵原则并应用于当下。
+                            </p>
+                            <ul class="space-y-3 text-sm text-gray-700">
+                                <li class="flex items-start"><i class="fas fa-heart text-teal-500 mt-1 mr-2"></i> <strong>从规条到品格：</strong> 即使我们不面对多妻制问题，“忠诚”和“专一”的原则依然适用于现代婚姻。</li>
+                                <li class="flex items-start"><i class="fas fa-heart text-teal-500 mt-1 mr-2"></i> <strong>从结构到本质：</strong> 无论教会体制如何变化，“真理的柱石”这一本质要求教会必须捍卫真道。</li>
+                                <li class="flex items-start"><i class="fas fa-heart text-teal-500 mt-1 mr-2"></i> <strong>个人省察：</strong> 将“无可指责”作为镜子，照亮我们生命中的暗处，而非仅仅用来衡量他人。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Example Case Study -->
+                    <div class="bg-teal-800 rounded-xl p-8 text-white shadow-xl">
+                        <h4 class="text-xl font-bold mb-4 border-b border-teal-600 pb-2">案例分析：对“善于教导”的两种解读</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <h5 class="font-bold text-teal-200 mb-2">学术解读</h5>
+                                <p class="text-sm opacity-90 leading-relaxed">
+                                    在以弗所教会受假教师（1:3）威胁的背景下，“教导”不仅仅是传递信息，更是具有护教性质的“驳斥异端”和“确立正统”。这是长老区别于执事的关键职能。
+                                </p>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-orange-200 mb-2">灵修应用</h5>
+                                <p class="text-sm opacity-90 leading-relaxed">
+                                    作为属灵领袖（或是父母），我们不仅要有好的品格，还必须对真理有清晰的认识，并能有效地传递给下一代。我们是否装备自己，能在真理上引导他人？
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initQualChart() {
+            const ctx = document.getElementById('qualChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['家庭管理', '个人品格 (节制/自守)', '人际关系 (好客/温和)', '名声 (无可指责)', '教导能力', '属灵成熟度'],
+                    datasets: [{
+                        label: '资格权重分布',
+                        data: [85, 95, 85, 90, 40, 70], // Skill (Teaching) is only one point among many character traits
+                        fill: true,
+                        backgroundColor: 'rgba(44, 122, 123, 0.2)', // Teal transparent
+                        borderColor: '#2C7A7B',
+                        pointBackgroundColor: '#234E52',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#2C7A7B'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: {
+                                font: { size: 12, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4A5568'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false } // Hide numbers for cleaner look
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ": 极其重要";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

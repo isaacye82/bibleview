@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太后书第一章：无伪之信与无畏之心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F3F4F6; /* Cool Gray 100 */
+            color: #1F2937; /* Gray 800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #6B21A8; /* Purple 800 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: #6B21A8;
+            border-radius: 2px;
+        }
+
+        .prison-bg {
+            background-image: linear-gradient(rgba(31, 41, 55, 0.9), rgba(31, 41, 55, 0.8)), url('https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+
+    <!-- Chosen Palette: Royal Purple (#6B21A8) for Apostolic Authority/Glory, Charcoal (#374151) for Prison/Suffering. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Final Dungeon". Context of Paul's imprisonment. Themes: Fear vs Power.
+         2. Verse Study: Grouped by "Heritage" (1-5), "The Charge" (6-12), "The Deposit" (13-18).
+         3. Methodology: Comparison of Exegesis (Historical/Original) vs Application (Personal/Spiritual).
+    -->
+    <!-- Visualization & Content Choices:
+         1. Bar Chart: "The Spirit God Gave Us" vs "Spirit of Fear".
+         2. Doughnut Chart: "Guard the Good Deposit" components.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-purple-800"><i class="fas fa-quidditch"></i></span> <!-- Using generic icon as flame representation -->
+                    <span class="text-xl font-bold text-gray-800 serif">提摩太后书 1章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium uppercase tracking-wide">总览：挑旺恩赐</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-gray-500 hover:text-purple-700 text-sm font-medium uppercase tracking-wide">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-gray-500 hover:text-purple-700 text-sm font-medium uppercase tracking-wide">解经原则</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 mt-auto border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-purple-400 mb-2">"因为知道我所信的是谁，也深信他能保全我所交付他的..."</p>
+            <p class="text-xs text-gray-600 uppercase tracking-widest">交互式研经工具 | 聚焦：苦难中的无畏与传承</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "死囚牢里的凯旋之歌",
+                summary: "这是保罗的最后书信，写于罗马阴冷的马梅尔定监狱，此时他正等待死刑。不同于《提摩太前书》的行政指导，本章充满了个人情感。保罗鼓励生性胆怯的提摩太，不要以福音为耻，要将神赐的恩赐“如火挑旺”。他在孤独中回忆起提摩太家族的信仰传承，并以自己面对死亡的从容（“我知道我所信的是谁”）作为榜样。",
+                context: "公元67年左右，尼禄迫害期间。保罗第二次被囚。",
+                themes: ["无伪的信心", "不要胆怯", "不以为耻", "保守所托"]
+            },
+            sections: [
+                {
+                    id: "heritage",
+                    title: "信仰的传承与眼泪 (1:1-5)",
+                    icon: "fas fa-users",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "奉神旨意...写信给我亲爱的儿子提摩太：愿恩惠、怜悯、平安从父神和我们主基督耶稣归与你！",
+                            academic: {
+                                title: "亲爱的儿子 vs 真儿子",
+                                content: "在《提前》1:2保罗称提摩太为“真儿子”（gnesio，合法的/真正的），强调其授权的合法性；而在此处称“亲爱的儿子”（agapeto），流露出现在面对死亡时深切的父爱与情感联系。这封信不仅是公函，更是遗嘱。"
+                            },
+                            devotional: {
+                                title: "属灵的父亲",
+                                content: "在人生终点，保罗最挂念的不是成就，而是“人”——他的属灵儿子。这提醒我们，事奉的核心是关系。我们是否在培养“亲爱的儿子”或“女儿”？当危机来临时，这种深厚的属灵纽带是我们最大的安慰。"
+                            }
+                        },
+                        {
+                            ref: "1:3-5",
+                            text: "我感谢神...祈祷的时候，不住地想念你...想到你心里无伪之信，这信是先在你外祖母罗以和你母亲友尼基心里的...",
+                            academic: {
+                                title: "母系信仰传承与犹太背景",
+                                content: "提摩太的父亲是希腊人（徒16:1），其信仰教育主要来自母亲和祖母。“接续祖先”（ap progonon）表明保罗视基督教为犹太教正统的延续，而非断裂。他强调这信心是“无伪的”（anypokritou，意为没有戴面具/不演戏），这在充满背教者的环境下尤为珍贵。"
+                            },
+                            devotional: {
+                                title: "家庭祭坛的影响力",
+                                content: "不要轻看家庭中的信仰教育。罗以和友尼基可能没有神学学位，但她们将“无伪之信”种在了提摩太心里。这是给所有母亲和祖母的鼓励：你们在暗处的祷告和榜样，正在塑造神国度的未来领袖。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "courage",
+                    title: "挑旺恩赐，不以为耻 (1:6-12)",
+                    icon: "fas fa-fire",
+                    verses: [
+                        {
+                            ref: "1:6-7",
+                            text: "为此我提醒你，使你将神藉我按手所给你的恩赐再如火挑旺起来。因为神赐给我们，不是胆怯的心，乃是刚强、仁爱、谨守的心。",
+                            academic: {
+                                title: "Anazopyrein (如火挑旺)",
+                                content: "这是一个生动的隐喻，意为“使余烬复燃”。这并不意味着提摩太失去了恩赐，而是暗示在逼迫压力下，恩赐可能被压抑或休眠。“胆怯”（deilias）特指懦弱或因恐惧而退缩，这不是来自神的灵；神的灵带来的是Dynamis（大能/神迹的能力）、Agape（爱）和Sophronismou（自律/清醒的头脑）。"
+                            },
+                            devotional: {
+                                title: "克服属灵的退缩",
+                                content: "恐惧是恩赐的灭火器。当我们因环境艰难而退缩时，圣灵的能力就无法彰显。神给的解药不是“自信”，而是圣灵的内住——那是胜过环境的能力（刚强），关怀他人的动力（仁爱），和面对危机的冷静（谨守）。去拨动那快熄灭的炭火吧！"
+                            }
+                        },
+                        {
+                            ref: "1:8, 12",
+                            text: "你不要以给我们的主作见证为耻，也不要以我这为主被囚的为耻...因为知道我所信的是谁，也深信他能保全我所交付他的（或作：他所交托我的），直到那日。",
+                            academic: {
+                                title: "荣耀与羞耻的神学",
+                                content: "在荣誉导向的罗马文化中，囚犯是极大的羞耻。保罗重构了价值观：为福音受苦是荣耀。“保全我所交付他的”（paratheken），希腊文可指“保罗交托给神的生命/灵魂”，也可指“神交托给保罗的福音真理”。鉴于上下文关于守护真道的主题，许多学者倾向于后者，或者是一种双向的信托关系。"
+                            },
+                            devotional: {
+                                title: "确据带来的勇气",
+                                content: "我们为何敢于面对羞辱？因为我们“知道”信的是谁。这种“知道”不是理论认知，而是深切的关系信任。就像把巨款存入最稳妥的银行，我们把生命（和福音使命）交托给全能者。无论遭遇什么，我们的“存款”在祂那里是绝对安全的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "loyalty",
+                    title: "保守善道与患难见真情 (1:13-18)",
+                    icon: "fas fa-shield-alt",
+                    verses: [
+                        {
+                            ref: "1:13-14",
+                            text: "你从我听的那纯正话语的规模...从前所交托你的善道，你要靠着那住在我们里面的圣灵牢牢地守着。",
+                            academic: {
+                                title: "Hypotyposin (规模/范本)",
+                                content: "“规模”原意为草图、轮廓或范本。这表明早期教会已有一套标准化的教义核心（“纯正话语”）。“交托的善道”（Paratheken）再次出现，指福音真理的存款。守护这存款不能靠人的智力，必须“靠着圣灵”。"
+                            },
+                            devotional: {
+                                title: "真理的守门人",
+                                content: "在这个相对主义盛行的时代，我们有责任守护那个古老的“范本”。不要为了迎合文化而修改福音的轮廓。但这守护不是靠血气争辩，而是靠内住的圣灵。只有在爱心和信心中，真理才能被正确地持守。"
+                            }
+                        },
+                        {
+                            ref: "1:15-18",
+                            text: "凡在亚西亚的人都离弃我...愿主怜悯阿尼色弗一家...他在罗马的时候，殷勤地找我，并且找着了...",
+                            academic: {
+                                title: "历史背景与为死者祈祷争议",
+                                content: "“凡在亚西亚的人”可能指当地的领袖或代表，因怕受牵连而与保罗切割。阿尼色弗是鲜明的对比，他不以保罗的锁链为耻。第18节“愿主使他在那日得主的怜悯”常被天主教引用为替死者祈祷的依据（假设阿尼色弗已死），但新教多解释为一种愿望的表达或假设他还活着。"
+                            },
+                            devotional: {
+                                title: "做那个“雪中送炭”的人",
+                                content: "当众人因惧怕而退去时，你愿意做那个“殷勤寻找”受苦同伴的人吗？阿尼色弗的“不以锁链为耻”是何等宝贵的友谊。在肢体受苦、名誉扫地或遭遇患难时，真实的友谊才显露出来。愿我们也成为使人“畅快”的阿尼色弗。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-purple-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-purple-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <!-- Hero Section -->
+                <div class="prison-bg rounded-xl shadow-2xl p-8 mb-8 text-white relative overflow-hidden animate-[fadeIn_0.5s]">
+                    <div class="absolute inset-0 bg-black/60"></div> <!-- Overlay -->
+                    <div class="relative z-10 max-w-3xl">
+                        <div class="inline-block px-3 py-1 bg-purple-900/80 border border-purple-500 rounded text-xs font-bold uppercase tracking-widest mb-4">
+                            公元67年 · 罗马监狱
+                        </div>
+                        <h2 class="text-4xl font-bold mb-4 serif">${chapterData.intro.title}</h2>
+                        <p class="text-gray-200 leading-relaxed text-lg mb-6 border-l-4 border-purple-500 pl-4">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-3">
+                            ${chapterData.intro.themes.map(t => `
+                                <span class="bg-gray-800/80 px-3 py-1 rounded-full text-sm border border-gray-600">${t}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-purple-600 flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800 border-b pb-2 w-full text-center">属灵心态对比 (1:7)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="spiritChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 text-center">神赐的灵 vs 胆怯的心</p>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border-t-4 border-gray-600 flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-800 border-b pb-2 w-full text-center">善道的组成 (1:13-14)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="depositChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 text-center">如何牢牢守着所交托的？</p>
+                    </div>
+                </div>
+
+                <!-- Key Verse Highlight -->
+                <div class="bg-gradient-to-r from-purple-800 to-purple-900 rounded-xl p-8 text-white text-center shadow-lg cursor-pointer transition hover:scale-[1.01]" onclick="navigate('study')">
+                    <i class="fas fa-quote-left text-3xl text-purple-400 mb-4 block opacity-50"></i>
+                    <p class="text-2xl font-serif italic mb-4">
+                        "为这缘故，我也受这些苦难。然而我不以为耻；<br>因为知道我所信的是谁..."
+                    </p>
+                    <p class="text-sm font-bold uppercase tracking-widest opacity-70">— 提摩太后书 1:12</p>
+                    <div class="mt-6">
+                        <span class="inline-block px-6 py-2 border border-white/30 rounded-full hover:bg-white/10 transition text-sm">
+                            进入逐节研读 <i class="fas fa-arrow-right ml-2"></i>
+                        </span>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-6 border border-gray-100 overflow-hidden group">
+                        <!-- Header -->
+                        <div class="p-5 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <div>
+                                <span class="inline-block px-2 py-1 bg-purple-100 text-purple-900 text-xs font-bold rounded mb-1 font-mono">${verse.ref}</span>
+                            </div>
+                            <!-- Mode Toggles -->
+                            <div class="flex space-x-2 bg-white rounded p-1 border border-gray-200">
+                                <button onclick="toggleMode('${section.id}-${idx}', 'academic')" class="mode-btn-${section.id}-${idx} px-3 py-1 text-xs rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="toggleMode('${section.id}-${idx}', 'devotional')" class="mode-btn-${section.id}-${idx} px-3 py-1 text-xs rounded transition ${appState.studyMode === 'devotional' ? 'bg-purple-700 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture -->
+                        <div class="p-6 border-b border-gray-100 bg-white">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content -->
+                        <div class="p-6 min-h-[150px]">
+                            <!-- Academic Content -->
+                            <div id="content-academic-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-gray-700 font-bold text-sm uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-gray-500 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional Content -->
+                            <div id="content-devotional-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-purple-700 font-bold text-sm uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-purple-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b border-gray-200">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 text-white flex items-center justify-center shadow">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                 <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F3F4F6]/95 backdrop-blur py-4 mb-8 border-b border-gray-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase">阅读偏好设置</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-purple-700 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- Logic for Toggles ---
+        function toggleMode(id, mode) {
+            // Toggle Content
+            document.getElementById(`content-academic-${id}`).className = mode === 'academic' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            document.getElementById(`content-devotional-${id}`).className = mode === 'devotional' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            
+            // Toggle Buttons styles locally
+            const buttons = document.getElementsByClassName(`mode-btn-${id}`);
+            // This is a simplified toggle logic for specific card buttons
+            // In a real framework, state would drive this cleaner. 
+            // Here, we just rely on re-rendering for simplicity or class manipulation.
+            // For now, let's just re-render to keep state consistent or manually update classes:
+            Array.from(buttons).forEach(btn => {
+                const btnType = btn.innerText.includes('学术') ? 'academic' : 'devotional';
+                if(btnType === mode) {
+                    btn.className = `mode-btn-${id} px-3 py-1 text-xs rounded transition ${mode === 'academic' ? 'bg-gray-800 text-white' : 'bg-purple-700 text-white'}`;
+                } else {
+                    btn.className = `mode-btn-${id} px-3 py-1 text-xs rounded transition text-gray-500 hover:bg-gray-100`;
+                }
+            });
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            在《提摩太后书》这种充满情感和个人历史的书卷中，学术与灵修视角的平衡尤为重要。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-gray-700">
+                            <div class="mb-4 text-gray-700 text-3xl"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学术性解经 (Historical-Grammatical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>焦点：</strong> 还原公元1世纪的罗马监狱场景。</li>
+                                <li><strong>关键词研究：</strong> 分析 <i>Charisma</i> (恩赐), <i>Paratheken</i> (交托), <i>Hypotyposin</i> (规模) 等希腊文原意。</li>
+                                <li><strong>处理争议：</strong> 如“为阿尼色弗一家祈祷”的神学含义，采取审慎、基于正典的态度。</li>
+                                <li><strong>目的：</strong> 确保我们理解的是保罗的原意，而非现代人的投射。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-700">
+                            <div class="mb-4 text-purple-700 text-3xl"><i class="fas fa-fire-alt"></i></div>
+                            <h3 class="text-xl font-bold text-purple-900 mb-4">灵修性解经 (Personal Application)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>焦点：</strong> 将保罗的勇气投射到现代信徒的软弱上。</li>
+                                <li><strong>情感共鸣：</strong> 体会保罗的孤独、对提摩太的父爱，以及面对死亡的平静。</li>
+                                <li><strong>行动呼召：</strong> "挑旺"不再是神学概念，而是具体的祷告行动；"不以为耻"转化为在公共领域的见证。</li>
+                                <li><strong>目的：</strong> 让真理进入内心，产生生命的改变。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-800 text-gray-300 p-6 rounded-lg text-center">
+                        <p class="italic">"学术使真理稳固，灵修使真理鲜活。"</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Spirit Chart
+            const ctxSpirit = document.getElementById('spiritChart').getContext('2d');
+            new Chart(ctxSpirit, {
+                type: 'bar',
+                data: {
+                    labels: ['刚强 (Power)', '仁爱 (Love)', '谨守 (Self-control)'],
+                    datasets: [{
+                        label: '神赐的灵',
+                        data: [100, 100, 100],
+                        backgroundColor: '#6B21A8', // Purple
+                        barPercentage: 0.6
+                    }, {
+                        label: '胆怯的心',
+                        data: [-50, -50, -50], // Negative to show contrast
+                        backgroundColor: '#9CA3AF', // Gray
+                        barPercentage: 0.6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false, min: -60, max: 110 },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Deposit Chart
+            const ctxDeposit = document.getElementById('depositChart').getContext('2d');
+            new Chart(ctxDeposit, {
+                type: 'doughnut',
+                data: {
+                    labels: ['纯正话语 (Sound Words)', '信心 (Faith)', '爱心 (Love)', '圣灵 (Holy Spirit)'],
+                    datasets: [{
+                        data: [40, 20, 20, 20],
+                        backgroundColor: [
+                            '#374151', // Charcoal
+                            '#6B21A8', // Purple
+                            '#9F7AEA', // Light Purple
+                            '#D1D5DB'  // Gray
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 12, font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

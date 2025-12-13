@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太后书第二章：贵重的器皿与无愧的工人</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 */
+            color: #334155; /* Slate 700 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #475569; /* Slate 600 */
+            font-weight: 800;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #B45309; /* Bronze/Amber 700 */
+            border-radius: 2px;
+        }
+
+        .metaphor-card {
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+        .metaphor-card:hover {
+            transform: translateY(-5px);
+            border-color: #B45309;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94A3B8;
+            border-radius: 4px;
+        }
+    </style>
+
+    <!-- Chosen Palette: Slate Blue (#475569) for Discipline/Truth, Bronze (#B45309) for Endurance/Vessels. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Portrait of a Servant". Interactive display of the 6 metaphors (Soldier, Athlete, Farmer, Worker, Vessel, Servant).
+         2. Verse Study: Broken down by the metaphors and key theological sections.
+         3. Methodology: Summary of the two hermeneutical approaches.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Radar Chart: "The Soldier's Attributes" (Focus, Discipline, Suffering, etc.).
+         2. Pie Chart: "Vessels in a Great House" (Honor vs Dishonor).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-amber-700"><i class="fas fa-hammer"></i></span>
+                    <span class="text-xl font-bold text-slate-800 serif">提摩太后书 2章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-slate-800">总览：工人的画像</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-slate-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-slate-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-300 mt-auto border-t border-slate-700">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-amber-500 mb-2">"你当竭力在神面前得蒙喜悦，作无愧的工人，按着正意分解真理的道。"</p>
+            <p class="text-xs text-slate-500 uppercase tracking-widest">交互式研经工具 | 聚焦：受苦、忍耐与成为贵重的器皿</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "传承与忍耐：无愧工人的特质",
+                summary: "提摩太后书第二章是关于门徒训练和事奉者品格的核心篇章。保罗深知自己时日无多，因此嘱咐提摩太要将真理“交托给忠心能教导别人的人”，确立了四代的传承模式。随后，他使用了一系列生动的隐喻（精兵、比武者、农夫、工人、器皿、仆人）来教导如何在受苦中忍耐、在真理上正直、在品格上圣洁。",
+                metaphors: [
+                    { name: "精兵", icon: "fas fa-shield-alt", desc: "专一与受苦" },
+                    { name: "比武者", icon: "fas fa-running", desc: "守规矩" },
+                    { name: "农夫", icon: "fas fa-seedling", desc: "劳力与耐心" },
+                    { name: "工人", icon: "fas fa-tools", desc: "正意解经" },
+                    { name: "器皿", icon: "fas fa-wine-glass-alt", desc: "自洁与贵重" },
+                    { name: "仆人", icon: "fas fa-hands-helping", desc: "温和待人" }
+                ]
+            },
+            sections: [
+                {
+                    id: "endurance",
+                    title: "传承与三个隐喻 (2:1-7)",
+                    icon: "fas fa-users-cog",
+                    verses: [
+                        {
+                            ref: "2:1-2",
+                            text: "我儿啊，你要在基督耶稣的恩典上刚强起来...交托那忠心能教导别人的人。",
+                            academic: {
+                                title: "使徒统绪与恩典动力",
+                                content: "保罗呼吁的“刚强”（endynamou）是被动语态，意为“被加力量”，源头是恩典。第2节描绘了四代传承：保罗 -> 提摩太 -> 忠心的人 -> 别人。这里的“交托”（parathou）是银行术语（存款），强调教义内容的完整传递。这是早期教会为了应对诺斯替异端而建立的教导权威链条。"
+                            },
+                            devotional: {
+                                title: "属灵的接力赛",
+                                content: "我们不能只顾自己属灵，必须思考“接棒人”是谁。神的工作不是靠个人英雄主义，而是靠代代相传的忠心。你现在是哪一代？你正在培养你的“提摩太”吗？这种传承不仅是知识的，更是生命的交托。"
+                            }
+                        },
+                        {
+                            ref: "2:3-7",
+                            text: "你要和我同受苦难，好像基督耶稣的精兵...凡在军中当兵的，不将世务缠身...人若在场上比武...劳力的农夫...",
+                            academic: {
+                                title: "三个职业隐喻",
+                                content: "1. **精兵**：核心是同受苦难（synkakopatheson）和专一（不被bios即日常生活事务缠累）。<br>2. **比武者**：核心是“按规矩”（nomimos），可能指当时的竞技规则或道德要求。<br>3. **农夫**：核心是“劳力”（kopiōnta，指辛勤工作直到疲惫）和“先得粮食”（由神供应或享受成果）。"
+                            },
+                            devotional: {
+                                title: "事奉者的心态",
+                                content: "作基督徒不仅是信条，更是生活方式。像军人一样，我们不仅要能打仗，还要能吃苦，且不被琐事分心；像运动员一样，我们不能投机取巧，必须遵守属灵纪律；像农夫一样，我们必须勤恳耕耘，并存盼望等待收成。这三者共同构成了坚忍的画像。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "gospel",
+                    title: "福音的核心与受苦的价值 (2:8-13)",
+                    icon: "fas fa-cross",
+                    verses: [
+                        {
+                            ref: "2:8-10",
+                            text: "你要记念耶稣基督...我为这福音受苦难，甚至被捆绑...然而神的道却不被捆绑。",
+                            academic: {
+                                title: "前保罗信条与道的自由",
+                                content: "“大卫的后裔，从死里复活”是早期教会的信条摘要，强调基督的人性（大卫后裔）和神性/大能（复活），这是对当时否定复活异端的反驳。保罗虽然被当作“犯人”（kakourgos，指重刑犯）捆绑，但他确信神的道（Logos）具有内在的生命力，无法被任何锁链囚禁。"
+                            },
+                            devotional: {
+                                title: "被捆绑的使徒，自由的道",
+                                content: "环境可以限制我们的身体，但不能限制真理的传播。当我们觉得事奉受阻时，要记得神的话语有它自己的脚。我们受苦不是徒然的，是为了“选民”得救。这种为了他人益处而忍受苦难的心志，正是基督的倒影。"
+                            }
+                        },
+                        {
+                            ref: "2:11-13",
+                            text: "有可信的话说：我们若与基督同死，也必与他同活...我们纵然失信，他仍是可信的...",
+                            academic: {
+                                title: "早期赞美诗片断",
+                                content: "这是一首对仗工整的诗歌（Hymn）。前两句讲救恩的确定性（同死同活），第三句讲背教的后果（不认主），第四句讲神的信实。关于“他仍是可信的”，有两种解释：1. 神信守承诺救我们；2. （更符合上下文）神信守他的公义审判，不能背乎自己去接纳不认他的人。神的一致性是我们的安慰，也是警告。"
+                            },
+                            devotional: {
+                                title: "神的信实是双刃剑",
+                                content: "神是可信的，这既是好消息也是坏消息。对于信靠祂的人，祂的应许永不落空；对于拒绝祂的人，祂的审判也绝不打折。我们不能利用神的“信实”来纵容自己的“失信”。真正的安慰在于，当我们软弱而非背叛时，祂依然扶持。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "worker",
+                    title: "工人的职责与器皿的洁净 (2:14-26)",
+                    icon: "fas fa-tools",
+                    verses: [
+                        {
+                            ref: "2:15",
+                            text: "你当竭力...作无愧的工人，按着正意分解真理的道。",
+                            academic: {
+                                title: "Orthotomein (按正意分解)",
+                                content: "“按正意分解”原文意为“切直了”（cutting straight）。背景可能指铺路、耕地或裁缝。意思是不偏左右地、准确地处理神的话语，不随私意曲解。这与假教师的“世俗虚谈”（2:16）和像“毒疮”（2:17）一样的教导形成鲜明对比。"
+                            },
+                            devotional: {
+                                title: "直面真理",
+                                content: "解释圣经是一项严肃的工程，需要“竭力”。我们不能随意让经文为我们的观点服务，而要顺着真理的纹理去“切”。当我们随意解经时，我们就是“有愧”的工人。准确传讲神的话，是工人的最高职业道德。"
+                            }
+                        },
+                        {
+                            ref: "2:20-21",
+                            text: "在大户人家，不但有金器银器...人若自洁，脱离卑贱的事，就必作贵重的器皿...",
+                            academic: {
+                                title: "大户人家的隐喻",
+                                content: "“大户人家”指可见的教会（或世界）。“金银”与“木瓦”的区别不在于材质本身，而在于用途（贵重/卑贱）和状态（洁净/污秽）。“自洁”（ekkathare）意为彻底清洗，特别是脱离假教师的错误教导。这里的重点不是宿命论（天生是木器），而是责任论（清洗自己）。"
+                            },
+                            devotional: {
+                                title: "成为合用的器皿",
+                                content: "神看重的不是才干（金银），而是圣洁。一个金杯若装满污秽，神不会用它；一个瓦碗若是洁净，主必重用。我们无法选择自己的天赋，但可以选择是否“自洁”。脱离罪恶和错误的教导，是成为贵重器皿的唯一途径。"
+                            }
+                        },
+                        {
+                            ref: "2:22-26",
+                            text: "你要逃避少年的私欲...惟用温温柔柔地劝戒那抵挡的人...",
+                            academic: {
+                                title: "牧者的品格与争战策略",
+                                content: "“逃避”（pheuge）和“追求”（diōke）是保罗惯用的命令。这里的“少年私欲”不仅指性，也包括争竞好胜、急躁、好辩论等不成熟表现。对待异议者，策略不是好勇斗狠，而是“温温柔柔”（prautēti），目的是为了“挽回”他们，使他们脱离魔鬼的网罗。"
+                            },
+                            devotional: {
+                                title: "温柔的力量",
+                                content: "属灵争战不是靠嗓门大，而是靠品格。当我们面对反对者时，最容易陷入血气的争辩。但神说，主的仆人“不可争竞”。温柔不是软弱，而是被圣灵控制的力量。只有温柔的心，才能为真理打开封闭的心门。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-slate-800');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-slate-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-[fadeIn_0.5s]">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <!-- Metaphor Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                            ${chapterData.intro.metaphors.map(m => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 flex flex-col items-center text-center metaphor-card cursor-default">
+                                    <i class="${m.icon} text-2xl text-amber-700 mb-2"></i>
+                                    <h4 class="font-bold text-slate-700">${m.name}</h4>
+                                    <span class="text-xs text-slate-500">${m.desc}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Radar Chart: Soldier's Profile -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-slate-100">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700 w-full text-center border-b pb-2">基督精兵的素质</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="soldierChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 italic">"凡在军中当兵的，不将世务缠身"</p>
+                    </div>
+                </div>
+
+                <!-- Concept Highlight: Vessels -->
+                <div class="bg-gradient-to-r from-slate-700 to-slate-800 rounded-xl p-8 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-8 cursor-pointer transition hover:shadow-xl" onclick="navigate('study')">
+                    <div class="flex-1">
+                        <h3 class="text-2xl font-bold mb-2 text-amber-400 serif">大户人家的器皿</h3>
+                        <p class="opacity-90 leading-relaxed">
+                            "人若自洁，脱离卑贱的事，就必作贵重的器皿，成为圣洁，合乎主用，预备行各样的善事。"
+                        </p>
+                    </div>
+                    <div class="w-full md:w-1/3 h-48 relative">
+                        <canvas id="vesselChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 border border-slate-100 overflow-hidden group hover:border-amber-200 transition-colors">
+                        <!-- Header -->
+                        <div class="p-5 bg-slate-50/50 border-b border-slate-100 flex justify-between items-center">
+                            <span class="inline-block px-3 py-1 bg-amber-100 text-amber-900 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-slate-200">
+                                <button onclick="toggleMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-700 text-white' : 'text-slate-500 hover:bg-slate-100'}">学术</button>
+                                <button onclick="toggleMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-amber-600 text-white' : 'text-slate-500 hover:bg-slate-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Text -->
+                        <div class="p-6 border-b border-slate-50">
+                            <p class="text-lg text-slate-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Interpretation Content -->
+                        <div class="p-6 min-h-[160px]">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2 border-l-4 border-slate-400 pl-3">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2 border-l-4 border-amber-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b border-slate-200">
+                            <div class="w-10 h-10 rounded-full bg-slate-700 text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-slate-800 serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-slate-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">阅读模式切换</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-700 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-amber-600 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function toggleMode(id, mode) {
+            // Logic for specific card toggles
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-slate-700 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-amber-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-600">
+                            本章通过丰富的隐喻，要求解经者既要准确把握原意（按正意分解），又要将其原则应用到品格塑造上。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="mb-4 text-slate-600 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>字义研究：</strong> 深入 <i>Orthotomein</i> (直切), <i>Athlei</i> (比武), <i>Kopiōnta</i> (劳力) 等希腊文背景。</li>
+                                <li><strong>历史背景：</strong> 识别“许米乃和腓理徒”的异端性质（过度实现的末世论）。</li>
+                                <li><strong>隐喻分析：</strong> 准确界定当时士兵、农夫、运动员的社会角色与法律要求。</li>
+                                <li><strong>原则：</strong> 避免私意解经，确保真理的“纹理”被正直地切开。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="mb-4 text-amber-600 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-amber-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>品格塑造：</strong> 将“受苦”、“忍耐”、“自洁”内化为个人的属灵追求。</li>
+                                <li><strong>自我省察：</strong> 问自己：“我是金银器皿还是木瓦器皿？”“我是否被世务缠身？”</li>
+                                <li><strong>关系应用：</strong> 在与人冲突时，应用“温温和和”的原则，而非血气争辩。</li>
+                                <li><strong>原则：</strong> 知识必须转化为生命，神学必须服务于成圣。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-200 p-6 rounded-lg text-center">
+                        <p class="text-slate-700 italic font-serif">"按正意分解真理，是头脑的纪律；作贵重的器皿，是心灵的清洁。"</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Soldier Radar Chart
+            const ctxSoldier = document.getElementById('soldierChart').getContext('2d');
+            new Chart(ctxSoldier, {
+                type: 'radar',
+                data: {
+                    labels: ['专一 (Focus)', '受苦 (Suffering)', '顺服 (Obedience)', '忍耐 (Endurance)', '劳力 (Hard Work)', '自洁 (Purity)'],
+                    datasets: [{
+                        label: '无愧工人的特质',
+                        data: [90, 85, 95, 90, 80, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(71, 85, 105, 0.2)', // Slate
+                        borderColor: '#475569',
+                        pointBackgroundColor: '#475569',
+                        pointBorderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { size: 11 }, color: '#64748B' },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Vessel Pie Chart
+            const ctxVessel = document.getElementById('vesselChart').getContext('2d');
+            new Chart(ctxVessel, {
+                type: 'doughnut',
+                data: {
+                    labels: ['贵重器皿 (金银)', '卑贱器皿 (木瓦)'],
+                    datasets: [{
+                        data: [30, 70], // Illustrative proportion
+                        backgroundColor: [
+                            '#B45309', // Bronze/Gold
+                            '#94A3B8'  // Slate Gray
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#fff', font: { size: 10 } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

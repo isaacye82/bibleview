@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得前书第三章：温良的品行与无亏的良心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0FDFA; /* Teal 50 */
+            color: #134E4A; /* Teal 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #0F766E; /* Teal 700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #0F766E;
+            border-radius: 2px;
+        }
+
+        .gentle-card {
+            border-left: 4px solid #14B8A6; /* Teal 500 */
+        }
+        
+        .deep-card {
+            border-left: 4px solid #1E40AF; /* Blue 800 */
+        }
+
+        /* Content Transition */
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Serene Teal (#14B8A6) for Gentle Spirit, Deep Ocean Blue (#1E40AF) for Baptism/Suffering. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Sphere of Witness". Visualizing witness in Marriage, Community, and Suffering.
+         2. Verse Study: Grouped by "Wives & Husbands" (1-7), "Social Ethics" (8-12), "Suffering & Apologetics" (13-17), "Christ's Victory" (18-22).
+         3. Methodology: Comparison of Cultural/Grammatical Context vs Spiritual Application.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "True Adornment" (Inner vs Outer).
+         2. Bar Chart: "Responses to Hostility" (Blessing vs Reviling).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-teal-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-teal-700"><i class="fas fa-dove"></i></span>
+                    <span class="text-xl font-bold text-teal-900 serif">彼得前书 3章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-teal-800">总览：温柔的力量</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-teal-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-teal-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-teal-100 mt-auto border-t border-teal-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-teal-200 mb-2">"只要以里面存着长久温柔、安静的心为妆饰..."</p>
+            <p class="text-xs text-teal-400 uppercase tracking-widest">交互式研经工具 | 聚焦：家庭见证与受苦的良心</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "在敌意世界中的温柔见证",
+                summary: "彼得前书第三章从社会顺服（第二章）转向家庭内部的顺服。彼得特别关注那些丈夫不信主的基督徒妻子，教导她们通过“无声的品行”而非言语来赢得丈夫。随后，他教导所有信徒在面对逼迫时如何“常作准备”回答心中的盼望。本章以一段极其深奥的神学总结结束：基督受苦、去传道给监狱里的灵、复活升天，以此确立信徒得胜的确据。",
+                stats: [
+                    { label: "家庭伦理", value: "7节" },
+                    { label: "护教经文", value: "15节" },
+                    { label: "难解经文", value: "19节" }
+                ]
+            },
+            sections: [
+                {
+                    id: "marriage",
+                    title: "妻子与丈夫的相处之道 (3:1-7)",
+                    icon: "fas fa-home",
+                    theme: "gentle",
+                    verses: [
+                        {
+                            ref: "3:1-2",
+                            text: "你们作妻子的要顺服...若有不信从道理的丈夫，他们虽然不听道，也可以因妻子的品行被感化过来...",
+                            academic: {
+                                title: "宣教性的顺服 (Hypotassomenai)",
+                                content: "在罗马家长制社会中，妻子通常随从丈夫的宗教。妻子改信基督被视为颠覆家庭秩序。彼得使用了“顺服”（把自己置于次序之下）一词，但赋予了新的宣教目的：为了“赢得”（kerdethesontai）丈夫。这里的策略是“不用话语”（aneu logou），因为对敌意的丈夫，言语辩论往往适得其反，唯有高尚的品行是无可辩驳的证据。"
+                            },
+                            devotional: {
+                                title: "无声的布道",
+                                content: "当我们甚至无法用语言分享福音时，我们的生命就是唯一的圣经。对于尚未信主的家人，唠叨的说教往往筑起高墙，而温柔的服侍、贞洁的品行和敬畏神的心，却能通过这堵墙。你的生命是否让身边的人感到“被感化”？"
+                            }
+                        },
+                        {
+                            ref: "3:3-6",
+                            text: "不要以编发、黄金、珍珠...为妆饰，只要以里面存着长久温柔、安静的心...就像撒拉...",
+                            academic: {
+                                title: "第一世纪的奢侈风气",
+                                content: "彼得并非完全禁止首饰，而是对比“外在的虚荣”与“内在的价值”。当时罗马富贵妇女流行极其复杂的编发（用金线编织）和昂贵珠宝，以此炫耀财富地位。彼得提出一种神眼中的“极宝贵”（poly-teles）妆饰——“温柔”（praeos，不坚持己权）和“安静”（hesuchiou，内在的安宁）。称呼信徒为“撒拉的女儿”，强调这是属灵应许的传承。"
+                            },
+                            devotional: {
+                                title: "神眼中的奢侈品",
+                                content: "在这个看脸的时代，我们花多少时间装饰外表，又花多少时间装饰灵魂？“温柔安静”不是软弱，而是对神主权的深切信赖——因为相信神在掌权，所以不需要焦虑地争取或喧嚷。这才是永不褪色的美容。"
+                            }
+                        },
+                        {
+                            ref: "3:7",
+                            text: "你们作丈夫的...因她比你软弱（原文作是软弱的器皿），与你一同承受生命之恩的，所以要敬重她...",
+                            academic: {
+                                title: "软弱的器皿与同承之恩",
+                                content: "“按情理”（gnosin，知识/体谅）与妻子同住。“软弱的器皿”指体能上的差异或当时社会地位的弱势，绝非指智力或灵性低下。彼得强调“一同承受生命之恩”（sygkleronomois），这是革命性的属灵平等宣言。“叫你们的祷告没有阻碍”表明家庭关系的破裂会直接切断与神的交通（礼仪/灵性层面的阻隔）。"
+                            },
+                            devotional: {
+                                title: "尊重是爱的语言",
+                                content: "丈夫对妻子的爱不应只是情感上的，更要是认知上的（按情理）。如果不敬重妻子，就是在轻视神的女儿，神必不听这种人的祷告。属灵的高调不能掩盖家庭的失职。你的婚姻关系是你灵性状态的最真实体温计。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "ethics",
+                    title: "同心与以善胜恶 (3:8-12)",
+                    icon: "fas fa-users",
+                    theme: "gentle",
+                    verses: [
+                        {
+                            ref: "3:8-12",
+                            text: "总而言之，你们都要同心...不以恶报恶，以辱骂还辱骂，倒要祝福...",
+                            academic: {
+                                title: "引用诗篇34篇的伦理",
+                                content: "彼得引用《诗篇》34:12-16作为基督徒伦理的旧约根基。这里的核心是“同心”（Homophrones，意念一致）和“体恤”（Sympatheis，共情）。“倒要祝福”（Eulogountes）不仅仅是说好话，更是祈求神赐福给敌人。这是耶稣登山宝训教导的回响。动机是“承受福气”，即末世的奖赏。"
+                            },
+                            devotional: {
+                                title: "停止恶性循环",
+                                content: "当别人辱骂我们时，本能是回击。但基督徒被呼召去打断这个恶性循环。我们是用“祝福”来回应“咒诅”的人。这需要极大的内在力量，这力量来自于知道我们已被神祝福，并且将要承受更大的福气。控制舌头，就是控制生命的航向。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "apologetics",
+                    title: "受苦中的护教 (3:13-17)",
+                    icon: "fas fa-shield-alt",
+                    theme: "deep",
+                    verses: [
+                        {
+                            ref: "3:13-15",
+                            text: "只要心里尊主基督为圣。有人问你们心中盼望的缘由，就要常作准备，以温柔、敬畏的心回答各人...",
+                            academic: {
+                                title: "护教学 (Apologia) 的宪章",
+                                content: "“尊主基督为圣”引用了赛8:13尊耶和华为圣的经文，彼得将其应用在基督身上，强烈暗示基督的神性。“回答”（Apologian）是法律术语，指法庭上的辩护。彼得要求的辩护不是咄咄逼人的，而是带着“温柔”（对待人）和“敬畏”（对待神）。内容是关于“盼望”（Elpidos），即复活与未来的确据。"
+                            },
+                            devotional: {
+                                title: "随时准备好",
+                                content: "我们不需要都成为神学家，但我们需要能讲清楚自己的故事：为什么在苦难中我有盼望？这需要“常作准备”。更重要的是态度——用傲慢的态度讲真理是对此真理的背叛。温柔的回答能平息怒气，敬畏的心能引人归主。"
+                            }
+                        },
+                        {
+                            ref: "3:16-17",
+                            text: "存着无亏的良心，叫你们在何事上被毁谤，就在何事上可以叫那诬赖你们在基督里有好品行的人自觉羞愧。",
+                            academic: {
+                                title: "良心 (Syneidesin) 的见证",
+                                content: "在希腊文化中，良心是内在的审判官。彼得强调护教不仅是言语的，更是道德的。当基督徒被社会边缘化甚至毁谤时，他们无可指责的生活方式（Good conduct）成为了反转羞耻的工具。让诬告者“自觉羞愧”是神通过信徒的见证实施的审判。"
+                            },
+                            devotional: {
+                                title: "良心是软枕头",
+                                content: "如果我们的良心有亏，我们在人面前就无法坦然无惧。当我们受苦时，如果是因行善受苦，我们的良心是安稳的，这种内心的平安是任何人都夺不走的。让你的生活方式成为让毁谤者闭嘴的最好证据。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "victory",
+                    title: "基督的受苦与得胜 (3:18-22)",
+                    icon: "fas fa-trophy",
+                    theme: "deep",
+                    verses: [
+                        {
+                            ref: "3:18",
+                            text: "因基督也曾一次为罪受苦，就是义的代替不义的，为要引我们到神面前...",
+                            academic: {
+                                title: "代替性救赎",
+                                content: "这是一句早期的信条。“一次”（hapax）强调献祭的终极性，不再重复。“义的代替不义的”阐明了代赎论。肉体被治死，灵里复活（或译：在灵里活着），这开启了下文难解的经文。"
+                            },
+                            devotional: {
+                                title: "通往神的道路",
+                                content: "基督受苦的目的不仅是解决罪，更是“引我们到神面前”。如果我们在苦难中觉得离神很远，要记得基督已经开通了这条路。他在前头走过，不仅是替我们赎罪，也是为我们开路。"
+                            }
+                        },
+                        {
+                            ref: "3:19-20",
+                            text: "他藉这灵曾去传道给那些在监狱里的灵听...就是那从前在挪亚预备方舟...的时候不信从的人...",
+                            academic: {
+                                title: "难解经文：监狱里的灵",
+                                content: "这是新约最难解的经文之一。主要学术观点有三：1. **奥古斯丁观**：基督的灵通过挪亚向当时的人传道（史前）。2. **堕落天使观**：基督向创世记6章犯罪的天使宣告审判（引用以诺书传统）。3. **阴间传道观**：基督在受死与复活之间下到阴间向亡灵宣告得胜。多数现代福音派学者倾向于第2种或第3种（作为得胜的宣告而非第二次悔改机会）。重点在于基督对灵界的宇宙性主权。"
+                            },
+                            devotional: {
+                                title: "基督掌管一切",
+                                content: "无论这里的细节神学如何，核心信息是清楚的：基督的得胜跨越了死亡、阴间和灵界。没有任何角落——无论是监狱、过去还是灵界——在祂的权柄之外。这给了受苦中的信徒极大的安全感。"
+                            }
+                        },
+                        {
+                            ref: "3:21-22",
+                            text: "这水所表明的洗礼，现在藉着耶稣基督复活也拯救你们；这洗礼本不在乎除掉肉体的污秽，只求在神面前有无亏的良心...",
+                            academic: {
+                                title: "洗礼的本质与基督的升天",
+                                content: "彼得用挪亚的洪水作洗礼的预表（Typology）。洪水既是审判也是拯救。洗礼救我们，不是靠水的物理洁净作用（Ex opere operato），而是作为“向神无亏良心的誓约/祈求”（Eperotema）。这一切的效力都基于“耶稣基督的复活”。第22节描述基督升天，以此作为信徒最终得胜的保证。"
+                            },
+                            devotional: {
+                                title: "洗礼是良心的誓约",
+                                content: "洗礼不只是一个仪式，它是我们公开向世界宣告：我已与基督同死同复活，我向神承诺持守清洁的良心。每当我们看到水，都应以此提醒自己：既然已经洗净了，就不要再回到泥潭中。基督已经升天掌权，我们的得救是稳固的。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-teal-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-teal-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-teal-500 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-teal-900"><i class="fas fa-dove"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-teal-900">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-teal-50 px-4 py-2 rounded-lg border border-teal-100">
+                                    <span class="block text-xl font-bold text-teal-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Adornment Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-teal-50">
+                        <h3 class="text-lg font-bold mb-4 text-teal-800 w-full text-center border-b pb-2">真正的妆饰 (3:3-4)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="adornmentChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"在神面前是极宝贵的"</p>
+                    </div>
+                </div>
+
+                <!-- Responses to Hostility Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-800 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-blue-900 mb-4 serif"><i class="fas fa-exchange-alt mr-2"></i> 颠覆性的回应</h3>
+                            <p class="text-gray-600 mb-4">
+                                彼得呼召信徒打破"以恶报恶"的循环，用"祝福"来回应"辱骂"。这不仅是道德要求，更是基于末世的福气。
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center"><i class="fas fa-check text-teal-500 mr-2"></i> <strong>同心体恤：</strong> 建立内部合一</li>
+                                <li class="flex items-center"><i class="fas fa-check text-teal-500 mr-2"></i> <strong>口出祝福：</strong> 转化外部敌意</li>
+                                <li class="flex items-center"><i class="fas fa-check text-teal-500 mr-2"></i> <strong>寻求和睦：</strong> 主动追求和平</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="responseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isDeep = section.theme === 'deep';
+                const borderColor = isDeep ? 'border-blue-200' : 'border-teal-200';
+                const iconBg = isDeep ? 'bg-blue-800' : 'bg-teal-600';
+                const titleColor = isDeep ? 'text-blue-900' : 'text-teal-900';
+                const cardClass = isDeep ? 'deep-card' : 'gentle-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 ${cardClass} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-gray-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-teal-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-blue-600 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-teal-900 mb-2 border-l-4 border-teal-300 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-blue-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-blue-900 mb-2 border-l-4 border-blue-400 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F0FDFA]/95 backdrop-blur py-4 mb-8 border-b border-teal-100 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-teal-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-blue-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-teal-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-blue-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-teal-900">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            彼得前书第三章是“头脑”与“心灵”的交汇处。我们需要学术严谨来处理难解经文，也需要灵性敏锐来活出温柔的见证。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-700">
+                            <div class="mb-4 text-teal-700 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-teal-900 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>文化背景：</strong> 理解第一世纪罗马家庭结构及妇女地位，以解释“顺服”的护教目的。</li>
+                                <li><strong>字义研究：</strong> 分析 <i>Hesuchios</i> (安静), <i>Apologia</i> (辩护), <i>Eperotema</i> (誓约) 的希腊文原意。</li>
+                                <li><strong>神学难题：</strong> 处理“基督传道给监狱里的灵”的各种学术观点（堕落天使论 vs 阴间传道论）。</li>
+                                <li><strong>原则：</strong> 准确还原作者意图，不回避神学难点。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-700">
+                            <div class="mb-4 text-blue-700 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>品格塑造：</strong> 将“温柔安静”作为对抗焦虑和虚荣的属灵操练。</li>
+                                <li><strong>关系应用：</strong> 丈夫如何具体地“敬重”妻子？如何在婚姻中实践“同心”。</li>
+                                <li><strong>苦难应对：</strong> 在被误解和攻击时，如何靠着良心的平安来祝福仇敌。</li>
+                                <li><strong>原则：</strong> 将真理转化为生命的妆饰，建立无亏的良心。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Adornment Doughnut Chart
+            const ctxAdornment = document.getElementById('adornmentChart').getContext('2d');
+            new Chart(ctxAdornment, {
+                type: 'doughnut',
+                data: {
+                    labels: ['温柔的心 (Inner)', '安静的灵 (Inner)', '编发/金饰/衣服 (Outer)'],
+                    datasets: [{
+                        data: [45, 45, 10], // Highlighting the value of inner beauty
+                        backgroundColor: [
+                            '#14B8A6', // Teal
+                            '#0F766E', // Dark Teal
+                            '#CBD5E1'  // Gray
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { family: "'Noto Sans SC', sans-serif" } } }
+                    }
+                }
+            });
+
+            // Responses to Hostility Bar Chart
+            const ctxResponse = document.getElementById('responseChart').getContext('2d');
+            new Chart(ctxResponse, {
+                type: 'bar',
+                data: {
+                    labels: ['世人的反应', '信徒的呼召'],
+                    datasets: [
+                        {
+                            label: '以恶报恶',
+                            data: [90, 0],
+                            backgroundColor: '#94A3B8' // Gray
+                        },
+                        {
+                            label: '以辱骂还辱骂',
+                            data: [85, 0],
+                            backgroundColor: '#64748B' // Dark Gray
+                        },
+                        {
+                            label: '倒要祝福',
+                            data: [0, 95],
+                            backgroundColor: '#1E40AF' // Blue
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

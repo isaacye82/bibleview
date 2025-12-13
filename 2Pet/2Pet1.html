@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得后书第一章：丰丰富富的真知识</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F4F8; /* Light Blue Grey */
+            color: #1E3A8A; /* Dark Blue */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #1E3A8A; /* Blue 900 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: #F59E0B; /* Amber 500 */
+            border-radius: 2px;
+        }
+
+        .truth-card {
+            border-left: 4px solid #1D4ED8; /* Blue 700 */
+        }
+        
+        .glory-card {
+            border-left: 4px solid #F59E0B; /* Amber 500 */
+        }
+
+        /* Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Deep Sapphire (#1E3A8A) for Knowledge, Morning Star Gold (#F59E0B) for Prophecy/Glory. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Ladder of Virtues". Visualizing the 8 steps of spiritual growth and the foundation of Scripture.
+         2. Verse Study: Grouped by "Partakers of Divine Nature" (1-4), "The Golden Ladder" (5-11), "The Peter's Testament" (12-15), "Sure Prophecy" (16-21).
+         3. Methodology: Summary of the Hermeneutical approach.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Bar Chart (Staircase style): "The Ladder of Faith" (Faith -> Love).
+         2. Doughnut Chart: "Authority Sources" (Fables vs Eyewitness vs Prophecy).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-blue-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-blue-800"><i class="fas fa-star"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif">彼得后书 1章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-blue-800">总览：晨星出现</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-blue-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-blue-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-blue-100 mt-auto border-t border-blue-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-400 mb-2">"直等到天发亮，晨星在你们心里出现的时候..."</p>
+            <p class="text-xs text-blue-300 uppercase tracking-widest">交互式研经工具 | 聚焦：真知识、神性与预言</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "长进、回忆与确据",
+                summary: "彼得后书第一章是彼得离世前的最后嘱托。面对假教师的威胁，彼得没有首先攻击谬误，而是正面建立真理的根基。他指出我们已得着一切关乎生命和虔敬的事，因此必须在信心的阶梯上“分外殷勤”地长进。随后，他以登山变像的亲眼见证和旧约预言的绝对可靠性，为信徒的信心打下了双重保险。",
+                stats: [
+                    { label: "属灵阶梯", value: "8级" },
+                    { label: "核心概念", value: "真知识 (Epignosis)" },
+                    { label: "权威来源", value: "预言" }
+                ]
+            },
+            sections: [
+                {
+                    id: "nature",
+                    title: "与神的性情有份 (1:1-4)",
+                    icon: "fas fa-atom",
+                    theme: "truth",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "西门彼得...写信给...靠我们的神和救主耶稣基督之义...愿恩惠、平安，因你们认识神和我们主耶稣，多多的加给你们。",
+                            academic: {
+                                title: "西门彼得与基督神性",
+                                content: "“西门”（希伯来名）与“彼得”（希腊名）并用，暗示他面向犹太和外邦读者。第1节使用了格兰维尔·夏普规则（Granville Sharp Rule），“神和救主”共用一个定冠词，强有力地证明了**耶稣基督的神性**。“认识”（Epignosis）是本书的核心词，指“完全的、经历性的真知识”，以此对抗诺斯替主义的假知识。"
+                            },
+                            devotional: {
+                                title: "恩典的倍增",
+                                content: "恩典和平安不是静止的，而是可以“多多的加给”（倍增）的。倍增的渠道不是更多的活动，而是更深地“认识”神。我们对神的认识越深，内在的平安就越稳固。信仰不是盲目的跳跃，而是基于对一位真实位格的深知。"
+                            }
+                        },
+                        {
+                            ref: "1:3-4",
+                            text: "神的神能已将一切关乎生命和虔敬的事赐给我们...叫你们...得与神的性情有份。",
+                            academic: {
+                                title: "神能 (Theia Dynamis) 与神性 (Theias Physeos)",
+                                content: "这是一个惊人的宣告：我们不需要再寻找新的属灵秘诀，因为“一切”已经赐下。“与神的性情有份”在希腊哲学背景下常指本体的融合，但彼得在此是在希伯来伦理背景下使用，指分享神的**道德属性**（如圣洁、爱），而非成为神。这是成圣的终极目标——像祂。"
+                            },
+                            devotional: {
+                                title: "你拥有你需要的一切",
+                                content: "很多时候我们觉得软弱，以为自己缺这缺那。但彼得说：如果你有耶稣，你就有了“一切”。就像一颗种子包含了大树的所有潜能，重生的生命已包含了成圣所需的一切资源。我们的责任不是去寻找新东西，而是去开发已有的宝藏。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "ladder",
+                    title: "成圣的黄金阶梯 (1:5-11)",
+                    icon: "fas fa-sort-amount-up",
+                    theme: "glory",
+                    verses: [
+                        {
+                            ref: "1:5-7",
+                            text: "正因这缘故，你们要分外地殷勤；有了信心，又要加上德行...知识...节制...忍耐...虔敬...爱弟兄的心...爱众人的心。",
+                            academic: {
+                                title: "分外殷勤 (Spouden) 与美德链 (Sorites)",
+                                content: "“加上”（Epichoregesate）原意为“以此作为合唱团的赞助人/指挥”，意为慷慨地、丰富地供应。这八种美德构成了一个修辞上的“链锁”（Sorites），始于**信心**，终于**爱**（Agape）。这表明属灵成长是有机联系的，不是孤立的品格拼凑。信心必须通过这些果子表现出来。"
+                            },
+                            devotional: {
+                                title: "信仰的加法",
+                                content: "得救是恩典，但成长需要“分外殷勤”。我们的信仰不能停留在仅仅“得救”的初级阶段。这是一个主动的、持续的“加法”过程。有了信心，还要加上好的品行；有了知识，还要加上自律。如果你的信仰链条在某处断裂（例如有知识无节制），整个生命就会失衡。"
+                            }
+                        },
+                        {
+                            ref: "1:8-11",
+                            text: "你们若充充足足地有这几样...丰丰富富地得以进入我们主...的国。",
+                            academic: {
+                                title: "闲懒不结果子 vs 丰丰富富进入",
+                                content: "彼得警告“闲懒”（Argous，无用/不工作）和“近视”（Myopazon）的危险。与之相对的是“使拣选坚定不移”（Bebaian）。虽然拣选源于神，但在人的体验中，通过结出果子来确证（Confirm）这种拣选。第11节的“丰丰富富进入”呼应了第5节的“加上”，暗示我们在地上的追求决定了天上的荣耀程度。"
+                            },
+                            devotional: {
+                                title: "不要做一个属灵的近视眼",
+                                content: "属灵近视眼只看得到眼前的物质和短暂的得失，却“忘”了自己已被洁净的身份。彼得呼吁我们要有长远的眼光——永恒的国度。我们在地上如何殷勤追求属灵的成长，将决定我们进入神国时的状态：是仅仅得救，还是像凯旋的将军一样“丰丰富富”地进入？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "testament",
+                    title: "彼得的遗嘱与提醒 (1:12-15)",
+                    icon: "fas fa-scroll",
+                    theme: "truth",
+                    verses: [
+                        {
+                            ref: "1:12-15",
+                            text: "...我以为应当趁我还在这帐棚的时候提醒你们...知道我脱离这帐棚的时候快到了...尽心竭力，使你们在我去世以后...",
+                            academic: {
+                                title: "彼得的辞世词 (Farewell Discourse)",
+                                content: "这是一种典型的犹太文学体裁（如《摩西遗言》）。“帐棚”（Skenoma）指暂时的肉身（也暗示了登山变像中的帐棚体验）。“去世”（Exodon）原文是“出埃及/离开”，暗示死亡不是终结，而是通往应许之地的旅程。彼得的紧迫感来自于主的指示（约21:18-19），他要在死前确立真理的传承。"
+                            },
+                            devotional: {
+                                title: "属灵的遗产",
+                                content: "面对死亡，彼得没有恐惧，只有对群羊的挂念。他最关心的是在他离开后，信徒是否能“时常记念”真理。我们留给后代最宝贵的遗产不是金钱，而是对真理的记忆。你正在为你的家人和教会留下什么样的属灵提醒？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prophecy",
+                    title: "亲眼的见证与更确的预言 (1:16-21)",
+                    icon: "fas fa-mountain",
+                    theme: "glory",
+                    verses: [
+                        {
+                            ref: "1:16-18",
+                            text: "我们从前...并不是随从乖巧捏造的虚言，乃是亲眼见过他的威荣...在圣山的时候...",
+                            academic: {
+                                title: "反驳神话 (Mythois) 与登山变像",
+                                content: "假教师可能声称复活和再来是“神话”。彼得用“亲眼见过”（Epoptai，特指奥秘宗教中的最高级目击者）来反驳。他回忆了登山变像（太17），那是基督“威荣”（Megaleiotes）和“大能”（Dynamis）的历史性显现，是基督再来（Parousia）的预演。这不是神学构想，而是历史事实。"
+                            },
+                            devotional: {
+                                title: "信仰建立在事实上",
+                                content: "我们的信仰不是心理慰藉，也不是这一套那一套的哲学理论，而是建立在目击证人所见证的历史事实之上。彼得在山上亲眼看见了耶稣的荣耀，亲耳听见了父神的声音。这荣耀是真实的，因此我们的盼望也是真实的。"
+                            }
+                        },
+                        {
+                            ref: "1:19-21",
+                            text: "我们并有先知更确的预言，如同灯照在暗处...经上所有的预言没有可随私意解说的...乃是人被圣灵感动，说出神的话来。",
+                            academic: {
+                                title: "更确的预言 (Bebaioteron) 与 默示论",
+                                content: "彼得认为旧约预言比他的亲身经历“更确”（More sure/firm），或指他的经历证实了预言。圣经的来源不是人的意愿（Thelemati），而是人被圣灵“感动”（Pheromenoi，原意为风吹动船帆，徒27:15）。这确立了圣经的神圣来源和绝对权威。圣经是黑暗世界中唯一的“灯”。"
+                            },
+                            devotional: {
+                                title: "晨星在心里出现",
+                                content: "在这黑暗的世代，我们需要这盏灯——圣经。我们不能依靠自己的感觉或私意来解释人生，必须依靠神的话。当我们专注研读圣经时，直到“晨星”（Phosphoros，金星/基督）在我们心里出现，那是黎明前的曙光，带给我们对基督再来的确切盼望和内心的光明。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-blue-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-blue-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-blue-700 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-blue-900"><i class="fas fa-book-reader"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
+                                    <span class="block text-xl font-bold text-blue-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Ladder Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-center border-b pb-2">成圣的阶梯 (1:5-7)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="ladderChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"你们要分外地殷勤"</p>
+                    </div>
+                </div>
+
+                <!-- Prophecy Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-yellow-500 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-blue-900 mb-4 serif"><i class="fas fa-lightbulb mr-2 text-yellow-500"></i> 真理的来源 (1:16-21)</h3>
+                            <p class="text-gray-600 mb-4">
+                                彼得确立了信仰的双重保险：历史的目击见证与圣灵的预言默示。
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center"><i class="fas fa-eye text-blue-500 mr-2"></i> <strong>亲眼见过：</strong> 登山变像的历史事实</li>
+                                <li class="flex items-center"><i class="fas fa-scroll text-yellow-600 mr-2"></i> <strong>更确预言：</strong> 旧约圣经的绝对权威</li>
+                                <li class="flex items-center"><i class="fas fa-wind text-green-500 mr-2"></i> <strong>圣灵感动：</strong> 像风吹动船帆 (Pheromenoi)</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="prophecyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isGlory = section.theme === 'glory';
+                const borderColor = isGlory ? 'border-yellow-200' : 'border-blue-200';
+                const iconBg = isGlory ? 'bg-yellow-500' : 'bg-blue-700';
+                const titleColor = isGlory ? 'text-yellow-800' : 'text-blue-900';
+                const cardClass = isGlory ? 'glory-card' : 'truth-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 ${cardClass} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-gray-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-blue-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-blue-900 mb-2 border-l-4 border-blue-300 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-yellow-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-yellow-400 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F0F4F8]/95 backdrop-blur py-4 mb-8 border-b border-blue-100 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-blue-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-blue-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-yellow-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            彼得后书第一章要求我们既要像登山变像的见证人一样确信真理（学术），又要像攀登阶梯一样实践真理（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-800">
+                            <div class="mb-4 text-blue-800 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-blue-900 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>文法分析：</strong> 应用格兰维尔·夏普规则确认基督神性；分析连锁修辞（Sorites）。</li>
+                                <li><strong>字义研究：</strong> 深入 <i>Epignosis</i> (真知识), <i>Theias Physeos</i> (神性), <i>Pheromenoi</i> (被灵感动) 的希腊文背景。</li>
+                                <li><strong>背景研究：</strong> 理解彼得作为目击证人的权威以及对假教师神话的反驳。</li>
+                                <li><strong>原则：</strong> 发现真理的客观根基。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                            <div class="mb-4 text-yellow-600 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>生命应用：</strong> 检查自己的生命阶梯是否缺环；如何“分外殷勤”地长进。</li>
+                                <li><strong>确据建立：</strong> 通过结出果子来确认自己的拣选，消除属灵的近视。</li>
+                                <li><strong>盼望内化：</strong> 在研读圣经中等待“晨星”在心中出现，获得内在的照明。</li>
+                                <li><strong>原则：</strong> 建立生命的亲密关系。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Ladder Chart
+            const ctxLadder = document.getElementById('ladderChart').getContext('2d');
+            new Chart(ctxLadder, {
+                type: 'bar',
+                data: {
+                    labels: ['信心', '德行', '知识', '节制', '忍耐', '虔敬', '爱弟兄', '爱众人'],
+                    datasets: [{
+                        label: '成圣的阶梯',
+                        data: [1, 2, 3, 4, 5, 6, 7, 8],
+                        backgroundColor: [
+                            '#1E3A8A', '#1D4ED8', '#2563EB', '#3B82F6', 
+                            '#60A5FA', '#93C5FD', '#F59E0B', '#FBBF24'
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return "加上 (Supply Lavishly)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Prophecy Chart
+            const ctxProphecy = document.getElementById('prophecyChart').getContext('2d');
+            new Chart(ctxProphecy, {
+                type: 'doughnut',
+                data: {
+                    labels: ['乖巧捏造的虚言 (Myths)', '亲眼见过 (Eyewitness)', '更确的预言 (Prophecy)'],
+                    datasets: [{
+                        data: [10, 40, 50],
+                        backgroundColor: [
+                            '#CBD5E1', // Grey
+                            '#3B82F6', // Blue
+                            '#F59E0B'  // Gold
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { padding: 20, font: { family: "'Noto Sans SC', sans-serif" } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

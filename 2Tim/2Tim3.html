@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太后书第三章：末世危险与圣经权威</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FDF5E6; /* Old Lace / Parchment */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #9B2C2C; /* Crimson 800 */
+            font-weight: 700;
+            border-bottom: 3px solid #9B2C2C;
+        }
+
+        .danger-card {
+            border-left: 4px solid #C53030; /* Red 600 */
+        }
+        
+        .scripture-card {
+            border-left: 4px solid #D69E2E; /* Gold 600 */
+        }
+
+        /* Toggle Switch Styling */
+        .toggle-btn {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .toggle-btn.active {
+            background-color: #9B2C2C;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+    </style>
+
+    <!-- Chosen Palette: Crimson (#9B2C2C) for Warning/Peril, Parchment Gold (#D69E2E) for Scripture/Truth. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Times & The Tool". Overview of the moral decay vs. the sufficiency of Scripture.
+         2. Verse Study: Grouped into "The Character of Men" (1-9), "The Cost of Godliness" (10-13), "The God-Breathed Word" (14-17).
+         3. Methodology: Comparison of Exegesis (Original Intent) vs Application (Modern Relevance).
+    -->
+    <!-- Visualization & Content Choices:
+         1. Bar Chart: "The Anatomy of Apostasy" - Categorizing the 19 vices in verses 2-5 (Misdirected Love, Social Breakdown, False Piety).
+         2. Radar Chart: "The Function of Scripture" - Visualizing Doctrine, Reproof, Correction, Instruction (v16).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-md sticky top-0 z-50 border-b border-orange-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-red-800"><i class="fas fa-exclamation-circle"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif">提摩太后书 3章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-red-800">总览：末世与圣经</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-red-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-red-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-900 text-red-100 mt-auto border-t border-red-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-200 mb-2">"圣经...于教训、督责、使人归正、教导人学义都是有益的..."</p>
+            <p class="text-xs text-red-300 uppercase tracking-widest">交互式研经工具 | 聚焦：败坏的人性与无谬的真理</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "末世的危险与神话语的保障",
+                summary: "提摩太后书第三章展现了强烈的对比：一边是末世人性道德的全面崩塌（1-9节），另一边是属神之人依靠圣经得着的稳固保障（14-17节）。保罗警告提摩太，艰难的日子必来到，人们将爱自我胜过爱神。在这种黑暗背景下，保罗指向了唯一的光源——那是他自己的榜样，以及更重要的，那“神所默示”的圣经。",
+                stats: [
+                    { label: "列举罪行", value: "19项" },
+                    { label: "核心神学", value: "圣经默示论" },
+                    { label: "关键命令", value: "躲开这些人" }
+                ]
+            },
+            sections: [
+                {
+                    id: "peril",
+                    title: "末世人性的画像 (3:1-9)",
+                    icon: "fas fa-skull-crossbones",
+                    theme: "danger",
+                    verses: [
+                        {
+                            ref: "3:1-5",
+                            text: "你该知道，末世必有危险的日子来到。因为那时，人要专爱自己，贪爱钱财...有敬虔的外貌，却背了敬虔的实意...",
+                            academic: {
+                                title: "末世 (Eschatos) 与罪恶清单",
+                                content: "“末世”在圣经中指从基督第一次降临到再来之间的整个时期。“危险”（chalepoi）原意为凶暴、野蛮（曾用于形容被鬼附的人，太8:28）。保罗列出的19种罪行以“误导的爱”为核心结构：爱自己、爱钱财、爱宴乐、不爱神。这被称为“希腊化时期的恶行目录”。“有敬虔的外貌”指保留了宗教仪式（Morphosis），但拒绝了其转化生命的大能（Dynamis）。"
+                            },
+                            devotional: {
+                                title: "爱的错位",
+                                content: "罪的核心是爱的次序混乱。当我们把对自己、金钱或快感的爱置于神之上时，我们就进入了灵性的“危险日子”。这面镜子不仅是照外面的世界，更是照教会内部。我们是否有宗教的“外壳”（聚会、术语），却失去了改变生命的“内核”？"
+                            }
+                        },
+                        {
+                            ref: "3:6-9",
+                            text: "那偷进人家、牢笼无知妇女的...从前雅尼和佯庇怎样敌挡摩西，这等人也怎样敌挡真道...",
+                            academic: {
+                                title: "雅尼和佯庇的犹太传统",
+                                content: "保罗引用犹太拉比传统（非旧约正典记载），指出“雅尼和佯庇”是埃及法老的术士，曾模仿摩西的神迹以此抵挡真理。这里的“无知妇女”（gynaikaria，贬义，指小女人）指当时以弗所某些富裕但灵性幼稚、易受假教师情感操纵的女性。这些假教师的特征是“敌挡真道”，他们的愚昧终必显露。"
+                            },
+                            devotional: {
+                                title: "识别属灵的欺骗",
+                                content: "假教师往往利用人的弱点（如负罪感或情感空虚）进行“牢笼”。真正的真理使人自由，虚假的教导使人被奴役。我们要警惕那些只在知识上兜圈子（常常学习），却从未在生命上悔改（终久不能明白真道）的宗教现象。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "example",
+                    title: "使徒的榜样与受苦 (3:10-13)",
+                    icon: "fas fa-hiking",
+                    theme: "neutral",
+                    verses: [
+                        {
+                            ref: "3:10-13",
+                            text: "但你已经服从了我的教训、品行、志向...凡立志在基督耶稣里敬虔度日的也都要受逼迫。",
+                            academic: {
+                                title: "门徒训练的全方位性",
+                                content: "保罗提醒提摩太，他所跟随（parakoloutheo，紧紧跟随/以此为准则）的不仅仅是神学（教训），还包括生活方式（品行）、内在动机（志向）和受苦的经历。提到的安提阿、以哥念、路司得的逼迫（徒13-14章）正是提摩太家乡发生的事，是他亲眼见证的。“都要受逼迫”是一个神学定论：光明与黑暗必然冲突。"
+                            },
+                            devotional: {
+                                title: "敬虔的代价",
+                                content: "如果我们从未感受到世界的压力或逼迫，可能需要反省我们是否真的在“敬虔度日”。顺流而下是容易的，唯有逆流而上才会感受到阻力。真正的门徒训练是生命的传递——你是否有这样的属灵导师，或者你是否正在这样影响他人？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "scripture",
+                    title: "圣经的权威与功用 (3:14-17)",
+                    icon: "fas fa-book-bible",
+                    theme: "scripture",
+                    verses: [
+                        {
+                            ref: "3:14-15",
+                            text: "但你所学习的，所确信的，要存在心里...这圣经能使你因信基督耶稣，有得救的智慧。",
+                            academic: {
+                                title: "圣经的救赎目的",
+                                content: "“存在心里”（mene）意为“居住/持续”。这里的“圣经”（Hieros Grammatos）特指旧约经文，但也暗示了使徒的教导。圣经的首要功能不是提供科学或历史知识，而是给予“得救的智慧”（Soteriological Wisdom）。这智慧的中心是“信基督耶稣”。"
+                            },
+                            devotional: {
+                                title: "确信的根基",
+                                content: "在动荡的世界中，我们唯一的稳定点是神的话。我们不仅要“学习”，还要“确信”，更要“存”在心里。圣经不是一本普通的书，它是引路人，将我们带向基督。离了基督，圣经只是死文字；有了基督，圣经就是生命的光。"
+                            }
+                        },
+                        {
+                            ref: "3:16-17",
+                            text: "圣经都是神所默示的，于教训、督责、使人归正、教导人学义都是有益的，叫属神的人得以完全...",
+                            academic: {
+                                title: "Theopneustos (神所默示)",
+                                content: "这是圣经论最关键的经文。“神所默示”（Theopneustos）直译为“神呼出的气”。这表明圣经的源头是神，具有神的属性（无谬、权威）。<br>四个功能：<br>1. **教训**（Didaskalia）：确立真理。<br>2. **督责**（Elegmon）：指出错误（负面）。<br>3. **使人归正**（Epanorthosin）：扶正/恢复（正面）。<br>4. **教导人学义**（Paideian）：持续的纪律训练。<br>目的：使属神的人“完全”（Artios，装备齐全/胜任）。"
+                            },
+                            devotional: {
+                                title: "属灵成长的全备工具",
+                                content: "我们不需要在圣经之外寻找新的启示来使我们属灵“升级”。神已经呼出了祂的话语，这已足够。圣经像一把手术刀，不仅教导我们什么是对的（教训），指出哪里错了（督责），怎么改正（归正），还训练我们如何保持正确（学义）。读经不应只是获取信息，而是让神的话语重塑我们的生命。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-red-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-red-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-[fadeIn_0.5s]">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-md border-l-4 border-red-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-red-900"><i class="fas fa-book-open"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-orange-50 px-4 py-2 rounded-lg border border-orange-100">
+                                    <span class="block text-xl font-bold text-red-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Vices Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-center border-b pb-2">末世人性的堕落结构 (3:2-4)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="vicesChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"爱自己、爱钱财、爱宴乐"</p>
+                    </div>
+                </div>
+
+                <!-- Scripture Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-md border-t-4 border-yellow-500 mb-8 cursor-pointer hover:shadow-lg transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-yellow-800 mb-4 serif"><i class="fas fa-scroll mr-2"></i> 神所默示的圣经</h3>
+                            <p class="text-gray-600 mb-4">
+                                "圣经都是神所默示的，于教训、督责、使人归正、教导人学义都是有益的..."
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i> <strong>教训：</strong> 什么是对的</li>
+                                <li class="flex items-center"><i class="fas fa-times text-red-500 mr-2"></i> <strong>督责：</strong> 哪里错了</li>
+                                <li class="flex items-center"><i class="fas fa-sync-alt text-blue-500 mr-2"></i> <strong>归正：</strong> 怎么改正</li>
+                                <li class="flex items-center"><i class="fas fa-dumbbell text-purple-500 mr-2"></i> <strong>学义：</strong> 如何保持</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="bibleFunctionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                // Determine border color based on theme
+                const borderColor = section.theme === 'danger' ? 'border-red-200' : 
+                                  section.theme === 'scripture' ? 'border-yellow-200' : 'border-gray-200';
+                
+                const titleColor = section.theme === 'danger' ? 'text-red-800' : 
+                                 section.theme === 'scripture' ? 'text-yellow-800' : 'text-gray-800';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 border ${borderColor} overflow-hidden">
+                        <!-- Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="toggle-btn px-3 py-1 text-xs font-medium rounded ${appState.studyMode === 'academic' ? 'active' : 'bg-white text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="toggle-btn px-3 py-1 text-xs font-medium rounded ${appState.studyMode === 'devotional' ? 'active' : 'bg-white text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px]">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} animate-[fadeIn_0.3s]">
+                                <h4 class="text-${section.theme === 'danger' ? 'red' : 'yellow'}-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 text-white flex items-center justify-center shadow">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#FDF5E6]/95 backdrop-blur py-4 mb-8 border-b border-orange-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-red-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- Logic for Modes ---
+        function setCardMode(id, mode) {
+            // Visual toggle for specific card
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block animate-[fadeIn_0.3s]' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.classList.add('active');
+                btnDe.classList.remove('active');
+            } else {
+                btnAc.classList.remove('active');
+                btnDe.classList.add('active');
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            本章的学习要求我们不仅要理解第一世纪的背景（学术），更要在这个弯曲悖谬的世代活出真理（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-gray-700">
+                            <div class="mb-4 text-gray-700 text-3xl"><i class="fas fa-glasses"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>文法与词源：</strong> 深入研究 <i>Theopneustos</i> (默示) 和 <i>Morphosis</i> (外貌) 等希腊文原意。</li>
+                                <li><strong>历史与文化：</strong> 识别“希腊化时期的恶行目录”文体以及“雅尼和佯庇”的犹太拉比背景。</li>
+                                <li><strong>神学意涵：</strong> 确立“末世”的神学定义及圣经的“充足性”。</li>
+                                <li><strong>原则：</strong> 发现作者的原意（What it meant）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-700">
+                            <div class="mb-4 text-red-700 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-red-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>自我省察：</strong> 将罪恶清单作为镜子，反省自己是否有“敬虔的外貌却背了实意”。</li>
+                                <li><strong>实践应用：</strong> 如何在生活中具体地使用圣经来“督责”和“归正”自己。</li>
+                                <li><strong>警醒守望：</strong> 识别当代的虚假教导，并立志在逼迫中跟随基督。</li>
+                                <li><strong>原则：</strong> 寻求当下的意义（What it means for me）。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Vices Bar Chart
+            const ctxVices = document.getElementById('vicesChart').getContext('2d');
+            new Chart(ctxVices, {
+                type: 'bar',
+                data: {
+                    labels: ['爱自己 (Misdirected Self)', '爱钱财 (Materialism)', '爱宴乐 (Hedonism)', '不爱神 (Impiety)'],
+                    datasets: [{
+                        label: '爱的错位',
+                        data: [100, 90, 85, 95], // Conceptual intensity
+                        backgroundColor: [
+                            '#C53030', // Red
+                            '#DD6B20', // Orange
+                            '#D69E2E', // Yellow
+                            '#2D3748'  // Dark Gray
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Bible Function Radar Chart
+            const ctxBible = document.getElementById('bibleFunctionChart').getContext('2d');
+            new Chart(ctxBible, {
+                type: 'radar',
+                data: {
+                    labels: ['教训 (Doctrine)', '督责 (Reproof)', '归正 (Correction)', '学义 (Training)'],
+                    datasets: [{
+                        label: '圣经的功用 (v16)',
+                        data: [90, 80, 85, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(214, 158, 46, 0.2)', // Gold transparent
+                        borderColor: '#D69E2E',
+                        pointBackgroundColor: '#D69E2E',
+                        pointBorderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { size: 12 }, color: '#4A5568' },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

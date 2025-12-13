@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提多书第三章：重生的洗与行善的民</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Emerald Green & Slate Gray */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #ECFDF5; /* Emerald 50 - Fresh/Renewal */
+            color: #064E3B; /* Emerald 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Emerald Green */
+        .active-tab {
+            color: #059669; /* Emerald 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #059669;
+            border-radius: 2px;
+        }
+
+        /* Verse Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            background-color: #FFFFFF;
+        }
+        .verse-card:hover {
+            border-left-color: #34D399; /* Emerald 400 */
+            transform: translateX(4px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-emerald-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-emerald-900 serif">
+                        <i class="fas fa-leaf mr-2 text-emerald-500"></i> 提多书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：重生的洗</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-emerald-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-emerald-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-emerald-900 text-emerald-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"藉着重生的洗和圣灵的更新。" (3:5)</p>
+            <p class="text-xs text-emerald-400 mt-2">交互式研经工具 | 聚焦：社会责任与救恩神学</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "基督徒的社会见证与救恩根基",
+                summary: "提多书第三章是整卷书的高潮。保罗从教会（第一章）和家庭（第二章）转向了更为广阔的社会公共领域。他教导信徒如何在非信徒社会中作好公民（1-2节），并给出了新约中最深刻的救恩论述之一（3-7节），解释了我们为何能活出新生命的深层原因——因为圣灵的更新。最后，他以关于教会纪律的严厉警告结束全书。",
+                highlights: [
+                    { icon: "fas fa-city", color: "text-slate-600", text: "公民责任" },
+                    { icon: "fas fa-tint", color: "text-emerald-500", text: "重生的洗" },
+                    { icon: "fas fa-hammer", color: "text-red-500", text: "拒绝分门结党" }
+                ]
+            },
+            sections: [
+                {
+                    id: "citizenship",
+                    title: "基督徒的社会责任 (3:1-2)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "3:1-2",
+                            text: "你要提醒众人，叫他们顺服作官的...预备行各样的善事。不要毁谤，不要争竞，总要和平，向众人大显温柔。",
+                            academic: {
+                                title: "提醒 (Hupomimnēskō) 与社会背景",
+                                content: "“提醒”暗示这并非新教导，而是容易被遗忘的真理。克里特人以叛逆和抗拒罗马统治闻名（历史上克里特常有暴动）。保罗要求信徒“顺服作官的”，是在这种动荡政治背景下的反文化教导。这里的“温柔”（prautēs）是希腊文化中被视为软弱的品质，但在基督里却是力量的受控表现。"
+                            },
+                            devotional: {
+                                title: "最好的公民",
+                                content: "基督徒应当是最好的公民。我们的顺服不是出于对权力的恐惧，而是出于对神的敬畏。在网络充满“毁谤”和“争竞”暴力的今天，基督徒若能“向众人大显温柔”，本身就是极大的神迹和见证。你的政治言论和公共行为，是否显出了基督的温柔？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "salvation",
+                    title: "救恩的神学核心 (3:3-7)",
+                    themeColor: "emerald",
+                    verses: [
+                        {
+                            ref: "3:3",
+                            text: "我们从前也是无知、悖逆、受迷惑、服侍各样私欲和宴乐...",
+                            academic: {
+                                title: "人类困境的诊断",
+                                content: "保罗列出了未重生之人的七重堕落状态。这里的“服侍”（douleuō）意为“做奴隶”。未得救的人并非自由人，而是“私欲”的奴隶。这解释了为何第1-2节的社会公义在未重生的人群中是不可能实现的——没有内在的自由，就没有外在的和平。"
+                            },
+                            devotional: {
+                                title: "同理心的源头",
+                                content: "当我们看到社会上的罪恶或他人的攻击时，不要急于定罪，而要回忆“我们从前也是...”这种记忆会生出谦卑和怜悯。我们能变好，完全是因为恩典，而非我们比别人优越。"
+                            }
+                        },
+                        {
+                            ref: "3:4-5",
+                            text: "但到了神我们救主的恩慈...他便救了我们，并不是因我们自己所行的义，乃是照他的怜悯，藉着重生的洗和圣灵的更新。",
+                            academic: {
+                                title: "重生的洗 (Loutron Palingenesias)",
+                                content: "这是新约中神学密度极高的一节。*Palingenesia*（重生/复兴）仅在此处和太19:28出现。这里提到救恩的两个方面：1.地位上的“洗”（洗净罪污，称义）；2.性质上的“更新”（圣灵赐予新生命）。句式强调“不是出于义...乃是照怜悯”，彻底排除了人本功德。"
+                            },
+                            devotional: {
+                                title: "每日的更新",
+                                content: "“重生的洗”是一次性的，但“圣灵的更新”却是持续的。就像我们身体每天需要新陈代谢，我们的属灵生命也需要圣灵每天的更新。不要只倚靠十年前的感动，今天要寻求圣灵新鲜的充满。"
+                            }
+                        },
+                        {
+                            ref: "3:6-7",
+                            text: "圣灵就是神藉着耶稣基督...厚厚浇灌在我们身上的...好叫我们因他的恩得称为义...",
+                            academic: {
+                                title: "三一神论的救赎",
+                                content: "这几节经文清晰展示了三位一体的工作：父神显明恩慈（v4），藉着圣子耶稣基督（v6），将圣灵厚厚浇灌（v6）。“厚厚浇灌”原文意为“丰富地倒出来”，呼应约珥书2:28的预言。目的是“称义”并成为“后嗣”。"
+                            },
+                            devotional: {
+                                title: "属灵的富足",
+                                content: "神对我们的供应不是吝啬的，而是“厚厚浇灌”的。我们拥有全备的三一神的救恩。作为一个拥有宇宙万物继承权（后嗣）的人，我们为何还要在世俗的蝇头小利上斤斤计较呢？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "discipline",
+                    title: "教会内的纪律 (3:8-11)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "3:8-9",
+                            text: "...留心行善...要远避无知的辩论...和关于律法的争竞...",
+                            academic: {
+                                title: "正面的行善 vs 负面的辩论",
+                                content: "保罗对比了“有益的”（行善）和“无益的、虚妄的”（空谈辩论）。这里的“行善”（kalōn ergōn）不仅指慈善，更指一种高尚、美好的职业或行为模式。对于那些陷入家谱和律法细节争论的人，保罗的建议是“远避”（periïstaso，意为“转身背对”）。"
+                            },
+                            devotional: {
+                                title: "信仰的实用主义",
+                                content: "基督教信仰是非常实用的。检验你属灵状况的不是你能辩论多少神学难题，而是你是否“留心行善”。当神学讨论变成纯粹的智力游戏且引发纷争时，最属灵的做法是“转身离开”。"
+                            }
+                        },
+                        {
+                            ref: "3:10-11",
+                            text: "分门结党的人，警戒过一两次，就要弃绝他。",
+                            academic: {
+                                title: "分门结党 (Hairetikos)",
+                                content: "英文单词 Heretic（异端）源于此词。原意指“选择自己派别的人”，即那些因固执己见而破坏教会合一的人。保罗给出了清晰的教会纪律程序：两次警戒，然后弃绝（拒绝往来）。这是为了保护羊群不受狼的侵害。"
+                            },
+                            devotional: {
+                                title: "合一的底线",
+                                content: "爱心是有底线的。对于那些顽固不化、制造分裂且以此为乐的人，无限期的包容就是对真理的残忍。为了教会的整体健康，有时必须做出痛苦的“弃绝”决定。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-emerald-500">
+                        <h2 class="text-3xl font-bold mb-6 serif text-emerald-900">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-gray-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Theology Card: The Washing of Regeneration -->
+                    <div class="bg-gradient-to-br from-emerald-800 to-emerald-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-water text-4xl mb-4 text-emerald-300"></i>
+                        <h3 class="text-xl font-bold mb-2">救恩的机制 (3:5)</h3>
+                        <p class="text-emerald-100 text-sm italic mb-4">"重生的洗 + 圣灵的更新"</p>
+                        <div class="flex justify-center items-center space-x-4 w-full">
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 rounded-full border-2 border-emerald-400 flex items-center justify-center mb-1">
+                                    <span class="text-xs font-bold">洗净</span>
+                                </div>
+                                <span class="text-xs text-emerald-200">地位(过去)</span>
+                            </div>
+                            <div class="h-0.5 bg-emerald-500 w-8"></div>
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 rounded-full bg-emerald-600 flex items-center justify-center mb-1 animate-pulse">
+                                    <span class="text-xs font-bold">更新</span>
+                                </div>
+                                <span class="text-xs text-emerald-200">生命(持续)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Before and After Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-emerald-50">
+                        <h3 class="text-lg font-bold mb-2 text-emerald-800 w-full border-b border-emerald-100 pb-2">生命的翻转 (3:3 vs 3:4-7)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="transformationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">从"奴仆"到"后嗣"的根本性改变</p>
+                    </div>
+
+                    <!-- Salvation Basis Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-emerald-50">
+                        <h3 class="text-lg font-bold mb-2 text-emerald-800 w-full border-b border-emerald-100 pb-2">救恩的根基 (3:5)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="basisChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">彻底排除人的功德，单单倚靠神的怜悯</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#ECFDF5]/95 backdrop-blur py-4 mb-8 border-b border-emerald-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-emerald-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-emerald-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-emerald-600 text-white font-bold' : 'text-gray-500 hover:bg-emerald-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-gray-500 hover:bg-emerald-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-emerald-400 text-white font-bold' : 'text-gray-500 hover:bg-emerald-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                const titleColorClass = section.themeColor === 'slate' ? 'text-slate-700 border-slate-200' : 
+                                        section.themeColor === 'red' ? 'text-red-800 border-red-200' : 'text-emerald-800 border-emerald-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-emerald-50">
+                        <div class="p-5 bg-gradient-to-r from-white to-[#F0FDF4] border-b border-emerald-50">
+                            <span class="inline-block px-2 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-emerald-50">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-emerald-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-emerald-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-emerald-100/50 transition">
+                                <h4 class="text-emerald-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-emerald-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-emerald-900">解经原则：神学与伦理的结合</h2>
+                        <p class="text-gray-600">
+                            提多书第三章展示了保罗如何用深奥的神学（救恩论）来支撑实际的伦理（公民责任）。解经必须连接“天上的根基”与“地上的生活”。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">关注：神学逻辑与原文含义</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>原则：</strong> 语境分析与系统神学。分析保罗如何用三一神论（v4-6）来回应社会暴动背景（v1）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 罕见词研究（如<em>Palingenesia</em> 重生）。
+                                    <br>2. 语法结构分析（“不是...乃是...”的对比）。
+                                </li>
+                                <li><strong>目的：</strong> 确立信仰的教义根基，防止律法主义或反律法主义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-emerald-500">
+                            <div class="text-emerald-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-emerald-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">关注：身份认同与生活见证</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>原则：</strong> 身份驱动行为。因为我们是“重生的后嗣”，所以我们应当是“温柔的公民”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 回忆与感恩（回忆“从前也是无知”以生发谦卑）。
+                                    <br>2. 圣灵更新的操练（每日寻求圣灵充满）。
+                                </li>
+                                <li><strong>目的：</strong> 在公共领域活出基督的样式，维护教会合一。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Transformation Chart (Radar) - Comparing Before and After states
+            const ctxTrans = document.getElementById('transformationChart').getContext('2d');
+            new Chart(ctxTrans, {
+                type: 'radar',
+                data: {
+                    labels: ['自由/被囚', '智慧/无知', '顺服/悖逆', '爱人/恨人', '平安/争竞'],
+                    datasets: [
+                        {
+                            label: '从前 (未重生)',
+                            data: [10, 10, 10, 10, 10], // Low scores represent negative traits
+                            backgroundColor: 'rgba(148, 163, 184, 0.5)', // Slate
+                            borderColor: '#64748B',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '如今 (圣灵更新)',
+                            data: [90, 80, 90, 95, 90], // High scores represent redeemed traits
+                            backgroundColor: 'rgba(16, 185, 129, 0.5)', // Emerald
+                            borderColor: '#059669',
+                            borderWidth: 2
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            ticks: { display: false }, 
+                            grid: { color: '#D1FAE5' }, // Emerald 100
+                            pointLabels: { display: true, font: { size: 11, family: "'Noto Sans SC', sans-serif" } } 
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Basis of Salvation Chart (Doughnut)
+            const ctxBasis = document.getElementById('basisChart').getContext('2d');
+            new Chart(ctxBasis, {
+                type: 'doughnut',
+                data: {
+                    labels: ['我们所行的义 (Works)', '神的怜悯 (Mercy)'],
+                    datasets: [{
+                        data: [0, 100], // 0% Works, 100% Mercy
+                        backgroundColor: [
+                            '#CBD5E1', // Slate 300 (Grayed out)
+                            '#059669'  // Emerald 600
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

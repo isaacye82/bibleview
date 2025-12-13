@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太后书第四章：当跑的路与公义冠冕</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAF5FF; /* Light Purple Tint */
+            color: #4A044E; /* Dark Purple */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #7E22CE; /* Purple 700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background-color: #F59E0B; /* Amber 500 */
+            border-radius: 2px;
+        }
+
+        .crown-card {
+            background: linear-gradient(135deg, #FFFBEB 0%, #FFFFFF 100%);
+            border-left: 4px solid #F59E0B;
+        }
+        
+        .final-card {
+            background: linear-gradient(135deg, #F3E8FF 0%, #FFFFFF 100%);
+            border-left: 4px solid #9333EA;
+        }
+
+        /* Toggle Animation */
+        .fade-enter {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+        .fade-enter-active {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+    </style>
+
+    <!-- Chosen Palette: Sunset Purple (#9333EA) for the End, Crown Gold (#F59E0B) for Glory. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Finish Line". Visualizing Paul's 3-fold summary (Fought, Finished, Kept).
+         2. Verse Study: Grouped by "The Charge" (1-5), "The Valediction" (6-8), "The Needs" (9-18), "The Benediction" (19-22).
+         3. Methodology: Summary of the Hermeneutical approach (Academic/Devotional).
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "The Final Charge Breakdown" (Preach, Reprove, Rebuke, Exhort).
+         2. Bar Chart: "Paul's Final Status" (Life Poured Out vs Crown Laid Up).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-purple-700"><i class="fas fa-crown"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif">提摩太后书 4章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-purple-800">总览：终点线</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-purple-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-purple-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-purple-900 text-purple-100 mt-auto border-t border-purple-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-400 mb-2">"那美好的仗我已经打过了，当跑的路我已经跑尽了，所信的道我已经守住了。"</p>
+            <p class="text-xs text-purple-300 uppercase tracking-widest">交互式研经工具 | 聚焦：忠心到底与永恒的奖赏</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "临终的嘱托与凯旋的宣告",
+                summary: "提摩太后书第四章是保罗书信的绝唱。在罗马阴暗的牢房里，这位身经百战的福音老将面对即将来临的死刑，没有恐惧，只有对年轻接班人的严厉嘱托（务要传道）和对自己一生的无悔总结（浇奠）。本章不仅有神学的高峰，也充满了极具人情味的细节——对外衣的需要、对书卷的渴望以及被同工离弃的孤单。",
+                stats: [
+                    { label: "最后命令", value: "传道" },
+                    { label: "关键隐喻", value: "浇奠" },
+                    { label: "终极奖赏", value: "冠冕" }
+                ]
+            },
+            sections: [
+                {
+                    id: "charge",
+                    title: "严厉的嘱托：务要传道 (4:1-5)",
+                    icon: "fas fa-bullhorn",
+                    theme: "purple",
+                    verses: [
+                        {
+                            ref: "4:1-2",
+                            text: "我在神面前，并在将来审判活人死人的基督耶稣面前...嘱咐你：务要传道，无论得时不得时...",
+                            academic: {
+                                title: "末世论背景下的命令",
+                                content: "“嘱咐”（diamartyromai）是一个法律术语，意为在证人面前庄严宣誓。保罗召唤了宇宙中最高的证人（神和基督）以及最严肃的时刻（审判活人死人/显现/国度），赋予了这个命令极度的紧迫性。“传道”（Keryxon）指像皇家传令官一样宣告。“无论得时不得时”指不管机会是否有利，都要随时预备好（eukairos akairos）。"
+                            },
+                            devotional: {
+                                title: "在其位，谋其政",
+                                content: "当我们意识到自己是在那位即将再来的君王面前服侍时，我们的工作态度会完全改变。传福音不是看心情，也不是看环境（得时不得时），而是一种神圣的责任。这也是对每一个信徒的提醒：不要等到完美的时机才开口，现在就是最好的时机。"
+                            }
+                        },
+                        {
+                            ref: "4:3-5",
+                            text: "因为时候要到，人必厌烦纯正的道理，耳朵发痒...你却要凡事谨慎，忍受苦难...",
+                            academic: {
+                                title: "耳朵发痒 (Knetho) 与消费主义宗教",
+                                content: "“耳朵发痒”是一个生动的医学隐喻，指人们渴望听到让自己舒服、新奇、迎合私欲的话，而不是真理的针砭。这是对宗教消费主义的早期预言——人们雇佣教师来满足自己的好奇心而非改正生命。对此，保罗给出的解药是“清醒”（nephe，谨慎/不醉酒）和“忍受苦难”。"
+                            },
+                            devotional: {
+                                title: "不要为了流量出卖真理",
+                                content: "在这个资讯爆炸的时代，我们很容易被那些迎合大众口味、只讲成功和心理安慰的信息吸引。但保罗警告我们，真理往往是逆耳的。作为听众，我们是否只听自己想听的？作为传讲者，我们是否敢于在不受欢迎时依然忠于真理？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "valediction",
+                    title: "凯旋的宣告：公义冠冕 (4:6-8)",
+                    icon: "fas fa-trophy",
+                    theme: "gold",
+                    verses: [
+                        {
+                            ref: "4:6",
+                            text: "我现在被浇奠，我离世的时候到了。",
+                            academic: {
+                                title: "浇奠 (Spendomai) 与 离世 (Analuseos)",
+                                content: "“浇奠”指献祭结束前将酒浇在祭物上，象征生命的最后倾倒，不仅是死亡，更是敬拜。“离世”原文是航海或军事术语，指“解开缆绳启航”或“拔营撤军”。保罗不视死亡为终结，而是视为起锚开往新港口，或行军结束后的拔营回家。"
+                            },
+                            devotional: {
+                                title: "生命的最后一杯酒",
+                                content: "当生命走到尽头，我们是感到被剥夺，还是感到这是向神献上的最后敬拜？保罗的一生是一场漫长的活祭，死亡只是最后浇上的那一杯酒。这是一种极度洒脱且神圣的生死观——活着是为主工作，死了是为主献祭。"
+                            }
+                        },
+                        {
+                            ref: "4:7-8",
+                            text: "那美好的仗我已经打过了...从此以后，有公义的冠冕为我存留...",
+                            academic: {
+                                title: "完成式 (Perfect Tense) 的力量",
+                                content: "这三句名言在原文都使用了完成时态（Teteleka等），强调动作已完成且影响持续至今。这里使用了竞技场的隐喻：摔跤/打仗（Agon）、赛跑（Dromos）、守规则（Pistis）。“公义的冠冕”（Stephanos）不是皇冠（Diadem），而是给获胜运动员的桂冠。这冠冕不仅给保罗，也给所有“爱慕他显现”的人。"
+                            },
+                            devotional: {
+                                title: "无悔的人生",
+                                content: "人生最大的悲剧不是死亡，而是死的时候充满遗憾。保罗之所以能平静面对死亡，是因为他完成了任务。他没有中途退赛，没有违规，也没有放弃。我们每一天都应当问自己：如果今天是我生命的终点，我能说“我守住了”吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "personal",
+                    title: "个人的需求与孤单 (4:9-18)",
+                    icon: "fas fa-user-friends",
+                    theme: "gray",
+                    verses: [
+                        {
+                            ref: "4:9-13",
+                            text: "你要赶紧的到我这里来...底马...离弃我...我在特罗亚留下的外衣...那些书卷...",
+                            academic: {
+                                title: "历史细节与人性的真实",
+                                content: "底马因“贪爱现今的世界”而离开，与路加的“独在”形成对比。“外衣”（Phailonen）是厚重的羊毛斗篷，暗示冬日监狱的寒冷。“书卷”（Biblia）和“皮卷”（Membranas）可能指旧约圣经或耶稣的言行录。这显示即便是伟大的使徒，也有物质（怕冷）、情感（怕孤单）和智性（阅读）的需求。"
+                            },
+                            devotional: {
+                                title: "属灵巨人的平凡需求",
+                                content: "这段经文让我们看到保罗不仅是圣人，也是凡人。他会冷，会寂寞，想看书，想见朋友。这安慰了我们：属灵不意味着没有情感需求。同时，我们也看到他的坚韧——即使在被抛弃和寒冷中，他依然在研读神的话语。我们是否在困境中仍不忘“皮卷”？"
+                            }
+                        },
+                        {
+                            ref: "4:16-18",
+                            text: "我初次申诉...没有人前来帮助...惟有主站在我旁边，加给我力量...",
+                            academic: {
+                                title: "法律程序中的孤立",
+                                content: "“申诉”（Apologia）是法庭辩护。按罗马法律，被告有权请辩护人。但在尼禄的恐怖统治下，没有人敢站在保罗身边。这里的“狮子口”可能隐喻撒但、尼禄或竞技场的野兽。虽然人离弃了他，但复活的主作为“辩护者”（Paraclete）在法庭上站在他身旁（Parestē）。"
+                            },
+                            devotional: {
+                                title: "虽千万人吾往矣",
+                                content: "这是信心最严峻的考验：当你为真理站立时，却发现身边空无一人。但正是在这种绝对的孤立中，保罗体验到了主的同在。如果你正经历被人误解或孤立，请记得：这是主“站在你旁边”的最佳时刻。人的缺席，正是神同在的彰显。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-purple-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-purple-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-[fadeIn_0.5s]">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-md border-l-4 border-purple-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-purple-900"><i class="fas fa-flag-checkered"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-purple-50 px-4 py-2 rounded-lg border border-purple-100">
+                                    <span class="block text-xl font-bold text-purple-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Life Status Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-md flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-center border-b pb-2">保罗的生命总结 (4:7)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="lifeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"三个完美的完成式"</p>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="crown-card p-6 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 text-2xl">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-yellow-800">公义的冠冕</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">
+                            不仅仅是给保罗的，也是给所有"爱慕他显现"之人的。这不仅是终点，更是永恒的起点。
+                        </p>
+                    </div>
+
+                    <div class="final-card p-6 rounded-xl shadow-sm cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                        <div class="flex items-center gap-4 mb-4">
+                            <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 text-2xl">
+                                <i class="fas fa-scroll"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-purple-800">无论得时不得时</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">
+                            在耳朵发痒的世代，这是最艰难却最必要的命令。传道不是一种选择，而是一种誓约。
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                // Determine style based on theme
+                const colors = {
+                    purple: { border: 'border-purple-200', text: 'text-purple-800', iconBg: 'bg-purple-800' },
+                    gold: { border: 'border-yellow-200', text: 'text-yellow-800', iconBg: 'bg-yellow-600' },
+                    gray: { border: 'border-gray-200', text: 'text-gray-700', iconBg: 'bg-gray-600' }
+                }[section.theme];
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 border ${colors.border} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Verse Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-gray-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-purple-600 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-enter-active">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-gray-400 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-enter-active">
+                                <h4 class="text-purple-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-purple-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${colors.border}">
+                            <div class="w-10 h-10 rounded-full ${colors.iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${colors.text} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#FAF5FF]/95 backdrop-blur py-4 mb-8 border-b border-purple-100 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-gray-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-purple-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            // Visual toggle for specific card
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-enter-active' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-enter-active' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-gray-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-purple-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            通过对提摩太后书最后一章的研读，我们再次看到两种解经方法如何如同双翼，帮助我们飞向真理的高空。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-gray-700">
+                            <div class="mb-4 text-gray-700 text-3xl"><i class="fas fa-search-plus"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>焦点：</strong> 挖掘原文的深层含义（如 <i>Spendomai</i> 浇奠，<i>Analuseos</i> 离世）。</li>
+                                <li><strong>背景：</strong> 还原尼禄时期的法庭场景和罗马监狱的地理环境。</li>
+                                <li><strong>神学：</strong> 分析“公义冠冕”的末世论意义和奖赏论。</li>
+                                <li><strong>原则：</strong> 确保我们听到的是第一世纪保罗的声音。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-600">
+                            <div class="mb-4 text-purple-600 text-3xl"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-purple-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>焦点：</strong> 将保罗的孤独与凯旋投射到我们的人生经历中。</li>
+                                <li><strong>应用：</strong> 问自己：“我的外衣是什么？”“谁是我的底马？”“我是否在跑当跑的路？”</li>
+                                <li><strong>情感：</strong> 在保罗的人性软弱中得到安慰，在他的信心坚固中得到激励。</li>
+                                <li><strong>原则：</strong> 确保真理在二十一世纪的我们心中产生回响。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-purple-100 p-6 rounded-lg text-center border border-purple-200">
+                        <p class="text-purple-800 font-bold text-lg">"愿主与你的灵同在！愿恩惠常与你们同在！"</p>
+                        <p class="text-purple-600 text-sm mt-2">—— 提摩太后书 4:22</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Life Status Chart
+            const ctxLife = document.getElementById('lifeChart').getContext('2d');
+            new Chart(ctxLife, {
+                type: 'bar',
+                data: {
+                    labels: ['仗已打过 (Fight)', '路已跑尽 (Race)', '道已守住 (Faith)'],
+                    datasets: [{
+                        label: '完成度',
+                        data: [100, 100, 100],
+                        backgroundColor: [
+                            '#9333EA', // Purple
+                            '#F59E0B', // Gold
+                            '#4B5563'  // Gray
+                        ],
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 110,
+                            ticks: { display: false },
+                            grid: { display: false }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得前书第五章：牧养、谦卑与荣耀的冠冕</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0FDF4; /* Green 50 */
+            color: #064E3B; /* Green 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #047857; /* Emerald 700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #B45309; /* Amber 700 */
+            border-radius: 2px;
+        }
+
+        .pastor-card {
+            border-left: 4px solid #059669; /* Emerald 600 */
+        }
+        
+        .humble-card {
+            border-left: 4px solid #92400E; /* Amber 800 */
+        }
+
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Pasture Green (#059669) for Shepherding, Earthy Amber (#92400E) for Humility. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Chief Shepherd's Flock". Overview of Leadership (Elders) and Community (Younger/All).
+         2. Verse Study: Grouped by "Shepherding God's Flock" (1-4), "Clothed in Humility" (5-7), "Spiritual Warfare" (8-11), "Final Greetings" (12-14).
+         3. Methodology: Summary of the Hermeneutical approach.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Horizontal Bar Chart: "Shepherding Motives" (Contrast between Negative prohibitions and Positive commands).
+         2. Radar Chart: "Spiritual Defense" (Sobriety, Alertness, Faith, etc.).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur shadow-sm sticky top-0 z-50 border-b border-green-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-green-700"><i class="fas fa-crook"></i></span> <!-- Shepherd's crook metaphor -->
+                    <span class="text-xl font-bold text-gray-800 serif">彼得前书 5章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-green-800">总览：牧者与群羊</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-green-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-gray-500 hover:text-green-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-900 text-green-100 mt-auto border-t border-green-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-400 mb-2">"到了牧长显现的时候，你们必得那永不衰残的荣耀冠冕。"</p>
+            <p class="text-xs text-green-300 uppercase tracking-widest">交互式研经工具 | 聚焦：仆人式领导与属灵警醒</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "长老的牧养与信徒的谦卑",
+                summary: "彼得前书第五章是整卷书的总结。面对外部的火炼试验（第四章），教会内部需要稳固的领导和紧密的团结。彼得首先以“同作长老”的身份劝勉教会领袖要按着神的心意牧养群羊，不要辖制，要做榜样。接着，他劝勉年幼的要顺服年长的，并呼召全教会以谦卑束腰。最后，他揭露了那恶者（魔鬼）的真实面目，并再次确立神赐恩典的应许。",
+                stats: [
+                    { label: "牧养禁令", value: "3项" },
+                    { label: "核心美德", value: "谦卑" },
+                    { label: "仇敌比喻", value: "狮子" }
+                ]
+            },
+            sections: [
+                {
+                    id: "shepherd",
+                    title: "牧养神的群羊 (5:1-4)",
+                    icon: "fas fa-users",
+                    theme: "pastor",
+                    verses: [
+                        {
+                            ref: "5:1-2",
+                            text: "我这同作长老，作基督受苦的见证...务要牧养在你们中间神的群羊，按着神旨意照管他们...",
+                            academic: {
+                                title: "同作长老 (Sympresbyteros) 与 牧养 (Poimanate)",
+                                content: "彼得没有使用“使徒”头衔，而是谦卑地自称“同作长老的”，强调与读者的认同感。第2节将“长老”（身份）、“监督”（职能，Episkopountes）和“牧养”（动作）结合在一起，表明早期教会这三个概念是互通的。彼得提出了三个对比：1. 出于甘心 vs 出于勉强；2. 出于乐意 vs 贪财（Aischrokerdos，可耻的利益）；3. 作群羊榜样 vs 辖制（Katakurieuontes，像主一样统治）。"
+                            },
+                            devotional: {
+                                title: "不是辖制，是榜样",
+                                content: "真正的属灵领袖不是老板，而是牧人。当你拥有权柄时，试探在于利用它来谋取私利或控制他人。彼得提醒我们，群羊是“神的”，不是领袖的私有财产。我们要问自己：我是用命令来推动人，还是用生命榜样来吸引人？服事的动力是责任的重担，还是对神旨意的甘心回应？"
+                            }
+                        },
+                        {
+                            ref: "5:3-4",
+                            text: "也不是辖制所托付你们的，乃是作群羊的榜样。到了牧长显现的时候，你们必得那永不衰残的荣耀冠冕。",
+                            academic: {
+                                title: "牧长 (Archipoimenos) 与 冠冕 (Stephanos)",
+                                content: "基督被称为“牧长”（Chief Shepherd），所有地上长老都是在他手下工作的副牧（Under-shepherds）。“冠冕”指竞技场上得胜者的花环（Stephanos），而非皇冠（Diadem）。“永不衰残”（Amarantinon）是用一种传说中永不凋谢的花（Amaranth）来形容，与地上会枯干的花环形成对比。"
+                            },
+                            devotional: {
+                                title: "永恒的绩效评估",
+                                content: "我们在地上的服事，最终的汇报对象是基督。我们可能在地上得不到掌声，甚至会被误解，但“牧长”知道每一份辛劳。这荣耀的冠冕不是给那些最有才干的人，而是给那些忠心牧养、温柔待人的人。这是我们在艰难服事中坚持下去的终极动力。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "humility",
+                    title: "以谦卑束腰 (5:5-7)",
+                    icon: "fas fa-people-carry",
+                    theme: "humble",
+                    verses: [
+                        {
+                            ref: "5:5",
+                            text: "你们年幼的，也要顺服年长的。就是你们众人也都要以谦卑束腰，彼此顺服；因为神阻挡骄傲的人，赐恩给谦卑的人。",
+                            academic: {
+                                title: "以谦卑束腰 (Egkombosasthe)",
+                                content: "“年幼的”可能指年龄，也可能指信主资历浅的人。“以谦卑束腰”是一个极具画面感的词，指系上奴隶的围裙（Egkomboma）。这极可能影射耶稣在最后晚餐束腰洗脚的场景（约13:4）。引用箴言3:34说明谦卑不仅是美德，更是神赐恩典的前提条件。骄傲使人站在神的对立面（Antitassetai，像军队一样列阵对抗）。"
+                            },
+                            devotional: {
+                                title: "属灵的着装规范",
+                                content: "在神的国度里，唯一的着装要求是“系上谦卑的围裙”。这不是一种自卑的情结，而是一种随时准备服事他人的心态。当我们骄傲时，我们实际上是在与神宣战；当我们谦卑时，神的恩典就如水往低处流一样临到我们。在教会冲突中，解决之道往往不是争论对错，而是双方都穿上这条“围裙”。"
+                            }
+                        },
+                        {
+                            ref: "5:6-7",
+                            text: "所以，你们要自卑，服在神大能的手下...你们要将一切的忧虑卸给神，因为他顾念你们。",
+                            academic: {
+                                title: "谦卑与卸忧虑的语法联系",
+                                content: "第7节在希腊原文中是第6节的分词从句：“要自卑...将一切忧虑卸给神”。这表明“卸下忧虑”是“谦卑”的具体表现之一。忧虑往往源于骄傲（认为必须靠自己掌控局面）。“大能的手”是出埃及记中神施行拯救的常用语。谦卑就是承认神的大能，放弃对自己命运的掌控欲。"
+                            },
+                            devotional: {
+                                title: "忧虑是骄傲的表现",
+                                content: "我们常以为忧虑是责任感的表现，但彼得告诉我们：忧虑其实是不信和骄傲。它意味着我们在说：“神啊，我不放心你来掌管，我得自己扛着。”真正的谦卑是承认自己无能为力，并把重担“扔”（Epiripsantes）给神。因为祂不仅有大能的手，更有顾念（Care）我们的心。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "warfare",
+                    title: "属灵争战与坚固 (5:8-11)",
+                    icon: "fas fa-shield-alt",
+                    theme: "pastor",
+                    verses: [
+                        {
+                            ref: "5:8-9",
+                            text: "务要谨守，警醒。因为你们的仇敌魔鬼，如同吼叫的狮子，遍地游行，寻找可吞吃的人...",
+                            academic: {
+                                title: "吼叫的狮子与抵挡 (Antistete)",
+                                content: "“谨守警醒”（Nepsate, Gregoresate）是末世论的常用语。魔鬼被描绘为“吼叫的狮子”，这既指它的凶残，也指它试图通过恐吓（逼迫的威胁）来使信徒瘫痪。彼得呼吁“抵挡”（Antistete，坚守阵地），并指出苦难是普世性的（众弟兄都在经历），以此打破受苦时的孤立感。"
+                            },
+                            devotional: {
+                                title: "不要在战场上睡着",
+                                content: "基督徒生活不仅是牧场，也是战场。仇敌最常用的战术是让我们属灵昏睡（沉迷世界）或恐惧（吼叫）。知道“我在受苦”不是因为我做错了什么，而是因为我在打仗，这本身就是一种安慰。并且，在这场战壕里，你并不孤单，全世界的弟兄都在和你一起并肩作战。"
+                            }
+                        },
+                        {
+                            ref: "5:10-11",
+                            text: "那赐诸般恩典的神...等你们暂受苦难之后，必要亲自成全、坚固、赐力量给你们...",
+                            academic: {
+                                title: "神的四个应许行动",
+                                content: "这是一段以未来时态表达确据的颂赞。苦难是“暂时的”（Oligon），荣耀是“永远的”。神将亲自做四件事：1. **成全**（Katartisei，修补网/接骨）；2. **坚固**（Sterixei，使其稳固）；3. **赐力量**（Sthenosei，使其强壮）；4. **建立**（Themeliosei，立定根基）。这一切都是基于“他在基督里召你们”的事实。"
+                            },
+                            devotional: {
+                                title: "苦难后的修复",
+                                content: "神没有承诺我们可以免受苦难，但祂承诺苦难是有期限的（暂受），且有建设性的目的。就像骨折愈合后骨头会更硬一样，神利用苦难来修补我们性格的缺陷，坚固我们的信心。当我们觉得自己快要崩溃时，要记得：伟大的修复师正在动工，祂正通过这一切为你立定永恒的根基。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "closing",
+                    title: "问安与平安 (5:12-14)",
+                    icon: "fas fa-envelope-open-text",
+                    theme: "humble",
+                    verses: [
+                        {
+                            ref: "5:12-14",
+                            text: "我略略地写了这信...巴比伦...马可...愿平安归与你们...",
+                            academic: {
+                                title: "巴比伦与马可",
+                                content: "“巴比伦”是早期教会对罗马的代称（启示录也如此使用），暗示它是敌对神的中心，也表明教会在世的流亡状态。马可被称为“儿子”，显示彼得与马可（马可福音作者）的亲密师徒关系。彼得最后确认这封信是关于“神真恩”的见证。"
+                            },
+                            devotional: {
+                                title: "在巴比伦通过恩典站立",
+                                content: "无论我们身处何种“巴比伦”（敌对神的环境），神的真恩典都足以让我们站立得住。这就是彼得前书的信息：要在恩典中站稳。最后的“平安”之吻，不仅是问候，更是给在这个动荡世界中受苦教会的最后祝福。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-green-800');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-green-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-green-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-green-900"><i class="fas fa-hand-holding-heart"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-green-50 px-4 py-2 rounded-lg border border-green-100">
+                                    <span class="block text-xl font-bold text-green-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Shepherding Motives Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-center border-b pb-2">牧养的动机 (5:2-3)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="shepherdChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"按着神旨意照管他们"</p>
+                    </div>
+                </div>
+
+                <!-- Warfare Radar Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-yellow-600 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 serif"><i class="fas fa-shield-alt mr-2"></i> 属灵防御姿态 (5:8-9)</h3>
+                            <p class="text-gray-600 mb-4">
+                                面对如同吼叫狮子的仇敌，彼得列出了一套属灵的防御姿态。
+                            </p>
+                            <ul class="space-y-2 text-sm text-gray-600">
+                                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> <strong>谨守 (Sobriety)：</strong> 头脑清醒，不被迷惑</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> <strong>警醒 (Alertness)：</strong> 随时待命，不沉睡</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> <strong>坚固 (Firmness)：</strong> 信心不动摇</li>
+                                <li class="flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> <strong>抵挡 (Resistance)：</strong> 主动对抗</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="warfareChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isPastor = section.theme === 'pastor';
+                const borderColor = isPastor ? 'border-green-200' : 'border-yellow-200';
+                const iconBg = isPastor ? 'bg-green-600' : 'bg-yellow-700';
+                const titleColor = isPastor ? 'text-green-900' : 'text-yellow-900';
+                const cardClass = isPastor ? 'pastor-card' : 'humble-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 ${cardClass} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-gray-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-green-800 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-700 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-gray-50">
+                            <p class="text-lg text-gray-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-gray-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-green-900 mb-2 border-l-4 border-green-300 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-in">
+                                <h4 class="text-yellow-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2 border-l-4 border-yellow-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F0FDF4]/95 backdrop-blur py-4 mb-8 border-b border-green-100 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-gray-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-green-800 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-700 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-in' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-in' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-green-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-gray-500 hover:bg-gray-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-yellow-700 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-green-900">解经方法论总结</h2>
+                        <p class="text-gray-600">
+                            彼得前书第五章是教牧神学与灵修生活的完美结合。学术解经帮助我们确立牧养的规范，灵修解经则教导我们如何披戴基督的谦卑。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-700">
+                            <div class="mb-4 text-green-700 text-3xl"><i class="fas fa-graduation-cap"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>职分研究：</strong> 辨析“长老”、“监督”和“牧养”在早期教会中的互通性。</li>
+                                <li><strong>字义挖掘：</strong> 深入 <i>Egkombosasthe</i> (以围裙束腰) 和 <i>Amarantinon</i> (永不衰残) 的背景含义。</li>
+                                <li><strong>语法分析：</strong> 识别第7节（卸忧虑）是第6节（自卑）的分词结构，确立二者的逻辑关系。</li>
+                                <li><strong>原则：</strong> 准确理解彼得对第一世纪教会领袖和信徒的具体教导。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-600">
+                            <div class="mb-4 text-yellow-600 text-3xl"><i class="fas fa-bible"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-gray-600 list-disc list-inside">
+                                <li><strong>领袖反省：</strong> 检视服事的动机，是出于爱神还是出于私利/辖制。</li>
+                                <li><strong>生命操练：</strong> 在具体的生活冲突中操练“穿上谦卑的围裙”。</li>
+                                <li><strong>信心应用：</strong> 将“忧虑”视为骄傲的信号，主动练习“扔给神”的祷告。</li>
+                                <li><strong>原则：</strong> 将经文转化为今日教会治理和个人成圣的动力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Shepherding Motives Chart (Horizontal Bar)
+            const ctxShepherd = document.getElementById('shepherdChart').getContext('2d');
+            new Chart(ctxShepherd, {
+                type: 'bar',
+                data: {
+                    labels: ['勉强/贪财/辖制', '甘心/乐意/榜样'],
+                    datasets: [
+                        {
+                            label: '牧养态度对比',
+                            data: [-10, 10], // Negative for bad motives, Positive for good
+                            backgroundColor: [
+                                '#EF4444', // Red for prohibitions
+                                '#10B981'  // Emerald for commands
+                            ],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            display: false, // Hide x-axis numbers
+                            min: -12,
+                            max: 12
+                        }, 
+                        y: { 
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataIndex === 0 ? "神所禁止的 (Prohibited)" : "神所喜悦的 (Pleasing)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Spiritual Warfare Radar Chart
+            const ctxWarfare = document.getElementById('warfareChart').getContext('2d');
+            new Chart(ctxWarfare, {
+                type: 'radar',
+                data: {
+                    labels: ['谨守 (Sobriety)', '警醒 (Alertness)', '信心 (Faith)', '抵挡 (Resistance)', '受苦 (Suffering)'],
+                    datasets: [{
+                        label: '属灵防御指数',
+                        data: [90, 95, 100, 90, 85],
+                        fill: true,
+                        backgroundColor: 'rgba(234, 179, 8, 0.2)', // Yellow/Amber transparent
+                        borderColor: '#CA8A04',
+                        pointBackgroundColor: '#CA8A04',
+                        pointBorderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E5E7EB' },
+                            grid: { color: '#E5E7EB' },
+                            pointLabels: { font: { size: 12 }, color: '#374151' },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

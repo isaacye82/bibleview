@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圣经导航 - Bible Navigation</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Microsoft YaHei', Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        header { background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%); color: white; padding: 30px; text-align: center; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .subtitle { font-size: 1.2em; opacity: 0.9; }
+        .content { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; padding: 30px; }
+        .testament { background: #f8f9fa; border-radius: 15px; padding: 25px; }
+        .testament h2 { color: #2c3e50; font-size: 1.8em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+
+        /* --- 书目卡片基础样式 --- */
+        .book-item {
+            background: white;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        /* --- 激活状态的书目样式（文件夹存在） --- */
+        .book-item.folder-exists {
+            border-left-color: #667eea; /* 明显的激活色边框 */
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .book-item.folder-exists .book-title { color: #2c3e50; }
+        .book-item.folder-exists .book-header:hover { background: #f0f4ff; }
+
+        /* --- 未激活状态的书目样式（文件夹缺失） --- */
+        .book-item.folder-missing {
+            opacity: 0.6;
+            background: #f0f0f0;
+            cursor: not-allowed;
+            filter: grayscale(0.8);
+        }
+        .book-item.folder-missing .book-header { cursor: not-allowed; pointer-events: none; }
+        .book-item.folder-missing .book-title, 
+        .book-item.folder-missing .book-english,
+        .book-item.folder-missing .arrow { color: #999; }
+
+        .book-header { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+        .book-title { font-weight: bold; font-size: 1.1em; }
+        .book-english { color: #7f8c8d; font-size: 0.9em; margin-left: 10px; }
+        .arrow { color: #667eea; font-size: 1.2em; transition: transform 0.3s ease; }
+        .book-item.active .arrow { transform: rotate(90deg); }
+
+        .chapters { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; padding: 0 20px; }
+        .book-item.active .chapters { max-height: 800px; padding: 10px 20px 20px; }
+        .chapter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 8px; }
+
+        /* --- 章节按钮样式 --- */
+        .chapter-link {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: #ecf0f1;
+            color: #2c3e50;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        /* 激活书目内的按钮悬停 */
+        .folder-exists .chapter-link:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* 缺失文件夹时的按钮置灰 */
+        .folder-missing .chapter-link {
+            background: #dcdde1;
+            color: #95a5a6;
+            pointer-events: none;
+        }
+
+        @media (max-width: 968px) {
+            .content { grid-template-columns: 1fr; }
+            h1 { font-size: 2em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>圣经导航</h1>
+            <p class="subtitle">智能检测：已激活文件夹将呈现紫色边框</p>
+        </header>
+
+        <div class="content">
+            <div class="testament">
+                <h2>旧约圣经 (Old Testament)</h2>
+                <div id="old-testament"></div>
+            </div>
+            <div class="testament">
+                <h2>新约圣经 (New Testament)</h2>
+                <div id="new-testament"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const bibleBooks = {
+            oldTestament: [
+                { chinese: '创世记', english: 'Genesis', abbr: 'Gen', chapters: 50 },
+                { chinese: '出埃及记', english: 'Exodus', abbr: 'Exod', chapters: 40 },
+                { chinese: '利未记', english: 'Leviticus', abbr: 'Lev', chapters: 27 },
+                { chinese: '民数记', english: 'Numbers', abbr: 'Num', chapters: 36 },
+                { chinese: '申命记', english: 'Deuteronomy', abbr: 'Deut', chapters: 34 },
+                { chinese: '约书亚记', english: 'Joshua', abbr: 'Josh', chapters: 24 },
+                { chinese: '士师记', english: 'Judges', abbr: 'Judg', chapters: 21 },
+                { chinese: '路得记', english: 'Ruth', abbr: 'Ruth', chapters: 4 },
+                { chinese: '撒母耳记上', english: '1 Samuel', abbr: '1Sam', chapters: 31 },
+                { chinese: '撒母耳记下', english: '2 Samuel', abbr: '2Sam', chapters: 24 },
+                { chinese: '列王纪上', english: '1 Kings', abbr: '1Kgs', chapters: 22 },
+                { chinese: '列王纪下', english: '2 Kings', abbr: '2Kgs', chapters: 25 },
+                { chinese: '历代志上', english: '1 Chronicles', abbr: '1Chr', chapters: 29 },
+                { chinese: '历代志下', english: '2 Chronicles', abbr: '2Chr', chapters: 36 },
+                { chinese: '以斯拉记', english: 'Ezra', abbr: 'Ezra', chapters: 10 },
+                { chinese: '尼希米记', english: 'Nehemiah', abbr: 'Neh', chapters: 13 },
+                { chinese: '以斯帖记', english: 'Esther', abbr: 'Esth', chapters: 10 },
+                { chinese: '约伯记', english: 'Job', abbr: 'Job', chapters: 42 },
+                { chinese: '诗篇', english: 'Psalms', abbr: 'Ps', chapters: 150 },
+                { chinese: '箴言', english: 'Proverbs', abbr: 'Prov', chapters: 31 },
+                { chinese: '传道书', english: 'Ecclesiastes', abbr: 'Eccl', chapters: 12 },
+                { chinese: '雅歌', english: 'Song of Solomon', abbr: 'Song', chapters: 8 },
+                { chinese: '以赛亚书', english: 'Isaiah', abbr: 'Isa', chapters: 66 },
+                { chinese: '耶利米书', english: 'Jeremiah', abbr: 'Jer', chapters: 52 },
+                { chinese: '耶利米哀歌', english: 'Lamentations', abbr: 'Lam', chapters: 5 },
+                { chinese: '以西结书', english: 'Ezekiel', abbr: 'Ezek', chapters: 48 },
+                { chinese: '但以理书', english: 'Daniel', abbr: 'Dan', chapters: 12 },
+                { chinese: '何西阿书', english: 'Hosea', abbr: 'Hos', chapters: 14 },
+                { chinese: '约珥书', english: 'Joel', abbr: 'Joel', chapters: 3 },
+                { chinese: '阿摩司书', english: 'Amos', abbr: 'Amos', chapters: 9 },
+                { chinese: '俄巴底亚书', english: 'Obadiah', abbr: 'Obad', chapters: 1 },
+                { chinese: '约拿书', english: 'Jonah', abbr: 'Jonah', chapters: 4 },
+                { chinese: '弥迦书', english: 'Micah', abbr: 'Mic', chapters: 7 },
+                { chinese: '那鸿书', english: 'Nahum', abbr: 'Nah', chapters: 3 },
+                { chinese: '哈巴谷书', english: 'Habakkuk', abbr: 'Hab', chapters: 3 },
+                { chinese: '西番雅书', english: 'Zephaniah', abbr: 'Zeph', chapters: 3 },
+                { chinese: '哈该书', english: 'Haggai', abbr: 'Hag', chapters: 2 },
+                { chinese: '撒迦利亚书', english: 'Zechariah', abbr: 'Zech', chapters: 14 },
+                { chinese: '玛拉基书', english: 'Malachi', abbr: 'Mal', chapters: 4 }
+            ],
+            newTestament: [
+                { chinese: '马太福音', english: 'Matthew', abbr: 'Matt', chapters: 28 },
+                { chinese: '马可福音', english: 'Mark', abbr: 'Mark', chapters: 16 },
+                { chinese: '路加福音', english: 'Luke', abbr: 'Luke', chapters: 24 },
+                { chinese: '约翰福音', english: 'John', abbr: 'John', chapters: 21 },
+                { chinese: '使徒行传', english: 'Acts', abbr: 'Acts', chapters: 28 },
+                { chinese: '罗马书', english: 'Romans', abbr: 'Rom', chapters: 16 },
+                { chinese: '哥林多前书', english: '1 Corinthians', abbr: '1Cor', chapters: 16 },
+                { chinese: '哥林多后书', english: '2 Corinthians', abbr: '2Cor', chapters: 13 },
+                { chinese: '加拉太书', english: 'Galatians', abbr: 'Gal', chapters: 6 },
+                { chinese: '以弗所书', english: 'Ephesians', abbr: 'Eph', chapters: 6 },
+                { chinese: '腓立比书', english: 'Philippians', abbr: 'Phil', chapters: 4 },
+                { chinese: '歌罗西书', english: 'Colossians', abbr: 'Col', chapters: 4 },
+                { chinese: '帖撒罗尼迦前书', english: '1 Thessalonians', abbr: '1Thess', chapters: 5 },
+                { chinese: '帖撒罗尼迦后书', english: '2 Thessalonians', abbr: '2Thess', chapters: 3 },
+                { chinese: '提摩太前书', english: '1 Timothy', abbr: '1Tim', chapters: 6 },
+                { chinese: '提摩太后书', english: '2 Timothy', abbr: '2Tim', chapters: 4 },
+                { chinese: '提多书', english: 'Titus', abbr: 'Titus', chapters: 3 },
+                { chinese: '腓利门书', english: 'Philemon', abbr: 'Phlm', chapters: 1 },
+                { chinese: '希伯来书', english: 'Hebrews', abbr: 'Heb', chapters: 13 },
+                { chinese: '雅各书', english: 'James', abbr: 'Jas', chapters: 5 },
+                { chinese: '彼得前书', english: '1 Peter', abbr: '1Pet', chapters: 5 },
+                { chinese: '彼得后书', english: '2 Peter', abbr: '2Pet', chapters: 3 },
+                { chinese: '约翰一书', english: '1 John', abbr: '1John', chapters: 5 },
+                { chinese: '约翰二书', english: '2 John', abbr: '2John', chapters: 1 },
+                { chinese: '约翰三书', english: '3 John', abbr: '3John', chapters: 1 },
+                { chinese: '犹大书', english: 'Jude', abbr: 'Jude', chapters: 1 },
+                { chinese: '启示录', english: 'Revelation', abbr: 'Rev', chapters: 22 }
+            ]
+        };
+
+        // 通过 HEAD 请求探测第一章文件是否存在，从而判定文件夹是否存在
+        async function checkFolderExists(abbr) {
+            try {
+                // 探测路径示例: Gen/Gen1.html
+                const response = await fetch(`${abbr}/${abbr}1.html`, { method: 'HEAD' });
+                return response.ok;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        async function createBookElement(book) {
+            const isAvailable = await checkFolderExists(book.abbr);
+            
+            const bookDiv = document.createElement('div');
+            // 根据检测结果赋予不同的类
+            bookDiv.className = `book-item ${isAvailable ? 'folder-exists' : 'folder-missing'}`;
+            
+            const chapterLinks = Array.from({ length: book.chapters }, (_, i) => i + 1)
+                .map(ch => `<a href="${book.abbr}/${book.abbr}${ch}.html" class="chapter-link">${ch}</a>`)
+                .join('');
+
+            bookDiv.innerHTML = `
+                <div class="book-header">
+                    <div>
+                        <span class="book-title">${book.chinese}</span>
+                        <span class="book-english">${book.english} (${book.abbr})</span>
+                    </div>
+                    <span class="arrow">▶</span>
+                </div>
+                <div class="chapters">
+                    <div class="chapter-grid">${chapterLinks}</div>
+                </div>
+            `;
+
+            // 只有检测到文件夹存在时，才允许展开
+            if (isAvailable) {
+                bookDiv.querySelector('.book-header').addEventListener('click', function() {
+                    bookDiv.classList.toggle('active');
+                });
+            }
+
+            return bookDiv;
+        }
+
+        async function renderBooks() {
+            const oldTestamentDiv = document.getElementById('old-testament');
+            const newTestamentDiv = document.getElementById('new-testament');
+
+            // 使用并发请求加快检测速度
+            const oldPromises = bibleBooks.oldTestament.map(book => createBookElement(book));
+            const newPromises = bibleBooks.newTestament.map(book => createBookElement(book));
+
+            const oldElements = await Promise.all(oldPromises);
+            const newElements = await Promise.all(newPromises);
+
+            oldElements.forEach(el => oldTestamentDiv.appendChild(el));
+            newElements.forEach(el => newTestamentDiv.appendChild(el));
+        }
+
+        renderBooks();
+    </script>
+</body>
+</html>

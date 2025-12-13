@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第二章：深度研经与灵修</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome (for icons, using text-based icons as requested, no SVG graphics) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F5F2EA; /* Warm neutral background */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict adherence to requirements */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .active-tab {
+            border-bottom: 2px solid #C05621; /* Terracotta */
+            color: #C05621;
+            font-weight: bold;
+        }
+
+        .verse-card {
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        /* Custom Scrollbar for study panel */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #F5F2EA;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background-color: #CBD5E0;
+            border-radius: 20px;
+        }
+    </style>
+
+    <!-- Chosen Palette: Warm Neutrals (Background: #F5F2EA) with Terracotta (#C05621) and Slate (#2D3748) accents. -->
+    <!-- Application Structure Plan: 
+         1. Dashboard: Overview of the chapter's structure and key themes.
+         2. Interactive Study: A verse-by-verse explorer allowing users to toggle between "Academic Exegesis" and "Spiritual Devotion".
+         3. Methodology Analysis: A comparative section summarizing the two hermeneutical approaches.
+         Reasoning: This structure separates the "micro" analysis (verses) from the "macro" analysis (methodology), allowing for focused study without clutter.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: To visualize the thematic distribution of the chapter (Prayer vs. Roles). Goal: Inform.
+         2. Radar Chart: To compare the "Methodological Attributes" of Academic vs. Devotional study. Goal: Compare.
+         3. Dynamic Text Cards: For the verse explanations. Goal: Inform/Change.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-gray-800 serif"><i class="fas fa-book-open mr-2 text-orange-700"></i> 提摩太前书 2章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm font-medium">总览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm font-medium text-gray-500 hover:text-gray-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 mt-auto border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8">
+            <p class="text-center text-xs text-gray-500">
+                交互式研经工具 | 资料来源：圣经神学研究 & 灵修传统
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const studyData = {
+            intro: {
+                title: "关于崇拜与秩序的教导",
+                summary: "提摩太前书第二章主要处理以弗所教会的公共敬拜秩序问题。保罗从普世的代求开始（1-7节），转向男人和女人在敬拜中的举止与角色（8-15节）。这一章包含了新约中关于救恩论、基督中保地位以及性别角色的最重要且最具争议的经文。",
+                stats: [
+                    { label: "经文节数", value: 15 },
+                    { label: "核心主题", value: "祷告与秩序" },
+                    { label: "关键希腊字", value: "Mesitēs (中保)" }
+                ]
+            },
+            verses: [
+                {
+                    ref: "2:1",
+                    text: "所以我劝你，第一要为万人恳求、祷告、代求、祝谢；",
+                    academic: {
+                        title: "学术性解经：祷告的优先级与分类",
+                        content: "保罗使用“第一”（Proton）表明公共敬拜中祷告的优先地位。他列举了四种祷告词汇：<br>1. <b>Deesis（恳求）</b>：基于需要的紧迫请求。<br>2. <b>Proseuche（祷告）</b>：通用的崇拜用语，强调对神的敬畏。<br>3. <b>Enteuxis（代求）</b>：大胆地来到君王面前为他人求情。<br>4. <b>Eucharistia（祝谢）</b>：基于神的主权而感恩。<br>这里的“万人”强调福音的普世性，反驳诺斯替主义的排他性。"
+                    },
+                    devotional: {
+                        title: "灵修含义：代祷的心肠",
+                        content: "祷告不应只是聚会的点缀，而是教会生活的首要任务。我们的祷告生活是否狭隘？保罗挑战我们将眼光从个人的琐事扩大到“万人”。当我们为他人代求时，我们不仅是在说话，而是在参与神的工作。感恩的心是所有祈求的基础。"
+                    }
+                },
+                {
+                    ref: "2:2",
+                    text: "为君王和一切在位的，也该如此，使我们可以敬虔、端正、平安无事地度日。",
+                    academic: {
+                        title: "学术性解经：政治背景与目的",
+                        content: "当时在位的是尼禄皇帝（Nero），这表明为掌权者祷告并不依赖于他们的道德品质。祷告的目的有双重：一是宣教性的（为福音广传创造环境），二是社会性的（平安无事，eremon bion）。“敬虔”（eusebeia）和“端正”（semnoteti）是教牧书信强调的基督徒品格，指对神的敬畏和在外人面前的庄重。"
+                    },
+                    devotional: {
+                        title: "灵修含义：属灵影响社会",
+                        content: "基督徒改变社会的主要手段是祷告，而非暴力革命。我们为执政者祷告，不是为了政治利益，而是为了福音的自由传播。平安的环境是神给教会的恩赐，目的是让我们能专心追求敬虔。在动荡的时代，你的膝盖比你的评论更有力量。"
+                    }
+                },
+                {
+                    ref: "2:3-4",
+                    text: "这是好的，在神我们救主面前可蒙悦纳。他愿意万人得救，明白真道。",
+                    academic: {
+                        title: "学术性解经：神的普世救恩意愿",
+                        content: "这是神学上的核心声明。神被称为“救主”（Soteros），这是罗马皇帝常用的头衔，保罗将其归给神。神意愿（thelei）万人得救，反驳了某种极端的宿命论或犹太排他主义。“明白真道”与“得救”是并行的，表明救恩包含理性的认知和对真理的降服。"
+                    },
+                    devotional: {
+                        title: "灵修含义：体贴神的心意",
+                        content: "神的心意是宽广的，他不愿一人沉沦。我们的布道热忱是否反映了神的心意？当我们传福音时，我们是在与神最深切的愿望同工。“明白真道”提醒我们，感性的经历若无真理的根基，并非完整的救恩。我们需要在知识和热心上同时长进。"
+                    }
+                },
+                {
+                    ref: "2:5-6",
+                    text: "因为只有一位神，在神和人中间，只有一位中保，乃是降世为人的基督耶稣；他舍自己作万人的赎价，到了时候，这事必证明出来。",
+                    academic: {
+                        title: "学术性解经：中保与赎价",
+                        content: "这里强调一神论（只有一位神）和唯一的中保（Mesitēs）。“降世为人”强调基督的人性，这是作为人类代表的必要条件。“赎价”（Antilutron）是一个强烈的词，意为“代替性的赎金”。这节经文不仅是救恩论的基础，也是对当时否定基督真正人性的异端的反驳。"
+                    },
+                    devotional: {
+                        title: "灵修含义：唯一的道路",
+                        content: "在多元主义的世界里，这节经文具有排他性的真理——只有一位中保。我们不需要天使、圣徒或其他媒介，我们可以直接通过耶稣来到神面前。基督作为“人”体恤我们的软弱，作为“神”能满足公义的要求。这是我们得安慰的确据。"
+                    }
+                },
+                {
+                    ref: "2:8",
+                    text: "我愿男人无忿怒，无争论，举起圣洁的手，随处祷告。",
+                    academic: {
+                        title: "学术性解经：男人的属灵领袖角色",
+                        content: "“男人”（Andras）特指男性，而非通用的人类。保罗针对当时教会中可能存在的纷争，指出男人在公共敬拜中的主要问题：愤怒和争论。“举起圣洁的手”是犹太人传统的祷告姿势，重点不在姿势本身，而在“圣洁”（Hosious），指道德上的洁净和关系的和谐。"
+                    },
+                    devotional: {
+                        title: "灵修含义：圣洁是能力的源头",
+                        content: "祷告的阻碍往往不是技巧，而是内心的罪。愤怒和争竞使祷告失效。神看重祷告者的手是否“圣洁”（行为正直）和心是否平和。作为属灵领袖，弟兄应当带头悔改，放下血气，建立合一的祷告生活。"
+                    }
+                },
+                {
+                    ref: "2:9-10",
+                    text: "又愿女人廉耻、自守，以正派衣裳为妆饰，不以编发、黄金、珍珠和贵价的衣裳为妆饰，只要有善行，这才与自称是敬神的女人相宜。",
+                    academic: {
+                        title: "学术性解经：文化背景与端庄",
+                        content: "以弗所是富裕的城市，这种装扮（复杂的编发、金饰）通常与富有的交际花或炫富有关，可能在教会引起阶级分化或性诱惑。“廉耻”（Aidous）指羞耻心和对界限的尊重；“自守”（Sophrosunes）指理智的自我控制。保罗并非完全禁止首饰，而是反对奢侈和将注意力引向身体而非神。"
+                    },
+                    devotional: {
+                        title: "灵修含义：内在美的优先性",
+                        content: "真正的美丽不在于外在的装饰，而在于内在的品格。当我们的穿着是为了吸引眼球或炫耀地位时，我们就偏离了敬拜的中心。善行是信徒最好的“名牌”。这是一种价值观的重塑：敬虔是女人最美的妆容。"
+                    }
+                },
+                {
+                    ref: "2:11-12",
+                    text: "女人要沉静学道，一味地顺服。我不许女人讲道，也不许她辖管男人，只要沉静。",
+                    academic: {
+                        title: "学术性解经：权柄与教导（争议焦点）",
+                        content: "“沉静”（Hesuchia）指一种安宁、可受教的灵，并非绝对的哑口无言。“讲道”特指教义性的教导权。“辖管”（Authentein）是新约孤证字，意为“行使权柄”或“独断专行”。学术界对此有互补主义（不同角色）和平等主义（仅指当时的文化限制）的激烈辩论。但从上下文看，保罗似乎在建立一种基于创造次序的教会治理结构。"
+                    },
+                    devotional: {
+                        title: "灵修含义：顺服的灵",
+                        content: "这段经文挑战现代文化，但在灵里，它指向的是秩序而非贬低。顺服不仅是对人的，更是对神所设立的秩序的顺服。这也是对那些想在教会中以此争竞权力的心态的警告。安静学道是一种谦卑的力量，是属灵成长的沃土。"
+                    }
+                },
+                {
+                    ref: "2:13-15",
+                    text: "因为先造的是亚当，后造的是夏娃，且不是亚当被引诱，乃是女人被引诱，陷在罪里。然而，女人若常存信心、爱心，又圣洁自守，就必在生产上得救。",
+                    academic: {
+                        title: "学术性解经：创造神学与生产",
+                        content: "保罗用创世记（创造次序和堕落过程）作为论据，说明这超越了以弗所的文化背景。关于“在生产上得救”，有三种主要解释：1. 借着弥赛亚的降生（女人的后裔）；2. 在生产过程中身体得蒙保守；3. （最可能）通过持守神赋予的女性角色（如养育儿女）来活出救恩的实际，以此避免类似夏娃的被诱惑。"
+                    },
+                    devotional: {
+                        title: "灵修含义：各尽其职的尊荣",
+                        content: "神赋予男女不同的受造特质，这不是优劣之分，而是功能之别。尽管曾有失败（被引诱），但神提供了恢复的道路。对于女性，持守神所量给的角色（包括家庭、母职或敬虔的生活方式），就是活出救恩的见证。我们在顺服神的设计中找到最大的自由和安全。"
+                    }
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard', // dashboard, study, methodology
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-gray-900');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-gray-900');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-orange-600">
+                        <h2 class="text-2xl font-bold mb-4 serif text-gray-800">${studyData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            ${studyData.intro.summary}
+                        </p>
+                        <div class="grid grid-cols-3 gap-4 border-t pt-4">
+                            ${studyData.intro.stats.map(stat => `
+                                <div class="text-center">
+                                    <span class="block text-2xl font-bold text-orange-600">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Theme Chart -->
+                    <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 w-full text-left border-b pb-2">本章神学主题分布</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="themeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">图表展示了本章经文涵盖的主要神学领域的权重。</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Prompts -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <button onclick="navigate('study')" class="group p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100 text-left">
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-orange-600 transition">
+                            <i class="fas fa-search mr-2"></i> 开始逐节研读
+                        </h3>
+                        <p class="text-gray-500 mt-2">深入探索每一节经文的学术背景与灵修应用。</p>
+                    </button>
+                    <button onclick="navigate('methodology')" class="group p-6 bg-white rounded-lg shadow-sm hover:shadow-md transition border border-gray-100 text-left">
+                        <h3 class="text-xl font-bold text-gray-800 group-hover:text-orange-600 transition">
+                            <i class="fas fa-balance-scale mr-2"></i> 两种解经法对比
+                        </h3>
+                        <p class="text-gray-500 mt-2">了解“学术解经”与“灵修解经”的原则与适用范围。</p>
+                    </button>
+                </div>
+            `;
+
+            initThemeChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let versesHtml = studyData.verses.map((verse, index) => `
+                <div class="verse-card bg-white rounded-lg shadow-sm mb-6 overflow-hidden border border-gray-100">
+                    <div class="p-4 bg-orange-50 border-b border-orange-100 flex items-start">
+                        <span class="flex-shrink-0 w-10 h-10 bg-orange-200 text-orange-800 rounded-full flex items-center justify-center font-bold mr-4 text-sm font-mono">
+                            ${verse.ref}
+                        </span>
+                        <p class="text-lg text-gray-800 font-serif leading-relaxed italic">
+                            "${verse.text}"
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                        <!-- Academic Column -->
+                        <div class="p-6 hover:bg-slate-50 transition ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-university text-slate-500 mr-2"></i>
+                                <h4 class="font-bold text-slate-700 text-sm uppercase tracking-wider">学术/释经学</h4>
+                            </div>
+                            <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                            <p class="text-gray-600 text-sm leading-relaxed text-justify">
+                                ${verse.academic.content}
+                            </p>
+                        </div>
+
+                        <!-- Devotional Column -->
+                        <div class="p-6 hover:bg-orange-50 transition ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3">
+                                <i class="fas fa-heart text-red-400 mr-2"></i>
+                                <h4 class="font-bold text-orange-800 text-sm uppercase tracking-wider">灵修/应用</h4>
+                            </div>
+                            <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-gray-600 text-sm leading-relaxed text-justify">
+                                ${verse.devotional.content}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="mb-8 text-center max-w-3xl mx-auto">
+                    <h2 class="text-3xl font-bold mb-4 serif text-gray-800">逐节研读室</h2>
+                    <p class="text-gray-600 mb-6">
+                        点击下方按钮切换视角，对比经文的原文原意（左）与今日的应用感动（右）。
+                    </p>
+                    
+                    <!-- Filters -->
+                    <div class="inline-flex bg-white rounded-lg shadow-sm border p-1">
+                        <button onclick="updateStudyFilter('all')" class="${appState.studyFilter === 'all' ? 'bg-orange-100 text-orange-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                            全部显示
+                        </button>
+                        <button onclick="updateStudyFilter('academic')" class="${appState.studyFilter === 'academic' ? 'bg-slate-100 text-slate-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                            仅学术解释
+                        </button>
+                        <button onclick="updateStudyFilter('devotional')" class="${appState.studyFilter === 'devotional' ? 'bg-red-50 text-red-800 font-bold' : 'text-gray-500 hover:text-gray-700'} px-4 py-2 rounded-md text-sm transition">
+                            仅灵修含义
+                        </button>
+                    </div>
+                </div>
+
+                <div class="max-w-5xl mx-auto">
+                    ${versesHtml}
+                </div>
+            `;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy(); // Re-render content
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">两种解经方法论对比</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            为了全面理解圣经，我们需要“头脑”的严谨（学术）和“心灵”的敏锐（灵修）。本页分析了这两种方法的原则与适用范围。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                        <!-- Chart Section -->
+                        <div class="md:col-span-1 bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                            <h3 class="font-bold text-gray-700 mb-4">关注点雷达图</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="methodChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Text Analysis Section -->
+                        <div class="md:col-span-2 space-y-6">
+                            <!-- Academic Card -->
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-slate-500">
+                                <h3 class="text-xl font-bold text-slate-700 mb-2 flex items-center">
+                                    <i class="fas fa-microscope mr-2"></i> 权威/学术性解经 (Exegesis)
+                                </h3>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-2 ml-2">
+                                    <li><strong>原则：</strong> 强调经文的历史背景、语法结构、原文词义（希腊文/希伯来文）以及作者的原意。</li>
+                                    <li><strong>核心问题：</strong> “作者当时想对听众说什么？”</li>
+                                    <li><strong>适用范围：</strong> 建立教义、处理争议性经文（如本章关于女性角色的经文）、防止异端、神学研究。</li>
+                                    <li><strong>本章应用：</strong> 分析“中保”、“赎价”、“辖管”等词的希腊文原意及当时的文化背景。</li>
+                                </ul>
+                            </div>
+
+                            <!-- Devotional Card -->
+                            <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-400">
+                                <h3 class="text-xl font-bold text-red-600 mb-2 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修性解经 (Devotional)
+                                </h3>
+                                <ul class="list-disc list-inside text-gray-600 text-sm space-y-2 ml-2">
+                                    <li><strong>原则：</strong> 强调圣灵当下的光照、经文对个人生命的指引、内心的感动与悔改。</li>
+                                    <li><strong>核心问题：</strong> “神今天借着这段经文对我有什么提醒？”</li>
+                                    <li><strong>适用范围：</strong> 个人灵修、祷告、生活应用、属灵造就、讲道劝勉。</li>
+                                    <li><strong>本章应用：</strong> 反思自己的祷告生活、内心的圣洁、对权柄的态度及服侍的心志。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Synthesis -->
+                    <div class="bg-orange-50 p-6 rounded-lg border border-orange-200 text-center">
+                        <h4 class="font-bold text-orange-900 mb-2">总结：平衡的艺术</h4>
+                        <p class="text-gray-700 text-sm">
+                            若是只有学术解经，信仰可能变成冰冷的知识；若是只有灵修解经，信仰可能沦为无根的主观感受。
+                            <br><strong>健康的研经应当是：先有严谨的学术理解（根基），再有活泼的灵修应用（果实）。</strong>
+                        </p>
+                    </div>
+                </div>
+            `;
+            initMethodChart();
+        }
+
+        // --- Chart Initialization ---
+
+        function initThemeChart() {
+            const ctx = document.getElementById('themeChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['公共祷告 (1-7节)', '弟兄的态度 (8节)', '姐妹的装扮 (9-10节)', '教会秩序/角色 (11-15节)'],
+                    datasets: [{
+                        data: [45, 10, 15, 30], // Approximate thematic weight
+                        backgroundColor: [
+                            '#C05621', // Terracotta
+                            '#2D3748', // Slate
+                            '#D69E2E', // Gold
+                            '#718096'  // Cool Gray
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { font: { family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initMethodChart() {
+            const ctx = document.getElementById('methodChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['历史背景', '原文语法', '教义准确性', '个人应用', '情感共鸣', '圣灵光照'],
+                    datasets: [{
+                        label: '学术性',
+                        data: [95, 90, 90, 30, 20, 40],
+                        fill: true,
+                        backgroundColor: 'rgba(45, 55, 72, 0.2)',
+                        borderColor: '#2D3748',
+                        pointBackgroundColor: '#2D3748'
+                    }, {
+                        label: '灵修性',
+                        data: [30, 20, 60, 95, 90, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(192, 86, 33, 0.2)',
+                        borderColor: '#C05621',
+                        pointBackgroundColor: '#C05621'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: {
+                                font: { size: 10, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4A5568'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

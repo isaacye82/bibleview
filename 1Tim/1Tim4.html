@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第四章：敬虔的操练</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F7F9F5; /* Very light olive tint */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .active-tab {
+            color: #2F855A; /* Green 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #2F855A;
+            border-radius: 2px;
+        }
+
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #38A169; /* Green 500 */
+            transform: translateX(4px);
+        }
+
+        /* Custom emphasis for warning sections */
+        .warning-bg {
+            background: linear-gradient(135deg, #FFF5F5 0%, #FFFAF0 100%);
+        }
+    </style>
+
+    <!-- Chosen Palette: Olive Green (#2F855A) for Growth/Training, Burnt Orange (#DD6B20) for Warning. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Spiritual Gym". Overview of the contrast between false asceticism and true godliness.
+         2. Verse Study: Three sections - "The Coming Apostasy" (1-5), "The Good Minister" (6-10), "The Personal Charge" (11-16).
+         3. Methodology: Analysis of "Defensive Exegesis" (Apologetics) vs "Constructive Exegesis" (Discipleship).
+    -->
+    <!-- Visualization & Content Choices:
+         1. Bar Chart: "Profitability Analysis" - Comparison of Bodily Exercise vs Godliness based on verse 8.
+         2. Polar Area Chart: "The Example of the Believer" - Visualizing the 6 areas mentioned in verse 12.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-green-900 serif"><i class="fas fa-dumbbell mr-2 text-green-600"></i> 提摩太前书 4章</span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：属灵操练</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-green-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-green-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-900 text-green-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"操练身体，益处还少；惟独敬虔，凡事都有益处。" (4:8)</p>
+            <p class="text-xs text-green-400 mt-2">交互式研经工具 | 聚焦：离弃真道与敬虔操练</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "属灵的危机与应对：敬虔的操练",
+                summary: "提摩太前书第四章呈现了鲜明的对比。前半部分（1-5节）保罗发出了关于“后来的时候”离弃真道的严厉警告，揭露了受鬼魔教导的禁欲主义。后半部分（6-16节）则提供了应对之道：在真道的话语上受教育，并像运动员一样“操练”敬虔。保罗鼓励年轻的提摩太不要因年轻被小看，而要在言语、行为、爱心、信心、清洁上作信徒的榜样。",
+                highlights: [
+                    { icon: "fas fa-exclamation-triangle", color: "text-orange-600", text: "离弃真道" },
+                    { icon: "fas fa-running", color: "text-green-600", text: "操练敬虔" },
+                    { icon: "fas fa-user-graduate", color: "text-blue-600", text: "作信徒榜样" }
+                ]
+            },
+            sections: [
+                {
+                    id: "apostasy",
+                    title: "警告：离弃真道的危机 (4:1-5)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "4:1-3",
+                            text: "圣灵明说，在后来的时候，必有人离弃真道，听从那引诱人的邪灵和鬼魔的道理...他们禁止嫁娶，又禁戒食物...",
+                            academic: {
+                                title: "诺斯替主义的雏形与末世论",
+                                content: "“后来的时候”指基督第一次降临到第二次再来之间的整个末世时期。这里的异端具有诺斯替二元论的特征——认为物质是恶的，灵是善的，因此推崇极端的禁欲（禁止婚姻和特定食物）。保罗指出其背后的超自然源头是“鬼魔”（daimoniōn），这表明神学错误往往不仅是智力问题，更是属灵争战。"
+                            },
+                            devotional: {
+                                title: "分辨披着宗教外衣的谎言",
+                                content: "并非所有看起来“属灵”或“刻苦”的教导都来自神。魔鬼常利用人们想要追求圣洁的渴望，通过设立人为的规条（如极端的禁欲）来通过律法主义捆绑人。真正的属灵不是逃避物质世界，而是在神所造的世界中活出圣洁。我们需要警惕那些让人产生属灵优越感却偏离福音恩典的教导。"
+                            }
+                        },
+                        {
+                            ref: "4:4-5",
+                            text: "凡神所造的物都是好的，若感谢着领受，就没有一样可弃的，都因神的道和人的祈求成为圣洁了。",
+                            academic: {
+                                title: "创造神学与成圣",
+                                content: "保罗回到创世记的原则：“神看着是好的”。这是对物质邪恶论的直接反驳。这里的“圣洁”（hagiázetai）不是指食物本质的改变，而是指用途上的分别为圣。通过“神的道”（神创造并赐予食物的应许）和“祈求”（谢饭祷告），日常的饮食活动就被转化为一种敬拜行为。"
+                            },
+                            devotional: {
+                                title: "感恩的心使生活成圣",
+                                content: "感恩是解毒剂，能破除律法主义的苦毒。当我们带着感恩的心领受神赐的食物、婚姻和各样美福时，这些看似世俗的事物就变得神圣了。基督徒的生活不是禁欲的苦行，而是充满喜乐的享受神恩。你的餐桌是圣坛吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "training",
+                    title: "应对：敬虔的属灵操练 (4:6-10)",
+                    themeColor: "green",
+                    verses: [
+                        {
+                            ref: "4:7-8",
+                            text: "只是要弃绝那世俗的言语和老妇荒渺的话，在敬虔上操练自己。操练身体，益处还少；惟独敬虔，凡事都有益处...",
+                            academic: {
+                                title: "Gymnaze：属灵的体育馆",
+                                content: "“操练”（gymnaze）是体育竞技术语（源于gymnasium）。当时的希腊文化极度推崇身体锻炼。保罗借用此概念，对比“身体操练”（益处有限/暂时）与“敬虔操练”（eusebeia，益处是今生和来生的）。“老妇荒渺的话”是当时的俗语，指那些无稽之谈或迷信传说。"
+                            },
+                            devotional: {
+                                title: "灵魂的健身房",
+                                content: "我们常为身体健康投入大量时间金钱，却忽略灵魂的健康。属灵成长不是自动发生的，它需要像运动员一样的纪律、汗水和坚持。读经、祷告、舍己，这些不仅是宗教义务，更是让属灵肌肉强壮的必要锻炼。你今天的灵修“健身”了吗？"
+                            }
+                        },
+                        {
+                            ref: "4:10",
+                            text: "我们劳苦努力，正是为此...他是万人的救主，更是信徒的救主。",
+                            academic: {
+                                title: "普世救恩与特定救恩",
+                                content: "这是一节神学难题。保罗称神是“万人（所有人类）的救主”，这通常被解释为神的普遍恩典（护佑、供应）或神愿意万人得救的潜能；“更是信徒的救主”则指救恩的实际效力仅临到信的人。这反驳了普救论（所有人最终都得救），同时也强调了神对全人类的普遍关怀。"
+                            },
+                            devotional: {
+                                title: "劳苦努力的动力",
+                                content: "基督徒的事奉之所以需要“劳苦努力”（agōnizometha，意为在竞技场上搏斗），是因为我们把盼望寄托在永生神身上。如果我们所信的只在今生有指望，我们就比众人更可怜。正是因为确信神是全人类的终极归宿，我们才不遗余力地传扬祂。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "charge",
+                    title: "嘱咐：作信徒的榜样 (4:11-16)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "4:12",
+                            text: "不可叫人小看你年轻，总要在言语、行为、爱心、信心、清洁上，都作信徒的榜样。",
+                            academic: {
+                                title: "年轻的领袖与权威的来源",
+                                content: "在古罗马文化中，“年轻”（neotēs）可指40岁以下的人。提摩太当时可能30多岁，在注重资历的文化中面临挑战。保罗教导他，属灵权柄不来自年龄，而来自“榜样”（typos，印记/模范）。列出的五个领域涵盖了外在表现和内在品格。"
+                            },
+                            devotional: {
+                                title: "用生命赢得尊重",
+                                content: "如果你觉得因为年轻或资历浅而被轻视，不要试图用强权去压制，而要用生命去证明。当你的言行、爱心和圣洁无可指责时，人们自然会认出神在你身上的权柄。榜样是无声却最有力的讲道。"
+                            }
+                        },
+                        {
+                            ref: "4:13-16",
+                            text: "你要以宣读、劝勉、教导为念...不要轻忽所得的恩赐...要谨慎自己和自己的教训...",
+                            academic: {
+                                title: "公共崇拜的核心要素",
+                                content: "“宣读”（anagnōsei）指在会堂崇拜中公开朗读圣经，这是早期教会崇拜的核心。“劝勉”是基于经文的应用，“教导”是教义的阐释。16节的“救自己，又能救听你的人”并非指因行为得救，而是指通过持守真理，确保自己和会众走在通往最终救赎的道路上（成圣的过程）。"
+                            },
+                            devotional: {
+                                title: "谨慎自己与教训的平衡",
+                                content: "传道人（及所有服侍者）面临双重危险：要么注重教义却忽略生命（谨慎教训却不谨慎自己），要么注重道德却教导偏差（谨慎自己却不谨慎教训）。唯有两者结合，才能产生拯救的能力。恒心持守这二者，是事奉者一生的挑战。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-green-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-gray-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Statistic / Concept -->
+                    <div class="bg-gradient-to-br from-green-800 to-green-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-balance-scale-right text-4xl mb-4 text-green-300"></i>
+                        <h3 class="text-xl font-bold mb-2">核心价值观</h3>
+                        <p class="text-green-100 text-sm italic mb-4">"操练身体，益处还少；惟独敬虔，凡事都有益处"</p>
+                        <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden">
+                            <div class="bg-green-400 h-full w-[95%]"></div>
+                        </div>
+                        <div class="flex justify-between w-full text-xs mt-1 text-green-200">
+                            <span>身体 (暂时)</span>
+                            <span>敬虔 (永恒)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Profitability Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">益处对比分析 (4:8)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="profitChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">基于经文神学价值的权重对比</p>
+                    </div>
+
+                    <!-- Example Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">信徒榜样的五个维度 (4:12)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="exampleChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">不可叫人小看你年轻，总要在...</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filters
+            const filterControls = `
+                <div class="sticky top-20 z-40 bg-[#F7F9F5]/95 backdrop-blur py-4 mb-8 border-b border-gray-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-gray-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-orange-500 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                const titleColorClass = section.themeColor === 'orange' ? 'text-orange-700 border-orange-200' : 
+                                        section.themeColor === 'green' ? 'text-green-800 border-green-200' : 'text-blue-800 border-blue-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden">
+                        <div class="p-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-orange-50 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经原则：护教与造就</h2>
+                        <p class="text-gray-600">
+                            第四章展示了两种截然不同的解经需求：对外抵挡谬误（1-5节），对内建立生命（6-16节）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Defensive/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-shield-alt"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">防御性解经 (Defensive)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">针对 4:1-5 (离弃真道)</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>原则：</strong> 辨析真理与谎言。必须了解当时的文化背景（如诺斯替主义、禁欲主义），才能明白保罗在反驳什么。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 追溯神学源头（如：创造神学 vs 二元论）。
+                                    <br>2. 词源研究（如：“鬼魔的道理”）。
+                                </li>
+                                <li><strong>目的：</strong> 保护教会免受异端侵害，确立正统信仰。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Constructive/Devotional -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                            <div class="text-green-600 text-4xl mb-4"><i class="fas fa-seedling"></i></div>
+                            <h3 class="text-xl font-bold text-green-800 mb-4">建设性解经 (Constructive)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">针对 4:6-16 (敬虔操练)</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>原则：</strong> 将神学转化为生活。关注点从“教义的正确”转向“生命的改变”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 提取榜样模式（如：提摩太的五样榜样）。
+                                    <br>2. 强调实践性动词（如：操练、宣读、劝勉、谨慎）。
+                                </li>
+                                <li><strong>目的：</strong> 建立属灵品格，促进个人与会众的成圣。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-orange-50 p-6 rounded-lg border border-orange-200 text-center">
+                        <h4 class="font-bold text-orange-800 mb-2">综合应用</h4>
+                        <p class="text-gray-700 text-sm">
+                            正如我们需要免疫系统（防御性）来抵抗病毒，也需要营养和运动（建设性）来强身健体。
+                            健康的研经必须同时包含对错误的警惕（Academic）和对敬虔的追求（Devotional）。
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Profitability Chart
+            const ctxProfit = document.getElementById('profitChart').getContext('2d');
+            new Chart(ctxProfit, {
+                type: 'bar',
+                data: {
+                    labels: ['今生益处', '来生/永恒益处'],
+                    datasets: [
+                        {
+                            label: '身体操练',
+                            data: [30, 0],
+                            backgroundColor: '#CBD5E0' // Gray
+                        },
+                        {
+                            label: '敬虔操练',
+                            data: [90, 100],
+                            backgroundColor: '#2F855A' // Green
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Example Chart
+            const ctxExample = document.getElementById('exampleChart').getContext('2d');
+            new Chart(ctxExample, {
+                type: 'polarArea',
+                data: {
+                    labels: ['言语', '行为', '爱心', '信心', '清洁'],
+                    datasets: [{
+                        data: [20, 20, 20, 20, 20], // Equal weight
+                        backgroundColor: [
+                            'rgba(237, 137, 54, 0.6)', // Orange
+                            'rgba(72, 187, 120, 0.6)', // Green
+                            'rgba(66, 153, 225, 0.6)', // Blue
+                            'rgba(245, 101, 101, 0.6)', // Red
+                            'rgba(159, 122, 234, 0.6)'  // Purple
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { ticks: { display: false }, grid: { color: '#E2E8F0' } }
+                    },
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10, font: { size: 11 } } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第五章：教会如家与行政智慧</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FDFBF7; /* Warm Beige/Paper */
+            color: #4A4A4A;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #9C4221; /* Terracotta Dark */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #9C4221;
+            border-radius: 2px;
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Interactive toggle switch for Verse Cards */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #9C4221;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #9C4221;
+        }
+    </style>
+
+    <!-- Chosen Palette: Terracotta (#9C4221) for Warmth/Family, Slate Blue (#2C3E50) for Structure/Authority. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "God's Household Management". Overview of the three main groups: Family Members, Widows, Elders.
+         2. Verse Study: Interactive cards grouped by topic. Users can flip/toggle between "Exegesis" (Academic) and "Application" (Devotional).
+         3. Methodology: Comparison of interpreting "Cultural Mandates" vs "Moral Principles".
+    -->
+    <!-- Visualization & Content Choices:
+         1. Doughnut Chart: "Chapter Content Distribution" - Visualizing the heavy focus on Widows (social welfare) and Elders (leadership).
+         2. Radar Chart: "The True Widow Profile" - Visualizing the qualifications in verse 5-10.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-orange-800"><i class="fas fa-home"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif">提摩太前书 5章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm uppercase tracking-wide">总览：神的家规</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-gray-500 hover:text-orange-700 text-sm uppercase tracking-wide">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-gray-500 hover:text-orange-700 text-sm uppercase tracking-wide">解经智慧</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg opacity-80 mb-2">"不可严责老年人，只要劝他如同父亲..."</p>
+            <p class="text-xs text-gray-500 uppercase tracking-widest">交互式研经工具 | 聚焦：家庭关系、寡妇关怀与长老治理</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "教会内的关系与管理",
+                summary: "提摩太前书第五章是整卷书中最具实践性的行政指南。保罗教导年轻的提摩太如何得体地对待不同年龄和性别的会众，确立了“教会如家”的互动原则。随后，他用大量篇幅制定了详细的社会福利制度（关于寡妇）和教会人事制度（关于长老的薪酬、纪律与按立）。",
+                stats: [
+                    { label: "经文总数", value: "25节" },
+                    { label: "寡妇论述", value: "14节" },
+                    { label: "长老论述", value: "9节" }
+                ]
+            },
+            sections: [
+                {
+                    id: "family",
+                    title: "家庭般的劝勉 (5:1-2)",
+                    icon: "fas fa-users",
+                    verses: [
+                        {
+                            ref: "5:1-2",
+                            text: "不可严责老年人，只要劝他如同父亲；劝少年人如同弟兄；劝老年妇女如同母亲；劝少年妇女如同姐妹；总要清清洁洁的。",
+                            academic: {
+                                title: "家庭隐喻与教牧伦理",
+                                content: "“严责”（epiplēxēs）意为“重击”或“严厉斥责”。保罗使用了家庭称谓（父亲、母亲、弟兄、姐妹）来定义教会关系。这反映了早期教会的自我认知是“神的家”（oikos theou）。对于年轻的提摩太，特别强调对异性（少年妇女）要“清清洁洁”（hagneia，指道德和性方面的纯洁），这是为了保护牧者的名誉和教会的圣洁。"
+                            },
+                            devotional: {
+                                title: "把会众当家人",
+                                content: "在教会中，我们不仅是组织成员，更是属灵亲人。这节经文挑战我们对人的态度：对长辈是否有敬重？对同辈是否有亲情？特别是当你拥有权柄时，是倾向于“严责”还是“劝勉”？权柄应当在爱的关系中运作，而非在冷漠的制度中执行。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "widows",
+                    title: "寡妇的关怀制度 (5:3-16)",
+                    icon: "fas fa-hand-holding-heart",
+                    verses: [
+                        {
+                            ref: "5:3-4, 8",
+                            text: "要尊敬那真为寡妇的...若寡妇有儿女...人若不看顾亲属，就是背了真道...",
+                            academic: {
+                                title: "“尊敬”的实质与家庭责任",
+                                content: "这里的“尊敬”（tima）包含“供养”或“财务支持”的含义（源于希腊文timē，意为价值/价格）。保罗设立了社会保障的优先次序：首先是原生家庭（儿女孙辈），其次才是教会。第8节的警告极其严厉：不供养亲属等同于“背了真道”（apistou，不信之人），甚至比不信的人还不好，因为连外邦人都懂得孝道。"
+                            },
+                            devotional: {
+                                title: "孝敬是信仰的试金石",
+                                content: "属灵不能成为推卸家庭责任的借口。有时我们热衷于教会服侍，却忽略了家中的老人。保罗提醒我们，照顾家人本身就是“行孝”和“报答亲恩”，这是在神面前可蒙悦纳的“敬虔”。你的信仰在家庭账单上体现出来了吗？"
+                            }
+                        },
+                        {
+                            ref: "5:9-10",
+                            text: "寡妇记在册子上，必须年纪到六十岁...又有行善的名声...",
+                            academic: {
+                                title: "寡妇团契的入册资格",
+                                content: "“记在册子上”（katalegesthō）表明这不仅仅是救济名单，可能是一个正式的服侍团体（Order of Widows）。资格包括：1. 年龄（60岁通常被视为不再改嫁和退休的年龄）；2. 婚姻忠诚（一个丈夫的妻子）；3. 善行见证（养育儿女、接待远人、洗圣徒的脚）。这显示早期教会的福利是与道德见证挂钩的。"
+                            },
+                            devotional: {
+                                title: "生命成熟的记号",
+                                content: "这些“真寡妇”是教会宝贵的属灵资产。她们虽缺乏物质依靠，却富有属灵善行。经文列出的美德（养育、接待、谦卑服侍）勾勒出一个敬虔女性的一生。我们年轻时所行的善，构成了老年的冠冕。"
+                            }
+                        },
+                        {
+                            ref: "5:11-15",
+                            text: "至于年轻的寡妇，就可以辞她...因为她们...习惯懒惰，挨家闲游...所以...不如嫁人...",
+                            academic: {
+                                title: "年轻寡妇的试探与应对",
+                                content: "保罗建议年轻寡妇再嫁，并非反对守独身，而是基于现实考量。当时年轻寡妇若由教会供养且无所事事，容易陷入“挨家闲游”（gossip/busybodies）和情欲试探，甚至“随从撒但”（指背道或严重的道德堕落）。“管理家务”（oikodespotein）一词很有力，意为“作家庭的主人/治理者”。"
+                            },
+                            devotional: {
+                                title: "闲懒是罪的温床",
+                                content: "当人闲懒不结果子时，往往就会开始论断人、传舌。工作（或管理家庭）不仅是生存手段，更是神保护我们远离试探的机制。对于精力充沛的年轻人，最好的属灵操练往往是务实地承担责任，而非空谈属灵。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "elders",
+                    title: "长老的敬重与管教 (5:17-25)",
+                    icon: "fas fa-gavel",
+                    verses: [
+                        {
+                            ref: "5:17-18",
+                            text: "那善于管理教会的长老，当以为配受加倍的敬奉...因为经上说：牛在场上踹谷的时候，不可笼住它的嘴...",
+                            academic: {
+                                title: "双重敬奉与圣经权威",
+                                content: "“加倍的敬奉”（diples times）指尊重和薪酬。保罗引用了《申命记》25:4（牛）和《路加福音》10:7（工人得工价），并将后者（耶稣的话）与旧约并列称为“经上说”（Graphē），这是新约正典形成的重要证据，显示保罗视路加的记载为圣经。"
+                            },
+                            devotional: {
+                                title: "善待神的仆人",
+                                content: "教会应当慷慨地对待那些劳苦传道教导的人。这不仅是薪酬问题，更是态度问题。一个亏待牧者的教会，很难在真理上蒙福。我们是否尊重并供应那些在属灵上喂养我们的人？"
+                            }
+                        },
+                        {
+                            ref: "5:19-21",
+                            text: "控告长老的呈子，非有两三个见证就不要收...犯罪的人，当在众人面前责备他...",
+                            academic: {
+                                title: "公正的司法程序",
+                                content: "为防止恶意诽谤，保罗设立了高门槛（两三个见证人，参考申19:15）。但一旦罪行确凿，则必须“在众人面前责备”，以产生“惧怕”（敬畏）之心。保罗在第21节指着神、基督和天使严严嘱咐，强调在执行纪律时不可有“成见”（prokrimatos，预先定罪）和“偏心”（prosklisin，偏袒）。"
+                            },
+                            devotional: {
+                                title: "公义无偏见",
+                                content: "教会领袖不仅有尊荣，也有更高的问责标准。处理领袖的罪是极其困难的，容易受到人情、偏见或党派的影响。保罗提醒我们，审判的最终观众是上帝和天使。由于这种神圣的注视，我们必须公正，既不轻信谗言，也不包庇罪恶。"
+                            }
+                        },
+                        {
+                            ref: "5:22-23",
+                            text: "给人行按手的礼，不可急促...因你胃口不清，屡次患病，再不要照常喝水，可以稍微用点酒。",
+                            academic: {
+                                title: "按立的审慎与医疗建议",
+                                content: "“按手”指授职礼。急促按立可能导致与他人的罪“有份”，即为不合格的领袖背书。第23节是私下的健康建议，当时的水常不洁净，酒（发酵的葡萄汁）具有杀菌和药用价值。这显示保罗并非极端的禁欲主义者，他关心提摩太的身体健康。"
+                            },
+                            devotional: {
+                                title: "身心灵的整全关怀",
+                                content: "我们在选立同工时要慢，观察其生命果子，以免日后后悔。同时，这节经文充满了人情味：属灵伟人也会胃痛。照顾身体、合理使用药物（当时的酒）并非不属灵。神关心我们的神学，也关心我们的胃。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-orange-900');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-orange-900');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-[fadeIn_0.5s_ease-out]">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl card-shadow border-l-4 border-orange-600">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="grid grid-cols-3 gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-orange-50 p-3 rounded-lg text-center">
+                                    <span class="block text-2xl font-bold text-orange-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Topic Distribution Chart -->
+                    <div class="bg-white p-6 rounded-xl card-shadow flex flex-col items-center justify-center">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700">本章教导重心分布</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="topicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Core Pillars -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-xl card-shadow group hover:bg-orange-50 transition cursor-pointer" onclick="navigate('study')">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-4 text-xl group-hover:bg-orange-600 group-hover:text-white transition">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">家庭伦理</h3>
+                        <p class="text-sm text-gray-500">对待老幼如同父母手足，建立清洁的关系。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl card-shadow group hover:bg-orange-50 transition cursor-pointer" onclick="navigate('study')">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-4 text-xl group-hover:bg-orange-600 group-hover:text-white transition">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">社会福利</h3>
+                        <p class="text-sm text-gray-500">分辨真寡妇与年轻寡妇，确立教会救济的边界。</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl card-shadow group hover:bg-orange-50 transition cursor-pointer" onclick="navigate('study')">
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 mb-4 text-xl group-hover:bg-orange-600 group-hover:text-white transition">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h3 class="font-bold text-lg text-gray-800 mb-2">行政公义</h3>
+                        <p class="text-sm text-gray-500">长老的薪酬、控告的处理程序与按手的谨慎。</p>
+                    </div>
+                </div>
+            `;
+
+            initTopicChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const versesHtml = section.verses.map((verse, vIndex) => `
+                    <div class="bg-white rounded-xl card-shadow mb-6 overflow-hidden">
+                        <!-- Verse Header -->
+                        <div class="p-5 border-b border-gray-100 bg-gray-50 flex items-start justify-between">
+                            <div class="w-full">
+                                <span class="inline-block px-2 py-1 bg-orange-200 text-orange-900 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                                <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                            </div>
+                        </div>
+
+                        <!-- Toggle Controls -->
+                        <div class="flex border-b border-gray-100">
+                            <button onclick="toggleCardMode('${section.id}-${vIndex}', 'academic')" id="btn-academic-${section.id}-${vIndex}" class="flex-1 py-3 text-sm font-bold text-slate-700 bg-slate-50 hover:bg-slate-100 transition border-r border-gray-100">
+                                <i class="fas fa-university mr-2"></i> 学术解经
+                            </button>
+                            <button onclick="toggleCardMode('${section.id}-${vIndex}', 'devotional')" id="btn-devotional-${section.id}-${vIndex}" class="flex-1 py-3 text-sm font-bold text-gray-400 hover:text-orange-600 hover:bg-orange-50 transition">
+                                <i class="fas fa-praying-hands mr-2"></i> 灵修应用
+                            </button>
+                        </div>
+                        
+                        <!-- Content Area -->
+                        <div class="p-6 min-h-[160px]">
+                            <div id="content-academic-${section.id}-${vIndex}" class="block animate-[fadeIn_0.3s]">
+                                <h5 class="font-bold text-slate-800 mb-3 text-lg border-l-4 border-slate-500 pl-3">${verse.academic.title}</h5>
+                                <p class="text-gray-600 leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+                            <div id="content-devotional-${section.id}-${vIndex}" class="hidden animate-[fadeIn_0.3s]">
+                                <h5 class="font-bold text-orange-800 mb-3 text-lg border-l-4 border-orange-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-10 h-10 rounded-full bg-orange-800 text-white flex items-center justify-center shadow-lg">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800">${section.title}</h3>
+                        </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            ${versesHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <div class="max-w-6xl mx-auto">
+                    <div class="bg-orange-100 border-l-4 border-orange-600 p-4 mb-8 rounded-r-lg flex justify-between items-center">
+                        <div>
+                            <p class="text-orange-900 font-bold">研读指南</p>
+                            <p class="text-orange-800 text-sm">点击卡片上方的标签，在“学术解经”与“灵修应用”之间切换。</p>
+                        </div>
+                    </div>
+                    ${contentHtml}
+                </div>
+            `;
+        }
+
+        function toggleCardMode(id, mode) {
+            // Update Content Visibility
+            document.getElementById(`content-academic-${id}`).classList.toggle('hidden', mode !== 'academic');
+            document.getElementById(`content-academic-${id}`).classList.toggle('block', mode === 'academic');
+            
+            document.getElementById(`content-devotional-${id}`).classList.toggle('hidden', mode !== 'devotional');
+            document.getElementById(`content-devotional-${id}`).classList.toggle('block', mode === 'devotional');
+
+            // Update Button Styles
+            const btnAcademic = document.getElementById(`btn-academic-${id}`);
+            const btnDevotional = document.getElementById(`btn-devotional-${id}`);
+
+            if (mode === 'academic') {
+                btnAcademic.className = "flex-1 py-3 text-sm font-bold text-slate-700 bg-slate-50 border-r border-gray-100 transition shadow-inner";
+                btnDevotional.className = "flex-1 py-3 text-sm font-bold text-gray-400 hover:text-orange-600 hover:bg-orange-50 transition";
+            } else {
+                btnAcademic.className = "flex-1 py-3 text-sm font-bold text-gray-400 hover:text-slate-700 hover:bg-slate-50 border-r border-gray-100 transition";
+                btnDevotional.className = "flex-1 py-3 text-sm font-bold text-orange-700 bg-orange-50 transition shadow-inner";
+            }
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经原则：文化与真理的张力</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            第五章包含许多具有强烈文化色彩的指令（如“洗圣徒的脚”、“稍微用点酒”）。
+                            如何区分“文化形式”与“永恒原则”是本章解经的关键。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Chart Section -->
+                        <div class="bg-white p-6 rounded-xl card-shadow flex flex-col items-center">
+                            <h3 class="font-bold text-gray-700 mb-6">真寡妇 (5:5-10) 的资格分析</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="widowChart"></canvas>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-4">图表展示了早期教会对受助者的高标准要求</p>
+                        </div>
+
+                        <!-- Text Analysis -->
+                        <div class="space-y-6">
+                            <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-slate-600">
+                                <h3 class="text-lg font-bold text-slate-800 mb-2">学术视角：情境化分析</h3>
+                                <p class="text-sm text-gray-600 mb-4">
+                                    学术解经致力于还原第一世纪的社会经济背景。
+                                </p>
+                                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                    <li><strong>社会保障缺失：</strong> 理解当时没有养老金制度，寡妇若无家庭支持即陷入赤贫，解释了为何教会救济如此重要。</li>
+                                    <li><strong>文化习俗：</strong> “洗脚”在当时是卑微服侍的具体表现；“饮酒”在当时是医疗手段。学术解经避免将其字面化为今日的宗教仪式或饮酒许可。</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-white p-6 rounded-xl card-shadow border-l-4 border-orange-600">
+                                <h3 class="text-lg font-bold text-orange-800 mb-2">灵修视角：原则化应用</h3>
+                                <p class="text-sm text-gray-600 mb-4">
+                                    灵修解经致力于提取超越时空的道德与属灵原则。
+                                </p>
+                                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                    <li><strong>爱与责任：</strong> 即使我们不再“洗脚”，但“谦卑服侍”的原则不变；即使有社保，但“孝敬亲属”的属灵责任不变。</li>
+                                    <li><strong>圣洁与见证：</strong> 无论是寡妇还是长老，核心原则是领袖和受助者都必须有良好的道德见证。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Synthesis -->
+                    <div class="bg-gradient-to-r from-slate-800 to-gray-800 rounded-xl p-8 text-white text-center shadow-lg">
+                        <i class="fas fa-lightbulb text-yellow-400 text-3xl mb-4"></i>
+                        <h4 class="text-xl font-bold mb-2">总结</h4>
+                        <p class="opacity-90 max-w-3xl mx-auto">
+                            本章教导我们，教会不仅是讲道的场所，更是生活的共同体。
+                            <strong>学术解经</strong>帮助我们理清古代的制度细节，避免断章取义；
+                            <strong>灵修解经</strong>则挑战我们在现代活出“彼此相爱、尊老爱幼、圣洁公义”的神家样式。
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            initWidowChart();
+        }
+
+        // --- Chart Initialization ---
+
+        function initTopicChart() {
+            const ctx = document.getElementById('topicChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['家庭对待 (1-2节)', '寡妇关怀 (3-16节)', '长老治理 (17-25节)'],
+                    datasets: [{
+                        data: [2, 14, 9],
+                        backgroundColor: [
+                            '#E2E8F0', // Slate 200
+                            '#C05621', // Terracotta
+                            '#2C3E50'  // Slate Blue
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { family: "'Noto Sans SC', sans-serif" } } }
+                    },
+                    cutout: '60%'
+                }
+            });
+        }
+
+        function initWidowChart() {
+            const ctx = document.getElementById('widowChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['年龄 (60岁+)', '婚姻忠诚 (一位丈夫)', '养育儿女', '接待远人', '救济遭难', '竭力行善'],
+                    datasets: [{
+                        label: '真寡妇的要求',
+                        data: [100, 100, 90, 85, 90, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(192, 86, 33, 0.2)', // Orange transparent
+                        borderColor: '#C05621',
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#C05621'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: { font: { size: 11 }, color: '#4A5568' },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

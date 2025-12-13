@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>腓利门书：深度研经与灵修</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fafaf9; /* Stone-50: Warm paper-like background */
+            color: #292524; /* Stone-800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .active-tab {
+            color: #b45309; /* Amber-700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #b45309; /* Amber-700 */
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #d97706; /* Amber-600 */
+            transform: translateX(4px);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-[#1c1917] shadow-md sticky top-0 z-50 border-b border-stone-700"> <!-- Stone-900 background -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-stone-200 serif tracking-wider">
+                        <i class="fas fa-scroll mr-2 text-amber-600"></i> 腓利门书
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center overflow-x-auto">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm whitespace-nowrap text-stone-300 hover:text-white">总览：价值重构</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-stone-400 hover:text-white whitespace-nowrap">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-stone-400 hover:text-white whitespace-nowrap">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-stone-400 mt-auto border-t border-stone-700">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic text-stone-300">"他若亏负你，或欠你什么，都归在我的账上。" (1:18)</p>
+            <p class="text-xs text-stone-500 mt-3">交互式研经工具 | 聚焦：宽恕、和解与代赎</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const studyData = {
+            intro: {
+                title: "腓利门书：被囚者的信笺",
+                summary: "这是保罗书信中最短的一卷，也是唯一的私人信函。但这封关于一个逃奴的短信，却蕴含了颠覆社会阶层的福音力量。本工具将带领您深入第一世纪的历史现场，探索宽恕、和解与代赎的永恒主题。",
+                highlights: [
+                    { icon: "fas fa-hand-holding-heart", color: "text-amber-700", text: "宽恕" },
+                    { icon: "fas fa-people-arrows", color: "text-stone-600", text: "和解" },
+                    { icon: "fas fa-file-invoice-dollar", color: "text-blue-800", text: "代赎" }
+                ]
+            },
+            sections: [
+                {
+                    id: "part1",
+                    range: "1-3节",
+                    title: "问安与发信人",
+                    scripture: "为基督耶稣被囚的保罗，同兄弟提摩太，写信给我们所亲爱的同工腓利门... 愿恩惠、平安从神我们的父和主耶稣基督归与你们！",
+                    themeColor: "stone",
+                    academic: {
+                        title: "身份的转换与修辞",
+                        content: "保罗在此自称“为基督耶稣被囚的”（<em>desmios</em>），而非惯用的“使徒”（<em>apostolos</em>）。这是一种修辞策略，他不想用使徒的权柄去压服腓利门，而是以受苦者的身份激起腓利门的同情心与属灵责任感。这种“全家+全教会”的问安方式表明，虽然这是处理私人恩怨，但将成为教会公共见证的一部分。"
+                    },
+                    devotional: {
+                        title: "受苦的冠冕",
+                        content: "当我们为主受苦或遭遇困境时，不应以此为耻，这反而是我们属灵的勋章。保罗在狱中仍心系他人，提醒我们在逆境中不应自怜，而应继续服侍。此外，腓利门的家就是教会，这提醒我们家庭应当是信仰传承的第一现场。"
+                    }
+                },
+                {
+                    id: "part2",
+                    range: "4-7节",
+                    title: "为腓利门感恩与代祷",
+                    scripture: "我祷告的时候提到你，常为你感谢我的神... 愿你与人所同有的信心显出功效... 兄弟啊，我为你的爱心，大有快乐...",
+                    themeColor: "amber",
+                    module: "chiasmus",
+                    academic: {
+                        title: "交叉结构与团契",
+                        content: "第5节在原文呈现交叉结构：爱心(A) -> 向主(B) -> 向圣徒(B') -> 信心(A')。第6节中“与人所同有”原文是 <em>koinonia</em>（团契）。保罗的意思是：当你的信心不仅仅是理性的认信，而是表现为具体的“分享”行动时，这信心就显出功效（<em>energes</em>）。"
+                    },
+                    devotional: {
+                        title: "信心的具体化",
+                        content: "信心不是抽象的神学概念，而是通过“分享”和“给予”来运作的。如果我们吝啬、封闭，我们的信心就是死的。在这个充满压力和焦虑的世界，基督徒应当像腓利门一样，成为让人“得畅快”（像行军后休息一样）的人。"
+                    }
+                },
+                {
+                    id: "part3",
+                    range: "8-16节",
+                    title: "为阿尼西母求情",
+                    scripture: "我虽然靠着基督能放胆吩咐你... 宁可凭着爱心求你... 他从前与你没有益处，但如今与你我都有益处... 不再是奴仆，乃是亲爱的兄弟。",
+                    themeColor: "stone",
+                    academic: {
+                        title: "社会阶层的颠覆",
+                        content: "保罗使用了双关语：“阿尼西母”意为“有益处”。保罗没有直接攻击奴隶制（这在当时会导致基督教被镇压），而是从内部瓦解它。如果奴隶变成了“亲爱的兄弟”，奴隶制的残酷本质就在爱中消融了。这是早期基督教改变社会的独特方式。"
+                    },
+                    devotional: {
+                        title: "生命的翻转",
+                        content: "在福音里，没有人是“废品”。一个曾经偷窃、背叛的逃奴，在基督里变成了“有益处”的宝贝。在教会里，我们要学习越过社会地位（老板、员工、富人、穷人）看对方为“亲爱的兄弟”。神可能在利用暂时的痛苦编织永恒的关系网。"
+                    }
+                },
+                {
+                    id: "part4",
+                    range: "17-20节",
+                    title: "担保与债务处理",
+                    scripture: "你若以我为同伴，就收纳他，如同收纳我一样。他若亏负你，或欠你什么，都归在我的账上；我必偿还...",
+                    themeColor: "blue",
+                    module: "ledger",
+                    academic: {
+                        title: "代赎的神学图画",
+                        content: "这是整本圣经中关于“义的归算”最生动的例子之一。“收纳他如同收纳我” = 接纳的归算；“都归在我的账上” = 债务的归算。第19节“亲笔写的”相当于当时的借据（IOU），保罗在此承担了法律上的债务责任。"
+                    },
+                    devotional: {
+                        title: "效法基督的代赎",
+                        content: "真正的饶恕往往伴随着代价。如果不愿承担损失（情感上的或物质上的），就没有真正的和解。我们是否愿意为了他人的益处，像保罗一样说：“这笔账算我的”？在冲突中，我们应当作“和平之子”。"
+                    }
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.remove('text-stone-300');
+                btn.classList.add('text-stone-400');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-400');
+            activeBtn.classList.add('text-stone-300');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-stone-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-stone-800">${studyData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${studyData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${studyData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-stone-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Concept Card -->
+                    <div class="bg-gradient-to-br from-stone-800 to-stone-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-balance-scale text-4xl mb-4 text-amber-500"></i>
+                        <h3 class="text-xl font-bold mb-2">福音的张力</h3>
+                        <p class="text-stone-300 text-sm italic mb-4">"罗马法律 vs 天国伦理"</p>
+                        <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden">
+                            <div class="bg-amber-600 h-full w-[80%]"></div>
+                        </div>
+                        <div class="flex justify-between w-full text-xs mt-1 text-stone-400">
+                            <span>社会规范</span>
+                            <span>爱的关系</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm flex flex-col items-center">
+                    <h3 class="text-lg font-bold mb-4 text-stone-700 w-full border-b border-stone-100 pb-4">福音带来的价值重构</h3>
+                    <p class="text-stone-500 text-sm mb-6 text-center max-w-2xl">
+                        保罗没有发动政治革命，而是通过改变人际关系的本质来瓦解奴隶制。下图对比了当时罗马社会规范与保罗在信中所倡导的天国伦理。
+                    </p>
+                    <div class="chart-wrapper">
+                        <canvas id="ethicsChart"></canvas>
+                    </div>
+                    <div class="flex justify-center mt-4 space-x-8 text-sm">
+                        <div class="flex items-center"><span class="w-3 h-3 bg-stone-400 rounded-full mr-2"></span> 罗马社会规范</div>
+                        <div class="flex items-center"><span class="w-3 h-3 bg-amber-600 rounded-full mr-2"></span> 天国伦理 (保罗)</div>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filter Bar
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#fafaf9]/95 backdrop-blur py-4 mb-8 border-b border-stone-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-stone-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-stone-700 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Verse Cards
+            const contentHtml = studyData.sections.map(section => {
+                let titleColorClass = '';
+                if (section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if (section.themeColor === 'stone') titleColorClass = 'text-stone-700 border-stone-200';
+                else if (section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else titleColorClass = 'text-stone-800 border-stone-200';
+                
+                // Modules (Chiasmus / Ledger)
+                let moduleHtml = '';
+                if (section.module === 'chiasmus') {
+                    moduleHtml = `
+                        <div class="bg-stone-50 p-4 border-t border-stone-100 ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <h4 class="text-xs font-bold text-stone-500 uppercase mb-2 text-center">结构分析：第5节的交叉结构 (Chiasmus)</h4>
+                            <div class="flex justify-center items-center text-sm space-x-2 flex-wrap gap-2">
+                                <span class="bg-amber-100 text-amber-900 px-2 py-1 rounded border border-amber-200">A. 爱心</span> 
+                                <span class="text-stone-400">→</span>
+                                <span class="bg-stone-200 text-stone-700 px-2 py-1 rounded border border-stone-300">B. 向主</span>
+                                <span class="text-stone-400 font-bold mx-2">||</span>
+                                <span class="bg-stone-200 text-stone-700 px-2 py-1 rounded border border-stone-300">B'. 向圣徒</span>
+                                <span class="text-stone-400">→</span>
+                                <span class="bg-amber-100 text-amber-900 px-2 py-1 rounded border border-amber-200">A'. 信心</span>
+                            </div>
+                        </div>
+                    `;
+                } else if (section.module === 'ledger') {
+                    moduleHtml = `
+                        <div class="bg-stone-50 p-4 border-t border-stone-100 flex justify-center ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <button onclick="transferDebt(this)" class="bg-blue-700 hover:bg-blue-800 text-white text-xs px-5 py-2 rounded-full shadow transition-transform transform active:scale-95 flex items-center">
+                                <i class="fas fa-exchange-alt mr-2"></i> 模拟“归在我的账上” (Imputation)
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto fade-in">
+                        <div class="flex items-center mb-4 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.range} ${section.title}</h3>
+                        </div>
+                        
+                        <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden border border-stone-100">
+                            <div class="p-5 bg-[#fefce8] border-b border-stone-100"> <!-- Very light yellow/paper tint -->
+                                <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${section.scripture}"</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-100">
+                                <!-- Academic -->
+                                <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-stone-50 transition">
+                                    <h4 class="text-stone-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                        <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                    </h4>
+                                    <h5 class="font-bold text-stone-900 mb-2">${section.academic.title}</h5>
+                                    <p class="text-stone-600 text-sm leading-relaxed text-justify">${section.academic.content}</p>
+                                </div>
+
+                                <!-- Devotional -->
+                                <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-50 transition">
+                                    <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                        <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                    </h4>
+                                    <h5 class="font-bold text-stone-900 mb-2">${section.devotional.title}</h5>
+                                    <p class="text-stone-600 text-sm leading-relaxed text-justify">${section.devotional.content}</p>
+                                </div>
+                            </div>
+                            ${moduleHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function transferDebt(btn) {
+            btn.innerHTML = '<i class="fas fa-check mr-2"></i> 债务已付 (Paid in Full)';
+            btn.classList.remove('bg-blue-700', 'hover:bg-blue-800');
+            btn.classList.add('bg-green-700', 'hover:bg-green-800');
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-exchange-alt mr-2"></i> 模拟“归在我的账上” (Imputation)';
+                btn.classList.add('bg-blue-700', 'hover:bg-blue-800');
+                btn.classList.remove('bg-green-700', 'hover:bg-green-800');
+            }, 3000);
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-600">
+                            本报告整合了学术严谨性与灵修深度，展示了如何全面地理解圣经。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 历史-文法原则。挖掘希腊文原意（如<em>Koinonia</em>），还原罗马社会背景（奴隶制）。</li>
+                                <li><strong>目标：</strong> 求真。确定经文的原始意义，建立正确的教义体系。</li>
+                                <li><strong>在本书体现：</strong> 分析“归在账上”的商业法律术语及其在法理上的代赎意义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 基督中心与当下一刻。将人际关系投射到神人关系，寻求圣灵的光照。</li>
+                                <li><strong>目标：</strong> 求善。建立与神的亲密关系，塑造品格。</li>
+                                <li><strong>在本书体现：</strong> 默想“我要如何像基督替我付账一样，去宽恕得罪我的人？”</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+        function initCharts() {
+            const ctx = document.getElementById('ethicsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['权力 (Power)', '等级 (Hierarchy)', '强制 (Coercion)', '爱心 (Love)', '平等 (Equality)', '甘心 (Volition)'],
+                    datasets: [{
+                        label: '罗马社会规范',
+                        data: [90, 95, 90, 10, 5, 10],
+                        fill: true,
+                        backgroundColor: 'rgba(168, 162, 158, 0.2)', // Stone-400
+                        borderColor: 'rgb(168, 162, 158)',
+                        pointBackgroundColor: 'rgb(168, 162, 158)',
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: '天国伦理 (保罗)',
+                        data: [20, 10, 5, 95, 90, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber-600
+                        borderColor: 'rgb(217, 119, 6)',
+                        pointBackgroundColor: 'rgb(217, 119, 6)',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            grid: { color: 'rgba(0, 0, 0, 0.1)' },
+                            ticks: { display: false },
+                            pointLabels: {
+                                color: '#57534e' // Stone-600
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#57534e' } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

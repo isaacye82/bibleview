@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得后书第三章：末世烈火与新天新地</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #0F172A; /* Slate 900 - Cosmic Dark */
+            color: #E2E8F0; /* Slate 200 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #38BDF8; /* Sky 400 */
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 2px;
+            background-color: #EF4444; /* Red 500 */
+            box-shadow: 0 0 8px #EF4444;
+        }
+
+        .academic-card {
+            border-left: 4px solid #94A3B8; /* Slate 400 */
+            background: linear-gradient(to right, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.8));
+        }
+        
+        .devotional-card {
+            border-left: 4px solid #F87171; /* Red 400 */
+            background: linear-gradient(to right, rgba(69, 10, 10, 0.6), rgba(15, 23, 42, 0.8));
+        }
+
+        /* Glow Effects */
+        .glow-text {
+            text-shadow: 0 0 15px rgba(248, 113, 113, 0.4);
+        }
+
+        .fade-enter {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Chosen Palette: Cosmic Midnight (#0F172A) for End Times, Apocalyptic Fire (#EF4444) for Judgment, New Creation Cyan (#38BDF8) for Hope. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Day of the Lord". Visualizing the cosmic timeline (Creation -> Flood -> Fire -> New Earth).
+         2. Verse Study: Grouped by "The Mockers" (1-7), "God's Time" (8-10), "Holy Living" (11-13), "Final Growth" (14-18).
+         3. Methodology: Summary of Hermeneutical approaches.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Line Chart: "Cosmic History" (Creation by Word -> Destruction by Water -> Destruction by Fire -> Restoration).
+         2. Doughnut Chart: "God's Patience" (Repentance vs Perishing).
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-900/90 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-slate-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-red-500"><i class="fas fa-meteor"></i></span>
+                    <span class="text-xl font-bold text-slate-100 serif tracking-wide">彼得后书 3章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-slate-400 hover:text-sky-400">总览：烈火与新天</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-400 hover:text-sky-400">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-400 hover:text-sky-400">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-500 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-sky-500 mb-2 glow-text">"但我们照他的应许，盼望新天新地，有义居在其中。"</p>
+            <p class="text-xs text-slate-600 uppercase tracking-widest">交互式研经工具 | 聚焦：末世论、时间观与圣洁生活</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "确定的结局：主再来的日子",
+                summary: "彼得后书第三章是整卷书的高潮。彼得反驳了那些讥诮主再来迟延的人，揭示了神独特的时间观（千年如一日）和宽容的心意（不愿一人沉沦）。他生动地描绘了宇宙性的结局——有形质的都要被火销化。但这并非终点，而是通向“新天新地”的门户。因此，信徒应当过圣洁的生活，切切仰望神的日子来到。",
+                stats: [
+                    { label: "关键元素", value: "火" },
+                    { label: "时间公式", value: "1000=1" },
+                    { label: "终极盼望", value: "新天新地" }
+                ]
+            },
+            sections: [
+                {
+                    id: "mockers",
+                    title: "讥诮者的谬论与神的创造 (3:1-7)",
+                    icon: "fas fa-laugh-beam",
+                    theme: "academic",
+                    verses: [
+                        {
+                            ref: "3:3-4",
+                            text: "在末世必有好讥诮的人...说：主要降临的应许在哪里呢？因为从列祖睡了以来，万物与起初创造的时候仍是一样。",
+                            academic: {
+                                title: "均变论 (Uniformitarianism) 的早期形式",
+                                content: "讥诮者基于“经验主义”提出质疑：历史上从未发生过宇宙性的灾难，自然界是稳定不变的，因此未来的审判也不可能发生。这是对神介入历史的超自然能力的否定。彼得称之为“故意忘记”（Willful Ignorance）。"
+                            },
+                            devotional: {
+                                title: "当世界嘲笑你的盼望",
+                                content: "今天我们同样面对这样的讥诮：“两千年过去了，耶稣在哪里？”世界用“常识”和“科学”来否定末世。但信心不是建立在眼见的现状上，而是建立在神的应许上。不要被世界的稳定表象欺骗，这种稳定是神暂时的恩典，而非永恒的保障。"
+                            }
+                        },
+                        {
+                            ref: "3:5-7",
+                            text: "他们故意忘记...当时的世界被水淹没就消灭了。但现在的天地还是凭着那命存留，直留到不敬虔之人受审判...的日子，用火焚烧。",
+                            academic: {
+                                title: "水与火的双重审判",
+                                content: "彼得用“创世”（由水而出）和“洪水”（被水消灭）来反驳“万物一直没变”的谬论。历史证明神曾经介入并审判世界。现在天地的存留不是因为自然的稳定性，而是靠着神的“话”（Logos）在维持。正如上次是水，下次将是火（Ekpyrosis，斯多葛学派也以此词描述宇宙大火，但彼得赋予了道德审判的意义）。"
+                            },
+                            devotional: {
+                                title: "悬在审判边缘的世界",
+                                content: "我们脚下的大地并非永固，它只是被神的话语暂时托住，像一张网兜住将要倾倒的火。洪水已经证明了神审判的真实性。当我们看到彩虹时，不仅要记念神不再用水灭世的应许，也要警醒那保留给末日的火。这世界是暂时的，不要把希望寄托在即将焚烧的物质上。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "time",
+                    title: "神的时间与宽容 (3:8-10)",
+                    icon: "fas fa-clock",
+                    theme: "devotional",
+                    verses: [
+                        {
+                            ref: "3:8-9",
+                            text: "亲爱的弟兄啊...主看一日如千年，千年如一日。主所应许的尚未成就...其实不是耽延，乃是宽容你们，不愿有一人沉沦，乃愿人人都悔改。",
+                            academic: {
+                                title: "神圣时间观 (Kairos) 与神的意愿",
+                                content: "彼得引用诗篇90:4，建立了超越物理时间（Chronos）的神学时间观。对于永恒的神，时间的长短是相对的。所谓的“耽延”（Bradytes）其实是“宽容”（Makrothymei，恒久忍耐）。这里揭示了神的心意（Thelō）：普世性的救赎意愿（Universal Salvific Will），不愿任何人灭亡。"
+                            },
+                            devotional: {
+                                title: "等待是为了爱",
+                                content: "为什么耶稣还没来？因为祂还在等你，或者在等你的家人。神的“慢”其实是祂的“爱”。每一天早晨太阳升起，都是神给世人悔改的机会。不要抱怨世界的苦难漫长，要感谢神给的宽容期。我们应当利用这“耽延”的时间，更迫切地传福音。"
+                            }
+                        },
+                        {
+                            ref: "3:10",
+                            text: "但主的日子要像贼来到一样。那日，天必大有响声废去，有形质的都要被烈火销化...",
+                            academic: {
+                                title: "主的日子 (Day of the Lord) 与宇宙性解体",
+                                content: "“像贼”强调突发性和不可预测性（太24:43）。“大有响声”（Rhoizedon）是拟声词，形容物体在火中崩裂或风暴呼啸的声音。“有形质的”（Stoicheia）可指组成物质的元素（地水火风）或天体（星辰）。“销化”（Lythesetai）意为解体/释放。这是一场彻底的宇宙重置。"
+                            },
+                            devotional: {
+                                title: "当你拥有的一切都归零",
+                                content: "想象一下，你所积攒的财富、房子、甚至这个星球，都在一瞬间化为乌有。这不仅是科幻，这是预言。既然物质世界终将销化，我们为什么还要为它拼命？这节经文呼唤我们重新评估价值观：投资于那些火烧不掉的东西——灵魂、爱和真理。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "living",
+                    title: "圣洁生活与新天新地 (3:11-13)",
+                    icon: "fas fa-leaf",
+                    theme: "academic",
+                    verses: [
+                        {
+                            ref: "3:11-12",
+                            text: "这一切既然都要如此销化，你们为人该当怎样圣洁，怎样敬虔，切切仰望神的日子来到...",
+                            academic: {
+                                title: "末世论作为伦理学的动力",
+                                content: "彼得的逻辑是：既然旧秩序要毁灭，那么依附于旧秩序的生活方式（罪恶、贪婪）就是愚蠢的。“圣洁”和“敬虔”是适应新秩序的生活方式。“切切仰望”原文有“催促”（Speudontas）的含义。犹太传统认为，以色列的悔改可以加速弥赛亚的降临。信徒的圣洁生活似乎与神的时间表有神秘的互动关系。"
+                            },
+                            devotional: {
+                                title: "你可以加速那一天的到来",
+                                content: "这是一各极其震撼的思想：我们的生活方式竟然可以影响神的时间表！当我们传福音、过圣洁生活时，我们实际上是在“催促”主的日子。我们不是被动等待末日的受害者，而是积极参与神计划的同工。这给了我们极大的生活动力。"
+                            }
+                        },
+                        {
+                            ref: "3:13",
+                            text: "但我们照他的应许，盼望新天新地，有义居在其中。",
+                            academic: {
+                                title: "新天新地与义 (Dikaiosyne)",
+                                content: "彼得引用以赛亚书65:17和66:22。重点不在于新世界的物质构成，而在于其道德本质——“有义居在其中”。这是一个没有罪恶、公义掌权的国度。这与启示录21章的异象呼应，强调的是道德秩序的恢复。"
+                            },
+                            devotional: {
+                                title: "我们真正的家乡",
+                                content: "我们之所以在这个世界感到痛苦，是因为这里充满了不义。我们渴望的不仅仅是环境的改变，更是道德的完美。新天新地最吸引人的地方，不是黄金街道，而是那里不再有欺压、谎言和罪恶。那是义人的家，是我们灵魂深处最深的渴望。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "growth",
+                    title: "最后的劝勉与颂赞 (3:14-18)",
+                    icon: "fas fa-seedling",
+                    theme: "devotional",
+                    verses: [
+                        {
+                            ref: "3:15-16",
+                            text: "就如我们所亲爱的兄弟保罗...写了信给你们...信中有些难明白的，那无学问、不坚固的人强解，如强解别的经书一样，就自取沉沦。",
+                            academic: {
+                                title: "保罗书信的圣经地位 (Graphe)",
+                                content: "这是新约中极其重要的一处经文，彼得将保罗的书信等同于“别的经书”（Graphas，特指旧约圣经），确立了新约正典的地位。同时也指出保罗神学的深奥（难明白）和被误解的危险（强解，Streblousin，原意为在刑具上扭曲拷问）。无知者常扭曲保罗的“因信称义”为“反律法主义”（放纵）。"
+                            },
+                            devotional: {
+                                title: "谦卑研读神的话",
+                                content: "连彼得都承认保罗的书信难懂，我们就更需要谦卑了。解经不是为了迎合自己的喜好（强解），而是为了顺服真理。那些随私意曲解圣经以支持自己放纵生活的人，是在“自取沉沦”。我们需要在教会的传统和正统教导中研读，避免走入极端。"
+                            }
+                        },
+                        {
+                            ref: "3:17-18",
+                            text: "你们...就当防备...你们却要在我们主救主耶稣基督的恩典和知识上有长进。愿荣耀归给他...",
+                            academic: {
+                                title: "防备 (Phylassesthe) 与 长进 (Auxanete)",
+                                content: "彼得的最后遗言包含一反一正两个命令：消极方面要“防备”（军事守卫），免得随恶人的错谬跌倒；积极方面要“长进”（植物生长）。这呼应了全书的主题：真知识（Gnosis）是防止背道的最佳疫苗。最后以对基督的颂赞（Doxology）结束，再次确认基督的神性。"
+                            },
+                            devotional: {
+                                title: "成长的生命不跌倒",
+                                content: "属灵生命如逆水行舟，不进则退。防止跌倒的最好方法不是仅仅在此地站立不动，而是向前奔跑（长进）。当我们越深认识基督的恩典，我们的根基就越稳固。愿我们在每一天的生活中，都能比昨天更多一点认识祂，更多一点爱祂。这是彼得对我们最后的祝愿。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-sky-400');
+                btn.classList.add('text-slate-400');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-sky-400');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-400');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; 
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 fade-enter">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-slate-900 p-8 rounded-xl shadow-lg border-t-4 border-red-500 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-10 text-9xl text-red-500"><i class="fas fa-hourglass-end"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-400">${chapterData.intro.title}</h2>
+                        <p class="text-slate-300 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-slate-800 px-4 py-2 rounded border border-slate-700">
+                                    <span class="block text-xl font-bold text-red-400">${stat.value}</span>
+                                    <span class="text-xs text-slate-400 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Line Chart: Cosmic History -->
+                    <div class="bg-slate-900 p-6 rounded-xl shadow-lg flex flex-col items-center justify-center border border-slate-800">
+                        <h3 class="text-lg font-bold mb-4 text-slate-200 w-full text-center border-b border-slate-700 pb-2">宇宙历史进程 (3:5-13)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="cosmicChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- God's Patience Chart Section -->
+                <div class="bg-slate-900 p-8 rounded-xl shadow-lg border-l-4 border-sky-600 mb-8 cursor-pointer hover:bg-slate-800 transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-200 mb-4 serif"><i class="fas fa-heart text-red-500 mr-2"></i> 神的宽容 (3:9)</h3>
+                            <p class="text-slate-400 mb-4">
+                                "主所应许的尚未成就...其实不是耽延，乃是宽容你们..."
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-400">
+                                <li class="flex items-center"><i class="fas fa-clock text-sky-500 mr-3"></i> <strong>时间观：</strong> 看一日如千年</li>
+                                <li class="flex items-center"><i class="fas fa-user-slash text-red-500 mr-3"></i> <strong>消极意愿：</strong> 不愿有一人沉沦</li>
+                                <li class="flex items-center"><i class="fas fa-user-check text-green-500 mr-3"></i> <strong>积极意愿：</strong> 乃愿人人都悔改</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="patienceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isAcademic = section.theme === 'academic';
+                const borderColor = isAcademic ? 'border-slate-600' : 'border-red-500';
+                const titleColor = isAcademic ? 'text-slate-300' : 'text-red-400';
+                const cardClass = isAcademic ? 'academic-card' : 'devotional-card';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="rounded-xl shadow-md mb-6 ${cardClass} overflow-hidden group hover:shadow-lg transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-black/20 border-b border-white/10 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-slate-800 text-sky-400 text-xs font-bold rounded font-mono border border-slate-700">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-slate-900 p-1 rounded border border-slate-700">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-600 text-white' : 'text-slate-400 hover:bg-slate-800'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-red-600 text-white' : 'text-slate-400 hover:bg-slate-800'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-white/5 bg-white/5">
+                            <p class="text-lg text-slate-200 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} fade-enter">
+                                <h4 class="text-slate-400 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-slate-200 mb-2 border-l-4 border-slate-500 pl-3">${verse.academic.title}</h5>
+                                <p class="text-slate-400 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} fade-enter">
+                                <h4 class="text-red-400 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-red-200 mb-2 border-l-4 border-red-600 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-slate-300 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b border-slate-700">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center shadow-md border border-slate-600">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#0F172A]/95 backdrop-blur py-4 mb-8 border-b border-slate-800 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-slate-900 rounded-lg p-1 border border-slate-700 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-600 text-white shadow' : 'text-slate-400 hover:bg-slate-800'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-red-600 text-white shadow' : 'text-slate-400 hover:bg-slate-800'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block fade-enter' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block fade-enter' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-slate-600 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-400 hover:bg-slate-800";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-400 hover:bg-slate-800";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-red-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-400">解经方法论总结</h2>
+                        <p class="text-slate-400">
+                            彼得后书第三章展示了如何将宏大的宇宙论（学术）转化为迫切的圣洁生活动力（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-slate-900 p-8 rounded-xl shadow-lg border-t-4 border-slate-500">
+                            <div class="mb-4 text-slate-400 text-3xl"><i class="fas fa-microscope"></i></div>
+                            <h3 class="text-xl font-bold text-slate-200 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-slate-400 list-disc list-inside">
+                                <li><strong>字义研究：</strong> 深入 <i>Stoicheia</i> (形质/元素), <i>Rhoizedon</i> (大响声), <i>Makrothymia</i> (宽容) 的希腊文含义。</li>
+                                <li><strong>背景分析：</strong> 识别讥诮者“均变论”的哲学背景及彼得对斯多葛学派宇宙大火概念的挪用与转化。</li>
+                                <li><strong>神学整合：</strong> 关联彼得后书与保罗书信（Graphas），确立新约正典意识。</li>
+                                <li><strong>原则：</strong> 确立末世论的客观真实性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-slate-900 p-8 rounded-xl shadow-lg border-t-4 border-red-500">
+                            <div class="mb-4 text-red-500 text-3xl"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-red-400 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-slate-400 list-disc list-inside">
+                                <li><strong>生活动力：</strong> 将“世界销化”的认知转化为“圣洁度日”的具体行动。</li>
+                                <li><strong>时间应用：</strong> 操练从神永恒的视角（千年如一日）来看待当下的等待与苦难。</li>
+                                <li><strong>盼望内化：</strong> 让“新天新地”的异象成为抵御世俗诱惑的锚。</li>
+                                <li><strong>原则：</strong> 将神学转化为生命的警醒与长进。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Cosmic Chart
+            const ctxCosmic = document.getElementById('cosmicChart').getContext('2d');
+            new Chart(ctxCosmic, {
+                type: 'line',
+                data: {
+                    labels: ['太古创造 (Word)', '洪水灭世 (Water)', '现在天地 (Reserved)', '末日审判 (Fire)', '新天新地 (Righteousness)'],
+                    datasets: [{
+                        label: '世界的进程',
+                        data: [10, 5, 5, 0, 15], // Conceptual levels of "Order/Newness"
+                        borderColor: '#38BDF8', // Cyan
+                        backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        pointBackgroundColor: ['#10B981', '#3B82F6', '#94A3B8', '#EF4444', '#F59E0B'],
+                        pointBorderColor: '#fff',
+                        pointRadius: 6,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false },
+                        x: { 
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94A3B8', font: { size: 10 } }
+                        }
+                    },
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const labels = [
+                                        "凭神的命而立 (v5)",
+                                        "被水淹没消灭 (v6)",
+                                        "凭命存留 (v7)",
+                                        "被烈火销化 (v10)",
+                                        "有义居在其中 (v13)"
+                                    ];
+                                    return labels[context.dataIndex];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Patience Chart
+            const ctxPatience = document.getElementById('patienceChart').getContext('2d');
+            new Chart(ctxPatience, {
+                type: 'doughnut',
+                data: {
+                    labels: ['愿人人悔改', '不愿一人沉沦'],
+                    datasets: [{
+                        data: [50, 50],
+                        backgroundColor: [
+                            '#10B981', // Green
+                            '#EF4444'  // Red
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#CBD5E1', padding: 20 } },
+                        title: { display: true, text: '神的旨意 (Thelema)', color: '#94A3B8' }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+    </script>
+</body>
+</html>

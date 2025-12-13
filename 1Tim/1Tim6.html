@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提摩太前书第六章：真财富与美好的仗</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFCF5; /* Very Light Cream */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #B7791F; /* Gold-700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #B7791F;
+            border-radius: 2px;
+        }
+
+        .gold-gradient {
+            background: linear-gradient(135deg, #ECC94B 0%, #B7791F 100%);
+        }
+
+        .slate-gradient {
+            background: linear-gradient(135deg, #4A5568 0%, #2D3748 100%);
+        }
+
+        .verse-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+    </style>
+
+    <!-- Chosen Palette: Antique Gold (#B7791F) for Riches/Glory, Dark Slate (#2D3748) for Truth/Firmness. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Great Gain Calculation". Contrast between "Love of Money" and "Godliness with Contentment".
+         2. Verse Study: Grouped into "Social Order" (1-2), "False Teachers & Money" (3-10), "Man of God" (11-16), "Charge to Rich" (17-21).
+         3. Methodology: Final summary of the Hermeneutical approach used throughout the study.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Horizontal Bar Chart: "Profit & Loss Analysis" - Visualizing Verse 6 vs Verse 10 (Great Gain vs Many Sorrows).
+         2. Radar Chart: "The Man of God's Pursuit" - Visualizing the 6 virtues in Verse 11.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-yellow-700"><i class="fas fa-crown"></i></span>
+                    <span class="text-xl font-bold text-gray-800 serif tracking-wide">提摩太前书 6章</span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium tracking-wide uppercase">总览：真财宝</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-gray-500 hover:text-yellow-700 text-sm font-medium tracking-wide uppercase">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-gray-500 hover:text-yellow-700 text-sm font-medium tracking-wide uppercase">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 mt-auto border-t border-gray-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-yellow-500 mb-2">"你要为真道打那美好的仗，持定永生。"</p>
+            <p class="text-xs text-gray-600 uppercase tracking-widest">交互式研经工具 | 聚焦：知足的心、贪财的恶与永恒的奖赏</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "属灵的终极挑战：金钱与永生",
+                summary: "提摩太前书第六章是全书的总结与高潮。保罗在此处理了最敏感也最危险的问题——对待金钱的态度。他揭露了假教师背后的贪婪动机，给出了“敬虔加上知足便是大利”的著名公式。最后，他以充满激情的语言呼召“属神的人”逃避贪欲，追求公义，直到基督显现。",
+                keyVerses: ["6:6", "6:10", "6:11-12"],
+                stats: [
+                    { label: "论金钱", value: "10节" }, // Approx count
+                    { label: "论争战", value: "6节" },
+                    { label: "论主权", value: "5节" }
+                ]
+            },
+            sections: [
+                {
+                    id: "social",
+                    title: "社会秩序与尊荣 (6:1-2)",
+                    icon: "fas fa-users-cog",
+                    verses: [
+                        {
+                            ref: "6:1-2",
+                            text: "凡在轭下作仆人的，当以自己主人配受十分的恭敬...仆人有信道的主人，不可因为与他是弟兄就轻看他...",
+                            academic: {
+                                title: "第一世纪的奴隶制与教会",
+                                content: "“轭下”（zygon）指奴隶制度的沉重。保罗并未在此发动社会革命废除奴隶制，而是教导在现有体制下的基督徒伦理。核心动机是宣教性的：“免得神的名和道理被人亵渎”。对于信主的主仆，由于在基督里平等的“弟兄”关系，仆人可能倾向于要求特权，保罗反倒教导要“加意服侍”，因为受益的是“信道蒙爱”的人。"
+                            },
+                            devotional: {
+                                title: "工作中荣耀神",
+                                content: "无论处于什么社会阶层或职位，基督徒的工作态度直接影响外界对福音的看法。如果我们对老板（哪怕是信主的老板）缺乏尊重、偷懒或利用关系谋私利，我们就亵渎了神的名。在工作中忠心，就是对神的敬拜。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "greed",
+                    title: "假教师与贪财的恶 (6:3-10)",
+                    icon: "fas fa-coins",
+                    verses: [
+                        {
+                            ref: "6:3-5",
+                            text: "若有人传异教...他是自高自大...专好问难，争辩言词...他们以敬虔为得利的门路。",
+                            academic: {
+                                title: "异端的道德破产",
+                                content: "保罗诊断假教师的病症：1. 智力上“一无所知”，却患了“好问难”（nosōn，直译为生了辩论的病）的病；2. 道德上产生嫉妒纷争；3. 动机上“以敬虔为得利的门路”（porismon，谋利手段）。这是当时巡回哲学家的通病，通过兜售智慧敛财。"
+                            },
+                            devotional: {
+                                title: "信仰不是敛财工具",
+                                content: "我们需要警惕那些将信仰商业化、承诺只要信耶稣就能发大财（成功神学）的教导。如果我们的信仰是为了换取地上的利益，我们就与那些“坏了心术”的人无异。敬虔的目的在于认识神，而非利用神。"
+                            }
+                        },
+                        {
+                            ref: "6:6-8",
+                            text: "然而，敬虔加上知足的心便是大利了；因为我们没有带什么到世上来，也不能带什么去...",
+                            academic: {
+                                title: "Autarkeias（自足/知足）",
+                                content: "“知足”（autarkeias）是斯多葛学派的常用词，指内在的自给自足，不受环境影响。保罗将其基督教化：真正的知足不是靠自己，而是因有神而满足。这是一个属灵算术公式：敬虔 + 知足 = 极大的收益（megas porismos，对比第5节的得利门路）。第7节呼应了约伯记1:21的赤身而来赤身而去。"
+                            },
+                            devotional: {
+                                title: "知足是属灵的财富",
+                                content: "真正的富有不是拥有得多，而是想要得少。当我们意识到人生本质是“过客”（空手来去），我们就能从物质的捆绑中释放出来。有衣有食就当知足——这是极简主义生活的属灵根基，是获得喜乐的秘诀。"
+                            }
+                        },
+                        {
+                            ref: "6:9-10",
+                            text: "但那些想要发财的人，就陷在迷惑...贪财是万恶之根。有人贪恋钱财，就被引诱离了真道，用许多愁苦把自己刺透了。",
+                            academic: {
+                                title: "贪财 (Philargyria) 的危险",
+                                content: "重点在于“想要”（boulomenoi）发财的欲望，而非财富本身。这是一条毁灭之路：迷惑 -> 网罗 -> 无知有害的私欲 -> 沉在败坏和灭亡中。“万恶之根”并非说所有罪都源于钱，而是说贪财能滋生各样形式的罪（背叛、谎言、谋杀等）。“刺透”（peripeiran）形容像烤肉叉一样穿透，痛苦是自我招致的。"
+                            },
+                            devotional: {
+                                title: "被刺透的灵魂",
+                                content: "贪婪不仅是道德问题，更是对灵魂的自杀。当我们把安全感建立在金钱上时，我们就已经偏离了真道。那些为了钱牺牲家庭、健康、良知的人，最终收获的不是幸福，而是“许多愁苦”。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "manofgod",
+                    title: "属神的人与美好的仗 (6:11-16)",
+                    icon: "fas fa-shield-alt",
+                    verses: [
+                        {
+                            ref: "6:11-12",
+                            text: "但你这属神的人要逃避这些事，追求公义、敬虔...你要为真道打那美好的仗，持定永生。",
+                            academic: {
+                                title: "属神的人 (Homo Theou)",
+                                content: "“属神的人”是旧约对先知（如摩西、以利亚）的尊称。保罗用此提醒提摩太的属灵身份。命令分为消极的“逃避”（pheuge，现在时态，持续逃跑）和积极的“追求”（diōke，持续追赶）。“打仗”（agōnizou）指竞技场上的搏斗，“持定”指夺取奖赏。这显示基督徒生活是激烈的动态过程。"
+                            },
+                            devotional: {
+                                title: "逃避与追求",
+                                content: "基督徒的人生由你的“逃避”和“追求”定义。你正在逃避什么？是逃避贪欲，还是逃避责任？你正在追求什么？是追求公义，还是追求享乐？记住你的身份是“属神的人”，这身份赋予你在这个世界不随波逐流的勇气。"
+                            }
+                        },
+                        {
+                            ref: "6:13-16",
+                            text: "我在...神面前，并在...基督耶稣面前嘱咐你...到了时候，那可称颂、独有权能的万王之王...必显明出来。",
+                            academic: {
+                                title: "末世论的颂赞",
+                                content: "保罗以极其庄严的誓词嘱咐提摩太。这不仅是个人建议，这是在神面前的军令。15-16节是另一首宏大的颂赞（Doxology），强调神的超越性（独一不死、住在人不能靠近的光里），这可能是为了反驳以弗所当地对阿尔忒弥斯女神或罗马皇帝的崇拜——只有神才是真正的Dynastēs（统治者/权能者）。"
+                            },
+                            devotional: {
+                                title: "活在神的眼光下",
+                                content: "我们的事奉和生活是在观众面前进行的——但这观众只有一位，就是神。当我们意识到万王之王终将显现，现在的困难、诱惑和人的评价就变得微不足道了。让对神荣耀的敬畏成为你生活的重心。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rich",
+                    title: "对富人的嘱咐与结语 (6:17-21)",
+                    icon: "fas fa-hand-holding-usd",
+                    verses: [
+                        {
+                            ref: "6:17-19",
+                            text: "你要嘱咐那些今世富足的人，不要自高，也不要倚靠无定的钱财...要行善，在好事上富足...",
+                            academic: {
+                                title: "富人的管家职分",
+                                content: "以弗所是富裕城市，教会中有富人。保罗没有命令他们散尽家财（像修道主义），而是教导正确的态度：1. 不自高（钱财常带来骄傲）；2. 不倚靠（钱财是“无定”的）；3. 积极分享（koinōnikous）。这是将“无定的钱财”转化为“积成美好的根基”，从而持定“真正的生命”（ontōs zoēs）。"
+                            },
+                            devotional: {
+                                title: "真正的投资",
+                                content: "如果你拥有财富，这是神的恩赐，也是责任。不要让财富成为你的主人或偶像。要把钱财变成爱的工具。当你施舍和分享时，你不是在损失，而是在永恒的银行里存款。这是通往“真正生命”的投资。"
+                            }
+                        },
+                        {
+                            ref: "6:20-21",
+                            text: "提摩太啊，你要保守所托付你的，躲避世俗的虚谈和那敌真道、似是而非的学问。",
+                            academic: {
+                                title: "所托付的 (Parathēkēn)",
+                                content: "“所托付的”是银行术语，指“存款”或“信托物”，必须完好无损地归还。这里指纯正的福音真理。“似是而非的学问”（Gnosis）直接指向早期诺斯替主义（Gnosticism），他们自称拥有特殊知识，实则是偏离真道。这是整卷书信的总结性警告。"
+                            },
+                            devotional: {
+                                title: "真理的守护者",
+                                content: "我们是真理的受托人。在这个充满各种新奇理论和世俗虚谈的时代，保守纯正的信仰是一场保卫战。我们不仅要自己信，还要完整地传递给下一代。愿恩惠常与你们同在！"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-yellow-700');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-yellow-700');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-[fadeIn_0.5s_ease-out]">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg border-l-4 border-yellow-600 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-4 opacity-10 text-9xl text-yellow-500 font-serif">Ω</div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4 mt-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-yellow-50 px-4 py-2 rounded-lg border border-yellow-100">
+                                    <span class="block text-xl font-bold text-yellow-800">${stat.value}</span>
+                                    <span class="text-xs text-gray-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Gain vs Loss Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center border border-gray-100">
+                        <h3 class="text-lg font-bold mb-4 text-gray-700 border-b pb-2 w-full text-center">属灵损益分析表 (6:6 vs 6:10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="gainLossChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center italic">"敬虔加上知足便是大利"</p>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="group cursor-pointer" onclick="navigate('study')">
+                        <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 text-white shadow-xl transform transition group-hover:-translate-y-2">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-yellow-400">属神的人</h3>
+                                <i class="fas fa-user-shield text-2xl opacity-50"></i>
+                            </div>
+                            <p class="text-gray-300 text-sm mb-4">"要逃避这些事，追求公义、敬虔、信心、爱心、忍耐、温柔。"</p>
+                            <span class="text-xs font-bold uppercase tracking-widest text-yellow-600 bg-gray-800 px-2 py-1 rounded">身份认同</span>
+                        </div>
+                    </div>
+                    <div class="group cursor-pointer" onclick="navigate('study')">
+                        <div class="bg-gradient-to-br from-yellow-600 to-yellow-700 rounded-xl p-6 text-white shadow-xl transform transition group-hover:-translate-y-2">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-xl font-bold text-white">真正的财富</h3>
+                                <i class="fas fa-gem text-2xl opacity-50"></i>
+                            </div>
+                            <p class="text-yellow-100 text-sm mb-4">"不要倚靠无定的钱财...要在好事上富足，积成美好的根基。"</p>
+                            <span class="text-xs font-bold uppercase tracking-widest text-yellow-800 bg-yellow-400 px-2 py-1 rounded">价值重塑</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initGainLossChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="verse-card bg-white rounded-xl mb-8 overflow-hidden border border-gray-100">
+                        <!-- Header -->
+                        <div class="p-5 bg-gray-50 border-b border-gray-100 flex flex-col md:flex-row justify-between items-start md:items-center">
+                            <div class="mb-2 md:mb-0">
+                                <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-bold rounded mb-2 font-mono shadow-sm">${verse.ref}</span>
+                                <span class="ml-2 text-xs font-bold text-gray-400 uppercase tracking-widest">${section.title}</span>
+                            </div>
+                            <!-- Mode Toggle (Desktop) -->
+                            <div class="hidden md:flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-700 text-white' : 'text-gray-500 hover:bg-gray-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white' : 'text-gray-500 hover:bg-gray-100'}">灵修</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Scripture -->
+                        <div class="p-6 border-b border-gray-100">
+                            <p class="text-xl text-gray-800 font-serif leading-relaxed italic text-center">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2">
+                            <!-- Academic Side -->
+                            <div id="content-ac-${section.id}-${idx}" class="p-6 transition-all duration-300 ${appState.studyMode === 'devotional' ? 'hidden lg:block lg:opacity-50 hover:opacity-100' : 'block bg-slate-50'}">
+                                <h4 class="text-slate-700 font-bold text-sm uppercase tracking-widest mb-3 flex items-center border-b border-slate-200 pb-2">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional Side -->
+                            <div id="content-de-${section.id}-${idx}" class="p-6 transition-all duration-300 ${appState.studyMode === 'academic' ? 'hidden lg:block lg:opacity-50 hover:opacity-100' : 'block bg-yellow-50'}">
+                                <h4 class="text-yellow-800 font-bold text-sm uppercase tracking-widest mb-3 flex items-center border-b border-yellow-200 pb-2">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Mobile Mode Toggle Note -->
+                        <div class="lg:hidden p-2 text-center bg-gray-50 text-xs text-gray-400 border-t border-gray-100">
+                            点击上方按钮切换视角
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-700 text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon} text-xl"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Filter Header -->
+                <div class="sticky top-16 z-40 bg-[#FFFCF5]/95 backdrop-blur py-4 mb-8 border-b border-gray-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-sm font-bold text-gray-500 uppercase tracking-wider">阅读模式：</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                        <button onclick="updateGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-700 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            <i class="fas fa-book-reader mr-2"></i>侧重学术
+                        </button>
+                        <button onclick="updateGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-yellow-600 text-white shadow' : 'text-gray-500 hover:bg-gray-50'}">
+                            <i class="fas fa-heart mr-2"></i>侧重灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // Helper to toggle individual card classes if needed, or global update
+        function updateGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy(); // Re-render to apply classes globally
+        }
+        
+        // Helper for specific card buttons (visual only in this implementation since re-render handles state)
+        function setCardMode(id, mode) {
+            // In a full React app this would be component state. 
+            // Here we just trigger the global update for simplicity in Vanilla JS
+            updateGlobalMode(mode);
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-5xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论总结</h2>
+                        <p class="text-gray-600 max-w-2xl mx-auto">
+                            在整卷《提摩太前书》的研读中，我们始终并行使用两种方法。
+                            这不仅仅是知识的积累，更是让真理进入生命的必经之路。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+                        <!-- Chart Section -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                            <h3 class="font-bold text-gray-700 mb-6 w-full text-center border-b pb-4">解经维度雷达图</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="methodChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Principles Section -->
+                        <div class="space-y-6">
+                            <!-- Exegesis Card -->
+                            <div class="bg-white p-6 rounded-xl shadow border-l-4 border-slate-600">
+                                <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center">
+                                    <span class="bg-slate-200 w-6 h-6 rounded text-xs flex items-center justify-center mr-2">A</span>
+                                    权威/学术性解经 (Exegesis)
+                                </h3>
+                                <p class="text-sm text-gray-500 mb-3 italic">"那时、那里、那人说了什么？"</p>
+                                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                    <li><strong>历史背景：</strong> 了解以弗所的经济（富裕）、文化（奴隶制）和异端（诺斯替雏形）。</li>
+                                    <li><strong>原文研究：</strong> 挖掘希腊文词汇（如 Autarkeias, Homo Theou）的深层含义。</li>
+                                    <li><strong>原则：</strong> 经文的原意只有一个，不能脱离语境强解。</li>
+                                </ul>
+                            </div>
+
+                            <!-- Devotional Card -->
+                            <div class="bg-white p-6 rounded-xl shadow border-l-4 border-yellow-600">
+                                <h3 class="text-lg font-bold text-yellow-800 mb-2 flex items-center">
+                                    <span class="bg-yellow-200 w-6 h-6 rounded text-xs flex items-center justify-center mr-2">B</span>
+                                    灵修/应用性解经 (Application)
+                                </h3>
+                                <p class="text-sm text-gray-500 mb-3 italic">"神今天对我说了什么？"</p>
+                                <ul class="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                                    <li><strong>普世原则：</strong> 从具体文化（如不戴金饰）中提取永恒原则（内在的朴素与敬虔）。</li>
+                                    <li><strong>生命反照：</strong> 将“贪财”、“自高”等罪映射到现代生活，寻求圣灵的光照与悔改。</li>
+                                    <li><strong>原则：</strong> 应用可以多样，但必须建立在正确释经的根基上。</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-gray-800 to-slate-900 rounded-2xl p-8 text-center text-white shadow-2xl">
+                        <i class="fas fa-scroll text-4xl text-yellow-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-4 serif">唯独神是那可称颂的</h3>
+                        <p class="opacity-80 max-w-3xl mx-auto leading-relaxed">
+                            愿我们通过这六章的研读，不仅头脑中充满真理的知识（学术），
+                            心中也燃烧着对主耶稣基督显现的切慕（灵修）。
+                            阿们。
+                        </p>
+                    </div>
+                </div>
+            `;
+            initMethodChart();
+        }
+
+        // --- Chart Initialization ---
+
+        function initGainLossChart() {
+            const ctx = document.getElementById('gainLossChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['敬虔+知足 (v6)', '贪恋钱财 (v10)'],
+                    datasets: [{
+                        label: '生命收益/亏损',
+                        data: [100, -80], // Arbitrary values to show contrast
+                        backgroundColor: [
+                            '#38A169', // Green for Gain
+                            '#E53E3E'  // Red for Loss
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // Horizontal bar
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: { color: '#E2E8F0' },
+                            ticks: { display: false } // Hide numbers, focus on visual
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { font: { size: 14, family: "'Noto Sans SC', sans-serif", weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataIndex === 0 ? "大利 (Great Gain)" : "许多愁苦 (Many Sorrows)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initMethodChart() {
+            const ctx = document.getElementById('methodChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['原文文法', '历史背景', '神学教义', '个人省察', '情感共鸣', '生活实践'],
+                    datasets: [{
+                        label: '学术解经',
+                        data: [95, 90, 85, 20, 10, 30],
+                        fill: true,
+                        backgroundColor: 'rgba(45, 55, 72, 0.2)',
+                        borderColor: '#2D3748',
+                        pointBackgroundColor: '#2D3748'
+                    }, {
+                        label: '灵修解经',
+                        data: [30, 40, 60, 95, 90, 95],
+                        fill: true,
+                        backgroundColor: 'rgba(183, 121, 31, 0.2)',
+                        borderColor: '#B7791F',
+                        pointBackgroundColor: '#B7791F'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#CBD5E0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: {
+                                font: { size: 12, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4A5568'
+                            },
+                            ticks: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

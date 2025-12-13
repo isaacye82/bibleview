@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彼得前书第二章：活石、国度与受苦的脚踪</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F1F5F9; /* Slate 100 */
+            color: #1E293B; /* Slate 800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #4338CA; /* Indigo 700 */
+            font-weight: 700;
+        }
+        
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: #4338CA;
+            border-radius: 2px;
+        }
+
+        .stone-card {
+            border-left: 4px solid #64748B; /* Slate 500 */
+        }
+        
+        .royal-card {
+            border-left: 4px solid #4338CA; /* Indigo 700 */
+        }
+
+        /* Flip/Toggle Animation classes */
+        .content-transition {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+    </style>
+
+    <!-- Chosen Palette: Royal Indigo (#4338CA) for Priesthood/Identity, Stone Slate (#64748B) for Foundation/Structure. -->
+    <!-- Application Structure Plan:
+         1. Dashboard: "The Spiritual House". Overview of the Christian Identity (v9) and the Structure of Authority.
+         2. Verse Study: Grouped by "Growth" (1-3), "Identity" (4-10), "Submission" (11-17), "Suffering" (18-25).
+         3. Methodology: Comparison of Historical-Grammatical Exegesis vs Devotional Application.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Pie Chart: "The Fourfold Identity" (Chosen, Royal, Holy, Possession) - v9.
+         2. Bar Chart: "Spheres of Submission" (Gov, Masters, All men) - v13-18.
+         CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center gap-3">
+                    <span class="text-2xl text-indigo-700"><i class="fas fa-gem"></i></span>
+                    <span class="text-xl font-bold text-slate-800 serif">彼得前书 2章</span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-indigo-800">总览：灵宫与国度</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-indigo-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-bold uppercase tracking-wide text-slate-500 hover:text-indigo-800">解经总结</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="serif italic text-lg text-indigo-300 mb-2">"惟有你们是被拣选的族类，是有君尊的祭司，是圣洁的国度，是属神的子民..."</p>
+            <p class="text-xs text-slate-500 uppercase tracking-widest">交互式研经工具 | 聚焦：身份认同与受苦的榜样</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "活石构建的灵宫与寄居者的品行",
+                summary: "彼得前书第二章是关于基督徒身份与伦理的核心篇章。彼得首先用“活石”建造“灵宫”的隐喻，确立了信徒在基督里的尊贵身份（君尊的祭司）。随后，他转向实际生活，教导这群“客旅”和“寄居的”如何在敌对的社会中生活：通过顺服掌权者、主人（即使是乖僻的），并效法基督受苦的榜样，以此堵住糊涂人的口，宣扬神的美德。",
+                stats: [
+                    { label: "身份称呼", value: "4个" },
+                    { label: "顺服对象", value: "3类" },
+                    { label: "核心榜样", value: "基督" }
+                ]
+            },
+            sections: [
+                {
+                    id: "growth",
+                    title: "灵命的成长与断奶 (2:1-3)",
+                    icon: "fas fa-seedling",
+                    theme: "stone",
+                    verses: [
+                        {
+                            ref: "2:1-3",
+                            text: "所以，你们既除去一切的恶毒、诡诈，并假善、嫉妒，和一切毁谤的话，就要爱慕那纯净的灵奶...",
+                            academic: {
+                                title: "除去 (Apothemenoi) 与 爱慕 (Epipothesate)",
+                                content: "“除去”是脱去污秽衣服的隐喻，这是洗礼时的用语。彼得列出的五种罪（恶毒、诡诈、假善、嫉妒、毁谤）都是破坏社群关系的罪。“灵奶”（Logikon gala）直译为“理性的/道的奶”，指神的话语。彼得将信徒比作新生儿，强调对神话语的极度渴望是成长的唯一途径。"
+                            },
+                            devotional: {
+                                title: "属灵的食欲",
+                                content: "健康的婴儿必定有食欲。如果我们对神的话语没有渴慕，甚至觉得乏味，这往往是属灵生病的信号。也许是因为我们的胃里塞满了“垃圾食品”（恶毒、嫉妒等罪），导致失去了对纯净灵奶的胃口。成长的秘诀很简单：倒空罪，填满话语。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "identity",
+                    title: "活石与君尊的祭司 (2:4-10)",
+                    icon: "fas fa-church",
+                    theme: "royal",
+                    verses: [
+                        {
+                            ref: "2:4-8",
+                            text: "主乃是活石...你们来到主面前，也就像活石，被建造成为灵宫...",
+                            academic: {
+                                title: "房角石神学 (Cornerstone Theology)",
+                                content: "彼得引用赛28:16、诗118:22和赛8:14，构建了独特的“石头基督论”。基督是“房角石”（Akrogoniaion，建筑基准），对信的人是宝贵的，对不信的人是绊脚石。信徒被称为“活石”（Lithoi zontes），表明教会不是死板的建筑，而是有生命的有机体。这直接挑战了当时耶路撒冷圣殿的物质观念。"
+                            },
+                            devotional: {
+                                title: "你也是一块活石",
+                                content: "教会不是建筑物，而是由一个个被基督生命点燃的人组成的。你不是一粒散沙，而是被神精心安放在属灵大厦中的“活石”。如果离开了与其他石头（信徒）的连接，石头就失去了建造的意义。我们只有连于基督（房角石）并彼此联结，才能显出灵宫的荣耀。"
+                            }
+                        },
+                        {
+                            ref: "2:9-10",
+                            text: "惟有你们是被拣选的族类，是有君尊的祭司，是圣洁的国度，是属神的子民...",
+                            academic: {
+                                title: "新以色列的四个头衔",
+                                content: "彼得将出埃及记19:6和以赛亚书43:20的以色列头衔直接应用在教会身上。1. **拣选的族类**：强调血缘/起源于神。2. **君尊的祭司**：结合了王权与祭司职分，这是在旧约中被严格分开的。3. **圣洁的国度**：分别为圣的政治实体。4. **属神的子民**（Peripoiesin）：直译为“被神买赎回来的产业”。"
+                            },
+                            devotional: {
+                                title: "你是谁？",
+                                content: "这是一个身份的宣言。在这个世界，我们可能被边缘化、被误解，但在神眼中，我们是皇室成员（君尊），是特种部队（圣洁国度），是祂的私有财产（属神的）。明白这个身份，我们才能明白活着的目的是为了“宣扬那召我们出黑暗入奇妙光明者的美德”。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "submission",
+                    title: "顺服人的一切制度 (2:11-17)",
+                    icon: "fas fa-balance-scale",
+                    theme: "stone",
+                    verses: [
+                        {
+                            ref: "2:11-12",
+                            text: "亲爱的弟兄啊，你们是客旅，是寄居的...你们在外邦人中，应当品行端正...",
+                            academic: {
+                                title: "护教性的伦理",
+                                content: "“客旅”和“寄居的”指没有公民权的侨民，这既是社会现实也是属灵现实。彼得提出的伦理动机是宣教性的：通过“好行为”（Kalōn ergōn）来反驳外邦人的毁谤（当时基督徒常被诬蔑为乱伦、食人或反社会）。这种策略被称为“颠覆性的顺服”。"
+                            },
+                            devotional: {
+                                title: "最好的辩护",
+                                content: "当世界攻击信仰时，最有力的回击不是网络上的争辩，而是无可指责的生活。当别人期待我们作恶时，我们行善；当别人期待我们反叛时，我们顺服。这种反差生活会引发世人的好奇，最终在“鉴察的日子”归荣耀给神。"
+                            }
+                        },
+                        {
+                            ref: "2:13-17",
+                            text: "你们为主的缘故，要顺服人的一切制度，或是在上的君王...务要尊敬众人，亲爱教中的弟兄，敬畏神，尊敬君王。",
+                            academic: {
+                                title: "为了主的缘故顺服 (Hupotagete)",
+                                content: "“顺服”不等于盲从，而是“把自己置于次序之下”。彼得要求顺服罗马皇帝（当时可能是尼禄！），这极具挑战性。关键限定语是“为主的缘故”。基督徒的自由（16节）不是放纵的借口，而是甘心作神的仆人。第17节的四个命令构成了平衡的社会观：对众人尊敬，对弟兄亲爱，对神敬畏，对君王尊敬（而非敬拜）。"
+                            },
+                            devotional: {
+                                title: "自由人的顺服",
+                                content: "我们顺服权柄，不是因为由于恐惧，也不是因为权柄完美，而是因为我们敬畏设立权柄的神。这是一种尊贵的顺服，是自由人的选择。当我们为了神而尊重那些甚至不配尊重的领袖时，我们不仅显出了属灵的成熟，也维护了福音的尊严。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "suffering",
+                    title: "受苦的榜样：基督 (2:18-25)",
+                    icon: "fas fa-cross",
+                    theme: "royal",
+                    verses: [
+                        {
+                            ref: "2:18-20",
+                            text: "你们作仆人的，凡事要存敬畏的心顺服主人；不但顺服那善良温和的，就是那乖僻的也要顺服...",
+                            academic: {
+                                title: "乖僻 (Skoliois) 与良心",
+                                content: "彼得直接对“家仆”（Oiketai）说话。“乖僻”原意弯曲（scoliosis脊柱侧弯源于此词），指不公正、残酷的主人。彼得指出，若因行善受苦而忍耐，在神眼中是“可喜爱的”（Charis，恩典）。这颠覆了古代价值观，赋予了奴隶道德主体的尊严——他们的忍耐不是无奈，而是向神的主动献祭。"
+                            },
+                            devotional: {
+                                title: "在不公中得胜",
+                                content: "职场上的不公（乖僻的老板）是我们常遇到的试炼。彼得挑战我们超越“以眼还眼”的本能。忍耐不公并非懦弱，而是深信神掌管一切。当我们选择不报复、不抱怨地继续行善时，我们就把职场的苦难转化为了属灵的祭坛。"
+                            }
+                        },
+                        {
+                            ref: "2:21-25",
+                            text: "你们蒙召原是为此；因基督也为你们受过苦，给你们留下榜样...他被骂不还口...因他受的鞭伤，你们便得了医治。",
+                            academic: {
+                                title: "受苦仆人的脚踪 (Hypogrammon)",
+                                content: "彼得在此引用了《以赛亚书》53章受苦仆人的经文。“榜样”（Hypogrammon）指小学生练字的描红字帖。基督的受苦有两个层面：1. 代赎性（24节，亲身担当了我们的罪）；2. 模范性（21-23节，不还口，交托公义审判者）。我们得医治是因为他的代赎，我们蒙召受苦是因为他的模范。"
+                            },
+                            devotional: {
+                                title: "跟随受苦的脚踪",
+                                content: "“你们蒙召原是为此”——这句经文令人震撼。受苦不是意外，而是呼召的一部分。当我们在冤屈中想要爆发时，看看那个“描红字帖”——耶稣基督。他拥有审判全地的权柄，却选择将自己交托给父。跟随他的脚踪，意味着在受苦中不让苦毒生根，而是让医治流出。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyMode: 'academic' // 'academic' or 'devotional'
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab', 'text-indigo-800');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab', 'text-indigo-800');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-[fadeIn_0.5s]">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-indigo-600 relative overflow-hidden">
+                        <div class="absolute right-0 top-0 opacity-5 text-9xl text-indigo-900"><i class="fas fa-crown"></i></div>
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            ${chapterData.intro.stats.map(stat => `
+                                <div class="bg-slate-100 px-4 py-2 rounded-lg border border-slate-200">
+                                    <span class="block text-xl font-bold text-indigo-800">${stat.value}</span>
+                                    <span class="text-xs text-slate-500 uppercase tracking-wide">${stat.label}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Identity Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center justify-center border border-slate-100">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700 w-full text-center border-b pb-2">基督徒的四重身份 (2:9)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="identityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center italic">"宣扬那召你们出黑暗入奇妙光明者的美德"</p>
+                    </div>
+                </div>
+
+                <!-- Submission Chart Section -->
+                <div class="bg-white p-8 rounded-xl shadow-sm border-t-4 border-slate-500 mb-8 cursor-pointer hover:shadow-md transition" onclick="navigate('study')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-800 mb-4 serif"><i class="fas fa-sitemap mr-2"></i> 顺服的次序</h3>
+                            <p class="text-slate-600 mb-4">
+                                "你们为主的缘故，要顺服人的一切制度..." 彼得将顺服的范围从国家延伸到社会，最终指向基督的榜样。
+                            </p>
+                            <ul class="space-y-2 text-sm text-slate-600">
+                                <li class="flex items-center"><i class="fas fa-landmark text-indigo-500 mr-2"></i> <strong>政府：</strong> 君王与臣宰</li>
+                                <li class="flex items-center"><i class="fas fa-user-tie text-slate-500 mr-2"></i> <strong>职场：</strong> 主人 (包括乖僻的)</li>
+                                <li class="flex items-center"><i class="fas fa-cross text-red-500 mr-2"></i> <strong>终极榜样：</strong> 基督受苦的脚踪</li>
+                            </ul>
+                        </div>
+                        <div class="chart-wrapper h-64">
+                            <canvas id="submissionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            initDashboardCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const contentHtml = chapterData.sections.map(section => {
+                const isRoyal = section.theme === 'royal';
+                const borderColor = isRoyal ? 'border-indigo-200' : 'border-slate-300';
+                const iconBg = isRoyal ? 'bg-indigo-600' : 'bg-slate-500';
+                const titleColor = isRoyal ? 'text-indigo-800' : 'text-slate-700';
+
+                const versesHtml = section.verses.map((verse, idx) => `
+                    <div class="bg-white rounded-xl shadow-sm mb-6 border ${borderColor} overflow-hidden group hover:shadow-md transition-shadow">
+                        <!-- Header -->
+                        <div class="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded font-mono">${verse.ref}</span>
+                            
+                            <!-- Toggle Buttons -->
+                            <div class="flex space-x-1 bg-white p-1 rounded border border-slate-200">
+                                <button onclick="setCardMode('${section.id}-${idx}', 'academic')" id="btn-ac-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-800 text-white' : 'text-slate-500 hover:bg-slate-100'}">学术</button>
+                                <button onclick="setCardMode('${section.id}-${idx}', 'devotional')" id="btn-de-${section.id}-${idx}" class="px-3 py-1 text-xs font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:bg-slate-100'}">灵修</button>
+                            </div>
+                        </div>
+
+                        <!-- Scripture Text -->
+                        <div class="p-6 border-b border-slate-50">
+                            <p class="text-lg text-slate-800 font-serif leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+
+                        <!-- Content Body -->
+                        <div class="p-6 min-h-[160px] relative">
+                            <!-- Academic -->
+                            <div id="content-ac-${section.id}-${idx}" class="${appState.studyMode === 'academic' ? 'block' : 'hidden'} content-transition">
+                                <h4 class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2 border-l-4 border-slate-400 pl-3">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div id="content-de-${section.id}-${idx}" class="${appState.studyMode === 'devotional' ? 'block' : 'hidden'} content-transition">
+                                <h4 class="text-indigo-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-praying-hands mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2 border-l-4 border-indigo-500 pl-3">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center gap-4 mb-6 pb-2 border-b ${borderColor}">
+                            <div class="w-10 h-10 rounded-full ${iconBg} text-white flex items-center justify-center shadow-md">
+                                <i class="${section.icon}"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold ${titleColor} serif">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = `
+                <!-- Sticky Controls -->
+                <div class="sticky top-16 z-40 bg-[#F1F5F9]/95 backdrop-blur py-4 mb-8 border-b border-slate-200 flex justify-between items-center max-w-5xl mx-auto px-4 md:px-0">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">全局阅读模式</span>
+                    <div class="flex bg-white rounded-lg p-1 border border-slate-200 shadow-sm">
+                        <button onclick="setGlobalMode('academic')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'academic' ? 'bg-slate-800 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部学术
+                        </button>
+                        <button onclick="setGlobalMode('devotional')" class="px-4 py-2 text-sm font-medium rounded transition ${appState.studyMode === 'devotional' ? 'bg-indigo-600 text-white shadow' : 'text-slate-500 hover:bg-slate-50'}">
+                            全部灵修
+                        </button>
+                    </div>
+                </div>
+                ${contentHtml}
+            `;
+        }
+
+        // --- View Logic ---
+        function setCardMode(id, mode) {
+            document.getElementById(`content-ac-${id}`).className = mode === 'academic' ? 'block content-transition' : 'hidden';
+            document.getElementById(`content-de-${id}`).className = mode === 'devotional' ? 'block content-transition' : 'hidden';
+            
+            const btnAc = document.getElementById(`btn-ac-${id}`);
+            const btnDe = document.getElementById(`btn-de-${id}`);
+            
+            if (mode === 'academic') {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition bg-slate-800 text-white";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+            } else {
+                btnAc.className = "px-3 py-1 text-xs font-medium rounded transition text-slate-500 hover:bg-slate-100";
+                btnDe.className = "px-3 py-1 text-xs font-medium rounded transition bg-indigo-600 text-white";
+            }
+        }
+
+        function setGlobalMode(mode) {
+            appState.studyMode = mode;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-600">
+                            彼得前书第二章要求我们既要理解旧约神学在教会身上的应验（学术），又要活出在异教社会中的得胜见证（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                        <!-- Academic Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-700">
+                            <div class="mb-4 text-slate-700 text-3xl"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">学术性解经 (Exegetical)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>旧约引用：</strong> 追踪赛28:16（房角石）、出19:6（祭司国度）、赛53（受苦仆人）的背景。</li>
+                                <li><strong>字义研究：</strong> 分析 <i>Logikos</i> (灵/理性的), <i>Hypogrammon</i> (字帖榜样) 等希腊文。</li>
+                                <li><strong>历史背景：</strong> 罗马帝国的奴隶制度与初期教会的社会边缘地位。</li>
+                                <li><strong>原则：</strong> 经文对原听众（小亚细亚的寄居者）意味着什么？</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-indigo-600">
+                            <div class="mb-4 text-indigo-600 text-3xl"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-xl font-bold text-indigo-900 mb-4">灵修性解经 (Devotional)</h3>
+                            <ul class="space-y-3 text-sm text-slate-600 list-disc list-inside">
+                                <li><strong>身份认同：</strong> 将“君尊祭司”的身份内化，建立属灵自信。</li>
+                                <li><strong>职场应用：</strong> 在面对不公待遇时，应用“顺服乖僻主人”的原则，转化苦毒为恩典。</li>
+                                <li><strong>生命效法：</strong> 在受苦中凝视基督的榜样，不还口，只交托。</li>
+                                <li><strong>原则：</strong> 经文对今天的我（现代寄居者）意味着什么？</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initDashboardCharts() {
+            // Identity Pie Chart
+            const ctxIdentity = document.getElementById('identityChart').getContext('2d');
+            new Chart(ctxIdentity, {
+                type: 'pie',
+                data: {
+                    labels: ['拣选的族类', '君尊的祭司', '圣洁的国度', '属神的子民'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#1E293B', // Slate 800
+                            '#4338CA', // Indigo 700
+                            '#64748B', // Slate 500
+                            '#818CF8'  // Indigo 400
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { padding: 20, font: { family: "'Noto Sans SC', sans-serif" } } }
+                    }
+                }
+            });
+
+            // Submission Bar Chart
+            const ctxSub = document.getElementById('submissionChart').getContext('2d');
+            new Chart(ctxSub, {
+                type: 'bar',
+                data: {
+                    labels: ['政府制度 (v13)', '主人/职场 (v18)', '社会众人 (v17)'],
+                    datasets: [{
+                        label: '顺服的范围',
+                        data: [90, 85, 80],
+                        backgroundColor: '#64748B',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

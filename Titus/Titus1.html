@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>提多书第一章：真理与敬虔的秩序</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Stone & Teal */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAFAF9; /* Stone 50 - Warm, earthy background */
+            color: #1C1917; /* Stone 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling - Strict Compliance with 1Tim4 layout */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Teal Color */
+        .active-tab {
+            color: #0F766E; /* Teal 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0F766E;
+            border-radius: 2px;
+        }
+
+        /* Verse Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #14B8A6; /* Teal 500 */
+            transform: translateX(4px);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-stone-800 serif">
+                        <i class="fas fa-anchor mr-2 text-teal-600"></i> 提多书 1章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：真理与秩序</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-teal-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-teal-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-800 text-stone-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"凭着神选民的信心与敬虔真理的知识" (1:1)</p>
+            <p class="text-xs text-teal-500 mt-2">交互式研经工具 | 聚焦：克里特文化与教会领袖</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "克里特岛的任务：真理与敬虔",
+                summary: "保罗将提多留在克里特岛（Crete），这是一个道德败坏、文化混乱的地区。提多书第一章的核心任务是“将剩余的事都办整齐了”，并通过设立敬虔的长老来对抗虚假的教师。保罗强调纯正的教义（Sound Doctrine）必须产生敬虔的生活（Godly Living），以此作为在这个充满谎言的文化中唯一的解毒剂。",
+                highlights: [
+                    { icon: "fas fa-gavel", color: "text-teal-600", text: "设立长老" },
+                    { icon: "fas fa-shield-alt", color: "text-orange-600", text: "抵挡异端" },
+                    { icon: "fas fa-balance-scale", color: "text-stone-600", text: "神的管家" }
+                ]
+            },
+            sections: [
+                {
+                    id: "preface",
+                    title: "问安与神学序言 (1:1-4)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "神的仆人...保罗，凭着神选民的信心与敬虔真理的知识，盼望那无谎言的神在万古之先所应许的永生...",
+                            academic: {
+                                title: "无谎言的神 (Apseudēs Theos)",
+                                content: "保罗使用“无谎言的神”这一独特称呼，是直接针对克里特文化的护教性宣告。克里特传说中的宙斯以欺骗著称，而克里特人本身也以撒谎闻名（1:12）。保罗在开篇就确立了基督教的神与异教神祇本质的不同：祂是绝对信实、无法撒谎的。"
+                            },
+                            devotional: {
+                                title: "真理的锚",
+                                content: "在这个充满虚假新闻、空头支票和背叛的世界中，拥有一位“无法撒谎”的神给我们带来极大的安全感。真理不仅仅是头脑的知识，而是“合乎敬虔”的，即真理必须导向生命的改变。你是否将生命建立在这个永不改变的应许之上？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "elders",
+                    title: "设立长老的标准 (1:5-9)",
+                    themeColor: "stone",
+                    verses: [
+                        {
+                            ref: "1:5-7",
+                            text: "...在各城设立长老...若有无可指责的人...监督既是神的管家，必须无可指责，不任性，不暴躁...",
+                            academic: {
+                                title: "神的管家 (Oikonomos)",
+                                content: "保罗交替使用“长老”（强调身份尊荣）和“监督”（强调管理职能），表明两者指同一职分。“管家”一词原指管理大家庭事务的奴仆总管。这提醒领袖：教会不是私人产业，而是神的家，领袖必须向神交账。"
+                            },
+                            devotional: {
+                                title: "品格重于才干",
+                                content: "在这份领袖清单中，绝大多数是关于品格（不暴躁、不贪财）和家庭治理（儿女信主）的要求，而非专业技能。神寻找的领袖首先是“对的人”。如果你不能用爱引导家人，如何能牧养神的教会？"
+                            }
+                        },
+                        {
+                            ref: "1:8-9",
+                            text: "乐意接待远人，好善，庄重，公平，圣洁自持；坚守所教真实的道理...",
+                            academic: {
+                                title: "接待远人与坚守真道",
+                                content: "“接待远人”在第一世纪是福音传播的战略需求，因为旅店常是危险和淫乱的场所。长老不仅要有道德操守，还必须在神学上稳固，“坚守”真道，以便能反驳异端。"
+                            },
+                            devotional: {
+                                title: "开放的家庭与心",
+                                content: "在这冷漠的世代，“接待”不仅是开放家门，更是开放心门接纳他人。长老应当是神学上的战士（坚守真道）和生活中的牧者（乐意接待）的结合。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rebuke",
+                    title: "抵挡假教师与克里特文化 (1:10-16)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "1:12-13",
+                            text: "有克里特人中的一个本地先知说：“克里特人常是说谎的，乃是恶兽，又馋又懒。”...你要严严地责备他们...",
+                            academic: {
+                                title: "克里特悖论 (Epimenides)",
+                                content: "保罗引用公元前6世纪哲学家伊壁门尼德的名言，不是为了讨论逻辑悖论，而是讽刺克里特文化的堕落本质——欺骗已成为民族性。面对这种深植文化的罪恶，保罗要求提多进行“严严地责备”（指医用术语上的“切除”），以保持信仰的纯正。"
+                            },
+                            devotional: {
+                                title: "文化与福音的张力",
+                                content: "我们都生活在特定的文化中，往往不知不觉沾染了时代的“恶习”（如消费主义、谎言）。基督徒不能随波逐流，而要被神的话语光照。你需要福音来“责备”你生命中的哪些文化偶像？"
+                            }
+                        },
+                        {
+                            ref: "1:15-16",
+                            text: "在洁净的人，凡事都洁净...他们说是认识神，行事却和他背道而驰...",
+                            academic: {
+                                title: "洁净观与实践性无神论",
+                                content: "针对强调外部礼仪（割礼、食物）的假教师，保罗指出真正的洁净源于内心（良心）。第16节描述了“实践性的无神论”：口头承认神，但行为（Works）否认神。这是对当时假教师最严厉的定性。"
+                            },
+                            devotional: {
+                                title: "言行一致的挑战",
+                                content: "最可怕的不是公开的无神论者，而是“口头承认神，行为否认神”的基督徒。我们的生活方式是否证明了我们所信的？神看重的是内心的洁净，而非外在的宗教表演。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-teal-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-stone-800">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-stone-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Statistic / Concept -->
+                    <div class="bg-gradient-to-br from-stone-800 to-stone-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-balance-scale-right text-4xl mb-4 text-teal-400"></i>
+                        <h3 class="text-xl font-bold mb-2">核心冲突</h3>
+                        <p class="text-stone-300 text-sm italic mb-4">"无谎言的神 vs 说谎的克里特人"</p>
+                        <div class="w-full bg-white/20 h-1 rounded-full overflow-hidden">
+                            <div class="bg-teal-500 h-full w-[90%]"></div>
+                        </div>
+                        <div class="flex justify-between w-full text-xs mt-1 text-stone-400">
+                            <span>神的属性</span>
+                            <span>堕落文化</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Contrast Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-stone-700 w-full border-b pb-2">神性 vs 人性 (1:2, 1:12)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="contrastChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">对比"无谎言的神"与"常说谎的克里特人"</p>
+                    </div>
+
+                    <!-- Leadership Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-stone-700 w-full border-b pb-2">长老资格多维评估 (1:6-9)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="leadershipChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">侧重品格与家庭，而非仅仅是才干</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters (Matching 1Tim4 layout)
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAFAF9]/95 backdrop-blur py-4 mb-8 border-b border-stone-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-stone-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-teal-700 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-stone-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-orange-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                const titleColorClass = section.themeColor === 'orange' ? 'text-orange-700 border-orange-200' : 
+                                        section.themeColor === 'teal' ? 'text-teal-800 border-teal-200' : 'text-stone-800 border-stone-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden">
+                        <div class="p-5 bg-gradient-to-r from-stone-50 to-white border-b border-stone-100">
+                            <span class="inline-block px-2 py-1 bg-stone-200 text-stone-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-stone-50 transition">
+                                <h4 class="text-stone-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-stone-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-orange-50 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-stone-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-stone-800">解经原则：求真与求善</h2>
+                        <p class="text-stone-600">
+                            提多书第一章展示了如何在败坏的文化背景中建立真理的秩序。这要求我们既要准确理解历史背景（学术），又要将其应用于当下的生命挑战（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">问题：它那时是什么意思？</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 历史-文法原则。还原克里特岛的文化背景（如“说谎者”悖论）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 原文分析（如：<em>Oikonomos</em> 神的管家）。
+                                    <br>2. 护教背景（如：针对律法主义的洁净观）。
+                                </li>
+                                <li><strong>目的：</strong> 确保教义的纯正，抵挡异端。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-600">
+                            <div class="text-teal-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-teal-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">问题：它现在对我意味着什么？</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 真理内化。将客观的神学真理转化为个人的生命指引。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 自我省察（如：我是否是“实践性无神论者”？）。
+                                    <br>2. 神学类比（如：神不撒谎带给我的安全感）。
+                                </li>
+                                <li><strong>目的：</strong> 建立敬虔的生命，活出真理。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-orange-50 p-6 rounded-lg border border-orange-200 text-center">
+                        <h4 class="font-bold text-orange-800 mb-2">综合应用</h4>
+                        <p class="text-stone-700 text-sm">
+                            健康的研经必须平衡“头脑的知识”与“内心的敬虔”。学术研经让我们免于迷信和错误，灵修应用让我们免于枯燥和骄傲。
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Contrast Chart (God vs Cretans)
+            const ctxContrast = document.getElementById('contrastChart').getContext('2d');
+            new Chart(ctxContrast, {
+                type: 'bar',
+                data: {
+                    labels: ['信实/真实', '道德/行为', '应许/话语'],
+                    datasets: [
+                        {
+                            label: '无谎言的神',
+                            data: [100, 100, 100],
+                            backgroundColor: '#0F766E' // Teal 700
+                        },
+                        {
+                            label: '克里特人',
+                            data: [10, 20, 10],
+                            backgroundColor: '#A8A29E' // Stone 400
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 110, ticks: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Leadership Radar Chart
+            const ctxLeadership = document.getElementById('leadershipChart').getContext('2d');
+            new Chart(ctxLeadership, {
+                type: 'radar',
+                data: {
+                    labels: ['家庭治理', '个人品格', '人际关系', '财务廉洁', '教导真理'],
+                    datasets: [{
+                        label: '保罗的重视程度',
+                        data: [90, 85, 95, 100, 95],
+                        backgroundColor: 'rgba(20, 184, 166, 0.2)', // Teal with opacity
+                        borderColor: '#0F766E',
+                        pointBackgroundColor: '#0F766E',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { ticks: { display: false }, grid: { color: '#E7E5E4' }, pointLabels: { font: { size: 12 } } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
