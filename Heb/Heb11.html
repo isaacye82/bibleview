@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第十一章：信心的凯旋</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Heritage Gold (Value) & Pilgrim Blue (Hope) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFBEB; /* Amber 50 - Warm, parchment-like background */
+            color: #451A03; /* Amber 950 - Deep text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Pilgrim Blue */
+        .active-tab {
+            color: #1E40AF; /* Blue 800 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1E40AF;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Heritage Gold */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.1), 0 4px 6px -2px rgba(217, 119, 6, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #DBEAFE; /* Blue 100 */
+            color: #1E3A8A; /* Blue 900 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #93C5FD; /* Blue 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-heritage {
+            background: linear-gradient(135deg, #1E40AF 0%, #D97706 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-900 serif">
+                        <i class="fas fa-mountain mr-2 text-blue-700"></i> 希伯来书 11章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">信心名人堂</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-amber-950 text-amber-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"信就是所望之事的实底，是未见之事的确据。" (11:1)</p>
+            <p class="text-xs text-amber-400 mt-3">交互式研经工具 | 聚焦：信心的本质与历史见证</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "信心的凯旋行列",
+                summary: "希伯来书第11章通常被称为“信心名人堂”。在前文劝勉信徒“不可退后”之后，作者在此用整整一章的篇幅，定义了何为信心（1-3节），并列举了旧约历史上如云彩般的见证人。从亚伯到先知，他们虽未得着所应许的（地上的完全），却因着信，看见了更美的家乡，并在苦难中得胜。这一章不仅是历史的回顾，更是对正在受苦之读者的强烈呼召：既然有这么多见证人，我们也就当放下重担，存心忍耐。",
+                highlights: [
+                    { icon: "fas fa-search-plus", color: "text-blue-600", text: "未见之事" },
+                    { icon: "fas fa-hiking", color: "text-amber-600", text: "更美家乡" },
+                    { icon: "fas fa-city", color: "text-slate-600", text: "有根基的城" }
+                ]
+            },
+            sections: [
+                {
+                    id: "definition",
+                    title: "信心的定义与创造 (11:1-3)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "11:1",
+                            text: "信就是所望之事的实底，是未见之事的确据。",
+                            academic: {
+                                title: "实底与确据",
+                                keywords: ["Hypostasis (实底/所有权契约)", "Elenchos (确据/证明)"],
+                                content: "这是圣经中对信心最著名的定义。Hypostasis 原指“站在下面的支撑物”，在蒲草纸文献中常指“地契”或“所有权证明”。信心将未来的希望（Things hoped for）转化为现在的实质拥有。Elenchos 是法庭用语，指“证据”或“定罪的凭据”。信心本身就是看不见之事物存在的证据。信心不是主观的幻想，而是对客观属灵现实的把握器官。"
+                            },
+                            devotional: {
+                                title: "你有天堂的房产证吗？",
+                                content: "信心就像一张地契。你虽然还没有搬进那座豪宅（天堂），也看不见它，但你手中的地契（信心）让你确信它是你的。这种确信让你在今天就能为了那未来的产业而喜乐、忍耐。不要低估你微小的信心，它是通往永恒的凭据。"
+                            }
+                        },
+                        {
+                            ref: "11:3",
+                            text: "我们因着信，就知道诸世界是藉神话造成的；这样，所看见的，并不是从显然之物造出来的。",
+                            academic: {
+                                title: "从无变有的创造",
+                                keywords: ["Noeō (悟性/明白)", "Rhēma (话语)"],
+                                content: "信心是理解宇宙起源的器官。科学观察“显然之物”（Phenomenal world），但信心透视到其背后的成因——神的话（Rhēma）。这否定了物质永恒论，确认了“从无变有”（Creatio ex nihilo）的教义。我们明白这一点，不是靠感官，而是靠信心。"
+                            },
+                            devotional: {
+                                title: "透过现象看本质",
+                                content: "当你看到壮丽的星空或精密的细胞时，你看到了什么？信心让我们看到的不仅仅是物质的堆砌，而是神话语的权能。如果你相信神能用话语创造宇宙，你也应当相信祂能用话语重建你破碎的生活。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "antediluvians",
+                    title: "洪水前的见证人 (11:4-7)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "11:4-6",
+                            text: "亚伯...以诺...人非有信，就不能得神的喜悦；因为到神面前来的人必须信有神，且信他赏赐那寻求他的人。",
+                            academic: {
+                                title: "得神喜悦的唯一途径",
+                                keywords: ["Euaresteō (得...喜悦)", "Misthapodotēs (赏赐者)"],
+                                content: "亚伯献祭显明了信心的**敬拜**（更美的祭）；以诺同行显明了信心的**生活**（被接去）。第6节是信仰的公理：1. 存在论的信（信有神）；2. 道德论的信（信祂是赏赐者，即神是良善和公义的）。没有这种基本的信任，人神关系无从建立。"
+                            },
+                            devotional: {
+                                title: "你在寻求赏赐吗？",
+                                content: "神不仅存在，而且祂乐意赏赐那些寻求祂的人。这不是功利主义，这是对神良善本性的信任。当你在此刻寻求祂时，不要怀疑祂是否在听，或是否吝啬。祂是慷慨的父亲，正等着把最好的给你。"
+                            }
+                        },
+                        {
+                            ref: "11:7",
+                            text: "挪亚因着信，既蒙神指示他未见的事，动了敬畏的心，预备了一只方舟...",
+                            academic: {
+                                title: "神圣的恐惧",
+                                keywords: ["Eulabeomai (动了敬畏的心/虔诚的恐惧)", "Katakrinō (定罪)"],
+                                content: "挪亚的信心表现为对“未见之事”（洪水）的敬畏和行动。他在晴天造船，这在当时人眼中是疯狂的。他的顺服本身就是对那个不信世代的“定罪”。信心使人分别出来，成为“承受义”的后嗣。"
+                            },
+                            devotional: {
+                                title: "你是疯子还是先知？",
+                                content: "跟随神的引导往往意味着在世人眼中成为“傻瓜”。当神让你做一件不合常理的事（如饶恕、奉献、坚持原则）时，你会像挪亚一样行动吗？你的顺服就是对这个世界最有力的见证。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "patriarchs",
+                    title: "列祖的客旅生涯 (11:8-22)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "11:8-10",
+                            text: "亚伯拉罕因着信，蒙召的时候就遵命出去，往将来要得为业的地方去...他等候那座有根基的城...",
+                            academic: {
+                                title: "天路客的眼光",
+                                keywords: ["Paroikeō (寄居/作客)", "Polis (城)"],
+                                content: "亚伯拉罕的信心在于“离开”确定的现在，走向未知的将来。他在应许之地像在“异地”一样寄居（住帐棚，随时可移动），因为他的眼光超越了地上的迦南，看向了神亲自建造的“那座城”（天上的耶路撒冷）。这是希伯来书重要的空间末世论。"
+                            },
+                            devotional: {
+                                title: "不要在帐棚里打地基",
+                                content: "我们在世上只是客旅，住的是帐棚。不要试图把帐棚建成永久的豪宅，那不仅徒劳，而且会让你忘记真正的家乡。如果你的心在这个世界上太安逸，你就会失去对天上那座城的渴望。"
+                            }
+                        },
+                        {
+                            ref: "11:13-16",
+                            text: "这些人都是存着信心死的，并没有得着所应许的，却从远处望见，且欢喜迎接...羡慕一个更美的家乡...",
+                            academic: {
+                                title: "未完成的信仰",
+                                keywords: ["Aspazomai (欢迎/拥抱)", "Patris (家乡/祖国)"],
+                                content: "这是一幅动人的画面：古代圣徒站在人生的终点，虽然手里没有拿到应许的实物，但他们的眼光“拥抱”了那未来的现实。他们承认自己在地上是“外人”（Xenoi）和“客旅”（Parepidēmoi）。神被称为“他们的神”，表明神认可并预备了归宿给他们。"
+                            },
+                            devotional: {
+                                title: "更美的家乡",
+                                content: "你是否有过一种莫名的乡愁，觉得这个世界虽然美好却无法让你完全满足？那是灵魂对天堂的渴望。我们是回家的孩子。即使在这个世界上有苦难，或者有些祷告未蒙应允，只要知道神已经为你预备了那更美的家，就能含笑面对死亡。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "moses_others",
+                    title: "摩西的抉择与信心的得胜 (11:23-40)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "11:24-27",
+                            text: "摩西...不肯称为法老女儿之子。他宁可和神的百姓同受苦害...他看为基督受的凌辱比埃及的财物更宝贵...",
+                            academic: {
+                                title: "价值的重估",
+                                keywords: ["Arnēomai (拒绝/否认)", "Hēgeomai (看作/评估)"],
+                                content: "摩西的信心体现为一种价值观的计算：受苦 > 罪中之乐；凌辱 > 埃及财物。作者特意提到“为基督受的凌辱”，将旧约圣徒的受苦与新约信徒的受苦连结起来——都是为了同一位弥赛亚。他“恒心忍耐，如同看见那不能看见的主”，这是信心的视觉功能。"
+                            },
+                            devotional: {
+                                title: "你的计算器准吗？",
+                                content: "摩西放弃了王子之位，选择了奴隶的道路。这在世人看来是愚蠢，在神看来是智慧。当你面临利益与信仰的抉择时，拿出信心的计算器算一算：暂时的享受 vs 永恒的赏赐，哪个更划算？"
+                            }
+                        },
+                        {
+                            ref: "11:32-40",
+                            text: "我又何必再说呢？...他们因着信，制伏了敌国...又有忍受戏弄、鞭打...这些人...仍未得着所应许的...因为神给我们预备了更美的事...",
+                            academic: {
+                                title: "得胜与受苦的双重奏",
+                                keywords: ["Kreittōn (更美)", "Teleiōthōsin (得完全)"],
+                                content: "这部分展示了信心的两面性：既有轰轰烈烈的得胜（狮子坑、烈火），也有默默无闻的受苦（锯死、流离）。神没有应许信心一定带来地上的成功。无论是得胜还是受苦，他们都未在当时得着终极的应许（基督的降临）。“更美的事”指新约的实现。他们（旧约圣徒）必须与我们（新约圣徒）一同，才能在基督里达到完全。"
+                            },
+                            devotional: {
+                                title: "成功不等于信心",
+                                content: "有时候信心让你“灭了烈火”，有时候信心让你“被锯锯死”。两种结局，同一种信心。不要用物质的成功来衡量信心的大小。无论环境顺逆，只要持守对神的忠诚，就是神眼中的信心伟人。我们是这接力赛的最后一棒，历代圣徒都在看着我们。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-amber-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-blue-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Nature of Faith -->
+                    <div class="gradient-heritage p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-amber-200">
+                        <div class="mb-4">
+                            <i class="fas fa-gem text-4xl text-amber-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">信心的双重本质 (v1)</h3>
+                        </div>
+                        
+                        <div class="flex justify-between items-center w-full mt-2 text-white">
+                            <div class="flex flex-col items-center w-1/2 border-r border-white/30">
+                                <span class="text-xs opacity-75">对所望之事</span>
+                                <span class="text-lg font-bold">实底</span>
+                                <span class="text-[10px] italic">Hypostasis (地契)</span>
+                            </div>
+                            <div class="flex flex-col items-center w-1/2">
+                                <span class="text-xs opacity-75">对未见之事</span>
+                                <span class="text-lg font-bold">确据</span>
+                                <span class="text-[10px] italic">Elenchos (证据)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-4 text-blue-100">将未来的希望转化为现在的拥有</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Hero Distribution Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-blue-100">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">信心见证人云彩</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="heroesChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">涵盖各个时代与阶层</p>
+                    </div>
+
+                    <!-- Earthly vs Heavenly Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">两个家乡的对比 (v13-16)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="countryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">承认是客旅 -> 羡慕更美的家乡</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFFBEB]/95 backdrop-blur py-4 mb-8 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-700 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-amber-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-amber-100">
+                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-amber-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-blue-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/30 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-amber-900">解经原则：见证与回应</h2>
+                        <p class="text-slate-600">
+                            希伯来书第11章通过“历史叙事”与“神学评价”的结合，展示了信心如何在不同处境中发挥功效。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：修辞与连贯性</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 类似排比的修辞分析（Anaphora）。分析作者为何反复使用"因着信"（Pistei）作为段落开头，以增强劝勉的力度。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 历史背景还原（作者如何选择性地解读旧约人物）。
+                                    <br>2. 词汇双关（"得着"与"未得着"的张力）。
+                                </li>
+                                <li><strong>目的：</strong> 证明信心是上帝子民在任何时代得胜的唯一法则。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：榜样与盼望</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 榜样激励。将古人的见证作为今人奔跑天路的动力（如云彩围着我们）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 价值观重置（像摩西一样看清什么是真正的宝贵）。
+                                    <br>2. 终末视角（像列祖一样羡慕更美的家乡）。
+                                </li>
+                                <li><strong>目的：</strong> 在苦难和延迟中，因着信心的确据而坚持到底。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Heroes Distribution Chart (Pie)
+            const ctxHeroes = document.getElementById('heroesChart').getContext('2d');
+            new Chart(ctxHeroes, {
+                type: 'pie',
+                data: {
+                    labels: ['列祖 (Abraham, etc.)', '士师/君王 (David, etc.)', '先知 (Prophets)', '无名受苦者 (Martyrs)', '初期人物 (Abel, Noah)'],
+                    datasets: [{
+                        data: [35, 20, 15, 20, 10], // Approximate visual weight in text
+                        backgroundColor: [
+                            '#F59E0B', // Amber 500
+                            '#3B82F6', // Blue 500
+                            '#6366F1', // Indigo 500
+                            '#EF4444', // Red 500
+                            '#10B981'  // Emerald 500
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    }
+                }
+            });
+
+            // Earthly vs Heavenly Country Chart (Bar)
+            const ctxCountry = document.getElementById('countryChart').getContext('2d');
+            new Chart(ctxCountry, {
+                type: 'bar',
+                data: {
+                    labels: ['地上的家乡', '天上的家乡'],
+                    datasets: [{
+                        label: '归属感 (Belonging)',
+                        data: [20, 100],
+                        backgroundColor: [
+                            '#94A3B8', // Slate (Temporary)
+                            '#D97706'  // Amber (Eternal)
+                        ],
+                        borderRadius: 4
+                    }, {
+                        label: '应许实现 (Fulfillment)',
+                        data: [10, 100],
+                        backgroundColor: [
+                            '#CBD5E1', // Light Slate
+                            '#FCD34D'  // Light Amber
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: true, position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

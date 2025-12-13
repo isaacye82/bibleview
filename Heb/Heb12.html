@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第十二章：坚忍奔跑与不可震动的国</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Endurance Maroon (Discipline/Blood) & Zion Gold (Glory/Kingdom) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFBEB; /* Warm/Parchment background */
+            color: #450A0A; /* Deep Maroon text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Zion Gold */
+        .active-tab {
+            color: #B45309; /* Amber 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #B45309;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Endurance Maroon */
+        .verse-card:hover {
+            border-left-color: #991B1B; /* Red 800 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(153, 27, 27, 0.1), 0 4px 6px -2px rgba(153, 27, 27, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FEF2F2; /* Red 50 */
+            color: #7F1D1D; /* Red 900 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FECACA; /* Red 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-endurance {
+            background: linear-gradient(135deg, #78350F 0%, #B45309 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-900 serif">
+                        <i class="fas fa-running mr-2 text-red-700"></i> 希伯来书 12章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">奔跑与管教</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-950 text-red-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-400">"我们既得了不能震动的国，就当感恩。" (12:28)</p>
+            <p class="text-xs text-red-300 mt-3">交互式研经工具 | 聚焦：从西奈山到锡安山的旅程</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "目光的焦点与终点的荣耀",
+                summary: "希伯来书第12章承接了信心伟人的见证，呼召信徒进入赛场。作者用“赛跑”的隐喻劝勉信徒放下重担，定睛耶稣（1-3节）。接着，他重新定义了苦难——不是刑罚，而是天父爱的管教，目的是为了让我们得益处（4-13节）。随后，通过对比旧约西奈山的恐怖与新约锡安山的荣耀（18-24节），作者发出了最后的警告：不可弃绝那向我们说话的，因为我们的神乃是烈火（25-29节）。",
+                highlights: [
+                    { icon: "fas fa-flag-checkered", color: "text-red-700", text: "奔跑赛程" },
+                    { icon: "fas fa-gavel", color: "text-slate-600", text: "父的管教" },
+                    { icon: "fas fa-mountain", color: "text-amber-500", text: "锡安山" }
+                ]
+            },
+            sections: [
+                {
+                    id: "race",
+                    title: "赛程与焦点：仰望耶稣 (12:1-3)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "12:1",
+                            text: "我们既有这许多的见证人，如同云彩围着我们，就当放下各样的重担，脱去容易缠累我们的罪，存心忍耐，奔那摆在我们前头的路程。",
+                            academic: {
+                                title: "如同云彩 (Nephos)",
+                                keywords: ["Nephos (云彩/大群)", "Ogkon (重担/赘肉)", "Agōna (赛程/争战)"],
+                                content: "作者将读者置于一个宏大的罗马竞技场中。看台上坐满了第11章的“见证人”（Martyrs），他们不是旁观者，而是已经跑完的选手在为我们加油。“重担”指虽非罪但阻碍速度的事物（如多余的脂肪或衣物）。“路程”（Agōn）一词暗示了这不仅是跑步，更是痛苦的搏斗。必须“放下”一切，才能跑得动。"
+                            },
+                            devotional: {
+                                title: "轻装上阵",
+                                content: "在人生的马拉松中，你背负了什么？有些东西本身不是罪（比如爱好、工作、人际关系），但如果它拖慢了你跟随神的脚步，它就是“重担”。为了那个奖赏，你愿意像运动员减脂一样，割舍这些累赘吗？"
+                            }
+                        },
+                        {
+                            ref: "12:2",
+                            text: "仰望为我们信心创始成终的耶稣。他因那摆在前面的喜乐，就轻看羞辱，忍受了十字架，便坐在神宝座的右边。",
+                            academic: {
+                                title: "专注的目标 (Aphorōntes)",
+                                keywords: ["Aphorōntes (转眼注视)", "Archēgon (创始者/元帅)", "Teleiōtēn (成终者/完成者)"],
+                                content: "“仰望”原文意为“转离其他目标，单单注视一个点”。耶稣不仅是信心的源头，也是信心的完美榜样。祂得胜的秘诀在于“透过苦难看到喜乐”（Teleological View）。祂轻看（Despise）羞辱——即不把羞辱当回事，视其无足轻重，因为相比于将来的荣耀，现在的羞辱微不足道。"
+                            },
+                            devotional: {
+                                title: "别看环境，看耶稣",
+                                content: "如果你盯着风浪看，你就会下沉；如果你盯着困难看，你就会疲倦。唯一的出路是“转眼”——从问题转向耶稣。祂已经跑过了最难的一段，并且在终点等着你。学习祂的视角：把现在的苦难当作通往未来喜乐的门票。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "discipline",
+                    title: "儿子的待遇：爱的管教 (12:4-13)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "12:5-8",
+                            text: "你们又忘了...主所爱的，他必管教...你们若受管教，神便是待你们如同待儿子...焉有儿子不被父亲管教的呢？",
+                            academic: {
+                                title: "管教神学 (Paideia)",
+                                keywords: ["Paideia (管教/孩童教育)", "Mastigoō (鞭打)"],
+                                content: "Paideia 是希腊文化中培养合格公民的教育系统，包括教导、纠正甚至体罚。作者重新定义了苦难：它不是神愤怒的刑罚（Punishment），而是父神爱的教育（Discipline）。没有管教才是可怕的，那意味着你是“私子”（Nothoi，无继承权），神不在乎你的成长。鞭打（Scourges）虽然痛苦，却是被接纳为儿子的确据。"
+                            },
+                            devotional: {
+                                title: "痛是因为爱",
+                                content: "当苦难临到时，我们常问：“神啊，你为什么恨我？”但经文说，这恰恰是因为祂爱你。祂太爱你了，以至于不能让你继续停留在软弱和罪中。祂的管教是为了修剪你，让你结果子更多。不要轻看，也不要灰心，要亲吻那根管教的杖。"
+                            }
+                        },
+                        {
+                            ref: "12:11",
+                            text: "凡管教的事，当时不觉得快乐，反觉得愁苦；后来却为那经练过的人结出平安的果子，就是义。",
+                            academic: {
+                                title: "延迟的果效",
+                                keywords: ["Gymnasmenois (经练/体操训练)", "Eirēnikon Karpon (平安的果子)"],
+                                content: "管教的效果不是即时的。“当时”必然是痛苦的（Grievous），但这痛苦是生产的阵痛。只有那些“经练过”（Gymnazo，像在体育馆受训一样，主动配合管教）的人，才能收获果子。结果是“平安的义果”——即因着品格的公义而带来的内心与关系的平安（Shalom）。"
+                            },
+                            devotional: {
+                                title: "拥抱过程",
+                                content: "不要指望管教的时候还能嘻嘻哈哈。痛是真实的。但请记住，这是一个过程，不是终局。现在流泪撒种（顺服管教），必欢呼收割（生命成熟）。如果你在受苦中抗拒、抱怨，你就白白受苦了；如果你顺服，痛苦就会转化为圣洁。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "two_mountains",
+                    title: "两座山的对比：西奈与锡安 (12:18-24)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "12:18-21",
+                            text: "你们原不是来到那能摸的山；此山有火焰、密云、黑暗、暴风...摩西说：“我甚是恐惧战兢。”",
+                            academic: {
+                                title: "西奈的恐怖",
+                                keywords: ["Pselaphōmenō (可触摸的)", "Gnophos (密云/幽暗)"],
+                                content: "这是旧约律法颁布时的场景（出19）。那是一座“物质的、可触摸的”山，代表律法的定罪职事。特征是：不可靠近、恐惧、黑暗、隔绝。连中保摩西都恐惧战兢。这表明旧约体系无法带给人真正的平安和亲近神的机会。"
+                            },
+                            devotional: {
+                                title: "你还在西奈山下吗？",
+                                content: "很多基督徒的生活充满了恐惧和定罪感，仿佛还站在西奈山脚下，担心随时被击杀。那不是你该待的地方。律法让你知罪，但不能救你。不要留在恐惧中，要往前走。"
+                            }
+                        },
+                        {
+                            ref: "12:22-24",
+                            text: "你们乃是来到锡安山，永生神的城邑...有审判众人的神...并新约的中保耶稣，以及所洒的血...",
+                            academic: {
+                                title: "锡安的荣耀",
+                                keywords: ["Panēgyris (节期聚会/盛会)", "Prototokōn (长子们)"],
+                                content: "“乃是来到”（Proselēlythate，完成时态）表明这是信徒现在的属灵地位。锡安山代表恩典的新约体系。这里有：1. 天上的耶路撒冷；2. 喜乐的天使（Festal gathering）；3. 名录在天上的长子共会（教会）；4. 审判的神（但对信徒是称义的神）；5. 义人的灵魂；6. 中保耶稣。这是一个充满喜乐、生命和团契的图景。"
+                            },
+                            devotional: {
+                                title: "欢迎来到锡安",
+                                content: "这就是我们现在的属灵地址！不是令人发抖的西奈，而是充满欢庆的锡安。在这里，天使是朋友，神是父亲，耶稣是长兄。这血比亚伯的血更美，因为亚伯的血呼求伸冤，耶稣的血呼求赦免。在这里安家吧！"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "kingdom",
+                    title: "不可震动的国与烈火的神 (12:25-29)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "12:26-29",
+                            text: "再一次我不单要震动地，还要震动天...使那不被震动的常存...我们既得了不能震动的国，就当感恩...因为我们的神乃是烈火。",
+                            academic: {
+                                title: "宇宙大震动",
+                                keywords: ["Saleuō (震动/摇动)", "Katanaliskon (吞灭/烧尽)"],
+                                content: "引用哈该书2:6。神将进行最后一次宇宙级别的大清理。凡是受造之物（可震动的，包括旧的制度、世界体系）都要被挪去，唯有那属灵的、永恒的国度（不可震动的）才能长存。面对这终极的震动，唯有感恩和敬畏（Reverence and Awe）是恰当的回应。神是烈火，这既是炼净也是审判。"
+                            },
+                            devotional: {
+                                title: "什么会留下来？",
+                                content: "当人生的地震来临时（失业、疾病、变故），你会发现什么才是真正稳固的。你的房子、存款、地位都可能被震倒，唯有你在基督里的生命“不可震动”。不要把生命建立在会摇动的根基上。我们要用敬畏的心事奉这位烈火般的神，让祂烧去我们生命中的杂质，只留下金银宝石。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-amber-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-red-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Two Mountains -->
+                    <div class="gradient-endurance p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-amber-200">
+                        <div class="mb-2">
+                            <i class="fas fa-mountain text-4xl text-white mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">两座山的抉择</h3>
+                        </div>
+                        <div class="flex justify-between items-end h-24 w-full px-2 mt-2">
+                            <!-- Sinai -->
+                            <div class="w-1/2 flex flex-col items-center">
+                                <div class="text-2xl text-slate-800 animate-pulse">⚡</div>
+                                <div class="w-full h-16 bg-slate-700 rounded-t-full relative overflow-hidden">
+                                    <div class="absolute bottom-0 w-full h-1/2 bg-red-900/50"></div>
+                                </div>
+                                <span class="text-xs font-bold text-white mt-1">西奈 (恐惧)</span>
+                            </div>
+                            <!-- Zion -->
+                            <div class="w-1/2 flex flex-col items-center">
+                                <div class="text-2xl text-yellow-300">✨</div>
+                                <div class="w-full h-20 bg-amber-400 rounded-t-full relative overflow-hidden border-2 border-yellow-200">
+                                    <div class="absolute top-2 w-full text-center text-white text-[10px]">👼</div>
+                                </div>
+                                <span class="text-xs font-bold text-white mt-1">锡安 (恩典)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-2 text-amber-100">不要弃绝那向你们说话的</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Discipline Alchemy Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-red-100">
+                        <h3 class="text-lg font-bold mb-2 text-red-800 w-full border-b border-red-100 pb-2">管教的转化过程 (v11)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="disciplineChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">痛苦(暂时) -> 经练 -> 义果(永久)</p>
+                    </div>
+
+                    <!-- The Race Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">赛程的要素 (v1-2)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="raceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">放下重担 -> 存心忍耐 -> 仰望耶稣</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFFBEB]/95 backdrop-blur py-4 mb-8 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-700 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-red-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'orange') titleColorClass = 'text-orange-700 border-orange-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-amber-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-amber-100">
+                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-amber-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-red-50/30 transition">
+                                <h4 class="text-red-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/30 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-amber-900">解经原则：对比与重构</h2>
+                        <p class="text-slate-600">
+                            希伯来书第12章通过重构对苦难的认知（管教）和对比两个约的场景（两座山），来激励信徒坚持到底。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-600">
+                            <div class="text-red-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：隐喻与神学</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 隐喻重构。将"苦难"从刑罚的框架移入"家庭管教"的框架，改变读者的认知。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 场景对比（西奈山的恐怖 vs 锡安山的欢庆）。
+                                    <br>2. 竞技场意象（赛跑、见证人、放下重担）。
+                                </li>
+                                <li><strong>目的：</strong> 消除对苦难的误解，确立新约信徒的优越地位。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：态度与终点</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 焦点转移。从关注当下的痛苦（手下垂腿发酸）转移到仰望耶稣和未来的国度。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 顺服操练（在受苦中学习儿子的顺服）。
+                                    <br>2. 感恩回应（既然得了不能震动的国，就当感恩）。
+                                </li>
+                                <li><strong>目的：</strong> 在震动的世界中，活出不可震动的平安与敬畏。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Discipline Alchemy Chart (Line/Area)
+            const ctxDiscipline = document.getElementById('disciplineChart').getContext('2d');
+            new Chart(ctxDiscipline, {
+                type: 'line',
+                data: {
+                    labels: ['开始', '管教中', '经练后', '成熟'],
+                    datasets: [
+                        {
+                            label: '主观感受 (愁苦)',
+                            data: [0, 90, 40, 10], // High pain initially
+                            borderColor: '#DC2626', // Red
+                            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: '属灵果效 (义果)',
+                            data: [0, 20, 60, 100], // Growth over time
+                            borderColor: '#D97706', // Amber
+                            backgroundColor: 'rgba(217, 119, 6, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 1 && context.datasetIndex === 0) return "当时不觉得快乐";
+                                    if(context.dataIndex === 3 && context.datasetIndex === 1) return "结出平安的果子";
+                                    return context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // The Race Chart (Doughnut)
+            const ctxRace = document.getElementById('raceChart').getContext('2d');
+            new Chart(ctxRace, {
+                type: 'doughnut',
+                data: {
+                    labels: ['见证人激励', '放下重担/罪', '忍耐奔跑', '仰望耶稣'],
+                    datasets: [{
+                        data: [15, 25, 30, 30],
+                        backgroundColor: [
+                            '#94A3B8', // Slate (Cloud)
+                            '#DC2626', // Red (Action)
+                            '#F59E0B', // Amber (Endurance)
+                            '#450A0A'  // Dark Red (Focus)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

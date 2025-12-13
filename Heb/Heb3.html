@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第三章：更美的中保与安息的应许</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Wilderness Ochre (Warning) & Faithful Blue (Christ's Headship) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FEFCF5; /* Warm Sand/Beige - Wilderness feel */
+            color: #1E3A8A; /* Dark Blue - Authority/House */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Faithful Blue */
+        .active-tab {
+            color: #1D4ED8; /* Blue 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1D4ED8;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Wilderness Ochre for warning contrast */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.1), 0 4px 6px -2px rgba(217, 119, 6, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #DBEAFE; /* Blue 100 */
+            color: #1E40AF; /* Blue 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #93C5FD; /* Blue 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-wilderness {
+            background: linear-gradient(135deg, #FFF7ED 0%, #EFF6FF 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-blue-900 serif">
+                        <i class="fas fa-home mr-2 text-amber-500"></i> 希伯来书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">摩西与基督：今日的听从</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-blue-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"你们今日若听他的话，就不可硬着心。" (3:7)</p>
+            <p class="text-xs text-blue-400 mt-3">交互式研经工具 | 聚焦：忠信的儿子与不信的鉴戒</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "比起摩西，祂配得更多荣耀",
+                summary: "希伯来书第三章是一个转折点。作者从比较基督与天使，转向比较基督与摩西——犹太教最受尊崇的领袖。通过“仆人”与“儿子”、“在神全家”与“治理神家”的精妙对比，确立了基督的超越性（1-6节）。紧接着，作者引用诗篇95篇，发出了关于“今日”的紧急呼吁，警告信徒不要重蹈旷野世代“不信”与“硬心”的覆辙（7-19节）。这是对教会集体责任的深切呼唤。",
+                highlights: [
+                    { icon: "fas fa-user-tie", color: "text-blue-600", text: "思想使者" },
+                    { icon: "fas fa-house-user", color: "text-amber-600", text: "治理神家" },
+                    { icon: "fas fa-exclamation-circle", color: "text-red-500", text: "不可硬心" }
+                ]
+            },
+            sections: [
+                {
+                    id: "moses_christ",
+                    title: "忠信的比较：摩西与基督 (3:1-6)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "3:1",
+                            text: "同蒙天召的圣洁弟兄啊，你们应当思想我们所认为使者、为大祭司的耶稣。",
+                            academic: {
+                                title: "思想 (Katanoeō)",
+                                keywords: ["Katanoeō (深思/注视)", "Apostolos (使者/使徒)"],
+                                content: "“思想”是一个强烈的动词，意为“全神贯注地凝视”或“深入考究”。耶稣在此被称为“使者”（Apostle，意为被差遣者，代表神向人说话，像摩西）和“大祭司”（代表八向神说话，像亚伦）。这是新约唯一一次称耶稣为“使者/使徒”，概括了祂的中保职分。"
+                            },
+                            devotional: {
+                                title: "目光的焦点",
+                                content: "当我们在信仰生活中感到疲惫或受试探时，往往是因为我们的目光离开了耶稣，转向了环境或困难。作者的处方很简单：盯着耶稣看。不要只瞥一眼，要“深思”祂。这种专注的注视是得胜的秘诀。"
+                            }
+                        },
+                        {
+                            ref: "3:2-6",
+                            text: "他比摩西算是更配多得荣耀...摩西为仆人...但基督为儿子，治理神的家...",
+                            academic: {
+                                title: "本体论的超越",
+                                keywords: ["Therapōn (仆人/侍从)", "Huios (儿子)", "Oikos (家)"],
+                                content: "作者丝毫没有贬低摩西，反而肯定他在神全家尽忠。但差异在于本质：摩西是“家中的仆人”（Part of the house），基督是“治理家的儿子”（Builder/Ruler of the house）。这就是创造者与受造物、主人与管家的区别。信徒群体（教会）正是这个“家”。"
+                            },
+                            devotional: {
+                                title: "你是家里的什么人？",
+                                content: "我们是神的家。这是一个何等尊贵的身份。基督不是像摩西一样只是我们的领袖，祂是我们的建造者和拥有者。既然是家，我们就应当有归属感，同时也应当顺服那位治理者。坚持到底，就是守住这个家的身份。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "warning_wilderness",
+                    title: "圣灵的警告：旷野的悲剧 (3:7-11)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "3:7-9",
+                            text: "圣灵有话说：你们今日若听他的话，就不可硬着心，像在旷野惹他发怒...试探我...",
+                            academic: {
+                                title: "圣灵的现时发言",
+                                keywords: ["Sēmeron (今日)", "Sklērynō (使变硬)"],
+                                content: "作者引用诗篇95篇，并归因为“圣灵有话说”（现在时态），表明旧约经文不仅是历史记录，更是神对当下的直接发言。“硬着心”是指一种顽固拒绝神恩典和引导的意志状态。旷野世代虽经历了神迹，却仍存不信的恶心，这是一种对恩典的免疫反应。"
+                            },
+                            devotional: {
+                                title: "抓住“今日”",
+                                content: "神的声音总是在“今日”临到。不是昨天（那是回忆），也不是明天（那是幻想），而是现在。每当我们推迟顺服，我们的心就会加一层硬壳。最危险的属灵状态不是犯罪，而是对神的声音麻木。今日，你的心是柔软的吗？"
+                            }
+                        },
+                        {
+                            ref: "3:10-11",
+                            text: "我就厌烦那世代的人...断不可进入我的安息。",
+                            academic: {
+                                title: "神的厌烦与起誓",
+                                keywords: ["Prosochthizō (厌烦/极度反感)", "Katapausis (安息)"],
+                                content: "“厌烦”是一个强烈的拟人化词汇，表达神对持续悖逆的深恶痛绝。神起誓不容他们进入安息（迦南地）。这里的“安息”具有多重含义：历史上的迦南、神创造后的安息、以及终末论的救恩安息。不信者被挡在安息之外。"
+                            },
+                            devotional: {
+                                title: "不要惹动神的怒气",
+                                content: "我们常讲神的爱，但这里提醒我们神也会“厌烦”。当我们一次次试探神的底线，却不肯悔改时，我们是在玩火。神的忍耐是为了领我们悔改，而不是让我们放肆。失去安息，是人生最大的悲剧。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "exhortation",
+                    title: "对信徒的劝勉：彼此相顾 (3:12-19)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "3:12-13",
+                            text: "弟兄们，你们要谨慎，免得你们中间...有不信的恶心...总要趁着还有今日，天天彼此相劝...",
+                            academic: {
+                                title: "不信的恶心 (Apistias Ponera)",
+                                keywords: ["Apostēnai (离弃/站开)", "Parakaleō (劝勉/鼓励)", "Apatē (迷惑/欺骗)"],
+                                content: "“不信”不仅仅是理智上的怀疑，更被定性为道德上的“恶”（Ponera），因为它导致“离弃”永生神（Apostasy）。对策是“天天彼此相劝”。这揭示了罪的“迷惑性”（Deceitfulness）：罪会硬化人心，让人觉得自己没错。独处的信徒是脆弱的，群体生活是防止硬心的解毒剂。"
+                            },
+                            devotional: {
+                                title: "你需要属灵伙伴",
+                                content: "没有人能独自对抗罪的迷惑。我们需要别人的眼睛来发现我们的盲点，需要别人的鼓励来软化我们的硬心。“天天”的相劝不是唠叨，而是爱的护卫。如果你在教会中总是独来独往，你就处在危险之中。开放你的生活，让人向你说诚实话。"
+                            }
+                        },
+                        {
+                            ref: "3:14",
+                            text: "我们若将起初确实的信心坚持到底，就在基督里有份了。",
+                            academic: {
+                                title: "坚持到底的验证",
+                                keywords: ["Metochos (有份/伙伴)", "Hypostasis (信心/确信/实质)"],
+                                content: "这也是希伯来书的核心主题之一：忍耐。救恩不仅是过去的决志（起初的信心），更是现在的持守。如果你没有“坚持到底”，那就证明你从未真正在基督里“有份”（Become partakers）。现在的状态是过去信心的验证。"
+                            },
+                            devotional: {
+                                title: "别在终点前放弃",
+                                content: "信仰是一场马拉松，不是短跑。起跑漂亮并不代表什么，重要的是能不能以此跑完全程。在这个充满试探的世界，坚持本身就是神迹。当我们感到软弱想放弃时，记得我们是与基督“有份”的伙伴，祂会牵着我们的手走完。"
+                            }
+                        },
+                        {
+                            ref: "3:19",
+                            text: "这样看来，他们不能进入，是因为不信的缘故了。",
+                            academic: {
+                                title: "根本原因：不信",
+                                keywords: ["Apistia (不信)"],
+                                content: "总结全章：倒毙旷野的根本原因不是因为环境恶劣，也不是因为仇敌强大，仅仅是因为“不信”。不信神能带他们进去，不信神的应许是真实的。不信是所有属灵失败的根源。"
+                            },
+                            devotional: {
+                                title: "信任是关系的底线",
+                                content: "你相信神真的对你好吗？你相信祂的应许会兑现吗？当我们开始怀疑神的良善和能力时，我们就已经踏上了旷野的路。信心不是感觉，是对神性格的把握。无论环境如何，选择相信祂。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-blue-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The House of God -->
+                    <div class="gradient-wilderness p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-blue-200">
+                        <div class="mb-2">
+                            <i class="fas fa-church text-4xl text-blue-600 mb-2"></i>
+                            <h3 class="text-xl font-bold text-blue-900">神的家 (The House)</h3>
+                        </div>
+                        <div class="flex justify-around items-end h-24 mt-2 px-4 relative">
+                            <!-- Moses Pillar -->
+                            <div class="flex flex-col items-center z-10">
+                                <span class="text-xs font-bold text-slate-500 mb-1">摩西</span>
+                                <div class="w-12 h-12 bg-slate-300 rounded-t-lg flex items-center justify-center shadow-md">
+                                    <span class="text-lg">🤲</span>
+                                </div>
+                                <span class="text-[10px] text-slate-500 mt-1">忠信的仆人</span>
+                            </div>
+                            
+                            <!-- Christ Pillar -->
+                            <div class="flex flex-col items-center z-10 relative bottom-4">
+                                <span class="text-xs font-bold text-amber-600 mb-1">基督</span>
+                                <div class="w-16 h-20 bg-amber-400 rounded-t-lg flex items-center justify-center shadow-lg border-2 border-white">
+                                    <span class="text-2xl">👑</span>
+                                </div>
+                                <span class="text-[10px] text-amber-700 mt-1 font-bold">治理的儿子</span>
+                            </div>
+                        </div>
+                        <div class="w-full h-1 bg-slate-200 mt-1"></div>
+                        <p class="text-xs mt-2 text-slate-500">我们若坚持到底，便是祂的家了</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Status Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-blue-100">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">地位对比：仆人 vs 儿子 (v5-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="statusChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">摩西是神家的一部分，基督是神家的建造者</p>
+                    </div>
+
+                    <!-- Hardening Cycle Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">硬心的病理学 (v13)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="hardeningChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">罪的迷惑 -> 心里刚硬 -> 离弃永生神</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FEFCF5]/95 backdrop-blur py-4 mb-8 border-b border-blue-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-blue-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-blue-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-700 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-indigo-800 border-indigo-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-blue-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-blue-100">
+                            <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-blue-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-blue-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-100/30 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">解经原则：对比与警戒</h2>
+                        <p class="text-slate-600">
+                            希伯来书第三章使用了“较小到较大”（a fortiori）的论证法，并结合了旧约叙事（Typology）的警戒。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：本体论与互文性</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 比较级论证。理解作者如何通过比较摩西（仆人）与基督（儿子）来确立基督的独特性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 诗篇95篇的解经学（作者如何将"今日"应用到当下）。
+                                    <br>2. 词汇分析（"硬心"与"不信"的关联）。
+                                </li>
+                                <li><strong>目的：</strong> 证明基督超越旧约体制，警告背道的危险。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：团契与持守</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 群体性应用。将"彼此相劝"的责任落实到教会生活中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 灵性体检（我的心是否变硬了？）。
+                                    <br>2. 专注操练（学习"思想"耶稣）。
+                                </li>
+                                <li><strong>目的：</strong> 在群体中彼此扶持，坚持到底，进入安息。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Status Comparison Chart (Bar)
+            const ctxStatus = document.getElementById('statusChart').getContext('2d');
+            new Chart(ctxStatus, {
+                type: 'bar',
+                data: {
+                    labels: ['身份', '权柄', '荣耀', '关系'],
+                    datasets: [
+                        {
+                            label: '摩西 (仆人)',
+                            data: [40, 50, 60, 50],
+                            backgroundColor: '#94A3B8', // Slate (Servant)
+                            borderRadius: 4
+                        },
+                        {
+                            label: '基督 (儿子)',
+                            data: [100, 100, 100, 100],
+                            backgroundColor: '#F59E0B', // Amber (Son/King)
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Hardening Cycle Chart (Doughnut)
+            const ctxHardening = document.getElementById('hardeningChart').getContext('2d');
+            new Chart(ctxHardening, {
+                type: 'doughnut',
+                data: {
+                    labels: ['罪的迷惑 (Deceit)', '心里刚硬 (Harden)', '离弃真神 (Depart)', '无法安息 (No Rest)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#60A5FA', // Blue 400 (Start)
+                            '#FBBF24', // Amber 400 (Warning)
+                            '#F59E0B', // Amber 500 (Danger)
+                            '#B45309'  // Amber 700 (Consequence)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + (context.dataIndex + 1) + '步';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

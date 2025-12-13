@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第五章：受苦的祭司与长大的呼召</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Priestly Violet (Office) & Harvest Gold (Maturity) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAF5FF; /* Violet 50 - Noble/Spiritual background */
+            color: #3B0764; /* Violet 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Priestly Violet */
+        .active-tab {
+            color: #7C3AED; /* Violet 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #7C3AED;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Harvest Gold */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F3E8FF; /* Violet 100 */
+            color: #6B21A8; /* Violet 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #D8B4FE; /* Violet 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-priestly {
+            background: linear-gradient(135deg, #E9D5FF 0%, #FEF3C7 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-violet-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-violet-900 serif">
+                        <i class="fas fa-user-friends mr-2 text-amber-500"></i> 希伯来书 5章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">祭司的泪与长大的粮</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-violet-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-violet-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-violet-950 text-violet-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-300">"惟独长大成人的才能吃干粮，他们的心窍习练得通达。" (5:14)</p>
+            <p class="text-xs text-violet-400 mt-3">交互式研经工具 | 聚焦：基督的顺服与信徒的成熟</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "受苦的祭司与停止生长的危机",
+                summary: "希伯来书第五章是全书论证的枢纽。前半部分（1-10节）详细阐述了耶稣作为大祭司的资格：祂既具备人间祭司的“体恤”（同情心），又拥有超越亚伦的“神圣任命”（照麦基洗德的等次）。特别是第7节描绘了耶稣在客西马尼园“大声哀哭”的人性时刻，极具震撼力。后半部分（11-14节）笔锋突转，作者责备读者“听不进去”，灵性退化到只能吃奶的婴孩阶段，无法领受关于麦基洗德的深奥真理。",
+                highlights: [
+                    { icon: "fas fa-sad-tear", color: "text-violet-600", text: "哀哭祷告" },
+                    { icon: "fas fa-medal", color: "text-amber-600", text: "学了顺服" },
+                    { icon: "fas fa-bread-slice", color: "text-orange-800", text: "吃干粮" }
+                ]
+            },
+            sections: [
+                {
+                    id: "priest_qualifications",
+                    title: "人间大祭司的资格 (5:1-4)",
+                    themeColor: "violet",
+                    verses: [
+                        {
+                            ref: "5:1-3",
+                            text: "凡从人间挑选的大祭司...能体谅那愚蒙和失迷的人，因为他自己也是被软弱所困...为自己献祭...",
+                            academic: {
+                                title: "同理心的神学基础",
+                                keywords: ["Metriopathein (适度同情/体谅)", "Astheneian (软弱)"],
+                                content: "亚伦系大祭司的首要资格是“同理心”。*Metriopathein* 是一个哲学词汇，介于“无动于衷”（Apathy）和“情绪失控”之间，指能够适度地感同身受。这种能力源于祭司自身的“软弱”（罪性）。因此，他在为百姓献祭前，必须先为自己献祭（如赎罪日）。这确立了祭司与百姓的“生命共同体”关系。"
+                            },
+                            devotional: {
+                                title: "受伤的治疗者",
+                                content: "最好的安慰者往往是那些自己受过伤的人。如果你正在经历软弱或失败，不要觉得这让你失去了事奉的资格。相反，这可能是神在训练你的“体恤之心”，让你将来能用温柔对待那些失败的人，而不是站在道德高地上指责。"
+                            }
+                        },
+                        {
+                            ref: "5:4",
+                            text: "这大祭司的尊荣，没有人自取。惟要蒙神所召，像亚伦一样。",
+                            academic: {
+                                title: "神圣的任命",
+                                keywords: ["Kaloumenos (被呼召)", "Timē (尊荣/职分)"],
+                                content: "祭司职分不仅需要人性的认同，更需要神性的授权。在旧约中，可拉党试图“自取”这尊荣，结果被灭（民16）。这强调了职分的合法性来源：不是人的野心，而是神的呼召。"
+                            },
+                            devotional: {
+                                title: "等待神的红灯变绿",
+                                content: "在教会服侍或人生使命中，我们常急于“自荐”或“上位”。但属灵的权柄永远来自神的呼召，而非人的争取。如果你确定是神召你，就不用担心没人认可；如果不是神召你，即便抢到了位置，也那是重担而非尊荣。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "christ_appointment",
+                    title: "基督的超越性任命 (5:5-10)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "5:5-6",
+                            text: "基督...不是自取...乃是那对他说“你是我的儿子”...又说“你是照着麦基洗德的等次永远为祭司”。",
+                            academic: {
+                                title: "双重身份的结合",
+                                keywords: ["Melchisedek (麦基洗德)", "Taxis (等次/秩序)"],
+                                content: "作者引用诗篇2:7（王权/儿子）和诗篇110:4（祭司权/麦基洗德）。在旧约，王权（犹大支派）和祭司权（利未支派）是严格分开的。但“麦基洗德”作为撒冷王兼至高神的祭司（创14），预表了基督身上王权与祭司权的完美统一。这是超越亚伦体系的新秩序。"
+                            },
+                            devotional: {
+                                title: "永远的祭司",
+                                content: "人间的牧师或领袖都会退休、离任或去世，但耶稣是“永远”的祭司。祂对你的代求永不停止，祂对你的责任永不卸任。把你的安全感建立在这位永不改变的中保身上。"
+                            }
+                        },
+                        {
+                            ref: "5:7-9",
+                            text: "基督在肉体的时候，既大声哀哭，流泪祷告...因他的虔诚蒙了应允。他虽然为儿子，还是因所受的苦难学了顺服。",
+                            academic: {
+                                title: "顺服的学习过程",
+                                keywords: ["Emathen (学习)", "Hypakoē (顺服)", "Teleiōtheis (得以完全/达到目标)"],
+                                content: "这是描述耶稣人性最深刻的经文之一。虽然祂在神性上无所不知，但在人性经验上，祂必须通过“受苦”来“习得”顺服的深度。“蒙应允”指的不是免除死亡（祂还是死了），而是从死亡中得救（复活）。祂的“完全”（Teleiōtheis）指祂完全具备了作救赎主的资格。"
+                            },
+                            devotional: {
+                                title: "眼泪的学校",
+                                content: "如果连神的儿子都需要通过受苦来“学习”顺服，我们为何以此为怪呢？苦难不是神不爱你的证据，而是神让你修读“顺服系”的高级课程。不要浪费你的眼泪，让它们浇灌出顺服的果实。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "warning_immaturity",
+                    title: "对属灵婴孩的责备 (5:11-14)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "5:11-12",
+                            text: "论到麦基洗德...你们听不进去...本该作师傅，谁知还得有人将圣言小学的开端教导你们...",
+                            academic: {
+                                title: "听力退化症",
+                                keywords: ["Nōthroi (迟钝/懒惰)", "Stoicheia (基本原理/字母表)"],
+                                content: "“听不进去”原文意为“听觉迟钝/懒惰”。这不仅是智力问题，更是态度问题。作者本想深入讲解麦基洗德的奥秘，但读者的灵性状态迫使他停下来。他们不仅没有成长为能教导人的“师傅”，反而退化到需要重学“ABC”（圣言小学的开端）。"
+                            },
+                            devotional: {
+                                title: "你还在喝奶吗？",
+                                content: "信主多年并不等于灵命成熟。如果你对真理的兴趣还停留在最初的简单安慰，如果一遇到深一点的神学就想睡觉，那就是“属灵巨婴”的症状。时间不会自动让你成长，只有对真理的渴慕和操练才能。"
+                            }
+                        },
+                        {
+                            ref: "5:13-14",
+                            text: "凡只能吃奶的...是婴孩。惟独长大成人的才能吃干粮；他们的心窍习练得通达，就能分辨好歹了。",
+                            academic: {
+                                title: "属灵感官的操练",
+                                keywords: ["Stereas Trophēs (干粮/固体食物)", "Aisthētēria (感官/知觉)", "Gymnasmena (习练/体操训练)"],
+                                content: "“干粮”指关于公义的深奥道理（如麦基洗德的高等基督论）。成熟的标志是拥有“习练得通达”（Gymnasmena，体操运动员般的训练）的“心窍”（感官）。这不是天赋，而是长期在生活中应用真理、做道德判断（分辨好歹）所形成的属灵直觉。"
+                            },
+                            devotional: {
+                                title: "属灵健身房",
+                                content: "分辨力不是读书读出来的，是练出来的。就像运动员的肌肉需要高强度训练，属灵的分辨力也需要在复杂的道德困境中，通过一次次选择顺服神来“习练”。不要逃避做艰难的决定，那是你的属灵健身房。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-violet-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-violet-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Path to Perfection -->
+                    <div class="gradient-priestly p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-violet-200">
+                        <div class="mb-4">
+                            <i class="fas fa-route text-4xl text-violet-600 mb-2"></i>
+                            <h3 class="text-xl font-bold text-violet-900">成全的路径 (v8-9)</h3>
+                        </div>
+                        
+                        <div class="flex flex-col items-center space-y-2 w-full max-w-xs mx-auto">
+                            <div class="bg-white/60 w-full py-2 rounded border-l-4 border-slate-400 text-slate-700 font-bold">
+                                受苦 (Suffering)
+                            </div>
+                            <i class="fas fa-arrow-down text-violet-400"></i>
+                            <div class="bg-white/70 w-full py-2 rounded border-l-4 border-violet-400 text-violet-800 font-bold">
+                                学顺服 (Obedience)
+                            </div>
+                            <i class="fas fa-arrow-down text-violet-600"></i>
+                            <div class="bg-white/90 w-full py-2 rounded border-l-4 border-amber-500 text-amber-800 font-bold shadow-md">
+                                进完全 (Perfection)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Spiritual Senses Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">属灵知觉雷达 (v14)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="sensesChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">婴孩(迟钝) vs 成人(通达)</p>
+                    </div>
+
+                    <!-- Priesthood Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-violet-100">
+                        <h3 class="text-lg font-bold mb-2 text-violet-800 w-full border-b border-violet-100 pb-2">祭司体系对比 (v1-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="priesthoodChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">亚伦(软弱/自祭) vs 基督(儿子/麦基洗德)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAF5FF]/95 backdrop-blur py-4 mb-8 border-b border-violet-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-violet-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-violet-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-violet-700 text-white font-bold' : 'text-slate-500 hover:bg-violet-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-violet-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-500 text-white font-bold' : 'text-slate-500 hover:bg-violet-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'violet') titleColorClass = 'text-violet-800 border-violet-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-violet-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-violet-50 border-b border-violet-100">
+                            <span class="inline-block px-2 py-1 bg-violet-100 text-violet-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-violet-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-violet-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-100/30 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-violet-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-violet-900">解经原则：预表与成长</h2>
+                        <p class="text-slate-600">
+                            希伯来书第五章结合了深奥的预表学（麦基洗德）与实际的灵命教导。解经需平衡“神学深度”与“牧养关怀”。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：历史与逻辑</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 资格验证原则。分析作者如何论证耶稣符合大祭司的两个条件（人性和神召）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 预表研究（麦基洗德作为非利未体系的祭司）。
+                                    <br>2. 词源对比（"婴孩" Nēpios vs "成人" Teleios）。
+                                </li>
+                                <li><strong>目的：</strong> 确立耶稣祭司职份的合法性与超越性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：苦难与成长</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 生命进深。将耶稣的"学了顺服"作为信徒面对苦难的模范。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 灵命自测（我是吃奶的还是吃干粮的？）。
+                                    <br>2. 习练操练（在日常选择中锻炼分辨力）。
+                                </li>
+                                <li><strong>目的：</strong> 摆脱属灵的停滞，追求成熟，能领受深奥真理。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Spiritual Senses Radar Chart
+            const ctxSenses = document.getElementById('sensesChart').getContext('2d');
+            new Chart(ctxSenses, {
+                type: 'radar',
+                data: {
+                    labels: ['听觉(受教)', '消化力(干粮)', '分辨好歹', '教导能力', '熟练仁义'],
+                    datasets: [{
+                        label: '成熟信徒 (Adult)',
+                        data: [90, 100, 95, 85, 90],
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber
+                        borderColor: '#D97706',
+                        pointBackgroundColor: '#D97706',
+                        pointBorderColor: '#fff',
+                    },
+                    {
+                        label: '属灵婴孩 (Infant)',
+                        data: [30, 20, 10, 0, 20],
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)', // Slate
+                        borderColor: '#64748B',
+                        pointBackgroundColor: '#64748B',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#3B0764' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Priesthood Comparison Chart (Bar)
+            const ctxPriesthood = document.getElementById('priesthoodChart').getContext('2d');
+            new Chart(ctxPriesthood, {
+                type: 'bar',
+                data: {
+                    labels: ['神圣呼召', '体恤软弱', '献祭效力', '职任期限'],
+                    datasets: [{
+                        label: '亚伦体系',
+                        data: [100, 80, 50, 20], // Limited efficacy and time
+                        backgroundColor: '#A78BFA', // Light Violet
+                        borderRadius: 4
+                    },
+                    {
+                        label: '基督 (麦基洗德)',
+                        data: [100, 100, 100, 100], // Perfect and Eternal
+                        backgroundColor: '#5B21B6', // Dark Violet
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 3 && context.datasetIndex === 0) return "受死阻隔";
+                                    if(context.dataIndex === 3 && context.datasetIndex === 1) return "永远为祭司";
+                                    return context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

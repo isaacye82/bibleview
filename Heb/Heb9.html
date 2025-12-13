@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第九章：更美的祭物与永远的赎罪</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Sanctuary Gold (Glory) & Atonement Crimson (Blood) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFBEB; /* Amber 50 - Warm Sanctuary Light */
+            color: #451A03; /* Amber 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Atonement Crimson */
+        .active-tab {
+            color: #BE123C; /* Rose 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #BE123C;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Sanctuary Gold */
+        .verse-card:hover {
+            border-left-color: #F59E0B; /* Amber 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(190, 18, 60, 0.1), 0 4px 6px -2px rgba(190, 18, 60, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FFE4E6; /* Rose 100 */
+            color: #881337; /* Rose 900 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FDA4AF; /* Rose 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-sanctuary {
+            background: linear-gradient(135deg, #78350F 0%, #BE123C 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-900 serif">
+                        <i class="fas fa-dungeon mr-2 text-rose-600"></i> 希伯来书 9章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">至圣所与宝血</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-amber-950 text-amber-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"若不流血，罪就不得赦免了。" (9:22)</p>
+            <p class="text-xs text-amber-400 mt-3">交互式研经工具 | 聚焦：礼仪的终结与良心的洗净</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "穿越幔子：从影儿进入实体",
+                summary: "希伯来书第九章带领读者进入了旧约敬拜的核心——帐幕的内部结构与赎罪日的礼仪（1-10节）。作者不仅详细描述了至圣所的器具，更指出了其局限性：路尚未显明，良心无法洁净。这一切都是为了衬托基督“更美的职任”：祂经过了更大、全备的帐幕，不是带着山羊和牛犊的血，而是用“自己的血”，一次性完成了“永远的赎罪”（11-14节）。本章还通过“遗嘱”（Covenant/Testament）的法律概念，解释了为何新约必须以死为确据（15-22节），并以基督宏大的三次显现（过去、现在、将来）作为结束。",
+                highlights: [
+                    { icon: "fas fa-cube", color: "text-amber-600", text: "至圣所" },
+                    { icon: "fas fa-tint", color: "text-rose-600", text: "无瑕疵的血" },
+                    { icon: "fas fa-history", color: "text-slate-600", text: "一次献上" }
+                ]
+            },
+            sections: [
+                {
+                    id: "earthly_sanctuary",
+                    title: "地上的圣所与礼仪的局限 (9:1-10)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "9:1-5",
+                            text: "原来前约有礼拜的条例和属世界的圣幕...第二层帐幕...至圣所...有金香坛...基路伯...",
+                            academic: {
+                                title: "神圣的空间结构",
+                                keywords: ["Hagia Hagiōn (至圣所)", "Kosmikon (属世界的/物质的)"],
+                                content: "作者回顾了帐幕的布局。值得注意的是，他将“金香坛”归入至圣所（虽然在旧约中它位于幔子外）。这可能指神学意义上的归属（香气通过幔子进入至圣所），或指赎罪日大祭司带着香炉进入的情景。这些物质的（Kosmikon）器具虽荣耀，却只是“影儿”。"
+                            },
+                            devotional: {
+                                title: "隔绝的幔子",
+                                content: "旧约的敬拜充满了“止步”的标志。普通人不能进圣所，普通祭司不能进至圣所，大祭司也只能一年一次进去。这种神圣的距离感在提醒我们神的圣洁和人的罪。但如今，因着基督，我们可以时刻坦然无惧地进去。不要把这种特权视为理所当然。"
+                            }
+                        },
+                        {
+                            ref: "9:8-10",
+                            text: "圣灵用此指明，头一层帐幕仍存的时候，进入至圣所的路还未显明...不过是...肉体的条例...",
+                            academic: {
+                                title: "良心的困境",
+                                keywords: ["Syneidēsin (良心)", "Parabolē (比喻/预表)"],
+                                content: "旧制度最大的软弱在于它只能处理“肉体的条例”（饮食、洗濯），却不能在“良心”（Syneidēsin）上叫人完全。重复的献祭恰恰证明了罪疚感从未被彻底清除。这是一个Parabolē（比喻），指向那个能真正解决良心问题的时代。"
+                            },
+                            devotional: {
+                                title: "洗不掉的污点",
+                                content: "你是否感觉即便做了很多善事、参加了很多聚会，内心深处仍有隐隐的罪疚感？旧约的礼仪就像只洗衣服不洗澡，无法触及灵魂深处。唯有基督的血能渗透到良心层面，给你一个真正清洁的内在确据。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "blood_christ",
+                    title: "基督的血与永远的赎罪 (9:11-14)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "9:11-12",
+                            text: "但现在基督已经来到...乃是用自己的血，只一次进入圣所，成了永远赎罪的事。",
+                            academic: {
+                                title: "Hapax (只一次)",
+                                keywords: ["Hapax (一次性/一劳永逸)", "Lytrōsin (救赎/赎价)"],
+                                content: "“只一次”（Hapax）是希伯来书的核心词汇，与旧约祭司“年年”（Kat' eniauton）形成鲜明对比。基督的血具有无限的价值，因此不需要重复。祂进入的是“天上的圣所”（非人手所造），取得的是“永远的”救赎（Aiōnian Lytrōsin）。"
+                            },
+                            devotional: {
+                                title: "成了",
+                                content: "耶稣在十字架上说“成了”，意思就是真的“成了”。你不需要再为你的罪通过自我惩罚、苦修或积德来“补交赎价”。那张支票已经付清了。如果你还在试图偿还，你就是在轻看基督宝血的价值。"
+                            }
+                        },
+                        {
+                            ref: "9:14",
+                            text: "何况基督藉着永远的灵...他的血岂不更能洗净你们的心，除去你们的死行，使你们事奉那永生神吗？",
+                            academic: {
+                                title: "三一神的救赎工作",
+                                keywords: ["Pneuma Aiōnion (永远的灵)", "Nekrōn Ergōn (死行)"],
+                                content: "这节经文提到了三位一体：基督藉着“永远的灵”（圣灵赋予献祭永恒的价值），向“神”献上自己。结果是：1. 消极面：洗净良心，除去“死行”（Dead Works，指那些试图靠行为称义却导致死亡的宗教活动）；2. 积极面：事奉永生神。"
+                            },
+                            devotional: {
+                                title: "从死行到事奉",
+                                content: "“死行”不一定是坏事，很多时候它是出于恐惧或律法主义的“好事”。基督的血释放我们脱离这种令人窒息的宗教义务，使我们能以自由、感恩的心去“事奉”（Worship/Serve）永生神。这才是活的信仰。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "covenant_death",
+                    title: "遗命的必要性与血的立约 (9:15-22)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "9:16-17",
+                            text: "凡有遗命必须等到留遗命的人死了...若留遗命的尚在，那遗命还有什么用处呢？",
+                            academic: {
+                                title: "遗嘱与盟约的双关",
+                                keywords: ["Diathēkē (盟约/遗嘱)"],
+                                content: "希腊文 *Diathēkē* 既可指“盟约”（Covenant）也可指“遗嘱”（Testament/Will）。作者利用这个双关义，指出新约就像一份遗嘱，只有立遗嘱者（基督）死亡，受益人（信徒）才能合法继承产业（15节提到的“得着所应许的永远产业”）。这从法律角度解释了基督受死的必要性。"
+                            },
+                            devotional: {
+                                title: "你是继承人",
+                                content: "耶稣的死不仅仅是一场悲剧，更是一份遗嘱的生效时刻。通过祂的死，所有的属灵福气（赦免、永生、儿子的名分）都合法地过户到了你的名下。你不是在乞求恩典，你是在继承产业。"
+                            }
+                        },
+                        {
+                            ref: "9:22",
+                            text: "按着律法...若不流血，罪就不得赦免了。",
+                            academic: {
+                                title: "血的铁律",
+                                keywords: ["Haimatekchysia (流血)"],
+                                content: "这是圣经救赎论的基石原则。生命在血中（利17:11）。罪的工价乃是死，因此必须有生命（血）被倾倒来支付死的代价。没有廉价的宽恕。神的公义要求必须有偿付，要么是罪人自己的血，要么是替代者的血。"
+                            },
+                            devotional: {
+                                title: "昂贵的宽恕",
+                                content: "我们在享受“神原谅我了”这份轻松时，往往忘记了这份宽恕背后的血腥代价。每一次赦免都是昂贵的。看着十字架，我们应当同时看到两件事：罪的可怕（必须死）和爱的深重（祂替我死）。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "three_appearings",
+                    title: "基督的三次显现 (9:23-28)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "9:24-26",
+                            text: "因为基督...进了天堂，如今为我们显在神面前...他在这末世显现一次，把自己献为祭，好除掉罪。",
+                            academic: {
+                                title: "救赎的时间轴",
+                                keywords: ["Emphanisthēnai (显明/显现)", "Phaneroō (显现/被看见)"],
+                                content: "这里通过三个时态的“显现”概括了基督的工作：\n1. **过去**（26节）：在这末世“显现”（Phaneroō，道成肉身与受死），为了除掉罪。\n2. **现在**（24节）：在天上为我们“显”（Emphanizō，正式出庭）在神面前，作为中保。\n3. **将来**（28节）：将来要向等候祂的人第二次“显现”（Ophthesthai），不为除罪，乃为拯救。"
+                            },
+                            devotional: {
+                                title: "不用怕审判",
+                                content: "第27节说“按着定命，人人都有一死，死后且有审判”。这本是恐怖的结局，但第28节给出了答案：基督已经替我们受了死和审判。当祂第二次显现时，不再是来处理罪（那个问题已经解决了），而是来迎接我们回家。这是何等大的盼望！"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-amber-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-rose-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Three Appearings -->
+                    <div class="gradient-sanctuary p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-rose-200">
+                        <div class="mb-2">
+                            <i class="fas fa-history text-4xl text-amber-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">基督的三次显现</h3>
+                        </div>
+                        
+                        <div class="relative flex justify-between items-center w-full mt-4 text-white text-xs">
+                            <div class="flex flex-col items-center w-1/3">
+                                <div class="w-3 h-3 bg-amber-400 rounded-full mb-1"></div>
+                                <span class="font-bold">第一次</span>
+                                <span>除掉罪</span>
+                                <span class="opacity-75">(十字架)</span>
+                            </div>
+                            <div class="h-0.5 bg-white/50 w-full absolute top-1.5 z-0"></div>
+                            <div class="flex flex-col items-center w-1/3 z-10">
+                                <div class="w-4 h-4 bg-white rounded-full mb-1 animate-pulse border-2 border-rose-500"></div>
+                                <span class="font-bold">如今</span>
+                                <span>显在神前</span>
+                                <span class="opacity-75">(代求)</span>
+                            </div>
+                            <div class="flex flex-col items-center w-1/3 z-10">
+                                <div class="w-3 h-3 bg-amber-400 rounded-full mb-1"></div>
+                                <span class="font-bold">第二次</span>
+                                <span>成全救恩</span>
+                                <span class="opacity-75">(再来)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Sacrifice Efficacy Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-rose-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">祭物功效对比</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="efficacyChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">基督的血 vs 公牛羊的血</p>
+                    </div>
+
+                    <!-- Conscience Cleansing Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">良心的洁净深度</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="conscienceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">礼仪只能洁净肉体，宝血洗净良心</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFFBEB]/95 backdrop-blur py-4 mb-8 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-700 text-white font-bold' : 'text-slate-500 hover:bg-rose-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-amber-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-amber-100">
+                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-amber-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/30 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-amber-900">解经原则：影儿与实体</h2>
+                        <p class="text-slate-600">
+                            希伯来书第九章展示了如何将旧约复杂的礼仪系统（影儿）解析为指向基督救赎工作（实体）的精准预表。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：空间与时间</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 空间类型学。分析作者如何利用"地上的圣所"与"天上的真帐幕"的空间对比，来阐述救恩的超越性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词汇双关（Diathēkē 既是约也是遗嘱）。
+                                    <br>2. 频率对比（"年年" vs "一次" Hapax）。
+                                </li>
+                                <li><strong>目的：</strong> 证明旧约礼仪的局限性与基督救赎的终极性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：良心与自由</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 良心洁净。将神学上的"赎罪"转化为心理和灵性上的"无亏良心"。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 自我审视（我是否还在靠"死行"来换取平安？）。
+                                    <br>2. 终末盼望（如何面对"人人都有一死"的定命？）。
+                                </li>
+                                <li><strong>目的：</strong> 从罪疚感中得释放，以此自由地事奉永生神。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Efficacy Radar Chart
+            const ctxEfficacy = document.getElementById('efficacyChart').getContext('2d');
+            new Chart(ctxEfficacy, {
+                type: 'radar',
+                data: {
+                    labels: ['洁净良心', '一次完成', '永远有效', '进入天堂', '事奉永生神'],
+                    datasets: [
+                        {
+                            label: '基督的血',
+                            data: [100, 100, 100, 100, 100],
+                            backgroundColor: 'rgba(190, 18, 60, 0.2)', // Rose
+                            borderColor: '#BE123C',
+                            pointBackgroundColor: '#BE123C',
+                            pointBorderColor: '#fff',
+                        },
+                        {
+                            label: '牛羊的血',
+                            data: [20, 10, 10, 0, 30], // Limited to flesh cleansing, repeated
+                            backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber
+                            borderColor: '#F59E0B',
+                            pointBackgroundColor: '#F59E0B',
+                            pointBorderColor: '#fff',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#451A03' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Conscience Cleansing Chart (Bar)
+            const ctxConscience = document.getElementById('conscienceChart').getContext('2d');
+            new Chart(ctxConscience, {
+                type: 'bar',
+                data: {
+                    labels: ['肉体洁净 (Ceremonial)', '良心洁净 (Conscience)'],
+                    datasets: [{
+                        label: '旧约礼仪',
+                        data: [100, 20],
+                        backgroundColor: '#FCD34D', // Light Amber
+                        borderRadius: 4
+                    }, {
+                        label: '基督宝血',
+                        data: [100, 100],
+                        backgroundColor: '#BE123C', // Rose 700
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 1 && context.datasetIndex === 0) return "无法除罪 (v9)";
+                                    if(context.dataIndex === 1 && context.datasetIndex === 1) return "除去死行 (v14)";
+                                    return context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

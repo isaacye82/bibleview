@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第八章：更美的之约与真帐幕</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Celestial Blue (Heavenly Tabernacle) & Inscription Red (Law on Heart) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Light Blue 50 - Heavenly feel */
+            color: #0C4A6E; /* Dark Blue 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Celestial Blue */
+        .active-tab {
+            color: #0369A1; /* Sky 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0369A1;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Inscription Red */
+        .verse-card:hover {
+            border-left-color: #BE123C; /* Rose 700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(3, 105, 161, 0.1), 0 4px 6px -2px rgba(3, 105, 161, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0F2FE; /* Sky 100 */
+            color: #075985; /* Sky 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #7DD3FC; /* Sky 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-celestial {
+            background: linear-gradient(135deg, #0C4A6E 0%, #BE123C 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-900 serif">
+                        <i class="fas fa-cloud-sun mr-2 text-rose-600"></i> 希伯来书 8章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">真帐幕与新约</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-950 text-sky-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"我要将我的律法放在他们里面，写在他们心上。" (8:10)</p>
+            <p class="text-xs text-sky-400 mt-3">交互式研经工具 | 聚焦：从影儿到实体，从石版到心版</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "第一要紧的事：天上的职任",
+                summary: "希伯来书第八章不仅是新旧约的转折点，也是全书神学的制高点。作者用“第一要紧的”（Kephalaion，意为要点/总结）开头，将读者的视线从地上的礼仪引向天上“真帐幕”的执事——耶稣。本章论证了旧约（前约）的局限性与“渐旧渐衰”，并引用耶利米书31章关于“新约”的宏大预言，宣告了一个以“内在律法”和“赦罪恩典”为核心的新时代的来临。",
+                highlights: [
+                    { icon: "fas fa-dungeon", color: "text-sky-600", text: "真帐幕" },
+                    { icon: "fas fa-file-contract", color: "text-rose-600", text: "更美之约" },
+                    { icon: "fas fa-heart", color: "text-purple-600", text: "写在心上" }
+                ]
+            },
+            sections: [
+                {
+                    id: "heavenly_priest",
+                    title: "天上的大祭司与真帐幕 (8:1-2)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "8:1-2",
+                            text: "我们所讲的事，其中第一要紧的，就是我们有这样的大祭司，已经坐在天上至大者宝座的右边，在圣所，就是真帐幕里作执事...",
+                            academic: {
+                                title: "坐下的执事",
+                                keywords: ["Kephalaion (要点/总结)", "Ekathisen (坐下)", "Leitourgos (执事/供职者)"],
+                                content: "“坐下”是一个极具神学张力的动作。旧约祭司从未在至圣所坐下（因为工作从未完成），但基督“坐下”表明救赎大工已成。然而祂同时是“执事”（Leitourgos，即Liturgist），表明祂在天上仍在积极地进行代求和服侍。祂服侍的地点是“真帐幕”（Alēthinē，指原型的、真实的），地上的帐幕只是它的复制品。"
+                            },
+                            devotional: {
+                                title: "天上有我们的人",
+                                content: "我们在天庭并非无依无靠。在宇宙的控制中心（至大者宝座右边），有一位不仅拥有最高权柄，而且也是我们的“执事”（服务者）。祂的崇高并没有使祂远离我们，反而是祂为了我们而在那里。我们有一位在天上全职为我们服务的救主。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "shadow_reality",
+                    title: "影儿与实体的对比 (8:3-6)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "8:5-6",
+                            text: "他们供奉的事本是天上事的形状和影像...如今耶稣所得的职任是更美的，正如他作更美之约的中保...",
+                            academic: {
+                                title: "类型学 (Typology) 的根基",
+                                keywords: ["Hypodeigma (形状/样本)", "Skia (影儿)", "Typos (样式/模具)"],
+                                content: "作者引用出埃及记25:40，指出摩西建造帐幕是严格按照山上的“样式”（Typos）。这确立了柏拉图式的二元结构在圣经神学中的应用：地上的礼仪体系（影儿）指向天上的真实体系（实体）。因为实体（基督的职任）更美，所以祂带来的契约（新约）也必然建立在“更美的应许”上。"
+                            },
+                            devotional: {
+                                title: "不要拥抱影子",
+                                content: "如果你的爱人站在你面前，你会去拥抱他的影子吗？旧约的礼仪、节期、建筑都是影儿，实体是基督。当我们有了基督，就不需要再回到影子里去寻找安全感。信仰的成熟就是学会分辨什么是暂时的工具，什么是永恒的实体。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "new_covenant",
+                    title: "更美之约的应许 (8:7-13)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "8:7-9",
+                            text: "那前约若没有瑕疵，就无处寻求后约了...主说...我要与以色列家...另立新约...",
+                            academic: {
+                                title: "旧约的“瑕疵”",
+                                keywords: ["Amemptos (无瑕疵)", "Memphomenos (指责)"],
+                                content: "旧约的“瑕疵”不在于律法本身（律法是圣洁的），而在于它无法赋予人守约的能力。神“指责”的是“他们”（百姓，8节）。因此，解决之道不是降低律法标准，而是改变守约的主体——通过“新约”。这引出了耶利米书31:31-34，这是旧约中唯一一次明确提到“新约”这一短语。"
+                            },
+                            devotional: {
+                                title: "不是规则错了，是心病了",
+                                content: "我们常以为只要有更好的制度、更严的规矩，人就会变好。但旧约的历史证明：没有新生命，再好的律法也只能定罪。问题不在外部的规则，而在内部的人性。我们需要的是换心手术，而不是整容手术。"
+                            }
+                        },
+                        {
+                            ref: "8:10-12",
+                            text: "我要将我的律法放在他们里面，写在他们心上...我要宽恕他们的不义，不再记念他们的罪愆。",
+                            academic: {
+                                title: "新约的四大特征",
+                                keywords: ["Dianoia (心思/悟性)", "Kardia (心)", "Ou mē (决不)"],
+                                content: "新约的四个核心应许：\n1. **内在化**：律法不再刻在石版上，而是内化在心版上（圣灵的工作）。\n2. **关系性**：我要作他们的神，他们要作我的子民（盟约公式）。\n3. **普遍性**：不用各人教导...都必认识我（直接的认识）。\n4. **赦免性**：不再记念罪愆（彻底的赦免）。"
+                            },
+                            devotional: {
+                                title: "你可以忘记过去",
+                                content: "“不再记念”是神最令人震撼的恩典。全知的神选择“忘记”你的罪案记录，不是因为健忘，而是因为爱。如果你还在为过去的罪纠结，你就是在记念神已经决定不记念的事。接受这个赦免，让律法成为你内心甘心乐意的喜爱，而不是外在的恐惧。"
+                            }
+                        },
+                        {
+                            ref: "8:13",
+                            text: "既说新约，就以前约为旧了；但那渐旧渐衰的，就必快归无有了。",
+                            academic: {
+                                title: "时代的终结",
+                                keywords: ["Palaioō (使变旧/过时)", "Aphanismos (消失/毁灭)"],
+                                content: "这是一个历史性的宣告。当耶利米说“新”的时候，这就已经在法理上宣告了“旧”约的过时。在希伯来书写作时（圣殿可能还未被毁），作者敏锐地指出，那个依靠物质圣殿和动物献祭的旧体系正在“老化”（Gēraskon，变老），并且即将从历史舞台上完全“消失”（Vanishing）。"
+                            },
+                            devotional: {
+                                title: "断舍离的智慧",
+                                content: "神的工作是不断更新的。当神开启新的一页时，不要死守着旧的篇章不放。无论是过去的宗教习惯、属灵经历，还是旧的自我，如果它已经“渐旧渐衰”，就让它“归无有”吧。拥抱神在这个季节给你的“新”恩典。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-rose-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: Shadow vs Reality -->
+                    <div class="gradient-celestial p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-sky-200">
+                        <div class="mb-4">
+                            <i class="fas fa-mountain text-4xl text-white mb-2 opacity-80"></i>
+                            <h3 class="text-xl font-bold text-white">山上的样式 (v5)</h3>
+                        </div>
+                        
+                        <div class="relative h-32 w-full flex justify-center items-center">
+                            <!-- Reality -->
+                            <div class="absolute top-0 flex flex-col items-center z-10">
+                                <span class="text-xs font-bold text-rose-200">天上实体 (Christ)</span>
+                                <i class="fas fa-cube text-4xl text-rose-400 drop-shadow-md"></i>
+                            </div>
+                            
+                            <!-- Projection Lines -->
+                            <div class="absolute top-8 w-24 h-16 border-l border-r border-dashed border-sky-300 opacity-50 transform perspective-500"></div>
+
+                            <!-- Shadow -->
+                            <div class="absolute bottom-0 flex flex-col items-center opacity-70">
+                                <i class="fas fa-campground text-3xl text-sky-200 transform scale-y-50 origin-bottom"></i>
+                                <span class="text-[10px] text-sky-300">地上影儿 (Tabernacle)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Covenant Comparison Radar -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-sky-100">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">新旧之约多维对比 (v6-12)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="covenantChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">新约在应许、中保、功效上全面超越</p>
+                    </div>
+
+                    <!-- New Covenant Features Flow -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-rose-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">新约的运作机制 (v10-12)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="mechanismChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">律法内化 -> 关系重建 -> 罪得赦免</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-700 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-500 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else titleColorClass = 'text-indigo-800 border-indigo-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-sky-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-sky-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-indigo-50/30 transition">
+                                <h4 class="text-indigo-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：预表与实现</h2>
+                        <p class="text-slate-600">
+                            希伯来书第八章通过对比“影儿”与“实体”，以及“旧约”与“新约”，展示了启示的历史性进程。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-indigo-600">
+                            <div class="text-indigo-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：柏拉图式二元论与救恩历史</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 垂直类型学。理解作者如何运用"天上实体 vs 地上影儿"的空间对比，来阐述基督工作的优越性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 经文互涉（Jer 31 在 Heb 8 的长篇引用）。
+                                    <br>2. 词汇分析（"新" Kainos - 质的新 vs "旧" Palaios - 废弃）。
+                                </li>
+                                <li><strong>目的：</strong> 证明旧约礼仪律的暂时性与基督救恩的终极性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-500">
+                            <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：内化与更新</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 内在转化。将"写在心上"的律法应用到个人的成圣生活中，强调从心里顺服而非外在规条。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 信心仰望（凝视那位在天上为我们代求的大祭司）。
+                                    <br>2. 恩典接纳（确信神"不再记念"罪愆的应许）。
+                                </li>
+                                <li><strong>目的：</strong> 在新约的自由与恩典中，活出爱神爱人的生命。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Covenant Comparison Chart (Radar)
+            const ctxCovenant = document.getElementById('covenantChart').getContext('2d');
+            new Chart(ctxCovenant, {
+                type: 'radar',
+                data: {
+                    labels: ['中保能力', '应许美善', '赦罪功效', '内在动力', '永恒性'],
+                    datasets: [{
+                        label: '更美之约 (New)',
+                        data: [100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(244, 63, 94, 0.2)', // Rose
+                        borderColor: '#E11D48',
+                        pointBackgroundColor: '#E11D48',
+                        pointBorderColor: '#fff',
+                    },
+                    {
+                        label: '前约 (Old)',
+                        data: [40, 50, 20, 10, 20], // Limited efficacy
+                        backgroundColor: 'rgba(148, 163, 184, 0.2)', // Slate
+                        borderColor: '#64748B',
+                        pointBackgroundColor: '#64748B',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#0C4A6E' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Mechanism Chart (Doughnut) - Representing the New Covenant Flow
+            const ctxMechanism = document.getElementById('mechanismChart').getContext('2d');
+            new Chart(ctxMechanism, {
+                type: 'doughnut',
+                data: {
+                    labels: ['律法入心 (Internal)', '关系建立 (Relational)', '认识神 (Universal)', '彻底赦罪 (Forgiveness)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#0EA5E9', // Sky 500
+                            '#F43F5E', // Rose 500
+                            '#8B5CF6', // Violet 500
+                            '#10B981'  // Emerald 500
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

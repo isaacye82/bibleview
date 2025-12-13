@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第四章：安息、利剑与施恩座</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Sabbath Indigo (Rest) & Piercing Violet (Word) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F5F3FF; /* Violet 50 - Calm, spiritual background */
+            color: #1E1B4B; /* Indigo 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Sabbath Indigo */
+        .active-tab {
+            color: #4338CA; /* Indigo 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4338CA;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Piercing Violet */
+        .verse-card:hover {
+            border-left-color: #7C3AED; /* Violet 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0E7FF; /* Indigo 100 */
+            color: #3730A3; /* Indigo 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #C7D2FE; /* Indigo 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-sabbath {
+            background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-indigo-900 serif">
+                        <i class="fas fa-bed mr-2 text-violet-500"></i> 希伯来书 4章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">竭力进入安息</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-950 text-indigo-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"只管坦然无惧地来到施恩的宝座前。" (4:16)</p>
+            <p class="text-xs text-indigo-400 mt-3">交互式研经工具 | 聚焦：神话语的剖析与大祭司的体恤</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "那遗留的安息应许",
+                summary: "希伯来书第四章承接第三章关于旷野漂流的警告，深入探讨了“安息”的神学含义。作者论证了约书亚并未带以色列人进入最终的安息（1-10节），因此那个“安息日的安息”依然为神的子民存留。随后，作者用极其锐利的语言描述了神话语的剖析能力（11-13节），警告人无法在神面前隐藏。最后，视线转向那位已经升入高天的大祭司耶稣，呼召信徒坦然无惧地来到施恩座前（14-16节）。",
+                highlights: [
+                    { icon: "fas fa-couch", color: "text-indigo-600", text: "另得安息" },
+                    { icon: "fas fa-magic", color: "text-violet-600", text: "道如利剑" },
+                    { icon: "fas fa-chair", color: "text-amber-500", text: "施恩宝座" }
+                ]
+            },
+            sections: [
+                {
+                    id: "rest_promise",
+                    title: "安息的应许与失落的危险 (4:1-10)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "4:1-2",
+                            text: "我们既蒙留下有进入他安息的应许，就当畏惧...因为有福音传给我们，像传给他们一样；只是所听见的道与他们无益，因为他们没有信心与所听见的道调和。",
+                            academic: {
+                                title: "信心调和论",
+                                keywords: ["Sygkekerasmenous (调和/混合)", "Euangelismenoi (被传福音)"],
+                                content: "“调和”是一个生理学或冶金学术语，指两种物质完全融合。听到福音（道）本身不能救人，必须像食物被身体吸收消化一样，通过“信心”与道融合，才能产生生命。旷野的百姓听到了，但没有信心的“消化”，道就成了排泄物，对他们无益。"
+                            },
+                            devotional: {
+                                title: "不要只做听众",
+                                content: "为什么有些人在教会听道几十年生命却没改变？因为道只是在他们耳边流过，没有进入心里与信心“化学反应”。每次读经听道，都要问自己：我真的信这句话吗？我准备怎么去行？没有信心的听道，只是属灵的噪音。"
+                            }
+                        },
+                        {
+                            ref: "4:8-10",
+                            text: "若是约书亚已叫他们享了安息...这样看来，必另有一安息日的安息，为神的子民存留。",
+                            academic: {
+                                title: "约书亚与耶稣",
+                                keywords: ["Iēsous (约书亚/耶稣)", "Sabbatismos (安息日的安息)"],
+                                content: "希腊文中“约书亚”和“耶稣”是同一个字。作者指出，旧约的约书亚虽然带人进了迦南，但这只是影儿，因为大卫在几百年后仍在说“今日”。因此，必定有一个终极的、末世的“Sabbatismos”（特指神在第七日的安息状态）存留。这是一个已然未然（Already but not yet）的状态。"
+                            },
+                            devotional: {
+                                title: "真正的休息",
+                                content: "我们在世上忙忙碌碌，即使度假回来也感到疲惫。为什么？因为魂没有安息。真正的安息不是停止活动，而是停止“靠自己挣扎”。就像神创造完工后安息一样，我们进入安息，是因为相信基督已经完成了救赎大工。我们可以停下来，享受祂的工。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "word_power",
+                    title: "神话语的剖析能力 (4:11-13)",
+                    themeColor: "violet",
+                    verses: [
+                        {
+                            ref: "4:12",
+                            text: "神的道是活泼的，是有功效的，比一切两刃的剑更快，甚至魂与灵、骨节与骨髓，都能刺入、剖开...",
+                            academic: {
+                                title: "属灵的手术刀",
+                                keywords: ["Zōn (活的)", "Energēs (有效的/能量)", "Kritikos (辨明/审判)"],
+                                content: "作者用极其生动的解剖学语言描述神的话（Logos）。它不是死板的文字，而是活的能量体。它能区分最难区分的“魂与灵”（心理与灵性），就像利剑能分开紧密相连的骨节与骨髓。Kritikos 意为“以此为审判/辨别”，神的话语是我们内心动机的终极裁判。"
+                            },
+                            devotional: {
+                                title: "让神的话读你",
+                                content: "通常是我们读圣经，但读到深处时，是圣经在读我们。当我们感到被神的话“扎心”时，不要逃避，那是属灵的手术刀在切除毒瘤。它在分辨什么是出于你的私欲（魂），什么是出于圣灵（灵）。这种剖析虽然痛，却是为了医治。"
+                            }
+                        },
+                        {
+                            ref: "4:13",
+                            text: "并且被造的没有一样在他面前不显然的；原来万物在那与我们有关系的主眼前，都是赤露敞开的。",
+                            academic: {
+                                title: "赤露敞开 (Trachelizo)",
+                                keywords: ["Trachēlizō (使颈项仰起/赤露)"],
+                                content: "这个词原意指摔跤运动员将对手的头向后扳，使其咽喉暴露；或指献祭时将动物的脖子仰起准备下刀。意思是：在神面前，人没有任何防御能力，完全暴露，无处可藏。我们必须向祂“交账”（Logos）。"
+                            },
+                            devotional: {
+                                title: "在X光机面前",
+                                content: "我们习惯戴着面具生活，甚至在祷告时也试图对神隐藏。但这节经文告诉我们：神有高清的X光眼。在祂面前装假是徒劳的。唯一的出路是诚实。既然藏不住，不如坦白承认，你会发现祂的眼光虽利，却充满怜悯。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "high_priest",
+                    title: "慈悲忠信的大祭司 (4:14-16)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "4:14-15",
+                            text: "我们既然有一位已经升入高天尊荣的大祭司，就是神的儿子耶稣...并非不能体恤我们的软弱...",
+                            academic: {
+                                title: "超越与体恤的结合",
+                                keywords: ["Dielelythota (穿过/升入)", "Sympathēsai (体恤/共情)"],
+                                content: "耶稣的独特在于祂兼具“超越性”和“临在性”。祂“升入高天”（穿越诸天，坐在神右边），拥有至高权柄；同时祂又能“体恤”（Sympathize，同受苦难）。祂受过试探，却“没有犯罪”（Chōris hamartias），这不仅确立了祂的无罪性，也保证了祂能有效帮助我们（如果祂犯了罪，祂就需要救主，而不能作救主）。"
+                            },
+                            devotional: {
+                                title: "祂懂你的挣扎",
+                                content: "当你觉得没人理解你的痛苦、孤独或试探时，抬头看耶稣。祂不是高高在上不食人间烟火的神，祂曾在这里，祂饿过、哭过、被背叛过。祂懂。祂的同情不是廉价的“拍拍肩”，而是基于亲身经历的深切共鸣。"
+                            }
+                        },
+                        {
+                            ref: "4:16",
+                            text: "所以我们只管坦然无惧地来到施恩的宝座前，为要得怜恤，蒙恩惠，作随时的帮助。",
+                            academic: {
+                                title: "施恩的宝座",
+                                keywords: ["Parrhēsia (坦然无惧/大胆)", "Thronos Charitos (施恩座)"],
+                                content: "在旧约，神的宝座令人战兢，只有大祭司一年一次带着血敢进去。但现在，因着耶稣，审判的宝座变成了“施恩的宝座”。Parrhēsia 原指希腊公民的言论自由权。我们可以随时（Eukairon，恰时的）进去，获取正如我们所需的那一份恩典。"
+                            },
+                            devotional: {
+                                title: "随时随地的特权",
+                                content: "你上一次“坦然无惧”地祷告是什么时候？不是以此乞丐的姿态，而是以儿子的姿态？神把办公室的门为你敞开了，不需要预约，不需要排队。无论你搞砸了什么，只要你需要帮助，就跑进去。那是施恩的地方，不是定罪的地方。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-indigo-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-indigo-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-violet-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Rest Ladder -->
+                    <div class="gradient-sabbath p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-indigo-200">
+                        <div class="mb-2">
+                            <i class="fas fa-stairs text-4xl text-indigo-600 mb-2"></i>
+                            <h3 class="text-xl font-bold text-indigo-900">安息的进阶</h3>
+                        </div>
+                        <div class="relative h-40 w-full flex items-end justify-center space-x-2">
+                            <!-- Step 1 -->
+                            <div class="w-1/3 bg-indigo-200 rounded-t-lg flex flex-col items-center justify-end pb-2 h-1/3">
+                                <span class="text-xs font-bold text-indigo-800">创造</span>
+                                <span class="text-[10px] text-indigo-600">第七日</span>
+                            </div>
+                            <!-- Step 2 -->
+                            <div class="w-1/3 bg-indigo-400 rounded-t-lg flex flex-col items-center justify-end pb-2 h-2/3">
+                                <span class="text-xs font-bold text-white">迦南</span>
+                                <span class="text-[10px] text-indigo-100">约书亚</span>
+                            </div>
+                            <!-- Step 3 -->
+                            <div class="w-1/3 bg-indigo-600 rounded-t-lg flex flex-col items-center justify-end pb-2 h-full shadow-lg">
+                                <span class="text-xs font-bold text-white">今日</span>
+                                <span class="text-[10px] text-indigo-200">基督里</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-2 text-slate-500">必另有一安息日的安息</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- The Word Anatomy Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-violet-100">
+                        <h3 class="text-lg font-bold mb-2 text-violet-800 w-full border-b border-violet-100 pb-2">神话语的手术刀 (v12)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="wordChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">层层深入：从外在行为到内在动机</p>
+                    </div>
+
+                    <!-- High Priest Attributes Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-indigo-100">
+                        <h3 class="text-lg font-bold mb-2 text-indigo-800 w-full border-b border-indigo-100 pb-2">大祭司的双重性 (v14-15)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="priestChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">超越性(升入高天) + 临在性(能体恤)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F5F3FF]/95 backdrop-blur py-4 mb-8 border-b border-indigo-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-indigo-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-indigo-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-indigo-700 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-violet-600 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-500 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else if(section.themeColor === 'violet') titleColorClass = 'text-violet-800 border-violet-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-indigo-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-indigo-50 border-b border-indigo-100">
+                            <span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-indigo-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-violet-50/30 transition">
+                                <h4 class="text-violet-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-indigo-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-100/30 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-indigo-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-indigo-900">解经原则：预表与劝勉</h2>
+                        <p class="text-slate-600">
+                            希伯来书第四章展示了如何将旧约的历史（安息日、约书亚）解释为新约属灵实体的预表，并结合严厉的劝勉。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-violet-600">
+                            <div class="text-violet-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：逻辑与词汇</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 预表学解经。理解旧约的安息日和迦南地如何指向基督里的安息。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 三段论逻辑（神歇工->约书亚未完成->必另有安息）。
+                                    <br>2. 词汇深度挖掘（"剖开"、"赤露"的祭司背景）。
+                                </li>
+                                <li><strong>目的：</strong> 证明基督带来的安息是终极的、超越旧约律法的。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：省察与信靠</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 存在主义应用。将"安息"从神学概念转化为解决焦虑和定罪的实际体验。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 良心省察（让神的话语如光照进黑暗角落）。
+                                    <br>2. 祷告操练（利用"施恩座"的特权，坦然无惧地求）。
+                                </li>
+                                <li><strong>目的：</strong> 在忙碌和压力中，得着深度的灵魂安息。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // The Word Anatomy Chart (Radar)
+            const ctxWord = document.getElementById('wordChart').getContext('2d');
+            new Chart(ctxWord, {
+                type: 'radar',
+                data: {
+                    labels: ['魂(情感/意志)', '灵(直觉/交通)', '骨节(行动)', '骨髓(生命源)', '心中的思念', '心中的主意'],
+                    datasets: [{
+                        label: '神话语的穿透力',
+                        data: [100, 100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(124, 58, 237, 0.2)', // Violet
+                        borderColor: '#7C3AED',
+                        pointBackgroundColor: '#7C3AED',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#1E1B4B' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // High Priest Attributes Chart (Doughnut)
+            const ctxPriest = document.getElementById('priestChart').getContext('2d');
+            new Chart(ctxPriest, {
+                type: 'doughnut',
+                data: {
+                    labels: ['升入高天(尊荣)', '体恤软弱(慈悲)', '受过试探(共鸣)', '没有犯罪(圣洁)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#4338CA', // Indigo 700
+                            '#818CF8', // Indigo 400
+                            '#F59E0B', // Amber 500
+                            '#A78BFA'  // Violet 400
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

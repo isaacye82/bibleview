@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第二章：这么大的救恩</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Incarnation Red (Blood/Humanity) & Salvation White (Glory/Purity) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FEF2F2; /* Red 50 - Soft background */
+            color: #450A0A; /* Red 950 - Deep text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Incarnation Red */
+        .active-tab {
+            color: #DC2626; /* Red 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #DC2626;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Salvation Gold/Yellow for hope */
+        .verse-card:hover {
+            border-left-color: #CA8A04; /* Yellow 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.1), 0 4px 6px -2px rgba(220, 38, 38, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FEE2E2; /* Red 100 */
+            color: #991B1B; /* Red 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FECACA; /* Red 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-incarnation {
+            background: linear-gradient(135deg, #7F1D1D 0%, #B91C1C 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-red-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-red-900 serif">
+                        <i class="fas fa-cross mr-2 text-red-600"></i> 希伯来书 2章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">救恩与人性：长兄耶稣</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-red-950 text-red-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"儿女既同有血肉之体，他也照样亲自成了血肉之体。" (2:14)</p>
+            <p class="text-xs text-red-400 mt-3">交互式研经工具 | 聚焦：道成肉身的目的与大祭司的体恤</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "不仅是神，更是我们的长兄",
+                summary: "如果说第一章确立了耶稣完全的神性（远超天使），第二章则转向了耶稣完全的人性（暂时比天使小）。作者首先发出了严厉的警告：不可忽略这“极大的救恩”（1-4节）。随后，他解释了耶稣为何必须成为人：为了恢复人类失去的荣耀（5-9节），为了作为元帅领众子进荣耀（10-13节），为了借着死败坏掌死权的魔鬼（14-16节），并成为慈悲忠信的大祭司（17-18节）。这章是理解“替代性救赎”的关键。",
+                highlights: [
+                    { icon: "fas fa-anchor", color: "text-blue-600", text: "防备漂流" },
+                    { icon: "fas fa-users", color: "text-red-600", text: "血肉之体" },
+                    { icon: "fas fa-crown", color: "text-yellow-500", text: "得了尊贵" }
+                ]
+            },
+            sections: [
+                {
+                    id: "warning",
+                    title: "警告：不可忽略这么大的救恩 (2:1-4)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "2:1",
+                            text: "所以，我们当越发郑重所听见的道理，恐怕我们随流失去。",
+                            academic: {
+                                title: "航海隐喻：随流失去",
+                                keywords: ["Pararyōmen (随流失去/漂走)", "Prosechein (郑重/系泊)"],
+                                content: "Pararyōmen 是一个航海术语，指船只因为没有系好缆绳或下锚，被水流悄悄带走，最终触礁或迷失。这是针对当时犹太信徒的处境：他们面临逼迫，并未公开背教，而是处于“慢慢漂离”基督的状态。作者呼吁“郑重”（Prosechein），即全神贯注地抓紧真理。"
+                            },
+                            devotional: {
+                                title: "你正在漂流吗？",
+                                content: "属灵的倒退通常不是突然的崩塌，而是不知不觉的漂流。当我们停止划桨（主动追求），世界的水流就会自动把我们带向远离神的地方。检查你的锚：你是否还紧紧系在神的道上？还是已经随波逐流了？"
+                            }
+                        },
+                        {
+                            ref: "2:2-4",
+                            text: "那藉着天使所传的话既是确定的...我们若忽略这么大的救恩，怎能逃罪呢？",
+                            academic: {
+                                title: "从较小到较大的辩证",
+                                keywords: ["Ameleō (忽略/轻忽)", "Sōtēria (救恩)"],
+                                content: "这是一个“从较小推论较大”（a fortiori）的论证。如果违背藉天使传的律法（旧约）都要受罚，那么忽略藉神儿子亲自传的福音（新约），后果岂不更严重？“忽略”并非公开反对，仅仅是“不当回事”。这表明对福音的冷漠本身就是重罪。"
+                            },
+                            devotional: {
+                                title: "冷漠是最大的敌人",
+                                content: "我们常以为只有杀人放火才是大罪。但在神眼中，“忽略”耶稣基督舍命换来的救恩，是对神极大的侮辱。这是一个“大”救恩，不仅因为它代价大（神子之死），也因为它涵盖了过去、现在和未来的全部。不要让这救恩在你手中变成廉价品。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "humanity",
+                    title: "人性的恢复与耶稣的降卑 (2:5-9)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "2:5-8",
+                            text: "我们所说将来的世界，神原没有交给天使管辖...人算什么...你叫他比天使微小一点...",
+                            academic: {
+                                title: "诗篇第八篇的各种解释",
+                                keywords: ["Hupotassō (降服/服在脚下)", "Barchu Ti (暂时/一点点)"],
+                                content: "作者引用诗篇8:4-6，原本是讲人类在创造中的尊贵地位（管理万物）。但现状是“我们还不见万物都服他”（人类因堕落失去了统治权）。这段经文不仅是人类学的，更是基督论的预表：只有在那位“末后的亚当”耶稣身上，我们才看到了这节经文的终极应验。"
+                            },
+                            devotional: {
+                                title: "你看得见荣耀吗？",
+                                content: "看着今天充满苦难、疾病和死亡的世界，我们很难相信“万物都服在人脚下”。但作者说：“唯独见耶稣...得了尊贵荣耀为冠冕。”这是信心的眼光：透过耶稣的得胜，我们看到了人类未来的希望。我们虽然现在还在挣扎，但我们的代表已经坐在宝座上了。"
+                            }
+                        },
+                        {
+                            ref: "2:9",
+                            text: "惟独见那成为比天使小一点的耶稣；因为受死的苦，就得了尊贵荣耀为冠冕...",
+                            academic: {
+                                title: "受苦作为得荣的途径",
+                                keywords: ["Pathēma (受苦)", "Chariti Theou (神的恩)"],
+                                content: "这里确立了十字架神学的核心逻辑：降卑 -> 受死 -> 得荣。耶稣“暂时”比天使小（道成肉身），目的是为了“人人尝了死味”。这是一个替代性的行动。祂的加冕（得荣耀）不是绕过死亡，而是因为（Because of）受死的苦。"
+                            },
+                            devotional: {
+                                title: "尝了死味",
+                                content: "耶稣不是象征性地死，他是真实地“尝”了死味——体验了死亡的苦毒、隔绝和恐怖。祂喝干了那杯苦酒，为了让你我可以喝福杯。当你面对死亡的阴影时，记得你的主已经先你一步走过，并留下了复活的脚印。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "solidarity",
+                    title: "神子与众子的连结 (2:10-18)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "2:10-11",
+                            text: "原来那为万物所属...要领许多儿子进荣耀里去，使救他们的元帅...成为完全...因他们都是出于一。",
+                            academic: {
+                                title: "救恩的元帅 (Archēgos)",
+                                keywords: ["Archēgos (元帅/先锋/创始者)", "Teleiōsai (使完全/达标)"],
+                                content: "Archēgos 是一个军事术语，指在前面开路并以此得胜的英雄（先锋）。耶稣不仅是救主，更是带领我们进入荣耀的队长。“因受苦难得以完全”并非指耶稣在道德上有缺陷需要修正，而是指祂通过受苦，在经历上完全具备了作救主和体恤者的大祭司资格（Vocationally Perfect）。"
+                            },
+                            devotional: {
+                                title: "他不以你为耻",
+                                content: "这是何等惊人的宣告：那位创造宇宙的主，竟然称我们为“弟兄”，并且“不以为耻”。无论你多么软弱、卑微或失败，只要你在祂里面，祂就指着你说：“这是我的家人。”你有一个在天上的长兄，祂正在带你回家。"
+                            }
+                        },
+                        {
+                            ref: "2:14-15",
+                            text: "儿女既同有血肉之体，他也照样亲自成了血肉之体，特要藉着死败坏那掌死权的...释放那些一生因怕死而为奴仆的人。",
+                            academic: {
+                                title: "击败死权",
+                                keywords: ["Katargeō (败坏/废除/使失效)", "Koinōneō (有份/分享)"],
+                                content: "耶稣必须成为人（血肉之体），因为只有人能死，也只有通过死才能进入死亡的领域去击败魔鬼。魔鬼“掌死权”不是指他能随意杀人，而是指他利用人对死亡的恐惧和罪疚感来奴役人。基督的死解决了罪（死毒钩），从而废除了魔鬼的权势（使其失效）。"
+                            },
+                            devotional: {
+                                title: "不再怕死",
+                                content: "死亡是人类最大的恐惧，也是魔鬼最大的筹码。但耶稣通过复活，拔掉了死亡的毒钩。如果你是基督徒，死亡不再是刑罚的开始，而是通往荣耀的门。既然连死都不怕了，生活中还有什么能辖制你呢？"
+                            }
+                        },
+                        {
+                            ref: "2:17-18",
+                            text: "所以，他凡事该与他的弟兄相同，为要在神的事上成为慈悲忠信的大祭司...他自己既然被试探而受苦，就能搭救被试探的人。",
+                            academic: {
+                                title: "慈悲忠信的大祭司",
+                                keywords: ["Eleēmōn (慈悲)", "Pistos (忠信)", "Hilasthē (挽回/赎罪)"],
+                                content: "这是希伯来书第一次正式引出“大祭司”的主题。耶稣具备大祭司的两个核心素质：对人“慈悲”（因为祂凡事与我们相同，了解我们的软弱），对神“忠信”（完成了挽回祭的工作）。祂的受苦不仅是为了赎罪，也是为了产生对他人的体恤（Empathy）。"
+                            },
+                            devotional: {
+                                title: "祂懂你的痛",
+                                content: "当你受苦时，不要觉得神高高在上不懂你的感受。祂凡事与你相同：祂经历过背叛、饥饿、疼痛、孤独甚至死亡的黑暗。祂不仅能救你，祂还能懂你。这让我们的祷告不再是对着空气说话，而是对着一位满有同理心的长兄倾诉。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-red-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-red-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-red-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Anchor Warning -->
+                    <div class="gradient-incarnation p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-red-900">
+                        <div class="mb-2">
+                            <i class="fas fa-ship text-4xl text-yellow-300 mb-2 animate-bounce"></i>
+                            <h3 class="text-xl font-bold text-white">漂流预警 (v1)</h3>
+                        </div>
+                        <div class="relative w-full h-24 mt-2 bg-white/20 rounded-lg overflow-hidden flex items-center justify-center">
+                            <div class="absolute left-0 top-1/2 w-full h-1 bg-blue-300/50"></div>
+                            <div class="absolute left-1/4 top-1/2 transform -translate-y-1/2 text-white text-xs font-bold">真理港湾</div>
+                            <i class="fas fa-anchor text-yellow-400 absolute left-1/4 top-1/2 transform -translate-y-1/2 text-2xl"></i>
+                            <i class="fas fa-long-arrow-alt-right text-white absolute left-1/3 top-1/2 transform -translate-y-1/2 text-4xl animate-pulse"></i>
+                            <div class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-xs font-bold">世俗洪流</div>
+                        </div>
+                        <p class="text-xs mt-2 text-red-100">越发郑重，免得随流失去</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Christ's Path Ladder Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-red-100">
+                        <h3 class="text-lg font-bold mb-2 text-red-800 w-full border-b border-red-100 pb-2">神子降卑与升高的路径 (v9-10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="pathChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 text-center">降卑受苦 -> 得尊贵荣耀 -> 领众子进荣耀</p>
+                    </div>
+
+                    <!-- Purpose of Incarnation Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">道成肉身的目的 (v14-18)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="purposeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-4 text-center">败坏死权、释放奴仆、成为大祭司</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FEF2F2]/95 backdrop-blur py-4 mb-8 border-b border-red-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-red-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-red-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-red-700 text-white font-bold' : 'text-slate-500 hover:bg-red-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-red-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-red-50 border-b border-red-100">
+                            <span class="inline-block px-2 py-1 bg-red-100 text-red-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-red-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-amber-50/30 transition">
+                                <h4 class="text-amber-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-red-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-blue-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-red-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-red-900">解经原则：类型学与救恩论</h2>
+                        <p class="text-slate-600">
+                            希伯来书第二章展示了如何将旧约诗篇（诗8）作为基督的预表来解读，并以此构建宏大的救恩论。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：逻辑与词源</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 逻辑论证（A Fortiori）。"如果天使的话...何况神儿子的话..."的比较逻辑。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 旧约引用分析（诗8:4-6如何从人类学转向基督论）。
+                                    <br>2. 词汇研究（"元帅" Archēgos 的丰富含义）。
+                                </li>
+                                <li><strong>目的：</strong> 确立耶稣作为完全的神与完全的人的中保地位。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-500">
+                            <div class="text-red-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：关系与安慰</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 同理心应用。将大祭司的"体恤"应用在个人的苦难和试探中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 身份认同（我是主的弟兄，我有荣耀的未来）。
+                                    <br>2. 恐惧克服（因着复活，不再怕死）。
+                                </li>
+                                <li><strong>目的：</strong> 在苦难中得着深深的安慰，重新对救恩产生敬畏。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Path Chart (Line/Step)
+            const ctxPath = document.getElementById('pathChart').getContext('2d');
+            new Chart(ctxPath, {
+                type: 'line',
+                data: {
+                    labels: ['原有荣耀', '暂时比天使小(降卑)', '受死的苦', '得尊贵荣耀(复活升天)', '领众子进荣耀(未来)'],
+                    datasets: [{
+                        label: '基督的路径',
+                        data: [100, 20, 0, 100, 100], // Visualizing the U-shape curve
+                        borderColor: '#DC2626', // Red
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        fill: false,
+                        pointBackgroundColor: '#F59E0B', // Amber points
+                        pointRadius: 6
+                    }, {
+                        label: '人类的路径 (因基督)',
+                        data: [null, 20, null, null, 90], // Starting low, ending high
+                        borderColor: '#2563EB', // Blue
+                        borderDash: [5, 5],
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, min: -10, max: 120 },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Purpose Chart (Radar)
+            const ctxPurpose = document.getElementById('purposeChart').getContext('2d');
+            new Chart(ctxPurpose, {
+                type: 'radar',
+                data: {
+                    labels: ['败坏掌死权的', '释放怕死为奴的', '成为慈悲大祭司', '搭救被试探者', '为百姓赎罪'],
+                    datasets: [{
+                        label: '道成肉身的成就',
+                        data: [100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(245, 158, 11, 0.2)', // Amber
+                        borderColor: '#D97706',
+                        pointBackgroundColor: '#D97706',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#450A0A' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

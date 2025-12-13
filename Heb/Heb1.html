@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第一章：超越天使的圣子</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Glory Gold (Divinity) & Majesty Purple (Royalty) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFBEB; /* Amber 50 - Warm, parchment-like background */
+            color: #451A03; /* Amber 950 - Deep brown text */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Majesty Purple */
+        .active-tab {
+            color: #7E22CE; /* Purple 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #7E22CE;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Glory Gold */
+        .verse-card:hover {
+            border-left-color: #F59E0B; /* Amber 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(126, 34, 206, 0.1), 0 4px 6px -2px rgba(126, 34, 206, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F3E8FF; /* Purple 100 */
+            color: #6B21A8; /* Purple 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #D8B4FE; /* Purple 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-royal {
+            background: linear-gradient(135deg, #581C87 0%, #B45309 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-purple-900 serif">
+                        <i class="fas fa-crown mr-2 text-amber-500"></i> 希伯来书 1章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">荣耀的圣子：超越天使</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-800">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-purple-950 text-purple-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-400">"他是神荣耀的光辉，是神本体的真像。" (1:3)</p>
+            <p class="text-xs text-purple-400 mt-3">交互式研经工具 | 聚焦：基督论的高峰与启示的完满</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神最终的发言：圣子的超越性",
+                summary: "希伯来书第一章是新约中基督论（Christology）最宏伟的篇章之一。作者不加寒暄，直接宣告神启示的最高峰——借着“儿子”晓谕我们（1-3节）。这一章通过七个壮丽的描述，确立了基督作为神荣耀光辉和本体真像的地位。随后，作者引用了七处旧约经文（4-14节），严密论证了基督远超天使：天使是服役的灵，而子是受敬拜的君王和创造主。这不仅是神学论述，更是对受逼迫信徒的强心剂——你们所信的这位，比一切都大。",
+                highlights: [
+                    { icon: "fas fa-lightbulb", color: "text-amber-500", text: "荣耀光辉" },
+                    { icon: "fas fa-feather-alt", color: "text-purple-600", text: "本体真像" },
+                    { icon: "fas fa-angle-double-up", color: "text-blue-600", text: "远超天使" }
+                ]
+            },
+            sections: [
+                {
+                    id: "prologue",
+                    title: "启示的终极：圣子的七重荣耀 (1:1-3)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "神既在古时藉着众先知多次多方地晓谕列祖，就在这末世藉着他儿子晓谕我们...",
+                            academic: {
+                                title: "启示的渐进与完满",
+                                keywords: ["Polymerōs (多次/零碎)", "Polytropōs (多方/多种方式)", "Huios (儿子)"],
+                                content: "这是一个宏大的对比：古时（旧约）的启示是“碎片化”（多次）和“多样化”（多方，如异梦、异象）的；但在这“末世”，启示汇聚于一个焦点——“儿子”。这表明基督不是先知行列中的最后一位，而是性质完全不同的一位。祂不仅是启示的媒介，祂本身就是启示的内容。"
+                            },
+                            devotional: {
+                                title: "神不再沉默",
+                                content: "你是否渴望听到神的声音？神已经说了话，并且说得最响亮、最清楚，那就是耶稣基督。我们不需要再去寻找新的神秘启示，因为神已经把祂的心完全剖开给我们看了。读懂了耶稣，就读懂了神的心。"
+                            }
+                        },
+                        {
+                            ref: "1:3",
+                            text: "他是神荣耀的光辉，是神本体的真像，常用他权能的命令托住万有。他洗净了人的罪，就坐在高天至大者的右边。",
+                            academic: {
+                                title: "本体论的巅峰",
+                                keywords: ["Apaugasma (光辉/辐射)", "Charaktēr (真像/印记)", "Hypostasis (本体/本质)"],
+                                content: "这节经文包含了深奥的神学概念：1. **光辉**：如同阳光之于太阳，子与父同永恒、同本质，不可分割。2. **真像**：Charaktēr 原指图章在蜡上留下的印记，完全吻合且显明了本体（Hypostasis）。3. **功能**：祂既是宇宙的维系者（托住万有），又是救赎的完成者（洗净了罪），最后是掌权的君王（坐下）。"
+                            },
+                            devotional: {
+                                title: "你信的是哪位神？",
+                                content: "我们所信的耶稣，不是仅仅是一个好老师，祂是宇宙的维持者。如果祂能用一句话托住亿万星辰，难道祂托不住你那点生活重担吗？祂“坐下”了，意味着救恩工作已经“完成”。你不需要再为此焦虑，安息在祂的得胜中吧。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "superiority",
+                    title: "基督超越天使的论证 (1:4-14)",
+                    themeColor: "purple",
+                    verses: [
+                        {
+                            ref: "1:4-5",
+                            text: "他所承受的名，既比天使的名更尊贵，就远超过天使。神曾对哪一个天使说：“你是我的儿子...”",
+                            academic: {
+                                title: "更尊贵的名",
+                                keywords: ["Diaphorōteron (更优越/不同)", "Onoma (名/身份)"],
+                                content: "当时的犹太背景非常推崇天使（因为律法是藉天使传的）。作者通过引用诗篇2:7和撒下7:14，指出天使从未被称为“儿子”。“儿子”不仅是称呼，更意味着“继承权”和“王权”。基督不仅在功能上超越天使，在本质（名）上也完全不同。"
+                            },
+                            devotional: {
+                                title: "不要拜错了对象",
+                                content: "人类总倾向于崇拜灵界的媒介（天使、圣徒、神秘力量），而忽略了源头。但这里告诉我们，天使只是仆役，基督才是儿子。我们的敬拜必须聚焦于那位坐在宝座上的，而不是围绕宝座飞翔的。唯有儿子配得我们的全心。"
+                            }
+                        },
+                        {
+                            ref: "1:6-9",
+                            text: "神的使者都要拜他...论到子却说：“神啊，你的宝座是永永远远的...”",
+                            academic: {
+                                title: "神性的直接宣告",
+                                keywords: ["Ho Theos (神 - 指称子)", "Proskyneō (敬拜)"],
+                                content: "作者引用诗篇45:6-7，直接称呼子为“神啊”（Ho Theos）。这是新约中最明确宣告基督神性的经文之一。同时，子被膏立是因为祂“喜爱公义，恨恶罪恶”。天使只是风和火（仆役的工具），而子是拥有永恒宝座的君王。"
+                            },
+                            devotional: {
+                                title: "喜乐的油",
+                                content: "为什么基督拥有“喜乐油”胜过同伴？因为祂最爱公义。在这个充满不义的世界，真正的喜乐不来自环境顺利，而来自与神公义性情的对齐。如果你想要那种超越环境的深层喜乐，就要学习像耶稣一样恨恶罪恶，喜爱公义。"
+                            }
+                        },
+                        {
+                            ref: "1:10-14",
+                            text: "天地都要灭没，你却要长存...天使岂不都是服役的灵、奉差遣为那将要承受救恩的人效力吗？",
+                            academic: {
+                                title: "创造者 vs 受造物",
+                                keywords: ["Dyameneis (长存/持续)", "Leitourgika (服役的/礼仪服务的)"],
+                                content: "引用诗篇102篇，将耶和华创造天地的属性归给基督。天地会像衣服一样变旧、被卷起，唯有基督永不改变。最后，作者给出了天使的正确定义：Liturgical Spirits（礼仪性服务的灵），他们的任务是服侍那些承受救恩的人（即信徒）。这是一幅惊人的图景：尊贵的天使竟然是信徒的“服务员”。"
+                            },
+                            devotional: {
+                                title: "你有皇家护卫队",
+                                content: "你知道自己的身份有多尊贵吗？连大能的天使都是被派来为你效力的。不要觉得自己孤单无助。那位永不改变的主是你的依靠，而祂的天军是你路上的保镖。在这个变幻莫测（像衣服渐渐变旧）的世界里，抓住那位“昨日今日一直到永远是一样的”主。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-purple-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-purple-900">${chapterData.intro.title}</h2>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Sevenfold Glory Radar -->
+                    <div class="gradient-royal p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-purple-900">
+                        <div class="mb-2">
+                            <i class="fas fa-sun text-4xl text-amber-300 mb-2 animate-pulse"></i>
+                            <h3 class="text-xl font-bold text-white">神子的七重荣耀 (v2-3)</h3>
+                        </div>
+                        <div class="chart-wrapper" style="height: 200px;">
+                            <canvas id="gloryChart"></canvas>
+                        </div>
+                        <p class="text-xs mt-2 text-purple-100">完全的启示，完全的救赎</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Hierarchy Steps Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-purple-100">
+                        <h3 class="text-lg font-bold mb-2 text-purple-800 w-full border-b border-purple-100 pb-2">地位的阶梯 (v4-14)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="hierarchyChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-4 text-center">众先知(仆人) -> 天使(服役的灵) -> 圣子(神/主)</p>
+                    </div>
+
+                    <!-- Revelation Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">启示的对比 (v1-2)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="revelationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-500 mt-4 text-center">古时(碎片化) vs 末世(完全体)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFFBEB]/95 backdrop-blur py-4 mb-8 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-purple-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-purple-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-purple-700 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'purple') titleColorClass = 'text-purple-800 border-purple-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-amber-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-amber-50 border-b border-amber-100">
+                            <span class="inline-block px-2 py-1 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-amber-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-purple-50/30 transition">
+                                <h4 class="text-purple-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-100/30 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-amber-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-purple-900">解经原则：基督中心与对比</h2>
+                        <p class="text-stone-600">
+                            希伯来书第一章是应用“基督中心”解经法的典范。透过大量的旧约引用（Catena），作者构建了一个以基督为终极启示的神学大厦。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-600">
+                            <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：引喻与论证</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 预表与实体。理解旧约经文（如诗篇）如何作为预表指向基督这一实体。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 串珠式引用分析（作者如何将7段旧约串连）。
+                                    <br>2. 词汇对比（"名"、"宝座"、"仆役"的对比）。
+                                </li>
+                                <li><strong>目的：</strong> 确立基督的神性与独特性，防止天使崇拜或信仰倒退。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：敬拜与安全感</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 荣耀归正。将对基督荣耀的认知转化为内在的敬畏与安息。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 身份确认（我有天使服侍，我与基督同作后嗣）。
+                                    <br>2. 焦点转移（从环境转向那位"坐着"的君王）。
+                                </li>
+                                <li><strong>目的：</strong> 在动荡的世界中，因看见主的荣耀而重新得力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Glory Radar Chart
+            const ctxGlory = document.getElementById('gloryChart').getContext('2d');
+            new Chart(ctxGlory, {
+                type: 'radar',
+                data: {
+                    labels: ['承受万有', '创造世界', '荣耀光辉', '本体真像', '托住万有', '洗净罪恶', '坐宝座'],
+                    datasets: [{
+                        label: '基督的完满性',
+                        data: [100, 100, 100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(245, 158, 11, 0.4)', // Amber
+                        borderColor: '#FCD34D',
+                        pointBackgroundColor: '#FFF',
+                        pointBorderColor: '#F59E0B',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { color: 'rgba(255, 255, 255, 0.3)' },
+                            grid: { color: 'rgba(255, 255, 255, 0.3)' },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { 
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" }, 
+                                color: '#FFF' 
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Hierarchy Chart (Bar - Horizontal)
+            const ctxHierarchy = document.getElementById('hierarchyChart').getContext('2d');
+            new Chart(ctxHierarchy, {
+                type: 'bar',
+                data: {
+                    labels: ['众先知 (仆人)', '天使 (服役的灵)', '圣子 (神/创造主)'],
+                    datasets: [{
+                        label: '尊贵程度',
+                        data: [30, 60, 100],
+                        backgroundColor: [
+                            '#D6D3D1', // Stone
+                            '#A855F7', // Light Purple
+                            '#F59E0B'  // Gold
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { 
+                            grid: { display: false },
+                            ticks: { font: { family: "'Noto Sans SC', sans-serif", weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 2) return "承受万有，永远长存";
+                                    if(context.dataIndex === 1) return "奉差遣为信徒效力";
+                                    return "多次多方晓谕";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Revelation Chart (Doughnut)
+            const ctxRev = document.getElementById('revelationChart').getContext('2d');
+            new Chart(ctxRev, {
+                type: 'doughnut',
+                data: {
+                    labels: ['古时启示 (碎片化)', '末世启示 (完全)'],
+                    datasets: [{
+                        data: [30, 70],
+                        backgroundColor: [
+                            '#D6D3D1', // Stone
+                            '#7E22CE'  // Purple
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

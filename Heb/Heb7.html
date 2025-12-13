@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第七章：麦基洗德与更美的祭司</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Royal Purple (King/Priest) & Eternal Green (Indestructible Life) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAF5FF; /* Purple 50 - Royal background */
+            color: #4C1D95; /* Purple 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Royal Purple */
+        .active-tab {
+            color: #7C3AED; /* Purple 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #7C3AED;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Eternal Green */
+        .verse-card:hover {
+            border-left-color: #059669; /* Emerald 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(124, 58, 237, 0.1), 0 4px 6px -2px rgba(124, 58, 237, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F3E8FF; /* Purple 100 */
+            color: #6B21A8; /* Purple 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #D8B4FE; /* Purple 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-royal {
+            background: linear-gradient(135deg, #581C87 0%, #10B981 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-purple-900 serif">
+                        <i class="fas fa-crown mr-2 text-emerald-500"></i> 希伯来书 7章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">麦基洗德的奥秘</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-purple-950 text-purple-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-emerald-300">"凡靠着他进到神面前的人，他都能拯救到底。" (7:25)</p>
+            <p class="text-xs text-purple-400 mt-3">交互式研经工具 | 聚焦：基督祭司职任的超越性与永恒性</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "永恒祭司的设立",
+                summary: "希伯来书第七章通过引入神秘人物麦基洗德（Melchizedek），论证了基督祭司职分的超越性。作者首先利用创世记14章的记载，指出麦基洗德作为“仁义王”和“平安王”，在地位上优于亚伯拉罕（进而优于利未祭司）。随后，作者阐明了为何需要一个新的祭司体系——因为旧的律法一无所成。基督不是照着属肉体的条例，而是照着“无穷之生命的大能”成为祭司，因此祂能拯救到底，并永远活着替我们祈求。",
+                highlights: [
+                    { icon: "fas fa-chess-king", color: "text-purple-600", text: "仁义王" },
+                    { icon: "fas fa-infinity", color: "text-emerald-600", text: "无穷生命" },
+                    { icon: "fas fa-hand-holding-heart", color: "text-red-500", text: "拯救到底" }
+                ]
+            },
+            sections: [
+                {
+                    id: "melchizedek_identity",
+                    title: "麦基洗德的身份与预表 (7:1-3)",
+                    themeColor: "purple",
+                    verses: [
+                        {
+                            ref: "7:1-3",
+                            text: "这麦基洗德就是撒冷王，又是至高神的祭司...他头一个名翻出来就是仁义王，又是撒冷王，就是平安王...与神的儿子相似...",
+                            academic: {
+                                title: "预表学 (Typology) 的巅峰",
+                                keywords: ["Melech Tzedek (仁义王)", "Melech Salem (平安王)", "Apatōr (无父无母)"],
+                                content: "作者运用了精彩的拉比式解经。麦基洗德的名字含义（仁义）和职衔（平安，Salem即Shalom）预表了基督的属性：先有公义，后有和平。经文说他“无父无母无族谱”，并非指他实际上没有父母，而是指创世记的记载中故意**省略**了他的家谱（Argument from Silence）。这在文学上使他成为了“永恒之子”的完美预表——没有记录的生与死，象征着永恒。"
+                            },
+                            devotional: {
+                                title: "神秘的安慰",
+                                content: "麦基洗德在历史中突然出现又消失，就像基督在我们生命中的工作。他不依靠家谱（肉体背景），只依靠神的任命。这安慰我们：我们得救和服侍的资格，不取决于我们的出身背景，而取决于那位永恒之主的呼召。公义与平安，是你生命此时的特征吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "superiority",
+                    title: "超越亚伯拉罕与利未 (7:4-10)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "7:4-7",
+                            text: "你们想一想，先祖亚伯拉罕将...十分之一给他，这人是何等尊贵呢！...从来位分大的给位分小的祝福...",
+                            academic: {
+                                title: "十分之一的逻辑",
+                                keywords: ["Dekatē (十分之一)", "Eulogeō (祝福)"],
+                                content: "这是犹太教等级观念的颠覆。亚伯拉罕是犹太民族的始祖，地位极高。但他向麦基洗德纳什一税，并接受祝福。根据“位分大的给位分小的祝福”这一公理，麦基洗德（及其所预表的基督）显然高于亚伯拉罕。这意味着基督的祭司职分在等级上远超犹太教的利未祭司体系。"
+                            },
+                            devotional: {
+                                title: "谁是你的大祭司？",
+                                content: "如果连信心之父亚伯拉罕都要在麦基洗德面前低头，我们又怎能轻看耶稣基督的祭司职分？我们在世上可能敬重许多属灵伟人，但没有任何人能取代基督的位置。只有祂能给我们终极的祝福。将你生命最宝贵的“十分之一”（代表主权）献给谁，就决定了谁是你的王。"
+                            }
+                        },
+                        {
+                            ref: "7:9-10",
+                            text: "那受十分之一的利未，也是藉着亚伯拉罕纳了十分之一...因他还在祖宗的腰中...",
+                            academic: {
+                                title: "代表性原理 (Federal Representation)",
+                                keywords: ["Osphys (腰/身)", "Levi (利未)"],
+                                content: "这里使用了“代表性原理”。利未当时尚未出生，但在其祖先亚伯拉罕的“腰中”（基因/血脉里），他也参与了纳税。这在逻辑上证明：利未祭司体系在法理上已经向麦基洗德体系称臣。因此，当麦基洗德的实体（基督）来到时，影儿（利未体系）必须退位。"
+                            },
+                            devotional: {
+                                title: "在基督里",
+                                content: "就像利未在亚伯拉罕里面纳税一样，我们也是在基督里面死了、复活了、升天了。这就是“在基督里”的奥秘。我们的命运与我们的代表紧密相连。因为基督得胜了，我们在祂“腰中”（生命里）也得胜了。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "new_order",
+                    title: "祭司职任与律法的更改 (7:11-19)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "7:11-12",
+                            text: "从前百姓在利未人祭司职任以下受律法，倘若藉这职任能得完全...祭司的职任既已更改，律法也必须更改。",
+                            academic: {
+                                title: "律法的必然更改",
+                                keywords: ["Teleiōsis (完全/完美)", "Metatithēmi (更改/转移)"],
+                                content: "这是一个巨大的神学跳跃。旧约律法与祭司制度是捆绑在一起的。如果祭司制度换了（从利未支派换到犹大支派的麦基洗德等次），那么律法本身也必须更改。这宣告了摩西律法作为得救途径的终结。为什么？因为旧制度“一无所成”（19节），不能带人进到完全（Perfect conscience/relationship）。"
+                            },
+                            devotional: {
+                                title: "不再修补旧衣服",
+                                content: "我们常试图用修补旧生命（律法主义）的方式来讨神喜悦，但神已经换了一套全新的系统。不要再回到旧的规则里去寻找安全感。基督带来的不是改良版律法，而是全新的生命关系。你是否已经“更改”了你的属灵操作系统？"
+                            }
+                        },
+                        {
+                            ref: "7:16",
+                            text: "他成为祭司，并不是照属肉体的条例，乃是照无穷之生命的大能。",
+                            academic: {
+                                title: "无穷生命的大能",
+                                keywords: ["Akatalyton (无穷/不可毁灭)", "Zōē (生命)"],
+                                content: "利未祭司依靠的是“肉体的条例”（家谱、身体无残疾等），且受制于死亡。但基督的资格源于祂复活的生命——一种死亡无法触碰、无法毁灭（Indestructible）的生命力。这是新约祭司职分的根基：不是外在的规条，而是内在复活的大能。"
+                            },
+                            devotional: {
+                                title: "生命胜过规条",
+                                content: "我们的信仰不是建立在死板的教条上，而是建立在活泼的生命上。当我们感到软弱无力时，依靠的不是“我应该做什么”，而是基督那“无穷生命的大能”在我里面运行。这股复活的力量，足以冲破一切死亡的权势。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "intercession",
+                    title: "拯救到底的大祭司 (7:20-28)",
+                    themeColor: "emerald",
+                    verses: [
+                        {
+                            ref: "7:25",
+                            text: "凡靠着他进到神面前的人，他都能拯救到底；因为他是长远活着，替他们祈求。",
+                            academic: {
+                                title: "拯救到底 (Panteles)",
+                                keywords: ["Panteles (到底/完全/彻底)", "Entygchanō (代求/介入)"],
+                                content: "Panteles 兼具时间和性质的双重含义：在时间上直到永远，在范围上涵盖一切。没有任何罪太大，也没有任何时间太晚，只要藉着祂，都能得救。基督现在的工就是“代求”（Intercession），祂将祂的功德持续呈现在父面前，作为我们得蒙悦纳的依据。"
+                            },
+                            devotional: {
+                                title: "祂正在为你祷告",
+                                content: "这也许是圣经中最令人安慰的经文之一。当你甚至无法为自己祷告时，耶稣正在天上为你祷告。祂的祷告从未停止，也不会失败。你的得救不是靠你抓住了神，而是靠神抓住了你。祂必拯救你到底，绝不半途而废。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-purple-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-purple-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-emerald-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Tithing Logic -->
+                    <div class="gradient-royal p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-purple-200">
+                        <div class="mb-4">
+                            <i class="fas fa-hand-holding-usd text-4xl text-white mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">什一税的属灵逻辑</h3>
+                        </div>
+                        
+                        <div class="relative flex flex-col items-center space-y-4">
+                            <!-- Melchizedek -->
+                            <div class="bg-white/20 p-2 rounded text-white font-bold w-full border border-white/30">
+                                麦基洗德 (受)
+                            </div>
+                            
+                            <!-- Arrow -->
+                            <div class="text-white text-2xl">⬆️</div>
+                            
+                            <!-- Abraham -->
+                            <div class="bg-white/20 p-2 rounded text-white w-full border border-white/30">
+                                亚伯拉罕 (纳)
+                                <span class="block text-xs opacity-75">包含利未在腰中</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-emerald-100">位分大的给位分小的祝福</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Priesthood Contrast Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-purple-100">
+                        <h3 class="text-lg font-bold mb-2 text-purple-800 w-full border-b border-purple-100 pb-2">祭司体系本质对比</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="contrastChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">利未(肉体条例) vs 基督(无穷生命)</p>
+                    </div>
+
+                    <!-- Salvation Capacity Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-emerald-100">
+                        <h3 class="text-lg font-bold mb-2 text-emerald-800 w-full border-b border-emerald-100 pb-2">拯救到底的能力 (v25)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="salvationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">覆盖所有时间与所有罪愆</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAF5FF]/95 backdrop-blur py-4 mb-8 border-b border-purple-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-purple-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-purple-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-purple-700 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-emerald-600 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'purple') titleColorClass = 'text-purple-800 border-purple-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'emerald') titleColorClass = 'text-emerald-800 border-emerald-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-purple-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-purple-50 border-b border-purple-100">
+                            <span class="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-purple-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-emerald-50/20 transition">
+                                <h4 class="text-emerald-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-purple-900">解经原则：预表与逻辑</h2>
+                        <p class="text-slate-600">
+                            希伯来书第七章展示了如何通过“拉比式解经”和“严密逻辑推导”来建立新约的基督论大厦。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：论证结构与沉默论证</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 沉默论证（Argumentum e silentio）。利用经文未记载的内容（无家谱）来建立神学观点（永恒性），这是当时希伯来解经的特色。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 代表性原理（利未在亚伯拉罕腰中）。
+                                    <br>2. 对比法（必死的 vs 永存的；起誓的 vs 不起誓的）。
+                                </li>
+                                <li><strong>目的：</strong> 证明旧约律法系统的终结和新约恩典系统的优越性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-emerald-600">
+                            <div class="text-emerald-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：中保与安慰</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 中保依靠。将焦灼的目光从自我努力转向基督完美的代求。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 默想代求（此刻基督正在为我做什么？）。
+                                    <br>2. 信心安息（因祂是“无穷生命”，所以我不用担心救恩失去）。
+                                </li>
+                                <li><strong>目的：</strong> 在失败和软弱中，因这位完美的大祭司而重新得力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Contrast Chart (Radar)
+            const ctxContrast = document.getElementById('contrastChart').getContext('2d');
+            new Chart(ctxContrast, {
+                type: 'radar',
+                data: {
+                    labels: ['生命力 (无穷)', '誓言 (有)', '职任 (不更换)', '功效 (完全)', '中保 (长远)'],
+                    datasets: [
+                        {
+                            label: '麦基洗德等次 (基督)',
+                            data: [100, 100, 100, 100, 100],
+                            backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+                            borderColor: '#059669',
+                            pointBackgroundColor: '#059669',
+                            pointBorderColor: '#fff',
+                        },
+                        {
+                            label: '亚伦等次 (利未)',
+                            data: [20, 0, 10, 30, 20], // Low scores due to death, weakness, law
+                            backgroundColor: 'rgba(148, 163, 184, 0.2)', // Slate
+                            borderColor: '#64748B',
+                            pointBackgroundColor: '#64748B',
+                            pointBorderColor: '#fff',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#4C1D95' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Salvation Capacity Chart (Bar) - Conceptual
+            const ctxSalvation = document.getElementById('salvationChart').getContext('2d');
+            new Chart(ctxSalvation, {
+                type: 'bar',
+                data: {
+                    labels: ['律法 (Law)', '基督 (Christ)'],
+                    datasets: [{
+                        label: '拯救深度',
+                        data: [10, 100], // Law makes nothing perfect
+                        backgroundColor: [
+                            '#CBD5E1', // Slate
+                            '#10B981'  // Emerald
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100,
+                            ticks: { display: false },
+                            grid: { display: false }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 0) return "一无所成 (v19)";
+                                    return "拯救到底 (v25)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

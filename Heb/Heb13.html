@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>希伯来书第十三章：营外的跟随与永远的牧人</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Shepherd Green (Pastoral Care) & Eternal Gold (Immutability) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0FDF4; /* Green 50 - Peaceful pasture background */
+            color: #14532D; /* Green 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Shepherd Green */
+        .active-tab {
+            color: #15803D; /* Green 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #15803D;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Eternal Gold */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.1), 0 4px 6px -2px rgba(217, 119, 6, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #DCFCE7; /* Green 100 */
+            color: #166534; /* Green 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #86EFAC; /* Green 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-pastoral {
+            background: linear-gradient(135deg, #14532D 0%, #D97706 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-green-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-green-900 serif">
+                        <i class="fas fa-staff-snake mr-2 text-amber-500"></i> 希伯来书 13章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">爱心与祭坛</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-900 text-green-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-300">"耶稣基督昨日、今日、一直到永远，是一样的。" (13:8)</p>
+            <p class="text-xs text-green-400 mt-3">交互式研经工具 | 聚焦：基督徒的社会伦理与属灵祭坛</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "信仰的实践与终极的祝福",
+                summary: "作为全书的终章，希伯来书第13章从高深的神学论证转向了具体的伦理劝勉。作者列出了一份“爱心清单”：接待客旅、记念被囚的、尊重婚姻、以自己所有的为足（1-6节）。随后，他回到核心的神学主题：效法领袖的信心，因为基督永不改变（7-8节）；并且呼召信徒跟随受苦的耶稣“出到营外”，献上颂赞的祭（9-16节）。全书以一段极具力量的祝福语结束，将所有的荣耀归给那位“群羊的大牧人”（20-21节）。",
+                highlights: [
+                    { icon: "fas fa-heart", color: "text-red-600", text: "弟兄相爱" },
+                    { icon: "fas fa-infinity", color: "text-amber-500", text: "永不改变" },
+                    { icon: "fas fa-campground", color: "text-slate-600", text: "出到营外" }
+                ]
+            },
+            sections: [
+                {
+                    id: "ethics",
+                    title: "爱心的具体实践 (13:1-6)",
+                    themeColor: "green",
+                    verses: [
+                        {
+                            ref: "13:1-3",
+                            text: "你们务要常存弟兄相爱的心。不可忘记用爱心接待客旅...你们要记念被捆绑的人，好像与他们同受捆绑...",
+                            academic: {
+                                title: "同理心的最高境界",
+                                keywords: ["Philadelphia (弟兄之爱)", "Philoxenia (爱陌生人/接待)", "Mimnēskomai (记念/感同身受)"],
+                                content: "希腊文 Philadelphia（爱弟兄）与 Philoxenia（爱陌生人）构成了爱的双翼。作者特别强调对受苦者（囚犯）的“记念”，原文意思是“好像自己也在肉身内受苦一样”（As being yourselves also in the body）。这不仅是同情，而是基于“基督身体”论的深度共情（Empathy）。"
+                            },
+                            devotional: {
+                                title: "不仅仅是好客",
+                                content: "接待客旅在当时可能有生命危险（接待被通缉的基督徒）。今天，神仍在通过“陌生人”测试我们的爱心。你是否愿意开放你的家、你的时间，去接待那些不能回报你的人？当我们触摸受苦者时，我们就触摸到了基督。"
+                            }
+                        },
+                        {
+                            ref: "13:4-5",
+                            text: "婚姻，人人都当尊重...你们存心不可贪爱钱财...因为主曾说：“我总不撇下你，也不丢弃你。”",
+                            academic: {
+                                title: "性与金钱的圣洁",
+                                keywords: ["Timios (尊贵的/有价值的)", "Aphilargyros (不爱银子的)", "Ou me (决不 - 双重否定)"],
+                                content: "作者将“性”（婚姻）与“钱”（贪婪）并列，因为这是人类欲望最易失控的两个领域。婚姻必须被视为“尊贵的”（Timios）。对于金钱，信徒应当“以自己所有的为足”（Autarkēs，自足）。其根基在于神的应许：希腊文使用了五个否定词（Ou me... oud' ou me）来强调神绝不会离弃我们。这是神学史上最强烈的否定句之一，意为“绝对、绝对不会”。"
+                            },
+                            devotional: {
+                                title: "最大的安全感",
+                                content: "为什么我们会贪财？因为缺乏安全感。为什么我们会淫乱？因为渴望亲密感但找错了对象。神给出的解药是祂自己：“我总不撇下你。”有了这位宇宙主宰的陪伴和保证，我们还需要靠抓取世界来填补内心吗？知足不是因为拥有的多，而是因为拥有的那位足够大。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "unchanging_christ",
+                    title: "不变的基督与营外的祭坛 (13:7-14)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "13:7-8",
+                            text: "从前引导你们...你们要想念他们，效法他们的信心...耶稣基督昨日、今日、一直到永远，是一样的。",
+                            academic: {
+                                title: "永恒的锚点",
+                                keywords: ["Hēgeomai (领袖/引导者)", "Ho Autos (同一位/一样的)"],
+                                content: "领袖会过去，但耶稣长存。第8节是希伯来书的名句，宣告了基督神性的“不变性”（Immutability）。在动荡的逼迫环境中，领袖可能殉道，教义可能被篡改，但基督的位格和工作永不改变。这是信徒效法先贤信心（而非效法其为人）的终极基础。"
+                            },
+                            devotional: {
+                                title: "在这变幻的世界",
+                                content: "世界在变，潮流在变，甚至我们自己也在变。我们需要一个恒定点来校准人生。耶稣基督就是那个恒定点。祂昨天的恩典够用，今天的能力依然，明天的应许必不落空。把你的希望寄托在这位不变的主身上，你就不致动摇。"
+                            }
+                        },
+                        {
+                            ref: "13:10-13",
+                            text: "我们有一祭坛...耶稣...在城门外受苦。这样，我们也当出到营外，就了他去，忍受他所受的凌辱。",
+                            academic: {
+                                title: "空间神学的转换",
+                                keywords: ["Thysiastērion (祭坛)", "Exō tēs Parembolēs (营外/体制外)", "Oneidismos (凌辱)"],
+                                content: "这是一个革命性的呼召。旧约的赎罪祭牲要在“营外”烧掉。耶稣在耶路撒冷城门外受死，应验了这一预表。作者呼吁读者“出到营外”，不仅是指地理上离开耶路撒冷（犹太教体制），更是指神学上与旧约祭祀体系的决裂，以及社会上准备好承受被排斥的羞辱。基督徒的祭坛不在圣殿里，而在十字架的受苦中。"
+                            },
+                            devotional: {
+                                title: "不要怕被排斥",
+                                content: "如果你的信仰让你在公司、学校或朋友圈里显得“不合群”，甚至被排斥，请记住：你正在“营外”。耶稣就在那里。在体制内（世界/舒适区）虽然安全，但那里没有耶稣。宁可在营外与耶稣一同受苦，也不要在营内享受没有神的安逸。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sacrifices",
+                    title: "新约的祭司献祭 (13:15-17)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "13:15-16",
+                            text: "我们应当靠着耶稣，常常以颂赞为祭献给神...只是不可忘记行善和捐输的事，因为这样的祭是神所喜悦的。",
+                            academic: {
+                                title: "嘴唇与手脚的祭",
+                                keywords: ["Thysia Aineseōs (赞美祭)", "Koinonia (捐输/分享)"],
+                                content: "既然旧约祭坛已废，新约信徒献什么？1. **言语的祭**：承认主名的嘴唇果子（公开认信与赞美）；2. **行为的祭**：行善和捐输（Koinonia，团契分享）。这意味着崇拜不仅发生在聚会中（唱诗），也发生在生活中（帮扶）。这就是新约的“祭司职分”。"
+                            },
+                            devotional: {
+                                title: "赞美是一种选择",
+                                content: "为什么叫“赞美的祭”？因为“祭”意味着牺牲。当你顺境时赞美是自然的，但当你痛苦、缺乏、被误解时，依然选择赞美神，那就是“牺牲”。这种逆境中的赞美，在神眼中是极宝贵的祭物。同时，不要忘了你的钱包也是祭坛的一部分。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "benediction",
+                    title: "伟大的祝福与结语 (13:20-25)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "13:20-21",
+                            text: "但愿赐平安的神，就是那凭永约之血、使群羊的大牧人...从死里复活的神，在各样善事上成全你们...",
+                            academic: {
+                                title: "希伯来书的冠冕",
+                                keywords: ["Poimēna (牧人)", "Haima Diathēkēs (立约的血)", "Katartisai (成全/装备/修补)"],
+                                content: "这是新约最宏伟的祝福语之一。它概括了全书核心：1. **神性**：赐平安的神；2. **基督论**：大牧人（复活的证明）；3. **救恩论**：永约之血（赎罪的功效）；4. **成圣论**：成全（Katartizo，原意为补网或接骨，指装备整齐）去行旨意。这是神在人里面工作（Working in us），使人能行出来的神人合作观。"
+                            },
+                            devotional: {
+                                title: "神负责修补你",
+                                content: "你觉得生命中有破口？有软弱？神应许要“成全”（修补/装备）你。祂不是发命令后就袖手旁观的工头，而是那位“在我们心里行祂所喜悦之事”的源头。你的成圣，是神的工作。依靠那位大牧人，祂既然流血买了你，就必负责到底。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-green-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-green-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Path Outside the Camp -->
+                    <div class="gradient-pastoral p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-green-200">
+                        <div class="mb-4">
+                            <i class="fas fa-route text-4xl text-amber-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">营外的道路 (v13)</h3>
+                        </div>
+                        
+                        <div class="relative flex items-center justify-between w-full mt-4 text-xs font-bold text-white">
+                            <!-- Inside Camp -->
+                            <div class="flex flex-col items-center opacity-70">
+                                <div class="w-12 h-12 border-2 border-white rounded flex items-center justify-center mb-1">
+                                    <i class="fas fa-gopuram"></i>
+                                </div>
+                                <span>营内(宗教体制)</span>
+                            </div>
+                            
+                            <!-- Path Arrow -->
+                            <div class="flex-grow border-t-2 border-dashed border-white mx-2 relative">
+                                <i class="fas fa-walking absolute top-[-14px] left-1/2 transform -translate-x-1/2 text-lg text-amber-300"></i>
+                            </div>
+
+                            <!-- Outside Camp -->
+                            <div class="flex flex-col items-center">
+                                <div class="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center mb-1 shadow-lg border-2 border-white">
+                                    <i class="fas fa-cross text-white"></i>
+                                </div>
+                                <span>营外(受苦之地)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-green-100">在那里遇见耶稣</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Ethics Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-green-100">
+                        <h3 class="text-lg font-bold mb-2 text-green-800 w-full border-b border-green-100 pb-2">基督徒伦理雷达 (v1-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="ethicsChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">爱心、圣洁与知足</p>
+                    </div>
+
+                    <!-- Sacrifices Pie Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">神所喜悦的祭 (v15-16)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="sacrificeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">言语(颂赞) + 行为(行善/捐输)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0FDF4]/95 backdrop-blur py-4 mb-8 border-b border-green-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-green-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-green-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-700 text-white font-bold' : 'text-slate-500 hover:bg-green-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'green') titleColorClass = 'text-green-800 border-green-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-green-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-green-50 border-b border-green-100">
+                            <span class="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-green-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-amber-50/30 transition">
+                                <h4 class="text-amber-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-green-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/30 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-green-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-green-900">解经原则：身份与行动</h2>
+                        <p class="text-slate-600">
+                            希伯来书第13章展示了教义如何落地为生活。解经需连接“祭坛”（神学身份）与“营外”（社会行动）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：空间隐喻与基督论</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 空间神学分析。理解"营内"（犹太教体制/世界安逸）与"营外"（受苦/宣教）的对立与呼召。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 动词分析（"出到" Exerchometha 的主动性）。
+                                    <br>2. 基督论应用（因为基督不变，所以信仰根基稳固）。
+                                </li>
+                                <li><strong>目的：</strong> 确立基督徒在这个世界上的"客旅"身份与"祭司"职分。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-500">
+                            <div class="text-green-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：爱的具体化</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 微观伦理。将宏大的神学转化为具体的行动（接待、探访、捐输）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 恐惧克服（靠着"主不撇下我"的应许战胜贪财）。
+                                    <br>2. 赞美操练（在逆境中献上嘴唇的祭）。
+                                </li>
+                                <li><strong>目的：</strong> 活出有血有肉、有爱有力的基督徒生命。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Ethics Radar Chart
+            const ctxEthics = document.getElementById('ethicsChart').getContext('2d');
+            new Chart(ctxEthics, {
+                type: 'radar',
+                data: {
+                    labels: ['弟兄相爱', '接待客旅', '记念囚犯', '尊重婚姻', '不贪钱财'],
+                    datasets: [{
+                        label: '基督徒伦理指标',
+                        data: [100, 90, 85, 100, 95],
+                        backgroundColor: 'rgba(21, 128, 61, 0.2)', // Green
+                        borderColor: '#15803D',
+                        pointBackgroundColor: '#15803D',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#14532D' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Sacrifices Pie Chart
+            const ctxSacrifice = document.getElementById('sacrificeChart').getContext('2d');
+            new Chart(ctxSacrifice, {
+                type: 'pie',
+                data: {
+                    labels: ['颂赞 (Lips)', '行善 (Doing Good)', '捐输 (Sharing)'],
+                    datasets: [{
+                        data: [33, 33, 34],
+                        backgroundColor: [
+                            '#D97706', // Amber (Praise)
+                            '#15803D', // Green (Action)
+                            '#0F172A'  // Slate (Sharing/Cost)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
