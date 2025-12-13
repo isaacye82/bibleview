@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅各书第二章：公义与活泼的信心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Ruby Red (Action/Life) & Justice Blue (Impartiality) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAFAF9; /* Stone 50 */
+            color: #1C1917; /* Stone 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Ruby Red */
+        .active-tab {
+            color: #BE123C; /* Rose 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #BE123C;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        .verse-card:hover {
+            border-left-color: #1E40AF; /* Blue 800 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Greek Word Chip - Stylized */
+        .greek-chip {
+            background-color: #FFF1F2; /* Rose 50 */
+            color: #9F1239; /* Rose 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FECDD3; /* Rose 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Comparison Table Styling */
+        .comparison-table th {
+            background-color: #F1F5F9;
+            color: #475569;
+            font-weight: 600;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .comparison-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-stone-800 serif">
+                        <i class="fas fa-balance-scale mr-2 text-rose-700"></i> 雅各书 2章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">真理天平：偏待人与死信心</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-rose-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-rose-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-rose-500">"身体没有灵魂是死的，信心没有行为也是死的。" (2:26)</p>
+            <p class="text-xs text-stone-500 mt-3">交互式研经工具 | 聚焦：社会公义与信仰实践</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "信仰的试金石：待人与行事",
+                summary: "雅各书第二章如同两面镜子，照出教会内部可能存在的虚伪。前半部分（1-13节）处理**社会关系中的虚伪**——按外貌待人（偏心）；后半部分（14-26节）处理**神学教义中的虚伪**——有信心没行为（死信心）。雅各以极其严厉的口吻指出：真实的信仰必须体现为对人的爱（不偏心）和对神的顺服（好行为）。",
+                highlights: [
+                    { icon: "fas fa-users-slash", color: "text-blue-700", text: "不可偏心" },
+                    { icon: "fas fa-crown", color: "text-amber-500", text: "至尊律法" },
+                    { icon: "fas fa-hand-holding-heart", color: "text-rose-600", text: "信心与行为" }
+                ]
+            },
+            sections: [
+                {
+                    id: "partiality",
+                    title: "偏待人的罪 (2:1-13)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "2:1-4",
+                            text: "我的弟兄们...不可按着外貌待人...这岂不是你们偏心待人，用恶意断定人吗？",
+                            academic: {
+                                title: "会堂里的势利眼",
+                                keywords: ["Prosōpolēmpsia (按外貌待人)", "Synagōgē (会堂/聚会)"],
+                                content: "雅各使用了“会堂”（Synagogue）一词来指代基督徒的聚会，暗示早期犹太基督徒背景。*Prosōpolēmpsia* 原意是“看脸”，即根据外在地位而非内在价值判断人。雅各通过极其生动的场景描写（金戒指 vs 脏衣服），揭露了当时教会内部已经开始模仿罗马社会的阶级分层。"
+                            },
+                            devotional: {
+                                title: "教会里的隐形人",
+                                content: "如果在主日崇拜，一个衣衫褴褛的流浪汉坐在你旁边，你的第一反应是什么？是嫌弃、恐惧，还是像接待耶稣一样接待他？偏心不仅是社交礼仪问题，更是“恶意”的审判。我们在神面前都是属灵的乞丐，有什么资格轻看物质上的乞丐呢？"
+                            }
+                        },
+                        {
+                            ref: "2:5-7",
+                            text: "神岂不是拣选了世上的贫穷人...你们反倒羞辱贫穷人...那富户岂不是欺压你们...",
+                            academic: {
+                                title: "神的选择逻辑",
+                                keywords: ["Eklegomai (拣选)", "Katadynasteuō (欺压/剥削)"],
+                                content: "雅各指出一个讽刺的现实：神拣选了贫穷人成为“信心中富足”的后嗣，而教会却在巴结那些实际上在法律上欺压他们、亵渎基督名号的富人。这不仅是愚蠢，更是站在了神的对立面。"
+                            },
+                            devotional: {
+                                title: "价值观的颠倒",
+                                content: "我们常以为有钱有势的人信主能给教会带来更多“资源”。但雅各提醒我们：神国的资源不看银行存款，而看信心。不要为了攀附权贵而羞辱了神眼中的“VIP”——那些单纯依靠神的卑微人。"
+                            }
+                        },
+                        {
+                            ref: "2:8-13",
+                            text: "经上记着说：“要爱人如己”，你们若守这至尊的律法才是好的...因为那不怜悯人的，也要受无怜悯的审判...",
+                            academic: {
+                                title: "至尊的律法 (Nomos Basilikos)",
+                                keywords: ["Nomos Basilikos (皇家律法/至尊律法)", "Eleos (怜悯)"],
+                                content: "“至尊的律法”即“爱邻舍如同自己”（利19:18），之所以称为“至尊/皇家”，因为它属于君王耶稣，且统领一切律法。雅各强调律法的统一性：犯了一条（如偏心）就是犯了众条。唯一的出路是“怜悯”，因为怜悯能夸胜审判。"
+                            },
+                            devotional: {
+                                title: "怜悯是审判时的护身符",
+                                content: "当我们站在审判台前，我们希望神按公义对待我们，还是按怜悯对待我们？必然是怜悯。既然如此，我们现在为何要用严苛的标准去审判（偏待）别人呢？你给出去的怜悯，终将成为你面对审判时的喜乐。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "faith_works",
+                    title: "信心与行为 (2:14-26)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "2:14-17",
+                            text: "若有人说自己有信心，却没有行为，有什么益处呢？...信心若没有行为就是死的。",
+                            academic: {
+                                title: "死信心的诊断",
+                                keywords: ["Erga (行为/工作)", "Nekra (死的)"],
+                                content: "雅各使用“有人说”（Diatribe修辞法）来引入辩论。他定义的“行为”并非律法主义的功德，而是爱心的具体表达（给弟兄吃穿）。“死的”意味着这种信心虽然在理智上存在（Intellectual Assent），但在生命上是无机能的，不能救人。"
+                            },
+                            devotional: {
+                                title: "空头支票的信仰",
+                                content: "如果我看见有人饿了，只对他说“平平安安地去吧”，却不给食物，这不仅是虚伪，简直是残忍。同样的，如果我们只在嘴上说“阿们”，却在生活中没有爱的行动，我们的信仰就是一张空头支票。信心不是名词，是动词。"
+                            }
+                        },
+                        {
+                            ref: "2:18-20",
+                            text: "鬼魔也信，却是战惊...虚浮的人哪，你愿意知道没有行为的信心是死的吗？",
+                            academic: {
+                                title: "鬼魔的正统神学",
+                                keywords: ["Daimonion (鬼魔)", "Frissō (战惊/毛骨悚然)"],
+                                content: "这是一个极其震撼的论点：鬼魔的神学是完全正统的（它们相信神只有一位），甚至它们的情感反应（战惊）比许多信徒更强烈。但它们不顺服，也不爱神。因此，单凭教义认知和情感波动，不足以证明得救的信心。"
+                            },
+                            devotional: {
+                                title: "你信得比魔鬼好吗？",
+                                content: "如果你的信心仅仅停留在“我相信神存在”、“我相信圣经是真的”，那么魔鬼也做到了，而且做得很好。得救的信心包含第三个要素：**委身与顺服**。魔鬼颤抖却背叛，信徒敬畏并顺服。"
+                            }
+                        },
+                        {
+                            ref: "2:21-26",
+                            text: "亚伯拉罕...喇合...可见信心是与他的行为并行...身体没有灵魂是死的...",
+                            academic: {
+                                title: "雅各与保罗的“矛盾”？",
+                                keywords: ["Dikaioō (称义)", "Synergeō (并行/同工)"],
+                                content: "保罗说“称义”是**法庭性**的（Declared righteous，罗3:28），指地位的改变；雅各说“称义”是**证实性**的（Shown to be righteous），指生命的验证。两者并不矛盾，而是分别针对“靠行为得救的律法主义”和“只要信不要行的反律法主义”。亚伯拉罕（先祖）和喇合（外邦妓女）代表了信心涵盖的所有光谱。"
+                            },
+                            devotional: {
+                                title: "信心是有呼吸的",
+                                content: "身体（信心）和灵魂（行为/气息）是不能分割的。一旦分割，就是死亡。我们不需要努力去“制造”行为来证明信心，就像活着的人不需要努力去“呼吸”一样。真实活泼的信心，自然会呼吸出顺服与爱心的行为。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-rose-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-rose-900">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-stone-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Scale of Faith -->
+                    <div class="bg-gradient-to-br from-stone-800 to-stone-900 text-white p-6 rounded-xl shadow-lg flex flex-col justify-center text-center">
+                        <i class="fas fa-balance-scale-right text-4xl mb-3 text-rose-500"></i>
+                        <h3 class="text-xl font-bold mb-2">信心的方程式</h3>
+                        <p class="text-sm text-stone-400 mb-4">"信心 + 行为 = 生命"</p>
+                        
+                        <div class="flex items-center justify-center space-x-2 text-sm">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center font-bold">信</div>
+                                <span class="text-xs mt-1 text-stone-400">根基</span>
+                            </div>
+                            <span class="text-xl">+</span>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-rose-600 flex items-center justify-center font-bold">行</div>
+                                <span class="text-xs mt-1 text-stone-400">果子</span>
+                            </div>
+                            <span class="text-xl">=</span>
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center font-bold"><i class="fas fa-heartbeat"></i></div>
+                                <span class="text-xs mt-1 text-stone-400">活泼</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-xs bg-white/10 p-2 rounded">
+                            "身体没有灵魂是死的" (v26)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Partiality Impact Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-stone-200">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">偏待人的后果 (2:4,9)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="partialityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">偏心不仅伤害人际，更触犯律法</p>
+                    </div>
+
+                    <!-- Faith Type Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-stone-200">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">三种信心的特质对比</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="faithChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">死信心(尸体) vs 鬼魔信心(战惊) vs 活信心(顺服)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAFAF9]/95 backdrop-blur py-4 mb-8 border-b border-stone-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-stone-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-700 text-white font-bold' : 'text-stone-500 hover:bg-rose-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-stone-600 text-white font-bold' : 'text-stone-500 hover:bg-rose-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-blue-600 text-white font-bold' : 'text-stone-500 hover:bg-rose-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                const titleColorClass = section.themeColor === 'blue' ? 'text-blue-800 border-blue-200' : 'text-rose-800 border-rose-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-stone-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-stone-50 border-b border-stone-100">
+                            <span class="inline-block px-2 py-1 bg-stone-200 text-stone-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-stone-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-blue-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-50/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-stone-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-stone-800">解经原则：处境与整合</h2>
+                        <p class="text-stone-600">
+                            雅各书第二章是新约中极具争议性的一章（因“称义”问题）。解经的关键在于准确理解作者的定义（什么是“行为”）和处境（反律法主义）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：神学定义与修辞</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 语境定义原则。当雅各说“行为”时，他指爱心的果子（v15）；当保罗说“行为”时，他指律法的功德。两人定义不同，故不矛盾。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 假想辩论法（Diatribe）分析（v18）。
+                                    <br>2. 旧约引用分析（创15:6在不同语境的应用）。
+                                </li>
+                                <li><strong>目的：</strong> 解决“唯独信心”与“行为称义”的神学张力。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：自我省察与实践</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 诚实省察。用经文作为X光片，检查自己是否有“势利眼”或“死信心”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 场景代入（面对穷人时我的反应）。
+                                    <br>2. 信心体检（我的信心有“心跳”吗？）。
+                                </li>
+                                <li><strong>目的：</strong> 催逼我们生发出真实的爱心行动。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Partiality Impact Chart (Radar)
+            const ctxPartiality = document.getElementById('partialityChart').getContext('2d');
+            new Chart(ctxPartiality, {
+                type: 'radar',
+                data: {
+                    labels: ['违背律法', '羞辱穷人', '恶意断定', '讨好富人', '缺乏怜悯'],
+                    datasets: [{
+                        label: '偏待人的严重性',
+                        data: [90, 85, 80, 70, 95],
+                        backgroundColor: 'rgba(30, 64, 175, 0.2)', // Blue
+                        borderColor: '#1E40AF',
+                        pointBackgroundColor: '#1E40AF',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#1E40AF'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Faith Type Comparison Chart (Bar)
+            const ctxFaith = document.getElementById('faithChart').getContext('2d');
+            new Chart(ctxFaith, {
+                type: 'bar',
+                data: {
+                    labels: ['死信心 (Dead)', '鬼魔信心 (Demonic)', '活信心 (Living)'],
+                    datasets: [
+                        {
+                            label: '认知/理智 (Knowledge)',
+                            data: [80, 100, 100],
+                            backgroundColor: '#94A3B8', // Slate 400
+                        },
+                        {
+                            label: '情感/战惊 (Emotion)',
+                            data: [20, 90, 90],
+                            backgroundColor: '#F59E0B', // Amber 500
+                        },
+                        {
+                            label: '顺服/行为 (Obedience)',
+                            data: [0, 0, 100], // Only Living Faith has obedience
+                            backgroundColor: '#BE123C', // Rose 700
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, title: { display: true, text: '程度 (%)' } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                footer: function(tooltipItems) {
+                                    const index = tooltipItems[0].dataIndex;
+                                    if(index === 0) return "有口无心，无行动";
+                                    if(index === 1) return "有知有情，却背叛";
+                                    if(index === 2) return "全人投入，生发仁爱";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

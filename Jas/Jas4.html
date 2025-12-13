@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅各书第四章：与世俗的战争与谦卑的恩典</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Warfare Red (Conflict) & Grace Blue (Humility) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 */
+            color: #1E293B; /* Slate 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Warfare Red */
+        .active-tab {
+            color: #991B1B; /* Red 800 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #991B1B;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Grace Blue */
+        .verse-card:hover {
+            border-left-color: #0284C7; /* Sky 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FEF2F2; /* Red 50 */
+            color: #991B1B; /* Red 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FECACA; /* Red 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-conflict-grace {
+            background: linear-gradient(135deg, #FEF2F2 0%, #E0F2FE 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-shield-alt mr-2 text-red-700"></i> 雅各书 4章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">战场与恩典：降服神</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-sky-400">"神阻挡骄傲的人，赐恩给谦卑的人。" (4:6)</p>
+            <p class="text-xs text-slate-500 mt-3">交互式研经工具 | 聚焦：世界观的冲突与生命的降服</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "降服：止息战争的唯一出路",
+                summary: "雅各书第四章揭露了人际冲突的根本原因——不是外部环境，而是内心的私欲（1-3节）。雅各严厉地指出，与世俗为友就是犯了属灵的淫乱，是与神为敌（4-5节）。解决之道不在于赢得争论，而在于彻底的谦卑与悔改（6-10节）。本章后半部分将这种谦卑应用在人际关系（不可论断，11-12节）和对未来的规划上（不可张狂，13-17节）。",
+                highlights: [
+                    { icon: "fas fa-fist-raised", color: "text-red-700", text: "私欲交战" },
+                    { icon: "fas fa-heart-broken", color: "text-purple-600", text: "属灵淫乱" },
+                    { icon: "fas fa-level-down-alt", color: "text-sky-600", text: "自卑升高" }
+                ]
+            },
+            sections: [
+                {
+                    id: "war_within",
+                    title: "冲突的解剖学 (4:1-3)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "4:1-2",
+                            text: "你们中间的争战斗殴是从哪里来的呢？不是从你们百体中战斗之私欲来的吗？...",
+                            academic: {
+                                title: "内战引发外战",
+                                keywords: ["Strateuomai (交战/当兵)", "Hēdonē (私欲/享乐)"],
+                                content: "“私欲”原文 *hēdonē* 是“享乐主义”（Hedonism）的词根。雅各指出，外部的人际冲突（争战斗殴）只是表象，根源在于内部的“内战”——私欲在肢体中打仗。这是一种为了满足自我欲望而发动的侵略战争，导致了对他人的杀害（可能是隐喻性的恨）和嫉妒。",
+                            },
+                            devotional: {
+                                title: "停止寻找替罪羊",
+                                content: "当教会或家庭发生冲突时，我们习惯指责对方：“是他先惹我的！”但雅各把聚光灯转向我们内心：是你里面的“自我”没有得到满足。除非平息内心的私欲之战，否则外部的和平条约只是一纸空文。和平始于你向神投降。"
+                            }
+                        },
+                        {
+                            ref: "4:3",
+                            text: "你们求也得不着，是因为你们妄求，要浪费在你们的宴乐中。",
+                            academic: {
+                                title: "以自我为中心的祷告",
+                                keywords: ["Kakōs (妄/邪恶地)", "Dapanaō (浪费/耗尽)"],
+                                content: "“妄求”意为“邪恶地求”或“求错目标”。祷告本是向神降服的工具，但在私欲的驱动下，祷告变成了利用神来满足私欲的手段。“浪费”一词常用于挥霍（如浪子回头中的小儿子）。神拒绝资助我们的罪恶享乐。"
+                            },
+                            devotional: {
+                                title: "神不是你的提款机",
+                                content: "有时神不听祷告是祂的慈爱。如果祂满足了我们所有的私欲，我们就会离祂更远。检查你的祷告清单：是为了荣耀神，还是为了让自己在世界里过得更舒服？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "friendship_world",
+                    title: "属灵的淫乱与恩典 (4:4-6)",
+                    themeColor: "purple",
+                    verses: [
+                        {
+                            ref: "4:4",
+                            text: "你们这些淫乱的人哪，岂不知与世俗为友就是与神为敌吗？...",
+                            academic: {
+                                title: "盟约的背叛",
+                                keywords: ["Moichalis (淫妇)", "Echthra (仇恨/敌意)"],
+                                content: "雅各使用旧约先知的语言，称信徒为“淫妇”（原文是阴性词），指责其对神盟约的不忠。这里没有中间地带：试图与这种反神的价值体系（世俗）建立亲密友谊，自动构成了对神的宣战。这是极其严厉的定性。"
+                            },
+                            devotional: {
+                                title: "你不能有两个爱人",
+                                content: "我们常想做“双重国籍”的基督徒：既享受神的恩典，又享受世界的掌声。但神说这是“通奸”。神是忌邪的（Jealous），祂不仅要你的周日，祂要你的全部。你是否在偷偷与世界调情？"
+                            }
+                        },
+                        {
+                            ref: "4:5-6",
+                            text: "神...是恋爱至于嫉妒吗？...神阻挡骄傲的人，赐恩给谦卑的人。",
+                            academic: {
+                                title: "神圣的嫉妒",
+                                keywords: ["Phthonos (嫉妒)", "Antitassetai (阻挡/列阵对抗)"],
+                                content: "神住在我们里面的圣灵拥有强烈的、排他性的爱（嫉妒）。面对这种背叛，骄傲的人会遭到神的“阻挡”（原文指军队列阵对抗敌人）。但对于那些承认自己灵里破产（谦卑）的人，神赐下“更大的恩典”来胜过世界。"
+                            },
+                            devotional: {
+                                title: "恩典往低处流",
+                                content: "水往低处流，恩典也是如此。只要你还昂着头为自己辩护，神的恩典就无法流入你的心。当你承认“我无法靠自己胜过这私欲”并俯伏时，更大的恩典就会像瀑布一样临到你。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "humility_cure",
+                    title: "解决之道：十个命令 (4:7-10)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "4:7-10",
+                            text: "故此，你们要顺服神。务要抵挡魔鬼...你们亲近神...有罪的人哪，要洁净手...务要在主面前自卑...",
+                            academic: {
+                                title: "悔改的礼仪",
+                                keywords: ["Hupotagēte (顺服)", "Tapeinōthēte (自卑/降卑)"],
+                                content: "这是一连串急促的命令语气（Imperatives），构成了一个完整的悔改进程：1.方向调整（顺服神，抵挡魔鬼）；2.关系修复（亲近神）；3.洁净行动（洗手/外在，洁心/内在）；4.情感反应（愁苦、悲哀，对罪的真实痛悔）；5.最终结果（主必叫你们升高）。"
+                            },
+                            devotional: {
+                                title: "唯一的出路是向下",
+                                content: "在这个推崇自我提升（Self-promotion）的世界，雅各提出的提升之路是“自我降卑”。这不是自卑情结，而是对自己真实光景的清醒认识。当你觉得自己低到尘埃里时，不要怕，那是神伸手把你举起来的最佳位置。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "judging_boasting",
+                    title: "傲慢的两种表现 (4:11-17)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "4:11-12",
+                            text: "弟兄们，不可彼此批评...你是谁，竟敢论断别人呢？",
+                            academic: {
+                                title: "篡夺立法者的位子",
+                                keywords: ["Katalaleite (毁谤/说坏话)", "Nomothetēs (立法者)"],
+                                content: "论断弟兄不仅仅是缺乏爱心，更是对神主权的侵犯。当你判断弟兄时，你实际上是把自己置于律法之上，成为了法官。但宇宙中只有一位立法者和审判者。雅各质问：“你是谁？”意在提醒人的受造地位。"
+                            },
+                            devotional: {
+                                title: "从审判席上下来",
+                                content: "每当我们批评论断别人时，我们就在心里搭建了一个审判台，并擅自坐在了上面。快下来吧！那个位子是属于神的。我们的任务是遵行律法（爱人），而不是审判他人。"
+                            }
+                        },
+                        {
+                            ref: "4:13-17",
+                            text: "你们有话说：“今天明天我们要往某城里去...其实明天如何，你们还不知道...你们只当说：“主若愿意...”",
+                            academic: {
+                                title: "世俗的自信",
+                                keywords: ["Emporusomai (作买卖)", "Atmis (云雾/蒸汽)"],
+                                content: "这些商人计划周详（时间、地点、行动、目标），却犯了一个致命错误：忽略了神的主权。这种自信被称为“张狂夸口”（Alazoneia，原指江湖郎中的吹嘘）。雅各用“云雾”比喻生命的短暂和不可控，强调必须加上“主若愿意”（Deo Volente）。"
+                            },
+                            devotional: {
+                                title: "你的日历上有神吗？",
+                                content: "做计划不是错，错在以为自己掌控明天。无神论者不仅仅是那些不信神的人，也包括那些制定计划时好像神不存在的基督徒。要在每一个计划上盖上“主若愿意”的印章，这不是口头禅，而是对生命主权的交托。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-red-700">
+                        <h2 class="text-3xl font-bold mb-6 serif text-red-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-slate-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Conflict Cycle -->
+                    <div class="gradient-conflict-grace text-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-slate-100">
+                        <div class="mb-4">
+                            <i class="fas fa-heart-broken text-4xl text-purple-600 mb-2"></i>
+                            <h3 class="text-xl font-bold">冲突的根源</h3>
+                        </div>
+                        
+                        <div class="space-y-2 text-sm text-left mx-auto w-4/5">
+                            <div class="flex items-center">
+                                <span class="w-6 text-center text-red-600 font-bold">1</span>
+                                <span class="flex-1">私欲在百体中交战</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 text-center text-red-600 font-bold">↓</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 text-center text-red-600 font-bold">2</span>
+                                <span class="flex-1">贪恋、嫉妒、杀害</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 text-center text-red-600 font-bold">↓</span>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-6 text-center text-red-600 font-bold">3</span>
+                                <span class="flex-1">与世俗为友 = 与神为敌</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Humility Steps Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-sky-700 w-full border-b border-sky-100 pb-2">谦卑的U型曲线 (4:7-10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="humilityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">先降卑（Humbling），后升高（Exaltation）</p>
+                    </div>
+
+                    <!-- Life Mist Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-slate-700 w-full border-b border-slate-100 pb-2">生命的实相：云雾 (4:14)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center bg-slate-50 rounded">
+                            <div class="absolute inset-0 flex items-center justify-center text-slate-300 text-6xl opacity-20">
+                                <i class="fas fa-smog"></i>
+                            </div>
+                            <canvas id="mistChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">我们以为能掌控的 vs 实际能掌控的</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-red-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-red-700 text-white font-bold' : 'text-slate-500 hover:bg-red-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-red-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-sky-600 text-white font-bold' : 'text-slate-500 hover:bg-red-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'purple') titleColorClass = 'text-purple-800 border-purple-200';
+                else if(section.themeColor === 'sky') titleColorClass = 'text-sky-700 border-sky-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-slate-50 border-b border-slate-100">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-red-50/20 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-red-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-sky-50/20 transition">
+                                <h4 class="text-sky-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经原则：诊断与处方</h2>
+                        <p class="text-slate-600">
+                            雅各书第四章像一位外科医生，先无情地诊断病因（私欲、骄傲），然后给出精准的处方（谦卑、顺服）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：逻辑链与命令式</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 逻辑分析原则。雅各如何从人际冲突（v1）追溯到神学根源（v4与世俗为友）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 命令语气分析（v7-10的一连串命令如何构建悔改的步骤）。
+                                    <br>2. 旧约背景（“淫妇”隐喻在何西阿书等先知书中的背景）。
+                                </li>
+                                <li><strong>目的：</strong> 揭示世界观的根本冲突，打破对罪的轻忽。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-sky-600">
+                            <div class="text-sky-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：降服与主权</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 主权交托。将经文的教导应用在具体的生活决策和人际关系中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 动机检测（我的祷告是“妄求”吗？）。
+                                    <br>2. 语言习惯改变（养成说“主若愿意”的心态，而非仅仅是口头禅）。
+                                </li>
+                                <li><strong>目的：</strong> 在生活中实践彻底的谦卑，从自我中心转向以神为中心。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Humility Steps Chart (Bar chart styled as steps)
+            const ctxHumility = document.getElementById('humilityChart').getContext('2d');
+            new Chart(ctxHumility, {
+                type: 'bar',
+                data: {
+                    labels: ['骄傲自大', '顺服/抵挡', '亲近神', '洁净手/心', '愁苦悲哀', '主必叫你升高'],
+                    datasets: [{
+                        label: '灵性高度',
+                        data: [10, -20, -40, -60, -80, 50], // Negative values simulate going "down" in humility
+                        backgroundColor: [
+                            '#94A3B8', // Slate (Pride)
+                            '#0284C7', // Sky
+                            '#0284C7',
+                            '#0284C7',
+                            '#0284C7', // Deepest humility
+                            '#F59E0B'  // Amber (Exaltation)
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Horizontal bars look more like steps potentially, but let's stick to vertical for "Depth"
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: '#E2E8F0' },
+                            ticks: { display: false } 
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.raw > 0 && context.dataIndex === 0) return "属世的高傲";
+                                    if (context.raw > 0) return "属天的尊荣";
+                                    return "谦卑的深度";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mist Chart (Pie/Doughnut representing fleeting life)
+            const ctxMist = document.getElementById('mistChart').getContext('2d');
+            new Chart(ctxMist, {
+                type: 'doughnut',
+                data: {
+                    labels: ['我们能掌控的 (0%)', '神掌管的 (100%)'],
+                    datasets: [{
+                        data: [5, 95], // Visual representation of limited control
+                        backgroundColor: [
+                            '#CBD5E1', // Slate 300 (Mist)
+                            '#0EA5E9'  // Sky 500 (Sky/God)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '80%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

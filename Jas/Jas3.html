@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅各书第三章：舌头的权能与两种智慧</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Wildfire Orange (Destruction) & Living Spring Green (Wisdom) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAFAF9; /* Stone 50 */
+            color: #1C1917; /* Stone 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Wildfire Orange */
+        .active-tab {
+            color: #C2410C; /* Orange 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #C2410C;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Green for contrast/balance */
+        .verse-card:hover {
+            border-left-color: #059669; /* Emerald 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FFF7ED; /* Orange 50 */
+            color: #9A3412; /* Orange 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FFEDD5; /* Orange 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds for visuals */
+        .gradient-fire-water {
+            background: linear-gradient(135deg, #FFF7ED 0%, #ECFDF5 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-stone-800 serif">
+                        <i class="fas fa-fire-alt mr-2 text-orange-600"></i> 雅各书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">掌舵与智慧：驯服舌头</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-orange-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-stone-500 hover:text-orange-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-emerald-500">"并且使人和平的，是用和平所栽种的义果。" (3:18)</p>
+            <p class="text-xs text-stone-500 mt-3">交互式研经工具 | 聚焦：言语控制与真智慧</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "大师级的测试：控制舌头",
+                summary: "如果第一章讲的是试炼中的忍耐，第二章讲的是信心的行为，那么第三章则直击基督徒成熟度最难的试金石——言语。雅各警告想要作师傅的人（1节），因为舌头虽小，却拥有毁灭性的力量（2-12节）。随后，他对比了两种智慧：导致嫉妒纷争的属地智慧，与带来和平义果的属天智慧（13-18节）。控制舌头不仅是自制力的问题，更是智慧源头的问题。",
+                highlights: [
+                    { icon: "fas fa-skull-crossbones", color: "text-orange-600", text: "舌头是火" },
+                    { icon: "fas fa-water", color: "text-teal-600", text: "泉源不杂" },
+                    { icon: "fas fa-seedling", color: "text-emerald-600", text: "和平义果" }
+                ]
+            },
+            sections: [
+                {
+                    id: "tongue_power",
+                    title: "小舌头的大权能 (3:1-5)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "3:1-2",
+                            text: "我的弟兄们，不要多人作师傅...原来我们在许多事上都有过失；若有人在话语上没有过失，他就是完全人...",
+                            academic: {
+                                title: "更重的审判",
+                                keywords: ["Didaskaloi (师傅/教师)", "Krima (审判/裁决)", "Teleios (完全/成熟)"],
+                                content: "在犹太文化中，拉比（师傅）拥有崇高的地位。雅各警告当时的信徒不要出于虚荣而争夺教导的权柄，因为教师将面临神“更重”（meizon）的审判标准。控制舌头被视为灵性成熟（Teleios）的终极标志，能勒住舌头就能勒住全身。"
+                            },
+                            devotional: {
+                                title: "属灵的体温计",
+                                content: "你想知道自己灵命有多成熟吗？不要看你祷告多长或奉献多少，要看你能否控制自己的嘴。言语是生命的流露。一个容易在话语上跌倒的人，无论外表多么属灵，内在仍是婴孩。领袖的每一个字都带有重量，因此必须战战兢兢。"
+                            }
+                        },
+                        {
+                            ref: "3:3-5",
+                            text: "我们若把嚼环放在马嘴里...看哪，船只虽然甚大...看哪，最小的火能点着最大的树林。",
+                            academic: {
+                                title: "杠杆效应的隐喻",
+                                keywords: ["Chalinagōgeō (勒住/引导)", "Pēdalion (舵)"],
+                                content: "雅各使用了三个类比：马的嚼环、船的舵、森林的火星。前两个是正面的控制，强调“引导性”——极小的机制控制巨大的力量；后一个是负面的失控，强调“破坏性”——极小的火星引发巨大的灾难。这揭示了舌头“四两拨千斤”的特性。"
+                            },
+                            devotional: {
+                                title: "方向盘在你嘴里",
+                                content: "你的言语正在决定你人生的方向。就像小小的舵决定了巨轮的航向，你今天说出的消极或积极的话，正在设定你明天的轨迹。不要轻视一句闲话，它可能是一个祝福的开始，也可能是一场火灾的源头。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "tongue_evil",
+                    title: "无法驯服的恶 (3:6-12)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "3:6-8",
+                            text: "舌头就是火，在我们百体中，舌头是个罪恶的世界...是从地狱里点着的...惟独舌头没有人能制伏...",
+                            academic: {
+                                title: "地狱的火种",
+                                keywords: ["Gehenna (地狱)", "Akatastaton (不止息/不稳定)", "Thanatephoros (致死/带毒)"],
+                                content: "“地狱”（Gehenna）一词在新约书信中仅出现这一次（通常由耶稣使用）。雅各将破坏性的言语直接与地狱的权势相连。人类能驯服野兽（3:7），却无法驯服自己舌头中的“毒气”。这表明堕落的人性无法靠自我修养来彻底解决罪的问题。"
+                            },
+                            devotional: {
+                                title: "谁在借你的口说话？",
+                                content: "当我们在愤怒中口出恶言、在背后论断拆毁时，我们的舌头实际上成了地狱火燄的喷射口。我们无法靠自己“制伏”它，就像我们无法徒手抓毒蛇。我们需要承认自己的无能，求圣灵来掌管这“不止息的恶物”。"
+                            }
+                        },
+                        {
+                            ref: "3:9-12",
+                            text: "我们用舌头颂赞...又用舌头咒诅...是照着神形象被造的人...泉源从一个眼里能发出甜苦两样的水吗？",
+                            academic: {
+                                title: "本体论的矛盾",
+                                keywords: ["Homoiōsis (形象/样式)", "Eulogeō (颂赞)", "Kataraomai (咒诅)"],
+                                content: "雅各指出了一个令人震惊的矛盾：同一个器官竟同时用于最高尚的敬拜和最邪恶的咒诅。咒诅人之所以严重，是因为人拥有神的“形象”（Imago Dei）。这种不一致性（Inconsistency）违背了自然法则（无花果树不能生橄榄），证明了内在生命的混乱。"
+                            },
+                            devotional: {
+                                title: "人格的分裂",
+                                content: "主日我们在教会唱诗赞美，周一我们在公司恶语伤人。这种“双重人格”是基督徒最大的悲哀。神不接受从刚吐出毒液的嘴里发出的赞美。我们的生命应当像清泉，保持单一和纯净。如果你的“水”是苦的，说明源头（心）出了问题。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "wisdom",
+                    title: "两种智慧的对决 (3:13-18)",
+                    themeColor: "emerald",
+                    verses: [
+                        {
+                            ref: "3:13-16",
+                            text: "你们中间谁是有智慧有见识的呢？...你们心里若怀着苦毒的嫉妒和纷争...这样的智慧...乃是属地的、属情欲的、属鬼魔的。",
+                            academic: {
+                                title: "假智慧的系谱",
+                                keywords: ["Zēlos (嫉妒/热心)", "Eritheia (自私的野心/结党)", "Daimoniōdēs (属鬼魔的)"],
+                                content: "真智慧表现为“温柔的善行”。假智慧的核心动机是“嫉妒”和“自私的野心”（Eritheia，原指政客为拉选票的手段）。雅各给出了假智慧的三重属性递进：属地的（世俗价值观）-> 属情欲的（肉体本能）-> 属鬼魔的（撒旦的源头）。其结果必然是“扰乱”。"
+                            },
+                            devotional: {
+                                title: "你的聪明从哪来？",
+                                content: "这个世界推崇一种“智慧”：通过踩低别人来升高自己，通过勾心斗角来获取利益。圣经说这是“属鬼魔的”。如果你在教会或职场中充满竞争心、嫉妒和算计，不要自以为聪明，你正在使用地狱的战术。真正的智慧总是伴随着谦卑。"
+                            }
+                        },
+                        {
+                            ref: "3:17-18",
+                            text: "惟独从上头来的智慧，先是清洁，后是和平，温良柔顺，满有怜悯...并且使人和平的，是用和平所栽种的义果。",
+                            academic: {
+                                title: "天智七柱",
+                                keywords: ["Hagnē (清洁/纯洁)", "Eirēnikē (和平)", "Adiakritos (不偏私/不摇摆)"],
+                                content: "这节经文描绘了属天智慧的画像，常被比作“智慧的八福”。首要属性是“清洁”（道德上的纯全，无杂质）。结果是“义果”（Righteousness），而这果子必须在“和平”的气候中栽种和收割。这是一个农业隐喻：和平是土壤，义是果实。"
+                            },
+                            devotional: {
+                                title: "和平的农夫",
+                                content: "我们是撒种的人。如果我们撒下争竞、抱怨和批评，我们绝不可能收割公义。只有当我们致力于成为“使人和睦的人”（Peacemakers），在和平中撒种，我们才能收获神所喜悦的生命果实。你今天是在制造纷争，还是在栽种和平？"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-orange-500">
+                        <h2 class="text-3xl font-bold mb-6 serif text-orange-900">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-stone-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: Fire & Spring -->
+                    <div class="gradient-fire-water text-stone-800 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-stone-100">
+                        <div class="flex justify-center items-center space-x-4 mb-4">
+                            <i class="fas fa-fire text-4xl text-orange-500 animate-pulse"></i>
+                            <span class="text-2xl text-stone-400">vs</span>
+                            <i class="fas fa-tint text-4xl text-emerald-500"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">源头的省察</h3>
+                        <p class="text-sm text-stone-600 mb-2">你的生命流出的是...</p>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-bold mt-2">
+                            <div class="bg-white/60 p-2 rounded text-orange-800">
+                                地狱之火<br>(苦毒/纷争)
+                            </div>
+                            <div class="bg-white/60 p-2 rounded text-emerald-800">
+                                上头清泉<br>(清洁/和平)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Leverage Effect Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-stone-200">
+                        <h3 class="text-lg font-bold mb-2 text-orange-800 w-full border-b border-orange-100 pb-2">舌头的杠杆效应 (3:3-5)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="leverageChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">极小的输入(Input) -> 巨大的后果(Impact)</p>
+                    </div>
+
+                    <!-- Wisdom Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-stone-200">
+                        <h3 class="text-lg font-bold mb-2 text-emerald-800 w-full border-b border-emerald-100 pb-2">两种智慧的属性对比 (3:13-17)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="wisdomChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">属地智慧(自我中心) vs 属天智慧(以神为中心)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAFAF9]/95 backdrop-blur py-4 mb-8 border-b border-stone-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-stone-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-orange-600 text-white font-bold' : 'text-stone-500 hover:bg-orange-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-stone-600 text-white font-bold' : 'text-stone-500 hover:bg-orange-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-emerald-600 text-white font-bold' : 'text-stone-500 hover:bg-emerald-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                // Color coding based on section theme
+                if(section.themeColor === 'orange') titleColorClass = 'text-orange-800 border-orange-200';
+                else if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'emerald') titleColorClass = 'text-emerald-800 border-emerald-200';
+                else titleColorClass = 'text-stone-700 border-stone-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-stone-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-stone-50 border-b border-stone-100">
+                            <span class="inline-block px-2 py-1 bg-stone-200 text-stone-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-stone-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-stone-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-orange-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-emerald-50/20 transition">
+                                <h4 class="text-emerald-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-stone-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-stone-800">解经原则：隐喻与源头</h2>
+                        <p class="text-stone-600">
+                            雅各书第三章充满了生动的自然界隐喻。解经的任务是准确解码这些隐喻，并追溯行为背后的属灵源头。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：类比与背景</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 隐喻分析原则。准确理解嚼环、舵、火、泉源等自然意象在古代文献中的用法及其修辞目的（强调小对大的控制力）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词义对比（属地 vs 属天智慧的希腊文特性）。
+                                    <br>2. 文化背景（犹太拉比的地位与责任）。
+                                </li>
+                                <li><strong>目的：</strong> 揭示言语失控的本质原因——内在生命的源头问题。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-emerald-600">
+                            <div class="text-emerald-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-stone-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：源头清洁与生命统整</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 统整性原则。将言语问题视为生命问题，而非技巧问题。解决“一口两舌”的矛盾。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 动机省察（我的“智慧”是否带有嫉妒和自私？）。
+                                    <br>2. 祈求（向神求从上头来的智慧）。
+                                </li>
+                                <li><strong>目的：</strong> 结出和平的义果，活出言行一致的见证。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Leverage Chart (Bar Chart focusing on Size vs Impact)
+            const ctxLeverage = document.getElementById('leverageChart').getContext('2d');
+            new Chart(ctxLeverage, {
+                type: 'bar',
+                data: {
+                    labels: ['马/嚼环', '船/舵', '树林/火星'],
+                    datasets: [
+                        {
+                            label: '本体大小 (Size)',
+                            data: [10, 5, 2],
+                            backgroundColor: '#94A3B8', // Slate 400
+                            barPercentage: 0.5
+                        },
+                        {
+                            label: '影响力/破坏力 (Impact)',
+                            data: [90, 95, 100],
+                            backgroundColor: '#C2410C', // Orange 700
+                            barPercentage: 0.5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + (context.raw > 50 ? '巨大' : '微小');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Wisdom Radar Chart
+            const ctxWisdom = document.getElementById('wisdomChart').getContext('2d');
+            new Chart(ctxWisdom, {
+                type: 'radar',
+                data: {
+                    labels: ['清洁/纯正', '和平', '温良/谦卑', '柔顺', '满有怜悯', '无伪/真诚', '结善果'],
+                    datasets: [{
+                        label: '属天智慧 (From Above)',
+                        data: [100, 100, 100, 100, 100, 100, 100],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)', // Emerald
+                        borderColor: '#059669',
+                        pointBackgroundColor: '#059669',
+                        pointBorderColor: '#fff',
+                    }, {
+                        label: '属地智慧 (Earthly)',
+                        data: [20, 10, 15, 30, 10, 20, 10], // Represents lack of these traits
+                        backgroundColor: 'rgba(249, 115, 22, 0.2)', // Orange
+                        borderColor: '#C2410C',
+                        pointBackgroundColor: '#C2410C',
+                        pointBorderColor: '#fff',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#44403c' }
+                        }
+                    },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

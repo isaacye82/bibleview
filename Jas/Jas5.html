@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雅各书第五章：忍耐候主与信心的祈祷</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Rust Red (Judgment) & Late Rain Blue (Patience/Prayer) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Sky 50 - Fresh Rain feel */
+            color: #0C4A6E; /* Sky 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Rain Blue */
+        .active-tab {
+            color: #0284C7; /* Sky 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0284C7;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Rust Red for contrast */
+        .verse-card:hover {
+            border-left-color: #9F1239; /* Rose 800 - Rust/Judgment */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F0FDF4; /* Green 50 */
+            color: #15803D; /* Green 700 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #BBF7D0; /* Green 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-rust-rain {
+            background: linear-gradient(135deg, #FFF1F2 0%, #E0F2FE 100%);
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-cloud-rain mr-2 text-sky-600"></i> 雅各书 5章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">秋雨春雨：审判与祈祷</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-sky-400">"义人祈祷所发的力量是大有功效的。" (5:16)</p>
+            <p class="text-xs text-slate-500 mt-3">交互式研经工具 | 聚焦：末世的财富观与教会生活</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "末后的结局与群体的力量",
+                summary: "雅各书以强烈的末世论视角结束。前六节是对不义富人的严厉审判宣告，他们的财富在末日将成为吞吃他们的火。随后，雅各转向受苦的信徒，劝勉他们像农夫一样忍耐，等候主的再来（7-12节）。全书的高潮在于教会内部的彼此服侍：受苦的祷告、喜乐的歌颂、病得医治以及挽回迷失的弟兄（13-20节）。这是一个在患难中通过祷告与爱彼此支撑的群体画像。",
+                highlights: [
+                    { icon: "fas fa-coins", color: "text-rose-700", text: "财富的锈蚀" },
+                    { icon: "fas fa-seedling", color: "text-green-600", text: "农夫的忍耐" },
+                    { icon: "fas fa-praying-hands", color: "text-sky-600", text: "信心的祈祷" }
+                ]
+            },
+            sections: [
+                {
+                    id: "rich_judgment",
+                    title: "对为富不仁者的审判 (5:1-6)",
+                    themeColor: "rust",
+                    verses: [
+                        {
+                            ref: "5:1-3",
+                            text: "嗐！你们这些富足人哪，应当哭泣、号咷...你们的金银都长了锈；那锈要证明你们的不是，又要吃你们的肉，如同火一样...",
+                            academic: {
+                                title: "反讽的预言",
+                                keywords: ["Taalaipōria (苦难/悲惨)", "Katioō (长锈/腐蚀)"],
+                                content: "雅各使用旧约先知（如阿摩司）的口吻宣告审判。金银本不会生锈，这里用“长锈”的超自然意象，象征财富的虚无和罪证。富人以为自己在“积攒”财富，实际上是在“积攒”神在末世的愤怒火燄。这是对物质主义最彻底的解构。"
+                            },
+                            devotional: {
+                                title: "你的财富在吃你吗？",
+                                content: "我们常以为自己拥有财富，其实往往是财富拥有了我们。当金钱成为安全感的来源时，它就开始腐蚀我们的灵魂。雅各警告我们：如果你囤积恩典而不流出去，那囤积的“吗哪”最终会生虫变臭，反过来吞噬你的生命。"
+                            }
+                        },
+                        {
+                            ref: "5:4-6",
+                            text: "工人给你们收割庄稼，你们亏欠他们的工钱...你们在世上享美福，好宴乐，当宰杀的日子竟娇养你们的心...",
+                            academic: {
+                                title: "社会公义的呼声",
+                                keywords: ["Boao (呼冤/喊叫)", "Sabaoth (万军之主)"],
+                                content: "克扣工钱在律法中是极重的罪（利19:13）。被剥削者的冤声直达“万军之主”（Lord of Sabaoth，统领天军的主）耳中。雅各用“宰杀的日子”比喻审判日，富人现在的奢侈宴乐，就像牲畜在宰杀前拼命吃喝把自己养肥一样愚蠢。"
+                            },
+                            devotional: {
+                                title: "神听见弱者的声音",
+                                content: "你是否在生意或工作中亏待过人？不要以为没人看见。每一分不义之财都在天上留下了录音。神是弱势群体的保护者。作为基督徒，我们在财务上必须不仅合法，更要公义和慷慨。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "patience",
+                    title: "在患难中的忍耐 (5:7-12)",
+                    themeColor: "green",
+                    verses: [
+                        {
+                            ref: "5:7-9",
+                            text: "弟兄们哪，你们要忍耐，直到主来。看哪，农夫忍耐等候地里宝贵的出产...因为主来的日子近了。",
+                            academic: {
+                                title: "农夫神学",
+                                keywords: ["Parousia (临在/再来)", "Makrothymeō (长久忍耐)"],
+                                content: "雅各将视线从审判转向盼望。Makrothymeō 意为“怒气发作得很慢”或“长久承受”。农夫的忍耐不是消极的无奈，而是充满期待的主动等候（等候秋雨春雨）。这基于一个神学事实：Parousia（主的再来）是确定的、临近的。"
+                            },
+                            devotional: {
+                                title: "像农夫一样生活",
+                                content: "在这个快餐时代，我们习惯了即时满足。但属灵的果子（如品格、复兴）需要时间。当你觉得神迟延时，想一想农夫。他看不见地下的种子，但他信任自然规律（神的应许）。在等待中不要发怨言，因为审判的主就站在门前。"
+                            }
+                        },
+                        {
+                            ref: "5:10-11",
+                            text: "你们要把那先前奉主名说话的众先知当作能受苦、能忍耐的榜样...约伯...主是满心怜悯，大有慈悲。",
+                            academic: {
+                                title: "苦难的榜样",
+                                keywords: ["Hypomonē (坚忍/承载)", "Telos (结局/目的)"],
+                                content: "雅各举了先知和约伯为例。约伯的“忍耐”（Hypomonē）并非指他没有抱怨（他抱怨了很多），而是指他没有背弃神。这里强调要看“主的结局”（Telos），即神在约伯身上最终显出的慈悲旨意。苦难不是结局，神的怜悯才是。"
+                            },
+                            devotional: {
+                                title: "结局由神以此定",
+                                content: "当我们身处苦难的风暴中心时，很难看到神的美意。但雅各邀请我们看“结局”。约伯的经历告诉我们，过程虽然痛苦，甚至充满困惑，但神对祂儿女的最终计划总是“满心怜悯”的。坚持住，故事还没结束。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prayer_healing",
+                    title: "信心的祈祷与团契 (5:13-20)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "5:13-16",
+                            text: "你们中间有受苦的呢，他就该祷告...有病了的呢，他就该请教会的长老来...义人祈祷所发的力量是大有功效的。",
+                            academic: {
+                                title: "全人医治",
+                                keywords: ["Aleiphō (抹油)", "Euchē tēs pisteōs (信心的祈祷)"],
+                                content: "“抹油”在当时既有医疗作用（药用），也有宗教意义（圣别）。雅各强调医治的主体是“信心的祈祷”而非油。这里将身体的医治与罪的赦免紧密联系（“互相代求”），反映了希伯来文化中身心灵整体的健康观（Shalom）。"
+                            },
+                            devotional: {
+                                title: "不要独自受苦",
+                                content: "为何要请长老来？为何要彼此认罪？因为罪喜欢黑暗和隔离。当我们敞开自己，请求代祷时，我们就打破了骄傲和羞耻的坚垒。医治往往发生在这个彼此连结、透明敞开的“身体”关系中。你的痛苦，需要身体（教会）一起来分担。"
+                            }
+                        },
+                        {
+                            ref: "5:17-18",
+                            text: "以利亚与我们是一样性情的人，他恳切祷告，求不要下雨，雨就三年零六个月不下...",
+                            academic: {
+                                title: "先知的常人性",
+                                keywords: ["Homoiopathēs (同样性情/感受)", "Proseuchē (祷告)"],
+                                content: "雅各特意强调以利亚的“凡人属性”（Homoiopathēs，意为有同样的软弱和情感）。这位能以此开关天门的先知，并非超人。祷告的大能不在于祷告者的超能力，而在于他所祈求的那位神，以及祷告的“恳切”（原文是“他在祷告里祷告”）。"
+                            },
+                            devotional: {
+                                title: "普通人的非凡祷告",
+                                content: "我们常觉得只有属灵伟人的祷告才有效。但雅各说：以利亚和你一样，会软弱，会惧怕。区别在于他敢于通过祷告抓住神的应许。不要小看你微弱的祷告，只要它是发自真诚信心的，就能撼动天上的宝座。"
+                            }
+                        },
+                        {
+                            ref: "5:19-20",
+                            text: "若有失迷真道的...叫一个罪人从迷路上转回...遮盖许多的罪。",
+                            academic: {
+                                title: "挽回的责任",
+                                keywords: ["Planaō (迷失/走偏)", "Epistrephō (转回/悔改)"],
+                                content: "雅各书突然结束于对挽回迷羊的呼吁，没有常规的问安。这突显了全书的教牧关怀核心。真理不仅仅是用来辩论的（如第二章），更是用来“转回”生命的。挽回一个弟兄，就是参与了神“遮盖罪”的救赎大工。"
+                            },
+                            devotional: {
+                                title: "成为灵魂的守望者",
+                                content: "当看到弟兄跌倒或走偏时，我们是选择冷眼旁观、背后议论，还是冒着被误解的风险去挽回？这就是爱了。雅各书以行动呼召结束：去吧，去寻找那迷失的，把他们带回家。这是对信心最有力的证明。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-slate-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Coming of the Lord -->
+                    <div class="gradient-rust-rain text-slate-800 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-sky-100">
+                        <div class="mb-4">
+                            <i class="fas fa-door-open text-4xl text-sky-600 mb-2"></i>
+                            <h3 class="text-xl font-bold">主已近了</h3>
+                            <p class="text-sm text-slate-500">审判者站在门前 (v9)</p>
+                        </div>
+                        
+                        <div class="space-y-3 w-full text-sm">
+                            <div class="bg-white/60 p-2 rounded border-l-4 border-rose-500">
+                                <span class="font-bold text-rose-800">对富人：</span>
+                                <span class="text-slate-600">积蓄火的审判</span>
+                            </div>
+                            <div class="bg-white/60 p-2 rounded border-l-4 border-green-500">
+                                <span class="font-bold text-green-800">对义人：</span>
+                                <span class="text-slate-600">忍耐直到收割</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Wealth Corrosion Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">财富的属灵锈蚀度 (5:3)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="rustChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">不仅是贬值，更是对灵魂的"吞吃"</p>
+                    </div>
+
+                    <!-- Prayer Power Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">义人祈祷的功效 (5:16-18)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="prayerChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">如同以利亚：凡人+信心=超自然大能</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-100">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-green-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'rust') titleColorClass = 'text-rose-800 border-rose-200';
+                else if(section.themeColor === 'green') titleColorClass = 'text-green-800 border-green-200';
+                else if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-rose-50/20 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-rose-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-green-50/20 transition">
+                                <h4 class="text-green-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：终末与实践</h2>
+                        <p class="text-slate-600">
+                            雅各书第五章结合了宏大的末世论（主再来）与微观的教会生活（互相认罪）。解经需平衡这两个维度。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：先知传统与末世论</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 旧约互文性。雅各如何沿用阿摩司、以赛亚等先知对富人的审判语言。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 末世论张力（“主来”的迫近感如何影响伦理要求）。
+                                    <br>2. 历史背景（早期教会的医治实践与长老职分）。
+                                </li>
+                                <li><strong>目的：</strong> 建立对财富的正确神学观，理解苦难的意义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                            <div class="text-green-600 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：社群与彼此服侍</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 身体生活。将经文命令（认罪、代求）落实到具体的教会团契中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 榜样效法（像以利亚一样恳切祷告）。
+                                    <br>2. 角色代入（我是等待的农夫，还是迷失的羊？）。
+                                </li>
+                                <li><strong>目的：</strong> 建立一个真实、透明、有医治能力的信仰群体。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Rust Chart (Bar - Accumulation vs Decay)
+            const ctxRust = document.getElementById('rustChart').getContext('2d');
+            new Chart(ctxRust, {
+                type: 'bar',
+                data: {
+                    labels: ['地上的价值', '天上的价值', '对灵魂的腐蚀'],
+                    datasets: [
+                        {
+                            label: '囤积的后果',
+                            data: [100, 0, 95], // High earthly, Zero heavenly, High corruption
+                            backgroundColor: [
+                                '#F59E0B', // Gold (Earthly)
+                                '#CBD5E1', // Slate (Empty Heaven)
+                                '#9F1239'  // Rust/Red (Corruption)
+                            ],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 2) return "吃你们的肉，如同火";
+                                    return context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Prayer Power Chart (Line - Pulse effect)
+            const ctxPrayer = document.getElementById('prayerChart').getContext('2d');
+            new Chart(ctxPrayer, {
+                type: 'line',
+                data: {
+                    labels: ['凡人', '恳切祷告', '天门关闭', '再次祷告', '天门打开', '降雨'],
+                    datasets: [{
+                        label: '属灵效能',
+                        data: [10, 80, 90, 85, 95, 100],
+                        borderColor: '#0284C7', // Sky Blue
+                        backgroundColor: 'rgba(2, 132, 199, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#0284C7',
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, min: 0, max: 120 },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
