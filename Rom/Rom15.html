@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第十五章：合一的颂赞与宣教的雄心</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Harmony Teal (Unity) & Missionary Blue (Global Vision) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0FDFA; /* Teal 50 - Fresh/Peaceful background */
+            color: #134E4A; /* Teal 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Missionary Blue */
+        .active-tab {
+            color: #1D4ED8; /* Blue 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1D4ED8;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Harmony Teal */
+        .verse-card:hover {
+            border-left-color: #0D9488; /* Teal 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(13, 148, 136, 0.1), 0 4px 6px -2px rgba(13, 148, 136, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #EFF6FF; /* Blue 50 */
+            color: #1E3A8A; /* Blue 900 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #93C5FD; /* Blue 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans15 {
+            background: linear-gradient(135deg, #134E4A 0%, #2563EB 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-teal-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-teal-900 serif">
+                        <i class="fas fa-globe-americas mr-2 text-blue-600"></i> 罗马书 15章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">一心一口与地极</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-teal-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-teal-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-teal-950 text-teal-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-blue-300">"使你们藉着圣灵的能力，大有盼望。" (15:13)</p>
+            <p class="text-xs text-teal-400 mt-3">交互式研经工具 | 聚焦：犹太人与外邦人的合一与普世宣教</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "合一的终极目的与宣教的祭司",
+                summary: "罗马书第15章将第14章的“接纳”主题升华到基督论的高度：基督不求自己的喜悦，而是为了神的真理和怜悯，接纳了犹太人和外邦人（1-13节）。接着，保罗揭示了他作为“外邦人祭司”的宏大异象：通过宣教将外邦人献给神（14-21节）。最后，他分享了具体的旅行计划（耶路撒冷 -> 罗马 -> 西班牙），将神学愿景落实到具体的金钱奉献与代祷支持中（22-33节）。",
+                highlights: [
+                    { icon: "fas fa-users-cog", color: "text-teal-600", text: "彼此建立" },
+                    { icon: "fas fa-book-reader", color: "text-blue-600", text: "圣经的安慰" },
+                    { icon: "fas fa-paper-plane", color: "text-orange-500", text: "未得之民" }
+                ]
+            },
+            sections: [
+                {
+                    id: "imitation",
+                    title: "效法基督的接纳 (15:1-7)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "15:1-3",
+                            text: "我们坚固的人应该担代不坚固人的软弱，不求自己的喜悦...因为基督也不求自己的喜悦...",
+                            academic: {
+                                title: "担代 (Bastazein)",
+                                keywords: ["Bastazein (背负/担当)", "Areskein (取悦/讨好)"],
+                                content: "“担代”不仅是容忍（Tolerate），更是像背负重物一样承担（Shoulder）。这是基督十字架精神在人际关系中的体现。保罗引用诗篇69:9（受苦仆人之诗），指出基督背负了辱骂。强者的责任不是炫耀自由，而是背负弱者的良心重担。这颠覆了世界的“强者法则”。"
+                            },
+                            devotional: {
+                                title: "强者的定义",
+                                content: "谁是教会里的“强者”？不是那些知识多、自由大、能言善辩的人，而是那些愿意为了爱而限制自己、背负别人软弱的人。如果你只顾自己爽（求自己的喜悦），你就是属灵的婴孩。真正的成熟，是像基督一样，为了他人的益处而活。"
+                            }
+                        },
+                        {
+                            ref: "15:5-7",
+                            text: "但愿...叫你们彼此同心...一心一口荣耀神...所以你们要彼此接纳，如同基督接纳你们一样...",
+                            academic: {
+                                title: "同心合意 (Homothumadon)",
+                                keywords: ["Homothumadon (同心/共鸣)", "Proslambanesthe (接纳/拥抱)"],
+                                content: "合一的目的是“荣耀神”。当犹太人和外邦人（或者今天的传统派与现代派）能“一心一口”（One mind and one voice）赞美时，这是神最大的荣耀。接纳的标准是“如同基督接纳你们”——不是因为我们完美，而是尽管我们有瑕疵，祂仍拥抱。这是无条件的接纳。"
+                            },
+                            devotional: {
+                                title: "像大合唱一样",
+                                content: "教会的合一不是“整齐划一”（Unison），而是“和声”（Harmony）。我们可能有不同的背景、习惯和观点，但当我们定睛于基督时，我们能发出同一个赞美的声音。如果你觉得很难接纳某人，想一想基督是怎样接纳那个不可爱的你的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "hope_gentiles",
+                    title: "旧约的见证与盼望的源头 (15:8-13)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "15:8-12",
+                            text: "我说，基督是为神真理作了受割礼人的执事...并叫外邦人因他的怜悯荣耀神...（引用四处旧约）",
+                            academic: {
+                                title: "真理与怜悯的交响",
+                                keywords: ["Diakonos (执事)", "Alētheia (真理)", "Eleos (怜悯)"],
+                                content: "基督的双重工作：对犹太人是证实神的“真理”（守约），对外邦人是显明神的“怜悯”（恩典）。保罗引用了律法书（申32）、先知书（赛11）和诗篇（18, 117）的四处经文，证明外邦人加入赞美行列是神永恒计划的一部分，而非事后补救。"
+                            },
+                            devotional: {
+                                title: "你是计划的一部分",
+                                content: "如果你是外邦信徒，你的得救不是神计划的“B计划”，而是旧约众先知早已预言的荣耀时刻。你被邀请加入这宇宙的大合唱。你的存在就是神怜悯的证据，你的赞美就是对神计划的回应。"
+                            }
+                        },
+                        {
+                            ref: "15:13",
+                            text: "但愿使人有盼望的神，因信将诸般的喜乐、平安充满你们的心，使你们藉着圣灵的能力大有盼望。",
+                            academic: {
+                                title: "盼望的祝福",
+                                keywords: ["Elpidos (盼望)", "Perisseuein (充盈/溢出)"],
+                                content: "这是罗马书最美的祝福语之一。神被称为“盼望的神”。机制是：信（因） -> 喜乐平安（果/填充物） -> 圣灵能力（动力） -> 大有盼望（终极状态，Overflowing with hope）。这表明基督徒的盼望不是一种名为“希望”的情绪，而是圣灵超自然工作的满溢结果。"
+                            },
+                            devotional: {
+                                title: "让盼望溢出来",
+                                content: "在这个绝望的世界，基督徒应当是“盼望的富翁”。这盼望不是盲目乐观，而是基于神的信实。当你感到枯竭时，求圣灵来“充满”你。喜乐和平安是液压油，圣灵是引擎，最终输出的是源源不断的盼望。你不需要自己制造盼望，你需要的是连接源头。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mission_priest",
+                    title: "保罗的祭司职分与宣教策略 (15:14-24)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "15:15-16",
+                            text: "特因神所给我的恩典，使我为外邦人作基督耶稣的仆役，作神福音的祭司，叫所献上的外邦人...可蒙悦纳。",
+                            academic: {
+                                title: "福音的祭司 (Hierourgounta)",
+                                keywords: ["Hierourgeō (作祭司/从事圣职)", "Prosphora (祭物)"],
+                                content: "保罗使用极具礼仪性的词汇。他把自己比作祭司，把“传福音”比作“献祭服务”（Hierourgeō），而“外邦信徒”就是他献在祭坛上的“祭物”（Offering）。这祭物因圣灵成为圣洁。这彻底打破了圣俗二分：宣教就是最高形式的敬拜。"
+                            },
+                            devotional: {
+                                title: "你的工作是献祭",
+                                content: "无论你是全职传道人还是带职信徒，当你带领一个人归主，或帮助一个生命成长时，你就是在履行祭司的职分。你把这个人作为一个活祭献给神，这是神最喜悦的礼物。让你的事奉充满这种神圣的祭坛感。"
+                            }
+                        },
+                        {
+                            ref: "15:20-24",
+                            text: "我立了志向，不在基督的名被称过的地方传福音...盼望从你们那里经过，得见你们...往西班牙去。",
+                            academic: {
+                                title: "前沿宣教策略",
+                                keywords: ["Philotimoumenon (立志/以此为荣)", "Themelion (根基)"],
+                                content: "保罗的策略是“开荒”而非“守成”。他不愿在别人的根基上建造。他的目标是西班牙（当时的“地极”）。这显示了保罗宏大的地缘战略眼光：东方（耶路撒冷到以利哩古）已传遍（指建立了据点），现在通过罗马作为跳板，进军西方。罗马教会不仅是牧养对象，更是宣教伙伴。"
+                            },
+                            devotional: {
+                                title: "你的志向是什么？",
+                                content: "保罗以“开荒”为荣。我们虽然未必都去海外，但我们是否拥有这种“不甘守成”的心志？在你的职场、社区、家族中，哪里是“基督的名未被称过”的地方？那里就是你的西班牙。不要只满足于舒适的团契，要看向未得之地。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "jerusalem_collection",
+                    title: "慈惠捐款与祷告的争战 (15:25-33)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "15:26-27",
+                            text: "马其顿和亚该亚人乐意凑出捐项...这原是他们欠犹太人的债...既在属灵的好处上有份，就当在肉身的好处上供给他们。",
+                            academic: {
+                                title: "神学与金钱的交换",
+                                keywords: ["Koinōnia (捐项/交通)", "Opheiletai (欠债者)"],
+                                content: "这次捐款对保罗具有极高的神学意义：它是外邦教会与犹太母会合一的实质证据。外邦人欠犹太人“属灵的债”（福音源头），因此用“物质的债”偿还是理所当然的（Leitourgēsai，礼仪性服务）。金钱奉献在这里被提升到了属灵偿还和礼仪服务的高度。"
+                            },
+                            devotional: {
+                                title: "钱包的悔改",
+                                content: "我们的钱包往往是我们信心的最后防线。保罗教导我们，金钱不仅是生活所需，更是表达感恩、还债和建立合一的工具。当你为神国奉献时，你是在参与一种神圣的“进出口贸易”：用必朽坏的钱财，换取永恒的属灵友谊。"
+                            }
+                        },
+                        {
+                            ref: "15:30-32",
+                            text: "我...劝你们与我一同竭力，为我祈求神...叫我脱离...可得你们的悦纳。",
+                            academic: {
+                                title: "祷告的摔跤 (Synagōnisasthai)",
+                                keywords: ["Synagōnisasthai (一同竭力/并肩作战)"],
+                                content: "“竭力”原文含有“格斗、摔跤”之意（Agony）。保罗请求罗马信徒加入他的属灵战壕，因为他预感到耶路撒冷之行的危险。祷告不是轻描淡写的祝愿，而是与代祷对象并肩作战。这是对“信徒皆祭司”的实际应用。"
+                            },
+                            devotional: {
+                                title: "在膝盖上作战",
+                                content: "当你说“我会为你祷告”时，你是在承诺加入一场战争。代祷是耗费体力的，是需要流汗甚至流泪的。你需要这种战友，别人也需要你成为这样的战友。让我们在祷告中“一同竭力”，直到得胜。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-teal-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-teal-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-blue-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Hope Reactor -->
+                    <div class="gradient-romans15 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-teal-200">
+                        <div class="mb-4">
+                            <i class="fas fa-atom text-4xl text-teal-200 mb-2 animate-spin-slow"></i>
+                            <h3 class="text-xl font-bold text-white">盼望反应堆 (v13)</h3>
+                        </div>
+                        
+                        <div class="relative w-full h-24 flex items-center justify-between text-xs text-white">
+                            <!-- Input -->
+                            <div class="flex flex-col items-center opacity-80">
+                                <span class="bg-blue-600/50 px-2 py-1 rounded mb-1">信 (Faith)</span>
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+
+                            <!-- Core -->
+                            <div class="w-24 h-24 bg-teal-500/30 rounded-full flex flex-col items-center justify-center border-2 border-teal-300 shadow-[0_0_15px_rgba(20,184,166,0.6)]">
+                                <span class="font-bold text-yellow-300">喜乐 + 平安</span>
+                                <span class="text-[10px] mt-1">圣灵能力</span>
+                            </div>
+
+                            <!-- Output -->
+                            <div class="flex flex-col items-center">
+                                <i class="fas fa-arrow-right"></i>
+                                <span class="bg-teal-600 px-2 py-1 rounded mt-1 font-bold shadow-md">大有盼望</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-teal-100">因信充满 -> 圣灵催化 -> 盼望溢出</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Paul's Mission Map -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-blue-100">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">保罗的宣教战略图 (v19, 24)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <!-- Simplified Map Visualization -->
+                            <div class="relative w-full h-48 bg-slate-50 rounded border border-slate-200 overflow-hidden">
+                                <!-- Jerusalem -->
+                                <div class="absolute bottom-4 right-10 flex flex-col items-center">
+                                    <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                    <span class="text-[10px] text-slate-500">耶路撒冷</span>
+                                </div>
+                                <!-- Illyricum -->
+                                <div class="absolute top-10 right-1/3 flex flex-col items-center">
+                                    <div class="w-3 h-3 bg-teal-500 rounded-full"></div>
+                                    <span class="text-[10px] text-slate-500">以利哩古</span>
+                                </div>
+                                <!-- Rome -->
+                                <div class="absolute top-12 left-1/3 flex flex-col items-center">
+                                    <div class="w-4 h-4 border-2 border-blue-600 rounded-full animate-ping"></div>
+                                    <div class="w-3 h-3 bg-blue-600 rounded-full absolute top-0.5"></div>
+                                    <span class="text-[10px] text-slate-800 font-bold mt-4">罗马(中转)</span>
+                                </div>
+                                <!-- Spain -->
+                                <div class="absolute top-14 left-4 flex flex-col items-center">
+                                    <div class="w-3 h-3 border-2 border-dashed border-orange-500 rounded-full"></div>
+                                    <span class="text-[10px] text-orange-600 font-bold">西班牙(目标)</span>
+                                </div>
+                                <!-- Path Lines -->
+                                <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                                    <path d="M280 170 Q 250 50 150 60" stroke="#CBD5E1" stroke-width="2" fill="none" stroke-dasharray="4"/>
+                                    <path d="M150 60 Q 100 70 40 70" stroke="#F97316" stroke-width="2" fill="none" stroke-dasharray="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">从东向西，不在此地停留</p>
+                    </div>
+
+                    <!-- Unity Chord Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-teal-100">
+                        <h3 class="text-lg font-bold mb-2 text-teal-800 w-full border-b border-teal-100 pb-2">合一的构成 (v5-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="unityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">彼此接纳 + 效法基督 = 一心一口</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0FDFA]/95 backdrop-blur py-4 mb-8 border-b border-teal-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-teal-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-teal-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-teal-700 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-orange-500 text-white font-bold' : 'text-slate-500 hover:bg-teal-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'teal') titleColorClass = 'text-teal-800 border-teal-200';
+                else if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'orange') titleColorClass = 'text-orange-700 border-orange-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-teal-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-teal-50 border-b border-teal-100">
+                            <span class="inline-block px-2 py-1 bg-teal-100 text-teal-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-teal-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-blue-50/30 transition">
+                                <h4 class="text-blue-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-teal-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-teal-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-teal-900">解经原则：神学与使命</h2>
+                        <p class="text-slate-600">
+                            罗马书第15章展示了如何将深厚的神学教义（旧约引用、基督论）转化为具体的宣教行动和教会合一。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：旧约引用与策略</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 救赎历史的连续性。分析保罗如何引用四处旧约经文（律法、先知、诗篇）来证明外邦人纳入神计划的合法性。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 祭司隐喻（保罗作为福音的祭司，外邦人作为祭物）。
+                                    <br>2. 策略分析（从耶路撒冷到以利哩古的地缘神学）。
+                                </li>
+                                <li><strong>目的：</strong> 消除犹太人与外邦人的隔阂，激发普世宣教的热情。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-500">
+                            <div class="text-teal-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：爱心与代祷</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 效法基督。将"不求自己的喜悦"作为处理人际关系的金科玉律。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 盼望充满（藉着圣灵的能力经历大有盼望）。
+                                    <br>2. 属灵争战（通过竭力祷告参与神国事工）。
+                                </li>
+                                <li><strong>目的：</strong> 建立一个彼此接纳、充满盼望且致力于宣教的生命。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Unity Chart (Pie)
+            const ctxUnity = document.getElementById('unityChart').getContext('2d');
+            new Chart(ctxUnity, {
+                type: 'pie',
+                data: {
+                    labels: ['彼此接纳', '担代软弱', '不求己悦', '一心一口'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#0D9488', // Teal
+                            '#14B8A6', // Light Teal
+                            '#F59E0B', // Amber
+                            '#3B82F6'  // Blue
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

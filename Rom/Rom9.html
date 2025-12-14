@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第九章：神的主权与拣选的奥秘</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Sovereign Purple (Royalty/Will) & Potter's Clay (Creation/Humility) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FAF5FF; /* Purple 50 - Mystery/Majesty background */
+            color: #4C1D95; /* Purple 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Sovereign Purple */
+        .active-tab {
+            color: #7E22CE; /* Purple 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #7E22CE;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Potter's Clay */
+        .verse-card:hover {
+            border-left-color: #C2410C; /* Orange 700 (Clay) */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(194, 65, 12, 0.1), 0 4px 6px -2px rgba(194, 65, 12, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #F3E8FF; /* Purple 100 */
+            color: #581C87; /* Purple 900 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #D8B4FE; /* Purple 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-sovereign {
+            background: linear-gradient(135deg, #4C1D95 0%, #C2410C 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-purple-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-purple-900 serif">
+                        <i class="fas fa-crown mr-2 text-orange-700"></i> 罗马书 9章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">主权与怜悯</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-purple-950 text-purple-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-orange-300">"我要怜悯谁就怜悯谁，要恩待谁就恩待谁。" (9:15)</p>
+            <p class="text-xs text-purple-400 mt-3">交互式研经工具 | 聚焦：神的自由意志与人的受造地位</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神义论：为何以色列人拒绝了？",
+                summary: "罗马书第9-11章处理了一个巨大的神学难题：如果福音是神的大能，且神对以色列有应许，为何大部分犹太人拒绝了弥赛亚？第9章从“神的主权”（Sovereignty）角度切入。保罗首先表达了对同胞深切的爱（1-5节），然后论证“真以色列人”是凭应许而非凭血统（6-13节）。面对“神不公平”的质疑，他引用摩西和法老的例子，确立了神拥有绝对的自由权（14-18节），并用著名的“窑匠与泥土”比喻，让人在造物主面前谦卑（19-29节）。最后指出，外邦人得救与以色列人跌倒，正是神奥秘计划的一部分。",
+                highlights: [
+                    { icon: "fas fa-hand-pointer", color: "text-purple-600", text: "神的拣选" },
+                    { icon: "fas fa-mug-hot", color: "text-orange-700", text: "窑匠泥土" },
+                    { icon: "fas fa-stone", color: "text-slate-600", text: "跌人的磐石" }
+                ]
+            },
+            sections: [
+                {
+                    id: "pauls_anguish",
+                    title: "保罗的伤痛与以色列的特权 (9:1-5)",
+                    themeColor: "purple",
+                    verses: [
+                        {
+                            ref: "9:1-3",
+                            text: "我在基督里说真话...我是大有忧愁，心里时常伤痛...为我弟兄，我骨肉之亲，就是自己被咒诅...我也愿意。",
+                            academic: {
+                                title: "代替性受苦的愿望",
+                                keywords: ["Anathema (被咒诅/被毁灭的供物)", "Syneidēseōs (良心)"],
+                                content: "保罗使用了极其强烈的誓言（在基督里说真话，良心被圣灵感动）。他愿意成为“Anathema”（被神弃绝、毁灭），以换取同胞的得救。这呼应了摩西在金牛犊事件中的代求（出32:32）。这显示了保罗并非冷酷的宿命论者，而是怀着基督般牺牲之爱的牧者。"
+                            },
+                            devotional: {
+                                title: "你有这种痛吗？",
+                                content: "当我们谈论神学（尤其是预定论）时，很容易变得冷酷理性。但保罗在讨论最坚硬的教义前，流露了最柔软的心肠。如果你没有对失丧灵魂（特别是骨肉之亲）的切肤之痛，你就还没有资格谈论神的拣选。神学应当在泪水中被宣讲。"
+                            }
+                        },
+                        {
+                            ref: "9:4-5",
+                            text: "他们是以色列人，那儿子的名分、荣耀、诸约、律法、礼仪、应许都是他们的...基督...是在万有之上，永远可称颂的神。",
+                            academic: {
+                                title: "特权清单与基督神性",
+                                keywords: ["Huiothesia (儿子的名分)", "Doxa (荣耀/舍吉拿)"],
+                                content: "保罗列出了以色列的八大特权，证明神并没有亏待他们。最后一句关于基督的颂赞（Theos Eulogētos）是新约最强烈的基督神性宣告之一。尽管拥有这一切“优势”，他们仍未得救，这引出了下一节的神学问题：难道神的话落空了吗？"
+                            },
+                            devotional: {
+                                title: "特权不等于救恩",
+                                content: "拥有一切宗教特权（去教会、读圣经、有敬虔父母），并不保证得救。以色列人拥有了神所有的签名文件，却错过了神自己。不要倚靠你的背景，要倚靠基督。没有信心的特权，只会成为更重审判的依据。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "election_logic",
+                    title: "拣选的逻辑：应许之子 (9:6-13)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "9:6-9",
+                            text: "这不是说神的话落了空。因为从以色列生的不都是以色列人...惟独从以撒生的才要称为你的后裔。",
+                            academic: {
+                                title: "真假以色列",
+                                keywords: ["Ekpiptein (落空/失败)", "Epangelias (应许)"],
+                                content: "保罗的核心论点是：神的应许从未承诺给所有“肉身”后裔，而是给“应许”后裔。他用以实玛利（肉身生）与以撒（应许生）的对比，重新定义了“以色列”。这表明救恩历史一直是一条“余数”（Remnant）的细线，而非民族的宽路。"
+                            },
+                            devotional: {
+                                title: "你是哪种后裔？",
+                                content: "肉身的出生不能让你成为神的儿女，唯有神的应许和你的信心可以。不要因为你生在基督徒家庭就觉得理所当然。以撒是神迹之子（从死胎而生），每个真正的基督徒也都是神迹的产物。"
+                            }
+                        },
+                        {
+                            ref: "9:10-13",
+                            text: "双子还没有生下来，善恶还没有做出来...神就对利百加说：“将来大的要服事小的。”正如经上所记：“雅各是我所爱的，以扫是我所恶的。”",
+                            academic: {
+                                title: "无条件的拣选 (Unconditional Election)",
+                                keywords: ["Prothesis (旨意/计划)", "Eklogēn (拣选)"],
+                                content: "为了排除“预知信心”的观点，保罗强调拣选发生在“行善恶之前”。目的：显明神拣选的旨意（Prothesis）不在乎人的行为（Works），乃在乎召人的主。玛拉基书1:2-3的“爱与恶”是希伯来习语，意为“拣选与弃绝”或“爱与爱得较少”，强调神主权的选择优先性。"
+                            },
+                            devotional: {
+                                title: "不在乎你的表现",
+                                content: "这节经文在挑战我们的公平观，却也是最大的安慰。神拣选你，不是因为你比别人好，甚至不是因为你未来的表现好，仅仅是因为祂定意爱你。这意味着你的失败不能让祂放弃你，你的成功也不能增加祂的爱。救恩的根基在神那里，稳如泰山。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sovereignty",
+                    title: "神的主权与自由 (9:14-18)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "9:14-16",
+                            text: "这样，我们可说什么呢？神有什么不公平吗？断乎没有！...据此看来，这不在乎那定意的，也不在乎那奔跑的，只在乎发怜悯的神。",
+                            academic: {
+                                title: "神义论的辩护",
+                                keywords: ["Adikia (不义/不公平)", "Eleeō (怜悯)", "Oiktirō (恩待/同情)"],
+                                content: "面对“不公平”的指控，保罗引用出埃及记33:19。神的主权在于祂有权决定对谁施怜悯。既然所有人都犯了罪配得审判，神赦免任何人都是恩典，不赦免则是公义。没人能因为神没有施恩给某人而指控神不义，因为恩典本质上是主权性的，不是应得的权利。"
+                            },
+                            devotional: {
+                                title: "不在乎那奔跑的",
+                                content: "这是一个打击人类骄傲的重锤。你的努力（定意）、你的行动（奔跑）都不是你得救的原因。一切“只在乎”发怜悯的神。这让我们在神面前完全谦卑下来。我们能信，是因为祂开了我们的眼；我们能跑，是因为祂给了我们力量。"
+                            }
+                        },
+                        {
+                            ref: "9:17-18",
+                            text: "经上对法老说...我要怜悯谁就怜悯谁，要叫谁刚硬就叫谁刚硬。",
+                            academic: {
+                                title: "刚硬的奥秘 (Hardening)",
+                                keywords: ["Sklērynō (使刚硬)", "Exēgeira (兴起/存留)"],
+                                content: "神“使法老刚硬”并非神将恶念植入他心里（神不试探人），而是神撤回了限制他作恶的恩典，任凭他顺着本性抵挡神，并通过外部环境（神迹）激化了他的顽梗。神的目的是在法老身上彰显权能。这是“双重预定”中遗弃（Reprobation）的圣经依据之一。"
+                            },
+                            devotional: {
+                                title: "敬畏神的主权",
+                                content: "法老的例子让我们战兢。一颗对神刚硬的心，若没有神的怜悯，只会越来越硬。不要在顺境中把心变硬。如果你的心今天还能被神的话语感动，那是神莫大的怜悯，要紧紧抓住。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "potter_clay",
+                    title: "窑匠的权柄与器皿的命运 (9:19-29)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "9:19-21",
+                            text: "这样，你必对我说：“他为什么还指责人呢？...你这个人哪，你是谁，竟敢向神强嘴呢？...窑匠难道没有权柄...吗？",
+                            academic: {
+                                title: "造物主的特权",
+                                keywords: ["Antapokrinomenos (顶嘴/反驳)", "Kerameus (窑匠)", "Pēlou (泥土)"],
+                                content: "保罗没有在逻辑上解答“人的责任与神的主权”如何调和，而是直接在本体论上指出人（泥土）没有资格审判神（窑匠）。这引用了赛29:16和45:9。受造物无权质问造物主的道德标准，因为神本身就是标准的定义者。从同一团泥里，祂有权做出贵重和卑贱的器皿。"
+                            },
+                            devotional: {
+                                title: "你是谁？",
+                                content: "当我们质问神“为什么”时，我们常忘了自己的身份。我们是泥土。泥土没有权利要求被做成花瓶。如果神把你做成了一个普通的瓦罐，或者如果神的使用方式不合你意，请记得：祂是窑匠，祂有绝对的主权。顺服主权，是内心平安的开始。"
+                            }
+                        },
+                        {
+                            ref: "9:22-24",
+                            text: "倘若神要显明他的忿怒...就多多忍耐宽容那可怒、预备遭毁灭的器皿，又要将他丰盛的荣耀彰显在那蒙怜悯...的器皿上...",
+                            academic: {
+                                title: "两类器皿的终极目的",
+                                keywords: ["Skeuē Orgēs (可怒的器皿)", "Skeuē Eleous (蒙怜悯的器皿)"],
+                                content: "神为何容许罪恶和毁灭？为了彰显祂的属性。在可怒器皿上彰显公义和权能（Power），在蒙怜悯器皿上彰显丰盛的荣耀（Glory）。值得注意的是，经文说可怒器皿是“被预备”（Passive/Middle voice，暗示其自取灭亡或神任凭），而蒙怜悯器皿是神“早预备”（Active voice，神主动预备）得荣耀的。这显示了定罪与得救在神作为上的不对称性。"
+                            },
+                            devotional: {
+                                title: "荣耀的容器",
+                                content: "我们本是泥土，配得毁灭，但神却定意把我们做成承载祂荣耀的容器。这不是因为泥土好，而是因为窑匠的手艺好、心意善。我们存在的目的就是为了展示祂的怜悯有多丰富。让你的生命成为一个展示神恩典的橱窗吧。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "stumbling_stone",
+                    title: "以色列的跌倒与外邦人的得着 (9:30-33)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "9:30-33",
+                            text: "那本来不追求义的外邦人反得了义...以色列人追求律法的义，反得不着...因为他们不凭着信心求...正跌在那绊脚石上。",
+                            academic: {
+                                title: "得救的悖论",
+                                keywords: ["Diōkō (追求)", "Katalambanō (得着/抓住)", "Proskommatos (绊脚石)"],
+                                content: "结论是惊人的：努力跑的人（以色列）没得到，没跑的人（外邦人）反而得到了。原因在于方法：一个靠行为（Works），一个靠信心（Faith）。基督作为“绊脚石”（赛8:14; 28:16），对于信的人是基石，对于想靠自己立功之法的人则是障碍。人的骄傲使他们无法接受“白白的恩典”，因此在基督这块石头上跌倒。"
+                            },
+                            devotional: {
+                                title: "放下你的努力",
+                                content: "有时候，我们在信仰上太“用力”了，想要靠自己的表现来赢得神的爱，结果反而离神更远。外邦人“得着了”，因为他们只是伸出了空空的手接受礼物。不要被你的宗教骄傲绊倒。放下你的“功德簿”，单纯地信靠耶稣，这才是得义的唯一道路。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-purple-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-purple-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-orange-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Potter and The Clay -->
+                    <div class="gradient-sovereign p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-purple-200">
+                        <div class="mb-4">
+                            <i class="fas fa-hands text-4xl text-orange-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">窑匠的主权 (v21)</h3>
+                        </div>
+                        
+                        <div class="relative w-full h-24 bg-white/10 rounded-lg flex justify-between items-center px-4">
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-14 bg-slate-400 rounded-b-lg border-2 border-slate-600 shadow-inner flex items-center justify-center text-xs text-white">卑贱</div>
+                                <span class="text-[10px] text-white mt-1">可怒的器皿</span>
+                            </div>
+                            
+                            <div class="text-white text-2xl">← 同一团泥 →</div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-14 bg-yellow-400 rounded-t-lg border-2 border-yellow-600 shadow-lg flex items-center justify-center text-xs text-purple-900 font-bold">贵重</div>
+                                <span class="text-[10px] text-white mt-1">蒙怜悯器皿</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-purple-100">受造之物岂能对造他的说：为何这样造我？</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Election Funnel Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-purple-100">
+                        <h3 class="text-lg font-bold mb-2 text-purple-800 w-full border-b border-purple-100 pb-2">拣选的漏斗 (v6-13)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="electionChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">不是所有以色列人都是真以色列人</p>
+                    </div>
+
+                    <!-- Paradox Bar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-orange-100">
+                        <h3 class="text-lg font-bold mb-2 text-orange-800 w-full border-b border-orange-100 pb-2">得救的悖论 (v30-32)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="paradoxChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">追求律法者跌倒 vs 不追求者得义</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FAF5FF]/95 backdrop-blur py-4 mb-8 border-b border-purple-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-purple-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-purple-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-purple-700 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-orange-600 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-purple-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'purple') titleColorClass = 'text-purple-800 border-purple-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'orange') titleColorClass = 'text-orange-800 border-orange-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-purple-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-purple-50 border-b border-purple-100">
+                            <span class="inline-block px-2 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-purple-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-orange-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/20 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-purple-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-purple-900">解经原则：神义论与主权</h2>
+                        <p class="text-slate-600">
+                            罗马书第9章是神学上的珠穆朗玛峰。解经需在“神的主权”与“人的责任”之间保持圣经的平衡，但重点在于为神的自由辩护。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-600">
+                            <div class="text-orange-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：逻辑与引用</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 辩护性逻辑 (Theodicy)。分析保罗如何一步步回应"神的话落空了吗？"、"神不公平吗？"等质疑。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 旧约引用分析（如玛拉基书的"爱雅各恶以扫"，出埃及记的"法老刚硬"）。
+                                    <br>2. 隐喻解析（窑匠与泥土的创造者权利）。
+                                </li>
+                                <li><strong>目的：</strong> 确立神在救恩历史中的绝对主权和自由。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-500">
+                            <div class="text-purple-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：谦卑与敬拜</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 降服主权。将令人费解的神学难题转化为对神智慧的敬畏和对恩典的感激。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 位置校准（我是泥土，不是审判官）。
+                                    <br>2. 情感投入（像保罗一样为失丧者忧伤）。
+                                </li>
+                                <li><strong>目的：</strong> 从对神的质疑转向对神的颂赞。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Election Funnel Chart (Bar - Vertical Pyramid-like)
+            const ctxElection = document.getElementById('electionChart').getContext('2d');
+            new Chart(ctxElection, {
+                type: 'bar',
+                data: {
+                    labels: ['亚伯拉罕的后裔', '以撒 (应许之子)', '雅各 (蒙拣选)', '蒙怜悯的余数'],
+                    datasets: [
+                        {
+                            label: '群体范围缩小',
+                            data: [100, 50, 25, 10], // Visualizing the narrowing down (Remnant theology)
+                            backgroundColor: [
+                                '#E9D5FF', // Lightest Purple
+                                '#C084FC',
+                                '#9333EA',
+                                '#581C87'  // Darkest Purple (The Elect)
+                            ],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y', // Funnel effect
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + " : " + (context.dataIndex === 0 ? "肉身生的" : context.dataIndex === 3 ? "真以色列" : "筛选中");
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Paradox Chart (Bar - Comparative)
+            const ctxParadox = document.getElementById('paradoxChart').getContext('2d');
+            new Chart(ctxParadox, {
+                type: 'bar',
+                data: {
+                    labels: ['以色列人', '外邦人'],
+                    datasets: [{
+                        label: '追求律法 (Effort)',
+                        data: [100, 0],
+                        backgroundColor: '#94A3B8', // Slate
+                        borderRadius: 4
+                    }, {
+                        label: '得着公义 (Result)',
+                        data: [0, 100],
+                        backgroundColor: '#C2410C', // Orange
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.datasetIndex === 0) return context.dataIndex === 0 ? "拼命追求" : "本来不追求";
+                                    if(context.datasetIndex === 1) return context.dataIndex === 0 ? "跌倒了" : "因信得着";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

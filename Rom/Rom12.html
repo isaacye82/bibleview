@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第十二章：活祭与更新的生命</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Altar Crimson (Sacrifice) & Renewal Teal (Transformation) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFF1F2; /* Rose 50 - Warm, sacrificial background */
+            color: #4C0519; /* Rose 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Altar Crimson */
+        .active-tab {
+            color: #BE123C; /* Rose 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #BE123C;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Renewal Teal */
+        .verse-card:hover {
+            border-left-color: #0F766E; /* Teal 700 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(15, 118, 110, 0.1), 0 4px 6px -2px rgba(15, 118, 110, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #FFE4E6; /* Rose 100 */
+            color: #9F1239; /* Rose 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #FDA4AF; /* Rose 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans12 {
+            background: linear-gradient(135deg, #BE123C 0%, #0F766E 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-rose-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-rose-900 serif">
+                        <i class="fas fa-fire-alt mr-2 text-teal-600"></i> 罗马书 12章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">活祭与更新</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-rose-950 text-rose-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-white">"不要效法这个世界，只要心意更新而变化。" (12:2)</p>
+            <p class="text-xs text-rose-400 mt-3">交互式研经工具 | 聚焦：献身、恩赐与群体生活</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神学的落地：从教义到生活",
+                summary: "罗马书第12章标志着整卷书的重大转折。在用11章的篇幅阐述了“因信称义”的伟大教义后，保罗用一个充满力量的“所以”（Oun）开启了伦理应用部分。真正的神学必然导致敬拜，而真正的敬拜就是将身体献上。本章涵盖了信徒对神的关系（1-2节）、对教会的关系（3-8节）以及对社会/仇敌的关系（9-21节），勾勒出一幅“心意更新”后的基督徒生活蓝图。",
+                highlights: [
+                    { icon: "fas fa-burn", color: "text-rose-600", text: "身体献上" },
+                    { icon: "fas fa-brain", color: "text-teal-600", text: "心意更新" },
+                    { icon: "fas fa-users", color: "text-slate-600", text: "彼此同心" }
+                ]
+            },
+            sections: [
+                {
+                    id: "living_sacrifice",
+                    title: "奉献的呼召：活祭与更新 (12:1-2)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "12:1",
+                            text: "所以弟兄们，我以神的慈悲劝你们，将身体献上，当作活祭...你们如此事奉乃是理所当然的。",
+                            academic: {
+                                title: "理性的事奉 (Logikēn Latreian)",
+                                keywords: ["Parakalō (劝/恳求)", "Thysian Zōsan (活祭)", "Logikēn (理性的/合逻辑的)"],
+                                content: "“所以”连接了前11章所有的神学论述。基于神的慈悲，保罗“恳求”（Parakalō，强烈的劝勉）信徒献祭。旧约的祭是死的，新约的祭是“活”的（持续的生命状态）。Logikēn Latreian 可译为“理所当然的事奉”或“理性的/属灵的敬拜”。这意味着敬拜不仅是情感的，更是基于对福音真理认知（Logic）的合理回应。"
+                            },
+                            devotional: {
+                                title: "我就是祭物",
+                                content: "敬拜不只是周日的唱歌，而是周一到周六的生活。当你早起工作、照顾孩子、忍耐同事时，如果在大祭司耶稣的手中，这些都是祭坛上的火。神不要你的钱或才干，祂要的是“你”。把你的身体——你的手、脚、嘴、脑——放在祭坛上，这就是最合理的敬拜。"
+                            }
+                        },
+                        {
+                            ref: "12:2",
+                            text: "不要效法这个世界，只要心意更新而变化，叫你们察验何为神的善良、纯全、可喜悦的旨意。",
+                            academic: {
+                                title: "变形记 (Metamorphōsis)",
+                                keywords: ["Syschēmatizesthe (效法/模仿外形)", "Metamorphousthe (变化/本质改变)", "Nous (心意/悟性)"],
+                                content: "这里对比了两个动词：“效法”是顺应外部模子（Schematic），是随波逐流；“变化”是内在本质的蜕变（Metamorphic，如毛虫变蝴蝶），是逆流而上。变化的引擎是“心意”（Nous，理智/悟性）的更新。只有被真理重塑的思维，才能“察验”（Dokimazein，测试并认可）神的旨意。"
+                            },
+                            devotional: {
+                                title: "你的脑子在想什么？",
+                                content: "世界不仅想控制你的行为，更想通过媒体、文化给你的大脑“洗脑”（塑形）。基督徒的反击战从“心意”开始。如果你输入的是垃圾，输出的必然是世界的模式。让神的话语以此重写你的操作系统（更新），你就能活出那只美丽的蝴蝶（神的旨意）。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "body_gifts",
+                    title: "教会的生活：恩赐与谦卑 (12:3-8)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "12:3",
+                            text: "不要看自己过于所当看的，要照着神分给各人信心的大小，看得合乎中道。",
+                            academic: {
+                                title: "清醒的自我认知",
+                                keywords: ["Hyperphronein (自高)", "Sōphronein (清醒/中道)"],
+                                content: "保罗运用了希腊文的双关语：不要“过度思考”（Hyper-phronein）自己，要“清醒思考”（So-phronein）。谦卑不是看低自己，而是诚实地看自己——既看到神赐的恩赐（不自卑），也看到这恩典是“分给”的（不自大）。信心的度量（Measure of faith）是衡量事奉界限的标准。"
+                            },
+                            devotional: {
+                                title: "照镜子，别照哈哈镜",
+                                content: "我们常在自负和自卑之间摇摆。自负是把自己看大了，自卑是把自己看小了，两者都是看错了。神要我们“看得合乎中道”。承认你的恩赐，那是神的礼物；承认你的限制，那是对他人的需要。健康的自我形象是：我是神家里一个独特的、有用的肢体。"
+                            }
+                        },
+                        {
+                            ref: "12:4-8",
+                            text: "正如我们一个身子上有好些肢体...按我们所得的恩赐，各有不同...或作执事...或作教导...",
+                            academic: {
+                                title: "身体神学与恩赐列表",
+                                keywords: ["Charismata (恩赐)", "Sōma (身体)"],
+                                content: "这是保罗著名的“身体隐喻”。多样性（Differing gifts）服务于统一性（One body）。保罗列举了七种恩赐：预言、执事（服务）、教导、劝化、施舍、治理、怜悯。这些涵盖了宣讲、服务和领导。每种恩赐都要专一（Simplicity）和殷勤（Diligence）。"
+                            },
+                            devotional: {
+                                title: "你是什么器官？",
+                                content: "不仅牧师有恩赐，每个人都有。也许你是手（服务），也许是嘴（劝化），也许是心（怜悯）。教会出问题，常是因为手想当嘴，或者脚在睡觉。找到你的恩赐，并热切地使用它。一个健康的身体，没有一个细胞是闲懒的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "christian_love",
+                    title: "真爱的实践：待友与待敌 (12:9-21)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "12:9-13",
+                            text: "爱人不可虚假；恶要厌恶，善要亲近...殷勤不可懒惰。要心里火热，常常服侍主...",
+                            academic: {
+                                title: "无伪的爱 (Agapē Anupokritos)",
+                                keywords: ["Anupokritos (无伪/不戴面具)", "Zēontes (沸腾/火热)"],
+                                content: "这是一连串急促的命令句（Participial Imperatives）。爱的首要特质是“不演戏”（Hypocrisy源于“演员”）。真爱包含道德判断（厌恶恶）。“心里火热”原文是“在灵里沸腾”（Boiling in spirit）。基督徒的生活不应是温吞水，而应是对主、对人充满热情的动态生活。"
+                            },
+                            devotional: {
+                                title: "别做属灵演员",
+                                content: "在这个充满客套和面具的世界，教会应当是唯一“卸妆”的地方。真爱不是永远微笑点头，而是真诚地对待。对罪恶要像躲避病毒一样厌恶，对良善要像胶水一样粘住。让圣灵把你烧开（沸腾），不要做一个冷淡的基督徒。"
+                            }
+                        },
+                        {
+                            ref: "12:17-21",
+                            text: "不要以恶报恶...若是能行，总要尽力与众人和睦...你不可为恶所胜，反要以善胜恶。",
+                            academic: {
+                                title: "颠覆性的和平",
+                                keywords: ["Eirēneuontes (追求和平)", "Nikō (得胜)"],
+                                content: "这是登山宝训的回响。保罗承认和睦的局限性（“若是能行”），但也强调了信徒的主动性（“尽力”）。对待仇敌的最高策略不是复仇（那是神的特权），而是“以善胜恶”。“堆炭火在头顶”可能指使对方羞愧而悔改（埃及习俗），也可能指如同神将审判变为恩典。"
+                            },
+                            devotional: {
+                                title: "唯一的报复方式",
+                                content: "当别人伤害你时，本能反应是“以牙还牙”。但神说：“伸冤在我。”把审判权交还给神，你就能从苦毒中释放出来。然后，用一种让世界震惊的方式去“报复”——那就是爱他。当恶意遇到善意，就像水遇到火，恶就被“胜过”（吞灭）了。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-rose-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-rose-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-teal-800">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Metamorphosis -->
+                    <div class="gradient-romans12 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-teal-200">
+                        <div class="mb-4">
+                            <i class="fas fa-sync text-4xl text-teal-200 mb-2 animate-spin-slow"></i>
+                            <h3 class="text-xl font-bold text-white">生命的蜕变 (Metamorphosis)</h3>
+                        </div>
+                        
+                        <div class="flex justify-between items-center w-full text-white text-xs mt-2 font-bold">
+                            <div class="flex flex-col items-center opacity-70">
+                                <span class="text-lg">🐛</span>
+                                <span>效法世界</span>
+                                <span class="text-[10px]">(Schematic)</span>
+                            </div>
+                            
+                            <!-- Arrow Process -->
+                            <div class="flex-grow border-t-2 border-dashed border-white mx-2 relative">
+                                <span class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-teal-800 px-2 rounded">心意更新</span>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg">🦋</span>
+                                <span>察验神旨</span>
+                                <span class="text-[10px]">(Metamorphic)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-teal-100">不要被世界塑形，要被真理重塑</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Gifts Polar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-teal-100">
+                        <h3 class="text-lg font-bold mb-2 text-teal-800 w-full border-b border-teal-100 pb-2">恩赐的光谱 (v6-8)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="giftsChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">肢体虽多，各有功用，彼此服侍</p>
+                    </div>
+
+                    <!-- Overcoming Evil Flow -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-rose-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">以善胜恶的策略 (v19-21)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="evilGoodChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">伸冤在主 -> 饿了给他吃 -> 堆炭火(悔改)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#FFF1F2]/95 backdrop-blur py-4 mb-8 border-b border-rose-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-rose-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-rose-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-700 text-white font-bold' : 'text-slate-500 hover:bg-rose-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-teal-600 text-white font-bold' : 'text-slate-500 hover:bg-rose-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-rose-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else if(section.themeColor === 'teal') titleColorClass = 'text-teal-800 border-teal-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-rose-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-rose-50 border-b border-rose-100">
+                            <span class="inline-block px-2 py-1 bg-rose-100 text-rose-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-rose-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-teal-50/30 transition">
+                                <h4 class="text-teal-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-rose-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-rose-100/30 transition">
+                                <h4 class="text-rose-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-rose-900">解经原则：教义与伦理</h2>
+                        <p class="text-slate-600">
+                            罗马书第12章展示了新约伦理学的核心结构：因为神做了（教义），所以我们做（伦理）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-600">
+                            <div class="text-teal-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：连接词与文化</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 逻辑连接。极其重视"所以"（Oun）的作用，理解伦理是教义的必然产物。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词源对比（"效法"与"变化"的希腊文词根）。
+                                    <br>2. 身体隐喻（Body Metaphor）在古代哲学与保罗神学中的独特意义。
+                                </li>
+                                <li><strong>目的：</strong> 建立以福音为动力的生活方式，而非律法主义的规条。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-500">
+                            <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：献身与人际</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 全人奉献。将"活祭"的呼召落实到身体的每一个行动和每一个关系中。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 思维更新（每日用真理对抗世界观）。
+                                    <br>2. 恩赐实践（在教会中找到位置）。
+                                    <br>3. 爱的行动（刻意去爱不可爱的人）。
+                                </li>
+                                <li><strong>目的：</strong> 在日常生活中活出神的旨意，成为和平之子。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Gifts Polar Area Chart
+            const ctxGifts = document.getElementById('giftsChart').getContext('2d');
+            new Chart(ctxGifts, {
+                type: 'polarArea',
+                data: {
+                    labels: ['预言 (Prophecy)', '执事 (Service)', '教导 (Teaching)', '劝化 (Exhortation)', '施舍 (Giving)', '治理 (Leadership)', '怜悯 (Mercy)'],
+                    datasets: [{
+                        data: [10, 10, 10, 10, 10, 10, 10], // Equal potential/value
+                        backgroundColor: [
+                            'rgba(190, 18, 60, 0.6)', // Rose
+                            'rgba(15, 118, 110, 0.6)', // Teal
+                            'rgba(245, 158, 11, 0.6)', // Amber
+                            'rgba(59, 130, 246, 0.6)', // Blue
+                            'rgba(16, 185, 129, 0.6)', // Emerald
+                            'rgba(99, 102, 241, 0.6)', // Indigo
+                            'rgba(236, 72, 153, 0.6)'  // Pink
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            ticks: { display: false },
+                            grid: { color: '#E2E8F0' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'right', labels: { boxWidth: 10 } }
+                    }
+                }
+            });
+
+            // Evil vs Good Flow Chart (Bar - Diverging)
+            const ctxEvilGood = document.getElementById('evilGoodChart').getContext('2d');
+            new Chart(ctxEvilGood, {
+                type: 'bar',
+                data: {
+                    labels: ['受害', '反应', '结果'],
+                    datasets: [{
+                        label: '被恶所胜 (以恶报恶)',
+                        data: [-50, -80, -100], // Negative spiral
+                        backgroundColor: '#64748B', // Slate
+                        borderRadius: 4
+                    }, {
+                        label: '以善胜恶 (爱仇敌)',
+                        data: [-50, 80, 100], // Positive outcome from negative start
+                        backgroundColor: '#BE123C', // Rose
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { display: false } 
+                        },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) {
+                                        if (context.dataIndex === 1) return "报复/苦毒";
+                                        if (context.dataIndex === 2) return "双输/被恶吞灭";
+                                    } else {
+                                        if (context.dataIndex === 1) return "给吃/给喝";
+                                        if (context.dataIndex === 2) return "堆炭火/得胜";
+                                    }
+                                    return "";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

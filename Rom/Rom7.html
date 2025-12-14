@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第七章：律法的捆绑与内心的交战</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Bondage Gray (Law/Death) & Deliverance Cyan (Spirit/Life) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F8FAFC; /* Slate 50 - Neutral/Solemn background */
+            color: #334155; /* Slate 700 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Bondage Gray (to show the struggle context) */
+        .active-tab {
+            color: #475569; /* Slate 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #475569;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Deliverance Cyan */
+        .verse-card:hover {
+            border-left-color: #06B6D4; /* Cyan 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(6, 182, 212, 0.1), 0 4px 6px -2px rgba(6, 182, 212, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0F2FE; /* Sky 100 */
+            color: #0369A1; /* Sky 700 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #7DD3FC; /* Sky 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans7 {
+            background: linear-gradient(135deg, #334155 0%, #06B6D4 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-gavel mr-2 text-cyan-600"></i> 罗马书 7章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">律法与挣扎</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-cyan-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-cyan-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-cyan-400">"感谢神！靠着我们的主耶稣基督就能脱离了。" (7:25)</p>
+            <p class="text-xs text-slate-500 mt-3">交互式研经工具 | 聚焦：律法的功用与得胜的秘诀</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "绝望的呼喊与恩典的出口",
+                summary: "罗马书第7章是保罗书信中最具心理深度的篇章之一。在第6章宣告了“向罪死”的真理后，第7章通过“婚姻的比喻”解释了信徒与律法关系的终结（1-6节）。随后，保罗处理了律法的神圣性与罪的欺骗性（7-13节），并详细描述了那个著名的“两个律”的交战（14-25节）。无论是描述未重生之人的无力，还是重生之人的挣扎，这一章最终都指向了唯一的出路——靠着耶稣基督得释放。",
+                highlights: [
+                    { icon: "fas fa-ring", color: "text-slate-600", text: "脱离律法" },
+                    { icon: "fas fa-search", color: "text-cyan-600", text: "律法显罪" },
+                    { icon: "fas fa-fist-raised", color: "text-red-500", text: "内心交战" }
+                ]
+            },
+            sections: [
+                {
+                    id: "marriage_analogy",
+                    title: "婚姻的比喻：律法的管辖权 (7:1-6)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "7:1-3",
+                            text: "女人有了丈夫，丈夫还活着，就被律法约束...丈夫若死了，就脱离了丈夫的律法。",
+                            academic: {
+                                title: "死亡是唯一的解脱",
+                                keywords: ["Kyrieuei (管辖/作主)", "Katērgētai (脱离/失效)"],
+                                content: "保罗使用当时熟知的婚姻法原则：死亡终止婚姻契约。律法（前夫）是公义且严厉的，只要人（旧人）活着，就必须受其管辖。只有死亡才能合法地解除这种约束。这里的关键在于：谁死了？不是律法死了（律法是永恒的），而是“我们”在基督里死了（6:6）。"
+                            },
+                            devotional: {
+                                title: "不要试图重婚",
+                                content: "很多基督徒活得像重婚者：一方面想嫁给基督（享受恩典），另一方面又舍不得那个严厉的前夫（律法主义/靠行为称义）。你不能同时拥有两个丈夫。既然那个试图靠守规条来讨神喜悦的旧人已经死了，就不要再回去看前夫的脸色过日子。"
+                            }
+                        },
+                        {
+                            ref: "7:4-6",
+                            text: "我的弟兄们，这样说来，你们藉着基督的身体，在律法上也是死了...叫我们服侍主，要按着心灵的新样。",
+                            academic: {
+                                title: "合法的再婚",
+                                keywords: ["Thanatoō (被处死/成为死的)", "Karpophoreō (结果子)"],
+                                content: "“在律法上也是死了”是被动语态，表明这是藉着基督的死成就的法理事实。目的有二：1. 归于别人（基督）；2. 结果子给神。这是一场为了多产（Fruitfulness）而进行的再婚。新的服侍方式是“心灵的新样”（Newness of Spirit），而非“仪文的旧样”（Oldness of Letter）。"
+                            },
+                            devotional: {
+                                title: "新婚姻，新果子",
+                                content: "和“前夫”（律法）在一起，你只会生出恐惧、伪善和死行（Fruit for death）。现在你嫁给了复活的基督，这段新婚姻应当生出什么？仁爱、喜乐、和平。如果你的信仰生活让你感到枯干和压抑，也许你正在偷偷和前夫约会。回到基督的爱里，那里才有生命力。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "law_and_sin",
+                    title: "律法是圣洁的，罪是恶极的 (7:7-13)",
+                    themeColor: "cyan",
+                    verses: [
+                        {
+                            ref: "7:7-8",
+                            text: "律法是罪吗？断乎不是！只是非因律法，我就不知何为罪...罪趁着机会，藉着诫命...。",
+                            academic: {
+                                title: "罪的寄生性",
+                                keywords: ["Aphormē (机会/桥头堡)", "Epithymia (贪心/私欲)"],
+                                content: "律法本身是“圣洁、公义、良善的”（12节），但罪（Hamartia，被拟人化为一种恶势力）利用律法作为“桥头堡”（Aphormē，军事术语，指进攻的发起点）来引诱人。特别是第十条诫命“不可起贪心”，因为它针对内在动机，使保罗意识到自己彻底的败坏。禁令反而刺激了欲望，这就是罪的诡诈。"
+                            },
+                            devotional: {
+                                title: "越禁止，越想做",
+                                content: "为什么告诉孩子“别碰那个按钮”，他反而更想碰？这就是罪性。律法像探照灯，照出了我们心里的灰尘，但它没有吸尘器的功能。不要怪律法（标准）太严，要怪我们里面的罪太深。律法让我们绝望，从而不仅寻求行为的改良，更寻求生命的拯救。"
+                            }
+                        },
+                        {
+                            ref: "7:9-11",
+                            text: "我以前没有律法是活着的；但是诫命来到，罪又活了，我就死了。",
+                            academic: {
+                                title: "属灵的死亡体验",
+                                keywords: ["Anezasen (复活/苏醒)", "Apethane (死)"],
+                                content: "这是保罗的自述（可能是信主前的经历，或作为人类代表的经历）。当律法的光真正照进良心时，那种“我也许还不错”的虚假安全感（活着）破灭了，罪的真实面目显露（活了），人意识到自己在神面前是死路一条（死了）。这是得救前必要的“绝望感”。"
+                            },
+                            devotional: {
+                                title: "置之死地而后生",
+                                content: "在真正遇见基督之前，我们往往自以为活得很好（道德良好、受人尊敬）。但当神的标准真的临到时，我们会发现自己彻底破产。这种“死”的感觉是痛苦的，但却是必要的。只有对旧生命彻底绝望，才会真正渴望新生命。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "inner_conflict",
+                    title: "两个律的交战：苦啊！ (7:14-25)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "7:14-17",
+                            text: "我们原晓得律法是属乎灵的，但我是属乎肉体的，是已经卖给罪了...因为我所做的，我自己不明白...",
+                            academic: {
+                                title: "分裂的自我",
+                                keywords: ["Sarkinos (属肉体的)", "Pipraskō (卖/被卖)"],
+                                content: "这里保罗转用现在时态（Present Tense），引发了著名的神学争论：这是指未重生的人，还是重生的人？（多数改革宗神学家认为是重生者的挣扎，因为未重生者不会“喜欢神的律”）。“卖给罪”描述了一种虽有新意愿（Will）但缺乏执行力（Performance）的痛苦状态。知行不合一，是成圣过程中的真实体验。"
+                            },
+                            devotional: {
+                                title: "我到底怎么了？",
+                                content: "“我以此立志为善，只是行出来由不得我。”如果你有这种挣扎，不要灰心，你不是精神分裂，你是正在经历成圣的阵痛。这证明你里面有一个新的生命在反抗旧的习惯。不想犯罪的痛苦，本身就是新生命存在的证据。不要放弃，继续呼求。"
+                            }
+                        },
+                        {
+                            ref: "7:21-24",
+                            text: "我觉得有个律，就是我愿意为善的时候，便有恶与我同在...我真是苦啊！谁能救我脱离这取死的身体呢？",
+                            academic: {
+                                title: "取死的身体 (Body of Death)",
+                                keywords: ["Nomos (律/原则/力量)", "Talaipōros (苦/悲惨)"],
+                                content: "保罗发现了“另一个律”（Another Law），即罪的重力法则，总是把他向下拉。到了24节，痛苦达到顶点：“我真是苦啊！”（Wretched man）。“取死的身体”可能指这个受罪和死辖制的肉身。这不仅是呼救，更是对自我拯救能力的彻底否定。"
+                            },
+                            devotional: {
+                                title: "从“什么”到“谁”",
+                                content: "请注意保罗问题的转变：他没有问“什么（方法）能救我？”，而是问“谁（Who）能救我？”。我们常在寻找方法（读经计划、自律表），但真正的拯救来自一个位格——耶稣基督。当你停止挣扎，开始呼求“谁”的时候，拯救就临近了。"
+                            }
+                        },
+                        {
+                            ref: "7:25",
+                            text: "感谢神！靠着我们的主耶稣基督就能脱离了。",
+                            academic: {
+                                title: "感恩的爆发",
+                                keywords: ["Eucharistō (感谢)", "Dia Iēsou Christou (藉着耶稣基督)"],
+                                content: "在绝望的深渊中，答案突然出现。不是靠律法，不是靠意志力，而是靠（Dia，Through）耶稣基督。虽然肉体和内心的冲突可能持续一生（25节下半句），但得胜的确据和感恩的赞美已经开始。这就是基督徒生活的张力：在挣扎中仍有得胜的把握。"
+                            },
+                            devotional: {
+                                title: "得胜的凯歌",
+                                content: "虽然战斗还在继续，但战争已经赢了。即使你今天又跌倒了，不要留在泥潭里哭泣，要抬头看那位得胜的主。你的得胜不取决于你的完美表现，而取决于你对基督的依靠。每一次呼求，都是一次微小的得胜。感谢神，靠着耶稣，我们能！"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-slate-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-cyan-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Marriage Law -->
+                    <div class="gradient-romans7 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-slate-700">
+                        <div class="mb-4">
+                            <i class="fas fa-handshake-slash text-4xl text-cyan-300 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">婚约的解除</h3>
+                        </div>
+                        
+                        <div class="flex justify-between items-center w-full text-white text-xs mt-2">
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg">📜</span>
+                                <span>前夫 (律法)</span>
+                                <span class="opacity-70">不死</span>
+                            </div>
+                            <div class="flex-grow border-t border-dashed border-white mx-2 relative">
+                                <span class="absolute top-[-20px] left-1/2 transform -translate-x-1/2 text-cyan-200">只有死亡能分开</span>
+                                <i class="fas fa-skull-crossbones absolute top-[-8px] left-1/2 transform -translate-x-1/2 text-slate-400"></i>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg">✝️</span>
+                                <span>后夫 (基督)</span>
+                                <span class="opacity-70">复活</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-cyan-100">我们在基督里死了，所以自由了</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Inner Conflict Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-slate-200">
+                        <h3 class="text-lg font-bold mb-2 text-slate-800 w-full border-b border-slate-100 pb-2">内心战场的张力 (v15-23)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="conflictChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">心中以此律 vs 肢体中罪的律</p>
+                    </div>
+
+                    <!-- Salvation Logic Flow -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-cyan-100">
+                        <h3 class="text-lg font-bold mb-2 text-cyan-800 w-full border-b border-cyan-100 pb-2">绝望中的出路 (v24-25)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="deliveranceChart"></canvas>
+                        </div>
+                        <p class="text-xs text-stone-400 mt-4 text-center">从"苦啊"到"感谢神"</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F8FAFC]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-slate-700 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-cyan-600 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-red-500 text-white font-bold' : 'text-stone-500 hover:bg-slate-200'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'slate') titleColorClass = 'text-slate-800 border-slate-200';
+                else if(section.themeColor === 'cyan') titleColorClass = 'text-cyan-800 border-cyan-200';
+                else titleColorClass = 'text-stone-700 border-stone-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-slate-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-slate-50 border-b border-slate-100">
+                            <span class="inline-block px-2 py-1 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-stone-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-cyan-50/20 transition">
+                                <h4 class="text-cyan-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-red-50/10 transition">
+                                <h4 class="text-red-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-stone-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-900">解经原则：张力与出路</h2>
+                        <p class="text-stone-600">
+                            罗马书第七章的解经难点在于如何处理“已然”（Already）与“未然”（Not Yet）的张力。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-cyan-600">
+                            <div class="text-cyan-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：文法与神学</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 语境一致性。必须在罗马书6-8章的整体脉络下理解第7章，不能将其孤立为“失败者的悲歌”。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 时态分析（从过去时转入现在时意味着什么？）。
+                                    <br>2. 拟人化修辞（罪作为拥有权势的主人）。
+                                </li>
+                                <li><strong>目的：</strong> 揭示律法的局限性，反衬圣灵工作的必要性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-500">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-stone-500 mb-4 uppercase tracking-wide">关注：诚实与依靠</p>
+                            <ul class="space-y-4 text-stone-600 text-sm">
+                                <li><strong>原则：</strong> 真实体验。承认基督徒内在冲突的真实性，不戴假面具。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 情感共鸣（与保罗一同呼喊"苦啊"）。
+                                    <br>2. 焦点转移（从盯着罪转向盯着救主）。
+                                </li>
+                                <li><strong>目的：</strong> 从自我挣扎的死胡同，转向靠圣灵得胜的宽阔之地。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Inner Conflict Radar Chart
+            const ctxConflict = document.getElementById('conflictChart').getContext('2d');
+            new Chart(ctxConflict, {
+                type: 'radar',
+                data: {
+                    labels: ['立志行善', '行出来', '爱神的律', '顺服罪律', '内心叹息'],
+                    datasets: [
+                        {
+                            label: '新生命 (Inner Man)',
+                            data: [100, 20, 100, 0, 90], // High desire, low performance initially
+                            backgroundColor: 'rgba(6, 182, 212, 0.2)', // Cyan
+                            borderColor: '#06B6D4',
+                            pointBackgroundColor: '#06B6D4',
+                            pointBorderColor: '#fff',
+                        },
+                        {
+                            label: '肉体 (Flesh)',
+                            data: [0, 100, 0, 100, 0], // Captivity to sin
+                            backgroundColor: 'rgba(71, 85, 105, 0.2)', // Slate
+                            borderColor: '#475569',
+                            pointBackgroundColor: '#475569',
+                            pointBorderColor: '#fff',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#334155' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Deliverance Flow Chart (Doughnut)
+            const ctxDeliverance = document.getElementById('deliveranceChart').getContext('2d');
+            new Chart(ctxDeliverance, {
+                type: 'doughnut',
+                data: {
+                    labels: ['困境 (Wretched)', '转向 (Who?)', '感恩 (Thanks)', '得胜 (Deliverance)'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#64748B', // Slate (Problem)
+                            '#F59E0B', // Amber (Turning point)
+                            '#06B6D4', // Cyan (Solution)
+                            '#10B981'  // Green (Result)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

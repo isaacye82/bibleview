@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以弗所书第四章：身体的合一与新人的建造</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Unity Indigo (Foundation) & Growth Orange (Life/Building) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #EEF2FF; /* Indigo 50 - Calm, unified background */
+            color: #312E81; /* Indigo 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Unity Indigo */
+        .active-tab {
+            color: #4338CA; /* Indigo 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4338CA;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Growth Orange */
+        .verse-card:hover {
+            border-left-color: #F97316; /* Orange 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.1), 0 4px 6px -2px rgba(249, 115, 22, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0E7FF; /* Indigo 100 */
+            color: #3730A3; /* Indigo 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #818CF8; /* Indigo 400 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-unity {
+            background: linear-gradient(135deg, #312E81 0%, #FB923C 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-indigo-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-indigo-900 serif">
+                        <i class="fas fa-cubes mr-2 text-orange-500"></i> 以弗所书 4章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">合一与成长</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-indigo-950 text-indigo-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-orange-300">"全身都靠他联络得合式...在爱中建立自己。" (4:16)</p>
+            <p class="text-xs text-indigo-400 mt-3">交互式研经工具 | 聚焦：教会的合一根基与成熟身量</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "行事为人与蒙召的恩相称",
+                summary: "以弗所书第4章标志着从“教义”（1-3章）到“生活”（4-6章）的转向。保罗以“所以”开启劝勉，首先强调教会合一的基础是“七个一”，并指出合一需要谦卑、温柔等品格的维系（1-6节）。接着，他论述了复活基督赐下五种职事恩赐（五重职事），目的是成全圣徒，使身体增长（7-16节）。最后，保罗转向个人伦理，呼吁信徒“脱去旧人，穿上新人”，在言语、情绪和行为上活出新生的样式（17-32节）。",
+                highlights: [
+                    { icon: "fas fa-link", color: "text-indigo-600", text: "竭力保守合一" },
+                    { icon: "fas fa-users-cog", color: "text-orange-500", text: "成全圣徒" },
+                    { icon: "fas fa-tshirt", color: "text-slate-600", text: "穿上新人" }
+                ]
+            },
+            sections: [
+                {
+                    id: "unity_call",
+                    title: "合一的根基与品格 (4:1-6)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "4:1-3",
+                            text: "我为主被囚的劝你们...行事为人就当与蒙召的恩相称...竭力保守圣灵所赐合而为一的心。",
+                            academic: {
+                                title: "相称的步行 (Axiōs Peripatēsai)",
+                                keywords: ["Axiōs (相称/配得)", "Spoudazontes (竭力/勤奋)", "Henotēta (合一)"],
+                                content: "“行事为人”原文是“行走”（Walk），指生活方式。这种生活必须像天平一样与“蒙召的恩”重量相称（Balance the scale）。合一（Unity）不是我们要创造的（Produce），而是圣灵已经赐下的，我们的责任是“竭力保守”（Keep/Maintain）。这需要谦卑、温柔、忍耐等反文化的品格。"
+                            },
+                            devotional: {
+                                title: "你的生活配得上你的身份吗？",
+                                content: "如果你是王的孩子，就不能活得像乞丐。我们被召进入了神荣耀的家，我们的行为举止（尤其是对弟兄的态度）应当配得上这个身份。合一不是靠开会达成的，是靠“忍耐”和“爱心”维护的。当你觉得难以忍受某人时，想一想：这是圣灵赐下的家人，我要竭力守护这关系。"
+                            }
+                        },
+                        {
+                            ref: "4:4-6",
+                            text: "身体只有一个，圣灵只有一个...一主，一信，一洗，一神...",
+                            academic: {
+                                title: "七一颂 (Heptad of Unity)",
+                                keywords: ["Heis/Mia (一)", "Sōma (身体)", "Pneuma (灵)"],
+                                content: "这是一首早期教会的信经或颂歌，以三一神为架构：1. 圣灵（身体、灵）；2. 圣子（主、信、洗）；3. 圣父（超乎众人之上、贯乎众人之中、住在众人之内）。这种本体论上的“一”是教会合一的客观基础，而非基于组织或情感的统一。"
+                            },
+                            devotional: {
+                                title: "我们是一家人",
+                                content: "教会的合一不是因为我们彼此喜欢，而是因为我们拥有同一个DNA（圣灵）、同一个大哥（耶稣）、同一个父亲（神）。不管我们在意见上有多少分歧，这些“一”永远大过我们的“异”。在这个分裂的世界里，教会的合一本身就是神迹。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "gifts_growth",
+                    title: "恩赐的赐予与身体的增长 (4:7-16)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "4:7-10",
+                            text: "我们各人蒙恩...是照基督所量给各人的恩赐...他升上高天的时候，掳掠了仇敌，将各样的恩赐赏给人。",
+                            academic: {
+                                title: "得胜者的赏赐",
+                                keywords: ["Dōrea (礼物)", "Aichmalōsian (俘虏/仇敌)"],
+                                content: "保罗引用诗篇68:18，描绘了一幅凯旋归来的画面：基督战胜了罪与死，像得胜君王一样将战利品（恩赐）分给子民。这不仅是能力的赋予，更是权柄的分享。基督的“降下”与“升上”确保了祂充满万有，使恩赐具有宇宙性的源头。"
+                            },
+                            devotional: {
+                                title: "你有来自天堂的礼物",
+                                content: "你的才干不是偶然的，是基督得胜后特意挑选并赏赐给你的。不要轻看你手中的恩赐，那是战利品。也不要嫉妒别人的恩赐，因为那是王按着祂的主权量给各人的。使用你的恩赐，就是参与基督的凯旋游行。"
+                            }
+                        },
+                        {
+                            ref: "4:11-12",
+                            text: "他所赐的，有使徒...先知...传福音的...牧师和教师，为要成全圣徒，各尽其职，建立基督的身体。",
+                            academic: {
+                                title: "成全圣徒 (Katartismos)",
+                                keywords: ["Katartismos (装备/补网/接骨)", "Oikodomē (建造)", "Diakonias (事奉)"],
+                                content: "这就是著名的“五重职事”。关键在于职事的目的：不是牧师包办一切，而是“成全”（Katartismos，医药术语指接骨，航海术语指补网）圣徒，让圣徒去“做”事奉的工作（Work of Ministry）。领袖是教练，信徒是上场球员。目标是身体的“建造”。"
+                            },
+                            devotional: {
+                                title: "别只当观众",
+                                content: "教会不是剧院，牧师不是演员，信徒不是观众。教会是训练营，牧师是教练，你是战士。神给教会领袖的目的是装备你，让你能去服侍。如果你只听道不服侍，你就辜负了神赐下领袖的目的。找到你的位置，开始“尽职”吧。"
+                            }
+                        },
+                        {
+                            ref: "4:15-16",
+                            text: "惟用爱心说诚实话，凡事长进，连于元首基督...百节各按各职...在爱中建立自己。",
+                            academic: {
+                                title: "真理与爱的平衡",
+                                keywords: ["Alētheuontes (持守真理/说真话)", "Synarmologoumenon (联络/装配在一起)"],
+                                content: "“用爱心说诚实话”原文是“在爱中持守真理”（Truthing in love）。真理是骨架，爱是肌肉。身体的增长依赖于两点：1. 与头的连接（连于元首）；2. 肢体间的连接（百节各按各职）。这是一种有机的、互助的生长模式。"
+                            },
+                            devotional: {
+                                title: "爱的连接",
+                                content: "没有爱，真理会伤人；没有真理，爱会变成纵容。我们需要在爱中讲真理。同时，你的成长不仅关乎你自己，也关乎坐在你旁边的人。当一个肢体生病，全身都受苦。我们在爱中彼此连接、输送生命，身体才能健康长得大。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "new_life",
+                    title: "脱去旧人，穿上新人 (4:17-32)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "4:22-24",
+                            text: "就要脱去...旧人...将你们的心志改换一新，并且穿上新人...",
+                            academic: {
+                                title: "道德的更衣室",
+                                keywords: ["Apothesthai (脱去)", "Endusasthai (穿上)", "Ananeousthai (更新)"],
+                                content: "保罗使用“更衣”的隐喻。这不仅是外在行为的改变，更是“心志”（Spirit of your mind）的更新。旧人是“变坏的”（Corrupt，进行时），新人是“照着神的形象造的”（Created，完成时）。这表明成圣是活出已经拥有的新创造地位。"
+                            },
+                            devotional: {
+                                title: "换件衣服",
+                                content: "每天早上，我们都需要在属灵的更衣室里做个决定：脱去那件发臭的、破烂的旧衣服（旧习惯、旧思维），穿上基督为你预备的新制服（公义、圣洁）。不要把新酒装在旧皮袋里，也不要让新人穿旧衣服。你的行为要配得上你的新身份。"
+                            }
+                        },
+                        {
+                            ref: "4:26-27",
+                            text: "生气却不要犯罪；不可含怒到日落，也不可给魔鬼留地步。",
+                            academic: {
+                                title: "情绪管理的灵界维度",
+                                keywords: ["Orgizesthe (生气)", "Topos (地步/空间/据点)"],
+                                content: "“生气”本身不一定是罪（义怒），但失控的怒气或怀怨（含怒到日落）会给魔鬼留“地步”（Topos，军事据点或滩头堡）。未处理的负面情绪是魔鬼入侵信徒生命的登陆点。这里强调了情绪处理的即时性（日落前解决）。"
+                            },
+                            devotional: {
+                                title: "别给魔鬼留钥匙",
+                                content: "当你甚至在睡前还抱着愤怒不放时，你实际上是把一把备用钥匙给了魔鬼，说：“欢迎随时光临。”苦毒和积怨是魔鬼最喜欢的温床。为了保护你的心灵家园，必须当日清理情绪垃圾。饶恕不是便宜了别人，是释放了自己。"
+                            }
+                        },
+                        {
+                            ref: "4:29-30",
+                            text: "污秽的言语一句不可出口...不要叫神的圣灵担忧...",
+                            academic: {
+                                title: "言语与圣灵",
+                                keywords: ["Sapros (腐烂/坏的)", "Lypeite (使...忧愁)"],
+                                content: "Sapros 原指腐烂的水果或鱼，形容破坏性的言语。对应的正面是“造就人”（Edification）。我们的言语直接影响内住的圣灵。圣灵是有位格、有情感的（能被“担忧”）。我们的罪不仅违反律法，更是伤害了那位爱我们并住在我们里面的圣灵的心。"
+                            },
+                            devotional: {
+                                title: "圣灵会心痛",
+                                content: "如果你知道说某句话会让但这世界上最爱你的人伤心流泪，你还会说吗？每当我们口出恶言、撒谎或行事污秽时，住在我们里面的圣灵就会“忧愁”。让我们的动机从“怕受罚”转变为“不愿让祂伤心”。这种对圣灵情感的在乎，是成圣的动力。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-indigo-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-indigo-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-orange-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Pyramid of Unity -->
+                    <div class="gradient-unity p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-indigo-200">
+                        <div class="mb-4">
+                            <i class="fas fa-layer-group text-4xl text-orange-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">合一的金字塔 (v4-6)</h3>
+                        </div>
+                        
+                        <div class="flex flex-col items-center w-full space-y-1 text-xs text-white font-bold">
+                            <!-- Top: Father -->
+                            <div class="w-16 h-8 bg-orange-500 rounded-t-lg flex items-center justify-center shadow-md z-30">一父</div>
+                            <!-- Middle: Son -->
+                            <div class="w-32 h-8 bg-indigo-500 flex items-center justify-center space-x-2 shadow-md z-20">
+                                <span>一主</span><span>一信</span><span>一洗</span>
+                            </div>
+                            <!-- Base: Spirit -->
+                            <div class="w-48 h-8 bg-indigo-700 rounded-b-lg flex items-center justify-center space-x-2 shadow-md z-10">
+                                <span>一灵</span><span>一身</span><span>一望</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-indigo-100">超乎众人之上，贯乎众人之中</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Ministry Cycle Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-orange-100">
+                        <h3 class="text-lg font-bold mb-2 text-orange-800 w-full border-b border-orange-100 pb-2">职事良性循环 (v11-12)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="ministryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">赐恩赐 -> 成全圣徒 -> 各尽其职 -> 建立身体</p>
+                    </div>
+
+                    <!-- Old Man vs New Man Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-indigo-100">
+                        <h3 class="text-lg font-bold mb-2 text-indigo-800 w-full border-b border-indigo-100 pb-2">新旧人的更衣室 (v22-24)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="newManChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">脱去私欲(旧) vs 穿上圣洁(新)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#EEF2FF]/95 backdrop-blur py-4 mb-8 border-b border-indigo-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-indigo-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-indigo-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-indigo-700 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-orange-500 text-white font-bold' : 'text-slate-500 hover:bg-indigo-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'indigo') titleColorClass = 'text-indigo-800 border-indigo-200';
+                else if(section.themeColor === 'orange') titleColorClass = 'text-orange-800 border-orange-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-indigo-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-indigo-50 border-b border-indigo-100">
+                            <span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-indigo-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-indigo-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-indigo-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-indigo-900">解经原则：教义与伦理</h2>
+                        <p class="text-slate-600">
+                            以弗所书第4章展示了如何从宏大的教会论（身体）推导出具体的个人伦理（更衣）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-indigo-600">
+                            <div class="text-indigo-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：逻辑连接与隐喻</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 连词的重要性。重视"所以"(v1, v17)的作用，理解前半部教义是后半部伦理的根基。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 身体隐喻分析（Christology of the Body）。
+                                    <br>2. 诗篇引用（v8）：分析保罗如何应用"升上高天"的经文来解释恩赐。
+                                </li>
+                                <li><strong>目的：</strong> 确立教会在神学上的合一性和功能上的多样性。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-500">
+                            <div class="text-orange-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：关系与更新</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 圣灵敏感度。将"不叫圣灵担忧"作为日常生活的指导原则。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 恩赐发掘（我在身体里是什么功用？）。
+                                    <br>2. 行为重塑（具体的"脱去谎言，穿上诚实"操练）。
+                                </li>
+                                <li><strong>目的：</strong> 活出与蒙召身份相称的生命，建立健康的教会身体。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Ministry Cycle Chart (Doughnut - Cycle)
+            const ctxMinistry = document.getElementById('ministryChart').getContext('2d');
+            new Chart(ctxMinistry, {
+                type: 'doughnut',
+                data: {
+                    labels: ['基督赐下恩赐', '领袖成全圣徒', '圣徒各尽其职', '建立基督身体'],
+                    datasets: [{
+                        data: [25, 25, 25, 25],
+                        backgroundColor: [
+                            '#4338CA', // Indigo
+                            '#F97316', // Orange
+                            '#F59E0B', // Amber
+                            '#6366F1'  // Light Indigo
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + " -> 下一步";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // New Man vs Old Man Chart (Bar)
+            const ctxNewMan = document.getElementById('newManChart').getContext('2d');
+            new Chart(ctxNewMan, {
+                type: 'bar',
+                data: {
+                    labels: ['心思 (Mind)', '言语 (Speech)', '情绪 (Emotion)', '行为 (Action)'],
+                    datasets: [{
+                        label: '旧人 (腐败)',
+                        data: [-80, -90, -70, -85], // Negative traits
+                        backgroundColor: '#94A3B8', // Slate
+                        borderRadius: 4
+                    }, {
+                        label: '新人 (圣洁)',
+                        data: [100, 100, 100, 100], // Positive traits
+                        backgroundColor: '#F97316', // Orange
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { display: false } 
+                        },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

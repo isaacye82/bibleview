@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第六章：与主联合与成圣之路</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Union Blue (Baptism/Death) & Liberty Gold (Resurrection/Gift) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #EFF6FF; /* Blue 50 - Water/Cleansing background */
+            color: #172554; /* Blue 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Union Blue */
+        .active-tab {
+            color: #1D4ED8; /* Blue 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1D4ED8;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Liberty Gold */
+        .verse-card:hover {
+            border-left-color: #CA8A04; /* Yellow 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(29, 78, 216, 0.1), 0 4px 6px -2px rgba(29, 78, 216, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #DBEAFE; /* Blue 100 */
+            color: #1E40AF; /* Blue 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #93C5FD; /* Blue 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans6 {
+            background: linear-gradient(135deg, #172554 0%, #EAB308 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-blue-900 serif">
+                        <i class="fas fa-water mr-2 text-yellow-500"></i> 罗马书 6章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">向罪死，向神活</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-blue-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-yellow-300">"罪的工价乃是死；惟有神的恩赐...乃是永生。" (6:23)</p>
+            <p class="text-xs text-blue-400 mt-3">交互式研经工具 | 聚焦：成圣的逻辑与奴仆的抉择</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "成圣的逻辑：身份决定行为",
+                summary: "罗马书第6章回答了一个关键问题：既然恩典显多，我们是否可以继续犯罪？保罗断然否定（Me Genoito）。他通过“与基督联合”的神学概念，阐明了信徒已经向罪死了，不能再活在罪中（1-11节）。这是一个身份的根本转变。随后，保罗用“奴仆”的比喻，呼召信徒将肢体献给义作奴仆，以至于成圣（12-23节）。本章建立了基督徒成圣的三步曲：知道（Knowing）、算为（Reckoning）、献上（Yielding）。",
+                highlights: [
+                    { icon: "fas fa-skull", color: "text-slate-600", text: "向罪死" },
+                    { icon: "fas fa-child", color: "text-yellow-600", text: "向神活" },
+                    { icon: "fas fa-hands", color: "text-blue-600", text: "献肢体" }
+                ]
+            },
+            sections: [
+                {
+                    id: "union_death",
+                    title: "与基督联合的死与生 (6:1-10)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "6:1-4",
+                            text: "我们可以仍在罪中、叫恩典显多吗？断乎不可！...受洗归入基督...和他一同埋葬...一举一动有新生的样式...",
+                            academic: {
+                                title: "归入 (Baptizo Eis)",
+                                keywords: ["Baptizō (受洗/浸入)", "Synetaphēmen (一同埋葬)", "Kainotēti (新/新样)"],
+                                content: "“受洗归入”（Baptized into）不仅指水礼仪式，更指属灵上的“联合”与“认同”。保罗强调的是一种本体论的改变：我们在基督的死上有份，因此旧人已经死了（法律上和地位上）；我们在基督的复活上有份，因此拥有了“新生”（Life of new quality）。这不是道德改良，而是物种的转换。"
+                            },
+                            devotional: {
+                                title: "参加自己的葬礼",
+                                content: "受洗就是参加自己的葬礼。当水漫过你的时候，宣告那个受罪辖制的“旧我”已经死了、埋了。你现在是一个从坟墓里走出来的“新人”。既然死人不会对诱惑有反应，作为一个已经“向罪死”的人，你为何还要听从罪的指挥呢？"
+                            }
+                        },
+                        {
+                            ref: "6:5-7",
+                            text: "我们若在他死的形状上与他联合...知道我们的旧人和他同钉十字架...因为已死的人是脱离了罪。",
+                            academic: {
+                                title: "联合的有机性",
+                                keywords: ["Symphytoi (联合/种植在一起)", "Katargēthē (废掉/失业)"],
+                                content: "Symphytoi 原意是“长在一起”，像嫁接的树枝。这表明我们与基督的结合是有机的、生命的。旧人同钉十字架的目的是叫罪身“灭绝”（Katargēthē，意为失效、失业，不再起作用），不再作罪的奴仆。罪依然存在，但它失去了对信徒的合法统治权（Dominion）。"
+                            },
+                            devotional: {
+                                title: "罪老板已经破产了",
+                                content: "你以前的老板（罪）已经被炒鱿鱼了，它的公司（旧人）已经破产倒闭了。虽然它可能还在你耳边发号施令，但你已经没有义务听它的。你有新的老板（基督）。下次罪再来敲门，你可以指着十字架说：“那个人已经不住在这里了。”"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "practical_holiness",
+                    title: "成圣的实践：算与献 (6:11-14)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "6:11",
+                            text: "这样，你们向罪也当看自己是死的；向神在基督耶稣里，却当看自己是活的。",
+                            academic: {
+                                title: "信心的算术 (Logizesthe)",
+                                keywords: ["Logizesthe (算/认定/记账)"],
+                                content: "这是本章第一个命令语气动词（Imperative）。前10节都是陈述语气（Indicative，陈述事实）。“算”不是假装（Make believe），而是根据事实进行认定（Reckon on reality）。就像在银行账户里确认一笔存款。这不是一种感觉，而是一种基于基督工作之事实的信心判断。"
+                            },
+                            devotional: {
+                                title: "改变你的自我认知",
+                                content: "成圣的第一步是改变你看待自己的方式。不要盯着你的失败看，要盯着基督的得胜看。每天早上对自己说：“在基督里，我对罪是死的，我对神是活的。”这不是自我催眠，这是宣讲真理。你的感受会随之改变。"
+                            }
+                        },
+                        {
+                            ref: "6:12-14",
+                            text: "不要容罪在你们必死的身上作王...倒要像从死里复活的人，将自己献给神，并将肢体作义的器具...",
+                            academic: {
+                                title: "主权的移交 (Paristanete)",
+                                keywords: ["Basileuetō (作王/统治)", "Paristanete (献上/呈交)", "Hopla (器具/兵器)"],
+                                content: "“不要容...作王”暗示信徒有责任也有能力拒绝罪的统治。Paristanete 是献祭或军事术语，意为将自己“呈交”给长官或神。肢体（手、脚、眼）是中性的，它们既可以是作恶的工具，也可以是行义的兵器（Hopla）。关键在于谁在指挥。"
+                            },
+                            devotional: {
+                                title: "你的身体是谁的武器？",
+                                content: "你的手机、你的舌头、你的钱包，此刻正在为谁效力？如果你不主动把它们献给神，罪就会利用它们。每天早晨做一个交接仪式：“主啊，我的手是你的，用来行善；我的口是你的，用来造就人。”主动的奉献是得胜的开始。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "two_masters",
+                    title: "两种奴仆的结局 (6:15-23)",
+                    themeColor: "yellow",
+                    verses: [
+                        {
+                            ref: "6:16-18",
+                            text: "岂不晓得你们献上自己作奴仆...或作罪的奴仆，以至于死；或作顺命的奴仆，以至于成义...现今却从心里顺服了...",
+                            academic: {
+                                title: "顺服的形态",
+                                keywords: ["Doulous (奴仆)", "Typon Didachēs (教训的模范/规范)"],
+                                content: "保罗指出人没有绝对的自由，只有“选择主人的自由”。你若不服侍神，就必然服侍罪。信徒的顺服不是被迫的，而是“从心里”（Ek kardias）顺服了“教训的模范”（Standard of teaching）。这表明真正的自由是在真理规范下的顺服。"
+                            },
+                            devotional: {
+                                title: "没有中间地带",
+                                content: "这个世界上没有“无主之人”。我们要么是义的奴仆，要么是罪的奴仆。好消息是，作义的奴仆才是真正的自由。因为罪是残酷的暴君，它榨干你；而神是慈爱的主人，祂成全你。选对主人，就选对了命运。"
+                            }
+                        },
+                        {
+                            ref: "6:20-23",
+                            text: "你们作罪之奴仆的时候...有什么果子呢？...但现今...作了神的奴仆，就有成圣的果子，那结局就是永生。",
+                            academic: {
+                                title: "结局的对比",
+                                keywords: ["Opsōnia (工价/军饷)", "Charisma (恩赐/礼物)"],
+                                content: "保罗对比了两种人生的“投资回报表”： 1. **罪的奴仆**：投入是羞耻的事，回报（工价）是死。Opsōnia 指士兵的薪水，是你应得的报应。 2. **神的奴仆**：投入是顺服，过程是成圣，回报（结局）是永生。注意：永生不是工价，而是Charisma（恩赐/礼物）。你不能赚取永生，只能作为礼物接受。"
+                            },
+                            devotional: {
+                                title: "你的薪水是多少？",
+                                content: "罪会付给你薪水，那就是死亡（隔绝、空虚、毁灭）。它从不拖欠工资。但神给你的不是工资，是礼物——永生。工资是你配得的惩罚，礼物是你配不上的恩典。既然有了这么好的礼物，为何还要去为那个发“死亡工资”的老板卖命呢？"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-blue-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-yellow-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Identity Transfer -->
+                    <div class="gradient-romans6 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-blue-200">
+                        <div class="mb-4">
+                            <i class="fas fa-exchange-alt text-4xl text-yellow-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">身份的迁移 (v3-5)</h3>
+                        </div>
+                        
+                        <div class="flex justify-between items-center w-full text-white text-xs mt-2 relative">
+                            <div class="flex flex-col items-center opacity-70">
+                                <span class="text-lg">🧟</span>
+                                <span>旧人 (在亚当里)</span>
+                            </div>
+                            
+                            <!-- Cross/Baptism Bridge -->
+                            <div class="flex-grow border-b-2 border-dashed border-white/50 mx-2 relative h-0">
+                                <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-blue-800 px-2 py-0.5 rounded">
+                                    <i class="fas fa-cross text-yellow-400"></i> 同死同埋
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center">
+                                <span class="text-lg">👶</span>
+                                <span class="font-bold text-yellow-300">新人 (在基督里)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-4 text-blue-100">受洗归入祂的死，一举一动有新生的样式</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Slavery Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-blue-100">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">两种奴仆的结局 (v20-23)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="slaveryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">罪的工价是死 vs 神的恩赐是永生</p>
+                    </div>
+
+                    <!-- Sanctification Steps Flow -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-yellow-100">
+                        <h3 class="text-lg font-bold mb-2 text-yellow-800 w-full border-b border-yellow-100 pb-2">成圣三步曲 (v6-13)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="sanctificationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">知道(Know) -> 算为(Reckon) -> 献上(Yield)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#EFF6FF]/95 backdrop-blur py-4 mb-8 border-b border-blue-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-blue-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-blue-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-700 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-yellow-500 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else if(section.themeColor === 'yellow') titleColorClass = 'text-yellow-700 border-yellow-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-blue-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-blue-50 border-b border-blue-100">
+                            <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-blue-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50/50 transition">
+                                <h4 class="text-slate-600 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-blue-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-yellow-50/30 transition">
+                                <h4 class="text-yellow-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-blue-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">解经原则：身份与命令</h2>
+                        <p class="text-slate-600">
+                            罗马书第六章展示了如何从“指示语气”（Indicative，你是谁）推导出“命令语气”（Imperative，你当做什么）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：神学逻辑与语态</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 身份优先原则。行为的改变必须基于身份的改变。先有"死了/活了"，才有"献上"。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 动词语态分析（"算"是现在时命令，意味着持续的态度）。
+                                    <br>2. 隐喻分析（"洗礼"作为联合的记号，"奴仆"作为归属的记号）。
+                                </li>
+                                <li><strong>目的：</strong> 确立成圣的客观基础，避免律法主义或放纵主义。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-500">
+                            <div class="text-yellow-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：意志与奉献</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 意志降服。将神学上的"向罪死"转化为每日生活中的"不容罪作王"。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 每日奉献（清晨将肢体献给神）。
+                                    <br>2. 认知重构（当受试探时，宣称"我已经死了"）。
+                                </li>
+                                <li><strong>目的：</strong> 活出新生的样式，结出成圣的果子。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Slavery Comparison Chart (Bar)
+            const ctxSlavery = document.getElementById('slaveryChart').getContext('2d');
+            new Chart(ctxSlavery, {
+                type: 'bar',
+                data: {
+                    labels: ['投入 (Service)', '果子 (Fruit)', '结局 (End)'],
+                    datasets: [
+                        {
+                            label: '罪的奴仆',
+                            data: [-50, -80, -100], // Negative outcomes
+                            backgroundColor: '#94A3B8', // Slate
+                            borderRadius: 4
+                        },
+                        {
+                            label: '神的奴仆',
+                            data: [50, 80, 100], // Positive outcomes
+                            backgroundColor: '#EAB308', // Yellow
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { 
+                            grid: { display: false },
+                            ticks: { display: false } 
+                        },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.dataset.label.includes('罪')) {
+                                        if (context.dataIndex === 0) return "献给不洁不法";
+                                        if (context.dataIndex === 1) return "羞耻的事";
+                                        if (context.dataIndex === 2) return "死亡 (工价)";
+                                    } else {
+                                        if (context.dataIndex === 0) return "献给义/顺服";
+                                        if (context.dataIndex === 1) return "成圣";
+                                        if (context.dataIndex === 2) return "永生 (恩赐)";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sanctification Steps Chart (Doughnut)
+            const ctxSanctification = document.getElementById('sanctificationChart').getContext('2d');
+            new Chart(ctxSanctification, {
+                type: 'doughnut',
+                data: {
+                    labels: ['知道 (Know)', '算为 (Reckon)', '献上 (Yield)'],
+                    datasets: [{
+                        data: [33, 33, 34],
+                        backgroundColor: [
+                            '#3B82F6', // Blue (Mind/Truth)
+                            '#6366F1', // Indigo (Faith/Accounting)
+                            '#EAB308'  // Yellow (Action/Will)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 0) return "知道旧人已死 (v6)";
+                                    if(context.dataIndex === 1) return "看自己是死的/活的 (v11)";
+                                    if(context.dataIndex === 2) return "将肢体献给义 (v13)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

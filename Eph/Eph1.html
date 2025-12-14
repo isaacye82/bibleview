@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以弗所书第一章：天上的福气与荣耀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F4F8; /* Light Blue-Grey */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Theme Colors: Royal Blue (#2C5282) & Amber Gold (#D69E2E) */
+        .active-tab {
+            color: #2B6CB0; /* Blue 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #2B6CB0;
+            border-radius: 2px;
+        }
+
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #D69E2E; /* Amber 500 */
+            transform: translateX(4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .gold-text { color: #B7791F; }
+        .blue-gradient { background: linear-gradient(135deg, #2C5282 0%, #1A365D 100%); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-blue-900 serif"><i class="fas fa-church mr-2 text-blue-600"></i> 以弗所书 1章</span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：荣耀颂赞</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-blue-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-blue-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"愿颂赞归与我们主耶稣基督的父神，他在基督里曾赐给我们天上各样属灵的福气。" (1:3)</p>
+            <p class="text-xs text-slate-500 mt-2">交互式研经工具 | 聚焦：基业、拣选与恩典的荣耀</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "天上各样属灵的福气",
+                summary: "《以弗所书》第一章是保罗书信中最宏伟的篇章之一。1:3-14 在希腊原文中是一句长达 202 个词的长句，被称为“大颂赞”（Eulogy），详述了三一真神在救恩历史中的宏大计划：父的拣选、子的救赎、灵的印记。随后（1:15-23），保罗转向祈祷，求神照明信徒心中的眼睛，使我们真知道这浩大的恩典与能力。",
+                highlights: [
+                    { icon: "fas fa-hand-holding-heart", color: "text-blue-600", text: "父神的拣选 (过去)" },
+                    { icon: "fas fa-cross", color: "text-red-600", text: "爱子的救赎 (现在)" },
+                    { icon: "fas fa-stamp", color: "text-amber-500", text: "圣灵的印记 (将来)" }
+                ]
+            },
+            sections: [
+                {
+                    id: "greeting",
+                    title: "问安：身份的确认 (1:1-2)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "1:1-2",
+                            text: "奉神旨意，作基督耶稣使徒的保罗，写信给在以弗所的圣徒，就是在基督耶稣里有忠心的人...",
+                            academic: {
+                                title: "“在以弗所”的抄本问题",
+                                content: "在一些最古老和可靠的希腊文抄本（如西奈抄本）中，并没有“在以弗所”这几个字。这表明《以弗所书》可能最初是一封“通函”（Circular Letter），要在亚细亚省的各教会间传阅。此外，“圣徒”（hagiois）并非指道德完美的人，而是指地位上被“分别出来”归给神的人。",
+                            },
+                            devotional: {
+                                title: "双重身份：在世上，也在基督里",
+                                content: "基督徒拥有双重住址：由于身体，我们住在“以弗所”（代表我们所处的具体城市、职场、家庭）；但由于灵性，我们住在“基督里”。无论你在地上的环境如何，你真实的属灵位置是在基督里。这给了我们超越环境的平安。",
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "trinity_work",
+                    title: "大颂赞：三一神的救赎计划 (1:3-14)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "1:3-6",
+                            text: "就如神从创立世界以前，在基督里拣选了我们...预定我们藉着耶稣基督得儿子的名分...",
+                            academic: {
+                                title: "预定论与拣选 (Proorisas)",
+                                content: "“拣选”（exelexato）使用的是关身语态，意味着神是“为自己”拣选了我们。“预定”（proorisas）意为“预先划定界限”。这里强调救恩的主动权完全在于父神（Monergism），并且是在时间开始之前（创立世界以前）就已经确立的。目的是为了使我们成为“圣洁无有瑕疵”。",
+                            },
+                            devotional: {
+                                title: "你不是意外",
+                                content: "在这个充满不确定感的世界里，最大的安慰莫过于知道：在宇宙诞生之前，你已经被神放在心上。你的存在不是生物学的偶然，而是神永恒计划的一部分。我们被拣选不是因为我们可爱，而是因为祂的爱。这应当消除我们对“表现”的焦虑。",
+                            }
+                        },
+                        {
+                            ref: "1:7-12",
+                            text: "我们藉这爱子的血得蒙救赎，过犯得以赦免...要照所安排的，在日期满足的时候，使天上、地上、一切所有的都在基督里面同归于一...",
+                            academic: {
+                                title: "救赎与奥秘 (Apolutrōsin & Mystērion)",
+                                content: "“救赎”（apolutrōsin）是奴隶市场术语，指支付赎价使奴隶获得自由。赎价即是基督的血。“奥秘”（mystērion）在保罗书信中并非指神秘不可知之事，而是指“曾经隐藏，如今通过启示显明”的真理——即神要借着基督，将分裂破碎的宇宙（天上地上的）重新联合归一（anakephalaiōsasthai）。",
+                            },
+                            devotional: {
+                                title: "破碎生命的重整",
+                                content: "罪带来了分裂：人与神、人与人、人与自然。基督的救赎不仅是赦免罪过，更是“同归于一”的宇宙性修复工程。当你的生活感到支离破碎时，基督是那位整合者。祂正在将你生命中混乱的碎片拼凑成一幅荣耀的图画。",
+                            }
+                        },
+                        {
+                            ref: "1:13-14",
+                            text: "你们...就受了所应许的圣灵为印记。这圣灵是我们得基业的凭据，直等到神之民被赎...",
+                            academic: {
+                                title: "印记与凭据 (Sphragis & Arrhabōn)",
+                                content: "“印记”（sphragis）在古代用于标识所有权（如牛羊身上的烙印）和保护（官方封条）。“凭据”（arrhabōn）是一个商业法律术语，指“定金”或“首付”。圣灵的内住不仅证明我们属于神，更是未来天堂完整基业的“首付款”，保证余款（身体得赎、完全的荣耀）必将付清。",
+                            },
+                            devotional: {
+                                title: "属天的定金",
+                                content: "我们在这个世界上可能没有房产证或巨额存款，但我们拥有圣灵。当我们感受到内心的平安、对罪的敏感、对神的渴慕时，那是圣灵在工作，是神在告诉你：“这只是开始，最好的还在后头。”这是我们在患难中确据的来源。",
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prayer",
+                    title: "保罗的祷告：真知道祂 (1:15-23)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "1:15-19",
+                            text: "求我们主耶稣基督的神...将那赐人智慧和启示的灵赏给你们，使你们真知道他...知道他的恩召有何等指望...基业有何等丰盛的荣耀...能力是何等浩大。",
+                            academic: {
+                                title: "真知道 (Epignōsei)",
+                                content: "保罗求神赐下“智慧和启示的灵”，目的是“真知道”（epignōsei）神。这个词比普通的知识（gnosis）更深，指关系性、体验性、完全的认识。保罗的三个祈求指向：1. 过去的呼召（指望），2. 未来的归宿（基业的荣耀），3. 现在的资源（浩大的能力）。",
+                            },
+                            devotional: {
+                                title: "超越物质的祈求",
+                                content: "我们常为健康、工作、顺遂祷告，这没有错。但保罗展示了更高层次的祷告：求神打开我们心中的眼睛（属灵洞察力）。很多时候，我们不需要神给我们新的东西，而是需要看见祂已经给了我们什么。你需要看见你拥有的指望、基业和能力。",
+                            }
+                        },
+                        {
+                            ref: "1:20-23",
+                            text: "就是照他在基督身上所运行的大能大力...远超过一切执政的、掌权的...教会是他的身体，是那充满万有者所充满的。",
+                            academic: {
+                                title: "教会论的高峰 (Kephalē & Plērōma)",
+                                content: "这里确立了基督的至高主权：祂不仅是教会的头（kephalē），也是万有的元首。所有灵界的权势（执政的、掌权的）都在祂脚下。“充满万有者所充满的”（plērōma）是一个神学难题，一种解释是：教会是基督的“补满”或“丰满”，意即就像头需要身体来表达自己，基督也定意通过教会来彰显祂的丰盛。",
+                            },
+                            devotional: {
+                                title: "教会的尊贵地位",
+                                content: "教会不仅是一个组织或建筑物，她是基督的身体，是基督在这个世界上的“丰满”。如果你轻看教会，就是轻看基督的身体。作为教会的一员，你承载着向万有彰显基督丰盛的使命。不要低估你所在的小组或教会的属灵价值。",
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-gray-700 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Theme Card -->
+                    <div class="blue-gradient text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-crown text-4xl mb-4 text-amber-400"></i>
+                        <h3 class="text-xl font-bold mb-2">核心神学</h3>
+                        <p class="text-blue-100 text-sm italic mb-4">"使他荣耀的恩典得着称赞"</p>
+                        <div class="w-full bg-white/10 h-1 rounded-full overflow-hidden my-2">
+                            <div class="bg-amber-400 h-full w-[100%]"></div>
+                        </div>
+                        <p class="text-xs mt-2 opacity-80">在基督里同归于一</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Trinity Work Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">三一神在救恩中的工作 (1:3-14)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="trinityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">救恩的历史进程与分工</p>
+                    </div>
+
+                    <!-- Prayer Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">保罗祈祷的三个维度 (1:18-19)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="prayerChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">照明心中的眼睛以真知道...</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filters
+            const filterControls = `
+                <div class="sticky top-20 z-40 bg-[#F0F4F8]/95 backdrop-blur py-4 mb-8 border-b border-gray-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-gray-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-500 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                const titleColorClass = section.themeColor === 'amber' ? 'text-amber-700 border-amber-200' : 
+                                        section.themeColor === 'indigo' ? 'text-indigo-800 border-indigo-200' : 'text-blue-800 border-blue-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden">
+                        <div class="p-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-amber-50 transition">
+                                <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经方法论：理智与心灵的结合</h2>
+                        <p class="text-gray-600">
+                            研读《以弗所书》第一章需要平衡神学的高深（学术）与信仰的火热（灵修）。以下是本报告采用的两种方法论总结。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">释经学 (Exegesis)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">原则：经文原意 (Original Intent)</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>定义：</strong> 使用历史-文法（Historical-Grammatical）方法，挖掘作者（保罗）对当时读者（以弗所教会）的原始意图。</li>
+                                <li><strong>关注点：</strong> 
+                                    <br>• <strong>原文分析：</strong> 希腊词汇（如 *proorisas*, *arrhabōn*）的具体法律或商业含义。
+                                    <br>• <strong>句法结构：</strong> 1:3-14 的长句结构显示出的神学连贯性。
+                                    <br>• <strong>历史背景：</strong> 罗马帝国的收养制度、奴隶市场背景。
+                                </li>
+                                <li><strong>适用范围：</strong> 建立教义根基，防止私意解经，处理神学争议（如预定论）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Homiletical -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-fire"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-4">灵修学 (Devotional)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">原则：今日应用 (Contemporary Application)</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>定义：</strong> 在理解原意的基础上，通过圣灵的光照，思考经文对个人生命、情感和意志的即时意义。</li>
+                                <li><strong>关注点：</strong> 
+                                    <br>• <strong>身份认同：</strong> 将客观真理（被拣选）内化为主观确据（我是被爱的）。
+                                    <br>• <strong>生命转化：</strong> 如何从认知转向敬拜，从担忧转向平安。
+                                    <br>• <strong>祷告回应：</strong> 效法保罗的祷告来祈求。
+                                </li>
+                                <li><strong>适用范围：</strong> 个人灵修（Quiet Time）、讲道应用、教牧辅导、生命更新。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-blue-50 p-6 rounded-lg border border-blue-100 text-center">
+                        <h4 class="font-bold text-blue-900 mb-2">总结：头与心的桥梁</h4>
+                        <p class="text-blue-800 text-sm">
+                            正如本章所示，如果没有学术解经，我们可能误解“预定”为宿命论；如果没有灵修应用，“预定”只是一套冰冷的神学理论，而非引发赞美的源泉。真正的研经是让真理通过头脑（理解），进入心灵（爱慕），最终流露于生活（行动）。
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Trinity Work Chart
+            const ctxTrinity = document.getElementById('trinityChart').getContext('2d');
+            new Chart(ctxTrinity, {
+                type: 'doughnut',
+                data: {
+                    labels: ['父神：拣选与预定', '爱子：救赎与赦免', '圣灵：印记与凭据'],
+                    datasets: [{
+                        data: [33, 33, 34],
+                        backgroundColor: [
+                            '#4299E1', // Blue (Father - Authority/Plan)
+                            '#F56565', // Red (Son - Blood/Sacrifice)
+                            '#ECC94B'  // Gold (Spirit - Seal/Glory)
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 20 } },
+                        title: { display: false }
+                    }
+                }
+            });
+
+            // Prayer Chart (Radar or Bar)
+            const ctxPrayer = document.getElementById('prayerChart').getContext('2d');
+            new Chart(ctxPrayer, {
+                type: 'bar',
+                data: {
+                    labels: ['恩召的指望 (过去)', '基业的荣耀 (将来)', '浩大的能力 (现在)'],
+                    datasets: [{
+                        label: '属灵认知的深度',
+                        data: [85, 90, 95],
+                        backgroundColor: [
+                            'rgba(66, 153, 225, 0.7)',
+                            'rgba(236, 201, 75, 0.7)',
+                            'rgba(72, 187, 120, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgb(66, 153, 225)',
+                            'rgb(236, 201, 75)',
+                            'rgb(72, 187, 120)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100, 
+                            ticks: { display: false },
+                            grid: { display: false }
+                        },
+                        x: {
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

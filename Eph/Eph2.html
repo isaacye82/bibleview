@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以弗所书第二章：出死入生与合而为一</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #FFFAF0; /* Floral White - Warm parchment feel */
+            color: #2D3748;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 350px;
+            }
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Theme Colors: Brick Red (#C05621) & Unity Teal (#2C7A7B) */
+        .active-tab {
+            color: #C05621; /* Orange/Red 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #C05621;
+            border-radius: 2px;
+        }
+
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            border-left-color: #2C7A7B; /* Teal 600 */
+            transform: translateX(4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .brick-gradient { background: linear-gradient(135deg, #C05621 0%, #9B2C2C 100%); }
+        .teal-text { color: #285E61; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-red-900 serif"><i class="fas fa-archway mr-2 text-red-600"></i> 以弗所书 2章</span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">总览：恩典与和平</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-red-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-red-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-6 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-sm font-serif italic">"你们得救是本乎恩，也因着信；这并不是出于自己，乃是神所赐的。" (2:8)</p>
+            <p class="text-xs text-gray-500 mt-2">交互式研经工具 | 聚焦：神的工作（杰作）与新人（圣殿）</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "死中得生，分中合一",
+                summary: "《以弗所书》第二章描绘了人类历史上最伟大的两次跨越。前半部分（2:1-10）处理垂直关系：我们曾死在罪恶过犯中，却因神的富足怜悯，与基督一同活过来。后半部分（2:11-22）处理水平关系：犹太人与外邦人之间曾有不可逾越的“隔断的墙”，却因基督的血被拆毁，两者在这一位圣灵里被建造成为神居住的所在。",
+                highlights: [
+                    { icon: "fas fa-skull-crossbones", color: "text-gray-600", text: "从前：死在过犯中" },
+                    { icon: "fas fa-gift", color: "text-red-600", text: "如今：本乎恩得救" },
+                    { icon: "fas fa-handshake", color: "text-teal-600", text: "结果：两下合而为一" }
+                ]
+            },
+            sections: [
+                {
+                    id: "death_to_life",
+                    title: "垂直的救赎：出死入生 (2:1-3)",
+                    themeColor: "gray",
+                    verses: [
+                        {
+                            ref: "2:1-3",
+                            text: "你们死在过犯罪恶之中，他叫你们活过来。那时，你们在其中行事为人，随从今世的风俗...",
+                            academic: {
+                                title: "属灵死亡的本质 (Nekrous)",
+                                content: "保罗使用“死”（nekrous）来描述未重生之人的状态。这不仅是隐喻，而是神学现实：正如尸体对物理刺激无反应，未重生者对属灵事物无反应。这里列出了控制人类的三大仇敌：1. 世界（今世的风俗），2. 魔鬼（空中掌权者的首领），3. 肉体（本为可怒之子）。",
+                            },
+                            devotional: {
+                                title: "你不仅是坏了，你是死了",
+                                content: "现代心理学常告诉我们“你只是受伤了”或“你需要被修补”，但圣经说我们是“死”的。这极其重要，因为死人不需要改良，死人需要复活。当我们意识到自己的全然无能时，才会停止依靠自我修行的努力，转而呼求那种叫死人复活的大能。",
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "grace_salvation",
+                    title: "恩典的杰作：本乎恩，因着信 (2:4-10)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "2:4-7",
+                            text: "然而，神既有丰富的怜悯，因他爱我们的大爱，当我们死在过犯中的时候，便叫我们与基督一同活过来...",
+                            academic: {
+                                title: "神的主动性与联合 (Syn-compounds)",
+                                content: "“然而神”（But God）是全书最伟大的转折词。保罗使用了一系列带“一同”（syn-）前缀的动词：一同活过来（synezōopoiēsen）、一同复活（synēgeiren）、一同坐在天上（synekathisen）。这表明我们的救恩不是独立的事件，而是通过与基督的奥秘联合（Union with Christ）而发生的。",
+                            },
+                            devotional: {
+                                title: "最伟大的转折：然而神",
+                                content: "你的人生可能充满了糟糕的“前情提要”：失败、成瘾、绝望。但神准备好写下“然而”（But）。神介入了你的故事，不是因为你配得，而是因为祂“爱我们的大爱”。你现在的属灵地位不是“正在努力爬向天堂”，而是已经“与基督一同坐在天上”。",
+                            }
+                        },
+                        {
+                            ref: "2:8-10",
+                            text: "你们得救是本乎恩，也因着信...我们原是他的工作，在基督耶稣里造成的...",
+                            academic: {
+                                title: "工作/杰作 (Poiēma)",
+                                content: "第8节强调救恩是礼物（dōron），排除了任何人为功德（Works）。第10节的“工作”（poiēma）一词是英文“poem”（诗歌）的词源，意为大师精心雕琢的艺术品或杰作。这解决了“信心与行为”的张力：我们不是靠行为得救，而是得救是为了行善（Good works are the fruit, not the root）。",
+                            },
+                            devotional: {
+                                title: "你是一首诗",
+                                content: "你不是工厂流水线上的次品，你是神手中的艺术品。神救你不仅是为了让你上天堂，更是为了通过你这一生展示祂的创造力。当你觉得自己毫无价值时，请记住：伟大的艺术家正在雕琢你，为了让你行出祂预备的美善。",
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "reconciliation",
+                    title: "水平的和睦：拆毁隔墙 (2:11-18)",
+                    themeColor: "teal",
+                    verses: [
+                        {
+                            ref: "2:11-13",
+                            text: "你们从前按肉体是外邦人...与基督无关...但如今...靠着他的血，已经得亲近了。",
+                            academic: {
+                                title: "局外人与圣约 (Xenoi & Diathēkai)",
+                                content: "保罗列举了外邦人的五重缺失：无基督、由以色列国民以外、在应许的诸约上是局外人、无指望、没有神。这是极度的属灵隔离。然而，“靠着他的血”（en tō haimati）是建立新关系的基础。血不仅是赎罪的代价，也是立约的凭据。",
+                            },
+                            devotional: {
+                                title: "不再是局外人",
+                                content: "我们常感到孤独、被排斥或不属于某个群体。但福音最大的好消息是：你被接纳了。不管你的种族、背景或过去如何，基督的血已经把你从“远处”拉到了神的“近处”。你不再是属灵的二等公民。",
+                            }
+                        },
+                        {
+                            ref: "2:14-18",
+                            text: "因他使我们和睦，将两下合而为一，拆毁了中间隔断的墙...造成一个新人...",
+                            academic: {
+                                title: "隔断的墙与新人 (Mesotoichon & Kainon Anthrōpon)",
+                                content: "“中间隔断的墙”在历史上指耶路撒冷圣殿中禁止外邦人进入内院的石栏（Soreg），上写着“越过者处死”。基督在肉身中废掉了冤仇（律法的规条）。结果不是犹太人变成外邦人，或外邦人变成犹太人，而是创造出“一个新人”（One New Man）——这是全新的第三种族（The Church）。",
+                            },
+                            devotional: {
+                                title: "和平不仅是停止战争",
+                                content: "基督的和平（Shalom）不仅是休战，而是拆毁。在我们的教会和生活中，是否还有无形的“墙”？种族、阶级、政治观点的隔阂？基督不仅教导我们宽容，祂实际上杀了那个“冤仇”。如果你还在筑墙，你就是在重建基督已经拆毁的东西。",
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "temple",
+                    title: "共同的建造：成为圣殿 (2:19-22)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "2:19-22",
+                            text: "这样，你们不再作外人和客旅...被建造在使徒和先知的根基上，有基督耶稣自己为房角石...",
+                            academic: {
+                                title: "房角石与圣殿 (Akrogōniaios & Naos)",
+                                content: "“房角石”（akrogōniaios）是古代建筑中决定整座建筑角度和稳定性的基石。使徒和先知是“根基”（指他们领受的启示，而非个人）。“各房靠他联络得合式”指建筑过程中石块的精细接合。最终目的是成为神藉着圣灵居住的“所在”（Katoikētērion）。",
+                            },
+                            devotional: {
+                                title: "不要做一块孤独的砖",
+                                content: "没有一块砖头是独自存在的。如果你不在教会的群体中与他人连接，你就无法成为圣殿的一部分。属灵成长是共同体的工程。有时候与人相处（联络得合式）会有摩擦和痛苦，但这正是建造的过程，为了让神更荣耀地居住在我们中间。",
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-red-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-gray-800">${chapterData.intro.title}</h2>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-gray-700 bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Theme Card -->
+                    <div class="brick-gradient text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
+                        <i class="fas fa-hammer text-4xl mb-4 text-orange-200"></i>
+                        <h3 class="text-xl font-bold mb-2">核心神学</h3>
+                        <p class="text-red-100 text-sm italic mb-4">"我们原是他的工作(杰作)"</p>
+                        <div class="flex items-center justify-center w-full space-x-2">
+                            <span class="text-xs">死</span>
+                            <div class="w-1/2 bg-white/20 h-1 rounded-full overflow-hidden">
+                                <div class="bg-teal-300 h-full w-full animate-pulse"></div>
+                            </div>
+                            <span class="text-xs">生</span>
+                        </div>
+                        <p class="text-xs mt-4 opacity-80 border-t border-white/20 pt-2 w-full">靠恩典 · 藉信心 · 为行善</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Salvation Logic Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">得救的逻辑 (2:8-10)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="salvationChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">恩典是源头，信心是管道，行为是果子</p>
+                    </div>
+
+                    <!-- One New Man Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-2 text-gray-700 w-full border-b pb-2">一个新人的构成 (2:15)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="unityChart"></canvas>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-4 text-center">不是A变成B，而是A和B成为C (新人)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filters
+            const filterControls = `
+                <div class="sticky top-20 z-40 bg-[#FFFAF0]/95 backdrop-blur py-4 mb-8 border-b border-gray-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-gray-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-gray-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-red-700 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-teal-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                // Determine Section Header Color
+                let headerColorClass = 'text-gray-800 border-gray-200';
+                if(section.themeColor === 'red') headerColorClass = 'text-red-700 border-red-200';
+                if(section.themeColor === 'teal') headerColorClass = 'text-teal-700 border-teal-200';
+                if(section.themeColor === 'orange') headerColorClass = 'text-orange-700 border-orange-200';
+
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card bg-white rounded-xl shadow-sm mb-8 overflow-hidden">
+                        <div class="p-5 bg-gradient-to-r from-gray-50 to-white border-b border-gray-100">
+                            <span class="inline-block px-2 py-1 bg-gray-200 text-gray-700 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-gray-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-slate-50 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-teal-50 transition">
+                                <h4 class="text-teal-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-gray-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-gray-600 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${headerColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${headerColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-gray-800">解经原则：历史与体验的桥梁</h2>
+                        <p class="text-gray-600">
+                            以弗所书第二章极其强调“过去”与“现在”的对比。正确的解经必须先回到历史的现场（学术），再进入心灵的现场（灵修）。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Historical/Contextual -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-landmark"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">历史背景解经 (Contextual Exegesis)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">原则：回到第一世纪</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>定义：</strong> 除非我们理解第一世纪犹太人与外邦人的仇恨，否则无法理解“和睦”的重量。</li>
+                                <li><strong>关键点：</strong> 
+                                    <br>• <strong>考古：</strong> 研究耶路撒冷圣殿的“中间隔断的墙”（Soreg）。
+                                    <br>• <strong>词源：</strong> 理解“房角石”、“杰作”等词汇在希腊文化中的原意。
+                                    <br>• <strong>神学：</strong> 阐明“本乎恩”与“因着信”的介词关系（Instrumental Cause）。
+                                </li>
+                                <li><strong>目的：</strong> 确立信仰的客观真理根基。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Existential/Applicational -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-600">
+                            <div class="text-teal-600 text-4xl mb-4"><i class="fas fa-users"></i></div>
+                            <h3 class="text-xl font-bold text-teal-800 mb-4">存在主义应用 (Existential Application)</h3>
+                            <p class="text-sm text-gray-500 mb-4 uppercase tracking-wide">原则：活在二十一世纪</p>
+                            <ul class="space-y-4 text-gray-600 text-sm">
+                                <li><strong>定义：</strong> 将“拆毁墙”的神学真理应用到现代的人际关系和教会生活中。</li>
+                                <li><strong>关键点：</strong> 
+                                    <br>• <strong>内省：</strong> 谁是我的“外邦人”？我在哪里筑了墙？
+                                    <br>• <strong>身份：</strong> 真正感受到“被接纳”和“不再是外人”的情感冲击。
+                                    <br>• <strong>行动：</strong> 作为圣殿的一块石头，我如何与周围不完美的“石头”磨合？
+                                </li>
+                                <li><strong>目的：</strong> 经历真理带来的自由与合一。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-orange-50 p-6 rounded-lg border border-orange-200 text-center">
+                        <h4 class="font-bold text-orange-800 mb-2">综合总结</h4>
+                        <p class="text-orange-900 text-sm">
+                            学术解经告诉我们：墙已经被拆毁了（客观事实）。<br>
+                            灵修解经挑战我们：那就不要再在这个废墟上重建心中的墙（主观回应）。
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Salvation Logic Chart (Vertical Bar)
+            const ctxSalvation = document.getElementById('salvationChart').getContext('2d');
+            new Chart(ctxSalvation, {
+                type: 'bar',
+                data: {
+                    labels: ['人的行为', '神的恩典', '信心(作为管道)', '行善(作为结果)'],
+                    datasets: [{
+                        label: '救恩贡献度 / 顺序权重',
+                        data: [0, 100, 40, 80],
+                        backgroundColor: [
+                            '#CBD5E0', // Grey (Works - 0 contribution)
+                            '#C53030', // Red (Grace - Source)
+                            '#2B6CB0', // Blue (Faith - Channel)
+                            '#2F855A'  // Green (Works - Fruit)
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.parsed.y === 0) return "人的行为：0% (不能赚取救恩)";
+                                    if(context.parsed.y === 100) return "神的恩典：100% (救恩的源头)";
+                                    if(context.parsed.y === 40) return "信心：接受恩典的唯一管道";
+                                    return "行善：得救后必然结出的果子";
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { display: false } }
+                    }
+                }
+            });
+
+            // Unity Chart (Pie/Doughnut)
+            const ctxUnity = document.getElementById('unityChart').getContext('2d');
+            new Chart(ctxUnity, {
+                type: 'doughnut',
+                data: {
+                    labels: ['犹太人 (律法)', '外邦人 (无约)', '一个新人 (教会)'],
+                    datasets: [{
+                        data: [25, 25, 50],
+                        backgroundColor: [
+                            '#ECC94B', // Yellow
+                            '#718096', // Grey
+                            '#2C7A7B'  // Teal (The New Man)
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { 
+                            display: true, 
+                            text: '借着十字架灭了冤仇',
+                            font: { size: 14 }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

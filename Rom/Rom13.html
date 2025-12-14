@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第十三章：顺服权柄与披戴基督</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Authority Navy (Order) & Daybreak Orange (Urgency) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Slate/Blue 50 - Orderly background */
+            color: #0F172A; /* Slate 900 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Authority Navy */
+        .active-tab {
+            color: #1E3A8A; /* Blue 900 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #1E3A8A;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Daybreak Orange */
+        .verse-card:hover {
+            border-left-color: #F97316; /* Orange 500 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.1), 0 4px 6px -2px rgba(249, 115, 22, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #EFF6FF; /* Blue 50 */
+            color: #172554; /* Blue 950 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #BFDBFE; /* Blue 200 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans13 {
+            background: linear-gradient(135deg, #1E3A8A 0%, #F97316 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-blue-900 serif">
+                        <i class="fas fa-balance-scale mr-2 text-orange-500"></i> 罗马书 13章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">政权与末世</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-900">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-900">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-blue-950 text-blue-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-orange-200">"黑夜已深，白昼将近；我们就当脱去暗昧的行为，带上光明的兵器。" (13:12)</p>
+            <p class="text-xs text-blue-400 mt-3">交互式研经工具 | 聚焦：公共神学与末世伦理</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "在世却不属世：公民责任与警醒",
+                summary: "罗马书第13章是新约关于“政教关系”最核心的经文。保罗在阐述了个人献身（12章）之后，将视线转向公共领域，教导基督徒要顺服掌权者，因为权柄出于神（1-7节）。接着，他将所有律法总结为“爱人如己”，指出爱是律法的成全（8-10节）。最后，他以末世论的紧迫感（白昼将近）呼吁信徒醒悟，脱去暗昧行为，披戴主耶稣基督（11-14节）。这是一份在黑暗时代作光明之子的生存指南。",
+                highlights: [
+                    { icon: "fas fa-university", color: "text-blue-700", text: "顺服掌权者" },
+                    { icon: "fas fa-heart", color: "text-red-500", text: "爱的债" },
+                    { icon: "fas fa-sun", color: "text-orange-500", text: "白昼将近" }
+                ]
+            },
+            sections: [
+                {
+                    id: "authority",
+                    title: "基督徒与政府：神的主权 (13:1-7)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "13:1-2",
+                            text: "在上有权柄的，人人当顺服他，因为没有权柄不是出于神的...所以抗拒掌权的就是抗拒神的命...",
+                            academic: {
+                                title: "权柄的神圣来源",
+                                keywords: ["Exousia (权柄/权力)", "Hypotassō (顺服/置于...之下)", "Diatağē (设立/命令)"],
+                                content: "保罗写作时（约公元57年）正值尼禄统治初期，这使得他的教导更具张力。他并未认可暴政，而是确立了“权柄源于神”的原则。政府是神设立的“普遍恩典”工具，用于维持秩序。Hypotassō（顺服）不等于盲从，而是指承认神在社会结构中设立的秩序。抗拒合法秩序即是抗拒神的主权安排。"
+                            },
+                            devotional: {
+                                title: "在坏政府下如何顺服？",
+                                content: "顺服政府不是因为他们完美，而是因为我们敬畏神。当我们在红灯前停下，或按时纳税时，我们是在向设立秩序的神致敬。这种顺服是“为主的缘故”。当然，如果政府要求我们违背神的律法（如徒5:29），顺服神优于顺服人，但即便在那时，我们的态度仍应是尊重的（非暴力抵抗）。"
+                            }
+                        },
+                        {
+                            ref: "13:3-5",
+                            text: "作官的原不是叫行善的惧怕...他是神的用人，是伸冤的...必须顺服，不但是因为刑罚，也是因为良心。",
+                            academic: {
+                                title: "剑的权柄与良心",
+                                keywords: ["Diakonos (用人/执事)", "Machaira (剑/刑罚权)", "Syneidēsis (良心)"],
+                                content: "政府官员被称为神的“用人”（Diakonos，与教会执事同词），表明其职能的神圣性（惩恶扬善）。“佩剑”象征合法的强制力和司法权（包括死刑）。保罗将顺服的动机从“惧怕刑罚”（外在）提升到“良心”（内在）。基督徒守法是因为良心对神的敏锐，而非仅仅怕坐牢。"
+                            },
+                            devotional: {
+                                title: "最好的公民",
+                                content: "因为我们有更高的主（耶稣），所以我们应当是地上最好的公民。我们纳税不偷漏，守法不钻空子，不是因为怕被抓，而是为了良心的缘故。在公共领域活出正直，本身就是对神的见证。你的公民生活能荣耀神吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "love_law",
+                    title: "爱的债务：律法的成全 (13:8-10)",
+                    themeColor: "red",
+                    verses: [
+                        {
+                            ref: "13:8",
+                            text: "凡事都不可亏欠人，惟有彼此相爱要常以为亏欠，因为爱人的就完全了律法。",
+                            academic: {
+                                title: "永远还不清的债",
+                                keywords: ["Opheiletē (亏欠/债务)", "Plēroō (成全/充满)"],
+                                content: "保罗巧妙地从“纳税的债”（7节）转到“爱的债”。金钱的债可以还清，但爱的债永远还不清（Owe nothing... except love）。这是一种持续的义务状态。爱不是律法的替代品（废除律法），而是律法的“成全”（Fulfillment）。只有爱能真正达到律法“不加害与人”的精义。"
+                            },
+                            devotional: {
+                                title: "爱的负债感",
+                                content: "当我们觉得“我已经爱得够多了”的时候，我们就错了。面对弟兄姊妹和邻舍，我们应当常存“负债感”——觉得我还欠他们爱。这种神圣的亏欠感会驱动我们不断去服侍、饶恕和给予。你今天打算还一点“爱的债”吗？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "eschatology",
+                    title: "末世的警钟：披戴基督 (13:11-14)",
+                    themeColor: "orange",
+                    verses: [
+                        {
+                            ref: "13:11-12",
+                            text: "再者，你们晓得现今就是该趁早睡醒的时候...黑夜已深，白昼将近。我们就当脱去暗昧的行为，带上光明的兵器。",
+                            academic: {
+                                title: "末世的时间观 (Kairos)",
+                                keywords: ["Kairos (时刻/时机)", "Hora (钟点)", "Hopla (兵器/器具)"],
+                                content: "保罗将伦理建立在末世论之上。Kairos 指具有决定性意义的时刻。信徒处于“已深之夜”与“将近之昼”的交界处。生活方式的改变被描绘为“更衣”：脱去睡衣（暗昧行为），穿上军装（光明的兵器）。这暗示基督徒的生活是一场属灵争战，要在黎明前的黑暗中保持警醒。"
+                            },
+                            devotional: {
+                                title: "起床号响了",
+                                content: "属灵的沉睡是指对神的国度麻木，沉迷于世界的享乐。保罗像吹号手一样喊道：“醒醒！天快亮了！”我们得救（身体得赎/主再来）比初信时更近了。不要像世人一样醉生梦死。现在是穿上军装、预备迎接君王的时候。"
+                            }
+                        },
+                        {
+                            ref: "13:13-14",
+                            text: "行事为人要端正，好像行在白昼...总要披戴主耶稣基督，不要为肉体安排，去放纵私欲。",
+                            academic: {
+                                title: "披戴基督 (Enduō)",
+                                keywords: ["Euschēmonōs (端正/体面)", "Endyō (穿上/披戴)", "Pronoia (安排/预谋)"],
+                                content: "这是奥古斯丁悔改时读到的经文。“端正”指举止合宜，不令人羞耻。对付肉体的策略不是修身养性，而是“披戴（Put on）主耶稣”。这是一个与其联合、活出其性情的动态过程。“不要为肉体安排”指不要为罪恶的欲望预留退路或制造机会（Premeditation）。"
+                            },
+                            devotional: {
+                                title: "你穿的是谁？",
+                                content: "每天早上出门前，我们都会穿衣服。在属灵上，我们也需要穿上“耶稣基督”。这意味着让祂的圣洁、谦卑和爱成为你的外衣，遮盖你的旧人，并展示给世界看。不要为私欲预留后门（比如手机里的某个App，或某段暧昧关系）。把后路堵死，单单为主活。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-blue-800">
+                        <h2 class="text-3xl font-bold mb-6 serif text-blue-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-orange-600">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Authority Pyramid -->
+                    <div class="gradient-romans13 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-blue-200">
+                        <div class="mb-2">
+                            <i class="fas fa-sitemap text-4xl text-blue-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">权柄的秩序</h3>
+                        </div>
+                        
+                        <div class="flex flex-col items-center w-full space-y-1">
+                            <!-- God -->
+                            <div class="w-16 h-8 bg-orange-400 rounded-t-lg flex items-center justify-center text-white text-xs font-bold shadow-md z-30">神</div>
+                            <!-- Government -->
+                            <div class="w-32 h-8 bg-blue-600 flex items-center justify-center text-white text-xs font-bold shadow-md z-20">
+                                掌权者 (神的用人)
+                            </div>
+                            <!-- Citizen -->
+                            <div class="w-48 h-8 bg-blue-800 rounded-b-lg flex items-center justify-center text-white text-xs font-bold shadow-md z-10">
+                                公民 (良心顺服)
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-blue-100">没有权柄不是出于神的 (v1)</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Debt of Love Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-blue-100">
+                        <h3 class="text-lg font-bold mb-2 text-blue-800 w-full border-b border-blue-100 pb-2">债务管理 (v7-8)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="debtChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">金钱税收：付清 / 彼此相爱：永欠</p>
+                    </div>
+
+                    <!-- Day vs Night Switch -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-orange-100">
+                        <h3 class="text-lg font-bold mb-2 text-orange-800 w-full border-b border-orange-100 pb-2">末世的时间表 (v12)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="timeChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">黑夜已深 -> 黎明将至 -> 穿上光甲</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-blue-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-blue-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-blue-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-700 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-orange-600 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-blue-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'blue') titleColorClass = 'text-blue-800 border-blue-200';
+                else if(section.themeColor === 'red') titleColorClass = 'text-red-800 border-red-200';
+                else if(section.themeColor === 'orange') titleColorClass = 'text-orange-700 border-orange-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-blue-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-blue-50 border-b border-blue-100">
+                            <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-blue-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-orange-50/20 transition">
+                                <h4 class="text-blue-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-blue-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/20 transition">
+                                <h4 class="text-orange-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-slate-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-blue-900">解经原则：处境与末世</h2>
+                        <p class="text-slate-600">
+                            罗马书第13章的解经需要在“历史处境”（罗马帝国）与“神学原则”（神的主权）之间找到平衡，并置于末世论的框架下。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：历史背景与词源</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 历史文法原则。考虑罗马基督徒面临的政治张力（犹太人被驱逐事件、早期反抗情绪），理解保罗维护社会秩序的护教意图。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 词汇研究（"权柄" Exousia 的神授性质）。
+                                    <br>2. 逻辑分析（从顺服政府推导到爱的成全）。
+                                </li>
+                                <li><strong>目的：</strong> 确立基督徒在世俗国家中的公民神学。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-orange-500">
+                            <div class="text-orange-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：良心与警醒</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 动机升华。将公民服从提升为对神的敬拜（"因为良心"），将道德生活提升为末世预备（"白昼将近"）。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 内省（我的顺服是出于恐惧还是敬畏神？）。
+                                    <br>2. 紧迫感（在这个弯曲悖谬的世代，我是否穿戴了光明的兵器？）。
+                                </li>
+                                <li><strong>目的：</strong> 在公共领域活出基督的见证，预备主的再来。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Debt of Love Chart (Bar)
+            const ctxDebt = document.getElementById('debtChart').getContext('2d');
+            new Chart(ctxDebt, {
+                type: 'bar',
+                data: {
+                    labels: ['纳税 (Tax)', '恭敬 (Honor)', '爱心 (Love)'],
+                    datasets: [{
+                        label: '债务状态',
+                        data: [100, 100, 15], // Tax/Honor paid in full (100%), Love never full (visualized as small bar or distinct)
+                        backgroundColor: [
+                            '#3B82F6', // Blue (Paid)
+                            '#3B82F6', // Blue (Paid)
+                            '#F97316'  // Orange (Love - Never Paid Off, visualized conceptually)
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100,
+                            ticks: { callback: function(value) { return value + '%' } }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex === 2) return "永远还不清 (Owe nothing but love)";
+                                    return "当纳的已纳 (Paid)";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Day vs Night Chart (Doughnut)
+            const ctxTime = document.getElementById('timeChart').getContext('2d');
+            new Chart(ctxTime, {
+                type: 'doughnut',
+                data: {
+                    labels: ['黑夜已深 (Night Spent)', '白昼将近 (Day at Hand)'],
+                    datasets: [{
+                        data: [85, 15], // Night is almost over, Day is near
+                        backgroundColor: [
+                            '#1E293B', // Dark Slate
+                            '#F97316'  // Bright Orange
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '60%',
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

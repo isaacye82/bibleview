@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第八章：圣灵里的生命与得胜</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Spirit Gold (Glory) & Freedom Blue (Spirit/Liberty) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Sky 50 - Open heavens */
+            color: #0C4A6E; /* Sky 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Freedom Blue */
+        .active-tab {
+            color: #0284C7; /* Sky 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0284C7;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Spirit Gold */
+        .verse-card:hover {
+            border-left-color: #D97706; /* Amber 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(217, 119, 6, 0.1), 0 4px 6px -2px rgba(217, 119, 6, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0F2FE; /* Sky 100 */
+            color: #075985; /* Sky 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #7DD3FC; /* Sky 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans8 {
+            background: linear-gradient(135deg, #0C4A6E 0%, #D97706 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-900 serif">
+                        <i class="fas fa-dove mr-2 text-amber-500"></i> 罗马书 8章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">圣灵与得胜</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-950 text-sky-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-amber-300">"如今，那些在基督耶稣里的就不定罪了。" (8:1)</p>
+            <p class="text-xs text-sky-400 mt-3">交互式研经工具 | 聚焦：圣灵的工作与得儿子的名分</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "圣灵的大教堂：得胜的凯歌",
+                summary: "罗马书第8章被誉为“圣经中的大教堂”，是基督教信仰最宏伟的篇章之一。如果说第7章是挣扎的低谷，第8章就是得胜的高峰。保罗以“不定罪”开始（1节），以“不能隔绝”结束（39节）。本章详细阐述了圣灵如何释放信徒脱离罪和死的律，赐下儿子的名分，并在叹息中代求。最后，保罗以“救恩的金链”（预定-呼召-称义-得荣）和“得胜的凯歌”将全书推向高潮。",
+                highlights: [
+                    { icon: "fas fa-unlock", color: "text-sky-600", text: "不再定罪" },
+                    { icon: "fas fa-child", color: "text-amber-600", text: "儿子的心" },
+                    { icon: "fas fa-link", color: "text-slate-600", text: "万事效力" }
+                ]
+            },
+            sections: [
+                {
+                    id: "no_condemnation",
+                    title: "生命的释放：圣灵的律 (8:1-11)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "8:1-2",
+                            text: "如今，那些在基督耶稣里的就不定罪了。因为赐生命圣灵的律，在基督耶稣里释放了我...",
+                            academic: {
+                                title: "新的引力法则",
+                                keywords: ["Katakrima (定罪/刑罚)", "Nomos (律/原则/力量)"],
+                                content: "“不定罪”是法律地位的宣告，但第2节解释了其动力学原理。这里的“律”（Nomos）不是指摩西律法，而是指一种“法则”或“力量”（如万有引力定律）。“罪和死的律”像地心引力一样把人向下拉，但“赐生命圣灵的律”像空气动力学一样产生了更大的升力，使人能克服引力飞起来。这不仅是地位的改变，更是能力的替换。"
+                            },
+                            devotional: {
+                                title: "不仅仅是赦免",
+                                content: "神给你的不只是一张赦免书（不定罪），更是一台新引擎（圣灵）。如果你只盯着“不犯罪”这个目标，你会很累；但如果你专注于顺随圣灵的新律，就像鸟儿专注于飞翔一样，地心引力（罪）自然就被克服了。得胜不是靠压抑，是靠飞翔。"
+                            }
+                        },
+                        {
+                            ref: "8:5-6",
+                            text: "随从肉体的人体贴肉体的事；随从圣灵的人体贴圣灵的事...体贴肉体的，就是死；体贴圣灵的，乃是生命、平安。",
+                            academic: {
+                                title: "思维模式的对抗",
+                                keywords: ["Phronousin (体贴/思念/心态)", "Sarx (肉体)"],
+                                content: "Phronousin 指一种根本的思维导向或心态（Mindset）。这不仅仅是思想内容，而是思想的“操作系统”。肉体的操作系统必然导向死（与神隔绝），因为它本质上是“与神为仇”（7节），既不服也“不能”服神。圣灵的操作系统则带来生命与平安（Shalom）。这是本体论上的对立。"
+                            },
+                            devotional: {
+                                title: "你在想什么？",
+                                content: "你的大脑被什么占据？是焦虑、比较、欲望（肉体的事），还是神的应许、感恩、爱（圣灵的事）？思想决定生命。如果你想改变生命的状态，先改变你的关注点。每天早晨，调整你的频道，对准圣灵的信号。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sonship",
+                    title: "儿子的名分：圣灵的印证 (8:12-17)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "8:14-16",
+                            text: "凡被神的灵引导的，都是神的儿子...所受的乃是儿子的心，因此我们呼叫：“阿爸！父！”",
+                            academic: {
+                                title: "阿爸父 (Abba)",
+                                keywords: ["Huiothesia (得儿子的名分/收养)", "Abba (阿爸/亲昵称呼)"],
+                                content: "Huiothesia 是罗马法律术语，指通过收养获得完全的继承权。保罗强调我们不是奴仆（惧怕），而是儿子（亲密）。“阿爸”是亚兰文（Abba），是耶稣对神的独特称呼，表达极度的亲密与信赖。圣灵在我们内心深处产生这种直觉性的呼唤，这是得救的主观确据（Internal Testimony）。"
+                            },
+                            devotional: {
+                                title: "不再是孤儿",
+                                content: "你祷告时觉得神是严厉的法官，还是慈爱的父亲？“阿爸”这个词打破了所有宗教的距离感。你有权像孩子一样爬到神的膝盖上。无论你犯了什么错，你的身份没有变。你不是在争取认可的奴工，你是被深爱的孩子。"
+                            }
+                        },
+                        {
+                            ref: "8:17",
+                            text: "既是儿女，便是后嗣...如果我们和他一同受苦，也必和他一同得荣耀。",
+                            academic: {
+                                title: "受苦的必然性",
+                                keywords: ["Klēronomoi (后嗣)", "Sympaschomen (一同受苦)"],
+                                content: "继承权（Heirship）包含两部分：荣耀和受苦。这不是说受苦是得救的条件，而是说受苦是与基督联合的必然结果。Sympaschomen（同受苦）表明我们的苦难不是无意义的倒霉，而是参与在基督的生命历程中。没有十字架，就没有冠冕。"
+                            },
+                            devotional: {
+                                title: "荣耀的代价",
+                                content: "当苦难来临时，不要觉得奇怪，那是“皇室成员”的必修课。这证明你真的属于那个受苦的弥赛亚家族。现在的苦难是通往未来荣耀的铺路石。只要你还在受苦，就说明故事还没结束，荣耀正在路上。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "future_glory",
+                    title: "将来的荣耀与叹息 (8:18-27)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "8:18-21",
+                            text: "我想，现在的苦楚若比起将来要显于我们的荣耀就不足介意了...受造之物切望等候...",
+                            academic: {
+                                title: "宇宙性的救赎",
+                                keywords: ["Logizomai (算/评估)", "Apokaradokia (切望/伸长脖子等候)"],
+                                content: "保罗进行了一次价值评估（Logizomai）：现在的苦楚 < 将来的荣耀。救赎不仅关乎人类，也关乎整个物质宇宙（受造之物）。因人的罪，自然界“服在虚空之下”（败坏、死亡）；因神儿子的显现，自然界也将“脱离败坏的辖制”。这是宏大的生态神学图景。"
+                            },
+                            devotional: {
+                                title: "天平的两端",
+                                content: "当你觉得苦难重得无法承受时，是因为你还没看到天平另一端的荣耀。那个荣耀太重了（Weight of Glory），以至于现在的苦难与之相比简直像羽毛一样轻。抬起头，像受造之物一样“伸长脖子”盼望，黎明就在前方。"
+                            }
+                        },
+                        {
+                            ref: "8:26-27",
+                            text: "况且，我们的软弱有圣灵帮助...圣灵亲自用说不出来的叹息替我们祷告...",
+                            academic: {
+                                title: "圣灵的叹息",
+                                keywords: ["Synantilambanetai (帮助/以此分担重担)", "Stenagmois (叹息)"],
+                                content: "当我们软弱到连怎么祷告都不知道时，圣灵“亲自”介入。Synantilambanetai 原意是“接过重担的一头帮着扛”。“说不出来的叹息”指一种超越语言的深层代求，表达了神对人类苦难的深刻共情。这表明在我们的痛苦深处，神与我们同在。"
+                            },
+                            devotional: {
+                                title: "你不需要逞强",
+                                content: "有时你会累到说不出一句话，甚至无法祷告。没关系，圣灵在为你祷告。祂懂你那些无法言说的痛。你不必在那一刻表现坚强，因为有一位全能的代求者正在你的心里，把你最深的渴望翻译成天上的语言。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "golden_chain",
+                    title: "救恩的金链与爱的凯歌 (8:28-39)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "8:28-30",
+                            text: "我们晓得万事都互相效力，叫爱神的人得益处...预先所定下的人又召他们来...又叫他们得荣耀。",
+                            academic: {
+                                title: "救恩的金链 (Golden Chain)",
+                                keywords: ["Synergei (互相效力/协同工作)", "Proōrisen (预定)"],
+                                content: "这是神主权的极致宣告。1. **范围**：万事（好坏、顺逆）；2. **目的**：得益处（最终模成儿子的形象）；3. **链条**：预知 -> 预定 -> 呼召 -> 称义 -> 得荣耀。这是一条不可断裂的链条，保证了救恩的稳固性。“得荣耀”用的是过去时态（Aorist），在神眼中这是已经完成的事实。"
+                            },
+                            devotional: {
+                                title: "没有浪费的经历",
+                                content: "在你的人生中，没有一件事是白发生的。失败、眼泪、错误，在神的手中都能“互相效力”，编织成美丽的图画。神对你的计划早于世界的根基，并通向永恒的荣耀。你是安全的，因为这链条的每一环都是神亲自打造的。"
+                            }
+                        },
+                        {
+                            ref: "8:31-39",
+                            text: "神若帮助我们，谁能敌挡我们呢？...谁能使我们与基督的爱隔绝呢？...在这这一切的事上已经得胜有余了。",
+                            academic: {
+                                title: "得胜有余 (Hypernikōmen)",
+                                keywords: ["Hypernikōmen (超级得胜)", "Chōrisai (隔绝/分开)"],
+                                content: "保罗用一连串反问句（Who can...?）将全书推向高潮。如果神连儿子都舍了（Logic of the Cross），祂还会吝啬什么吗？没有任何指控能成立，因为神已称义；没有任何力量能隔绝爱，因为基督已复活。Hypernikōmen 意为“超级得胜者”或“压倒性的胜利”，不是勉强过关，而是从容夸胜。"
+                            },
+                            devotional: {
+                                title: "不可动摇的爱",
+                                content: "无论你是高山还是低谷，是赤身露体还是刀剑危险，有一件事是确定的：神爱你。这爱不是某种感觉，而是基于基督之死的客观事实。没有什么能切断这根爱的脐带。在这个不确定的世界里，拥抱这个唯一的确定性吧：你是被永恒之爱所拥抱的。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-amber-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Golden Chain -->
+                    <div class="gradient-romans8 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-amber-200">
+                        <div class="mb-4">
+                            <i class="fas fa-link text-4xl text-sky-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">救恩的金链 (v29-30)</h3>
+                        </div>
+                        
+                        <div class="flex flex-col space-y-2 text-xs text-white font-bold">
+                            <div class="flex items-center justify-center">
+                                <span class="bg-amber-500/80 px-3 py-1 rounded-full">预知 (Foreknew)</span>
+                                <span class="mx-1">↓</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <span class="bg-amber-500/80 px-3 py-1 rounded-full">预定 (Predestined)</span>
+                                <span class="mx-1">↓</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <span class="bg-sky-500/80 px-3 py-1 rounded-full">呼召 (Called)</span>
+                                <span class="mx-1">↓</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <span class="bg-sky-500/80 px-3 py-1 rounded-full">称义 (Justified)</span>
+                                <span class="mx-1">↓</span>
+                            </div>
+                            <div class="flex items-center justify-center">
+                                <span class="bg-amber-600 px-4 py-1 rounded-full shadow-md border border-white">得荣耀 (Glorified)</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-sky-100">神不失败的计划</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Suffering vs Glory Balance Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-amber-100">
+                        <h3 class="text-lg font-bold mb-2 text-amber-800 w-full border-b border-amber-100 pb-2">荣耀的极重无比 (v18)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="gloryChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">现在的苦楚 vs 将来的荣耀</p>
+                    </div>
+
+                    <!-- Mindset Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-sky-100">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">两种体贴/心态 (v5-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="mindsetChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">体贴圣灵(生命平安) vs 体贴肉体(死)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-700 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-amber-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else if(section.themeColor === 'amber') titleColorClass = 'text-amber-800 border-amber-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-sky-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-sky-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-amber-50/30 transition">
+                                <h4 class="text-amber-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-sky-100/30 transition">
+                                <h4 class="text-sky-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：确据与凯歌</h2>
+                        <p class="text-slate-600">
+                            罗马书第8章将深奥的三一神论（父、子、圣灵）与最实际的苦难安慰完美结合。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：神学结构与修辞</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 终末论张力。理解"已经"（不定罪、得儿子的心）与"尚未"（身体得赎、完全得荣）之间的张力。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 逻辑链推导（从"若神帮助我们"推导出"谁能抵挡"）。
+                                    <br>2. 词汇隐喻（"初结的果子"指圣灵作为未来的担保）。
+                                </li>
+                                <li><strong>目的：</strong> 确立救恩的绝对安全感（Eternal Security）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-sky-500">
+                            <div class="text-sky-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：安慰与得胜</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 情感升华。将神学真理转化为面对苦难时的得胜信念。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 视角转换（从看苦难转向看将来的荣耀）。
+                                    <br>2. 身份宣告（我是神的后嗣，我是超级得胜者）。
+                                </li>
+                                <li><strong>目的：</strong> 在圣灵里享受自由，确信神的爱永不隔绝。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Glory vs Suffering Balance Chart (Bar - Imbalanced)
+            const ctxGlory = document.getElementById('gloryChart').getContext('2d');
+            new Chart(ctxGlory, {
+                type: 'bar',
+                data: {
+                    labels: ['现在的苦楚', '将来的荣耀'],
+                    datasets: [
+                        {
+                            label: '份量 (Weight)',
+                            data: [10, 100], // Glory far outweighs suffering
+                            backgroundColor: [
+                                '#94A3B8', // Slate (Suffering)
+                                '#F59E0B'  // Amber (Glory)
+                            ],
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataIndex === 0 ? "不足介意" : "极重无比";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Mindset Radar Chart
+            const ctxMindset = document.getElementById('mindsetChart').getContext('2d');
+            new Chart(ctxMindset, {
+                type: 'radar',
+                data: {
+                    labels: ['平安 (Peace)', '生命 (Life)', '顺服神 (Submitting)', '得神喜悦 (Pleasing)', '有圣灵 (Indwelling)'],
+                    datasets: [
+                        {
+                            label: '体贴圣灵',
+                            data: [100, 100, 100, 100, 100],
+                            backgroundColor: 'rgba(14, 165, 233, 0.2)', // Sky Blue
+                            borderColor: '#0284C7',
+                            pointBackgroundColor: '#0284C7',
+                            pointBorderColor: '#fff',
+                        },
+                        {
+                            label: '体贴肉体',
+                            data: [0, 0, 0, 0, 0], // Death, hostility
+                            backgroundColor: 'rgba(71, 85, 105, 0.2)', // Slate
+                            borderColor: '#475569',
+                            pointBackgroundColor: '#475569',
+                            pointBorderColor: '#fff',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: { 
+                            angleLines: { display: true },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: { display: false },
+                            pointLabels: { font: { size: 11, family: "'Noto Sans SC', sans-serif" }, color: '#0C4A6E' }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以弗所书第六章：属灵争战与全副军装</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F1F5F9; /* Slate 100 */
+            color: #1E293B; /* Slate 800 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+        }
+
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .active-tab {
+            color: #4338ca; /* Indigo 700 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #4338ca;
+            border-radius: 2px;
+        }
+
+        /* 装备卡片特效 */
+        .armor-card {
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+        }
+        .armor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: #D97706; /* Amber 600 */
+        }
+
+        .academic-bg {
+            background-color: #F8FAFC;
+            border-left: 3px solid #64748B;
+        }
+        .devotional-bg {
+            background-color: #FFFBEB;
+            border-left: 3px solid #D97706;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800 serif">
+                        <i class="fas fa-shield-alt mr-2 text-indigo-600"></i> 以弗所书 6章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">战略总览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-indigo-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-gray-500 hover:text-indigo-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-2">"要穿戴神所赐的全副军装，就能抵挡魔鬼的诡计。" (6:11)</p>
+            <p class="text-xs text-slate-500">双轨解经报告 | 学术严谨性 & 灵修应用性</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "在主里刚强：从人际关系到属灵战场",
+                summary: "以弗所书第六章是整卷书的巅峰。保罗首先处理了最亲密的社会关系（父母与儿女、主人与仆人），强调基督的主权渗透生活细节。随后，视角瞬间拉大到宇宙层面，揭示了基督徒真正的敌人并非属血气的人，而是空中的恶魔。为此，神为信徒预备了全副军装。本章将日常伦理与宇宙性的属灵争战完美结合。",
+                highlights: [
+                    { icon: "fas fa-home", color: "text-blue-600", text: "家庭伦理秩序" },
+                    { icon: "fas fa-briefcase", color: "text-gray-600", text: "职场的主权" },
+                    { icon: "fas fa-khanda", color: "text-amber-600", text: "全副军装" }
+                ]
+            },
+            sections: [
+                {
+                    id: "relationships",
+                    title: "生活中的顺服与权柄 (6:1-9)",
+                    themeColor: "blue",
+                    verses: [
+                        {
+                            ref: "6:1-4",
+                            text: "你们作儿女的，要在主里听从父母...你们作父亲的，不要惹儿女的气...",
+                            academic: {
+                                title: "Paterfamilias（罗马父权）的转化",
+                                content: "在罗马法律下，父亲对家庭拥有绝对权力（Patria Potestas）。保罗在此引入了革命性的限制：1. 儿女顺服的前提是“在主里”；2. 父亲的权力受到限制，被禁止“惹儿女的气”（parorgizō，激怒）。保罗引用出埃及记20:12，将“在耶和华你神所赐你的地上”转化为普世性的“在世长寿”，表明新约伦理超越地域限制。"
+                            },
+                            devotional: {
+                                title: "家是学习顺服的第一所学校",
+                                content: "我们在家中如何对待看得见的权威（父母），反映了我们如何对待看不见的神。父母也不再是家中的暴君，而是神恩典的管家。管教的目的不是宣泄情绪（惹气），而是按照主的教训塑造生命。你的家庭是恩典的港湾，还是律法的法庭？"
+                            }
+                        },
+                        {
+                            ref: "6:5-9",
+                            text: "你们作仆人的...不要只在眼前事奉，像是讨人喜欢的...你们作主人的，待仆人也是一理...",
+                            academic: {
+                                title: "奴隶制的内部瓦解",
+                                content: "保罗没有直接推翻奴隶制，但通过神学从内部瓦解了它。他提出“你们（主人）和他们（仆人）同有一位主在天上”。“眼前事奉”（ophthalmodoulia）是指只有主人在场才工作。保罗将其转化为“基督的仆人”，将工作的对象从人转向神，彻底改变了劳动的神圣性。"
+                            },
+                            devotional: {
+                                title: "为耶稣打工",
+                                content: "无论你的老板是谁，你最终的老板都是耶稣基督。这赋予了哪怕最卑微的工作以神圣的意义。不要做“眼前的服侍”——只在主管看见时才努力；要做“心里的服侍”。如果你是管理者，请记住你也是被管理者（被神管理），要在权柄中显出谦卑。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "warfare",
+                    title: "属灵争战的现实 (6:10-13)",
+                    themeColor: "indigo",
+                    verses: [
+                        {
+                            ref: "6:10-13",
+                            text: "因我们并不是与属血气的争战，乃是与那些执政的、掌权的...以及天空属灵气的恶魔争战。",
+                            academic: {
+                                title: "宇宙性的对抗 (Kosmokrators)",
+                                content: "保罗使用了一系列军事和政治术语（执政的、掌权的、管辖幽暗世界的）来描述邪恶势力的层级和组织。这里的“争战”（palē）原意是近身摔跤，暗示争战的激烈与贴身。重点不在于研究魔鬼的层级，而在于认清敌人的本质——非物质的、超自然的，因此必须依靠神的大能（en dymanei）。"
+                            },
+                            devotional: {
+                                title: "认清真正的敌人",
+                                content: "基督徒常犯的最大错误是与“属血气的”争战——与配偶吵架、恨恶老板、在政治上互相攻击。经文提醒我们：人不是敌人，人是受害者。真正的敌人是背后的灵界势力。当我们停止攻击人，转向依靠神抵挡魔鬼时，真正的得胜才开始。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "armor",
+                    title: "神所赐的全副军装 (6:14-20)",
+                    themeColor: "amber",
+                    verses: [
+                        {
+                            ref: "6:14",
+                            icon: "fas fa-grip-lines",
+                            item: "真理的腰带",
+                            text: "所以要站稳了，用真理当作带子束腰...",
+                            academic: { title: "行动的准备", content: "罗马士兵的腰带用于束紧长袍以便自由行动，并以此佩剑。真理（Aletheia）既指福音的客观真理，也指信徒的主观诚实。" },
+                            devotional: { title: "不仅是教义，更是诚实", content: "若生活中有谎言和隐藏的罪，腰带就松了，我们在争战中就会绊倒。诚实使我们有力。" }
+                        },
+                        {
+                            ref: "6:14",
+                            icon: "fas fa-heart",
+                            item: "公义的护心镜",
+                            text: "用公义当作护心镜遮胸...",
+                            academic: { title: "双重公义", content: "护心镜保护致命器官。神学上指：1. 基督赋予的“被称义”的地位；2. 信徒活出的实际道德公义。" },
+                            devotional: { title: "保护良心", content: "魔鬼常控告我们的良心。我们需要基督的义来抵挡控告，也需要行为的义不留破口。" }
+                        },
+                        {
+                            ref: "6:15",
+                            icon: "fas fa-shoe-prints",
+                            item: "平安福音的鞋",
+                            text: "又用平安的福音当作预备走路的鞋穿在脚上...",
+                            academic: { title: "稳固的根基", content: "罗马军鞋底有钉，防滑。'预备'指随时站稳并行动。福音带来的平安是争战中站立得稳的基础。" },
+                            devotional: { title: "在动荡中有平安", content: "世界充满混乱，唯有福音带来的内在平安能让我们在风暴中不滑跌。" }
+                        },
+                        {
+                            ref: "6:16",
+                            icon: "fas fa-shield-alt",
+                            item: "信德的藤牌",
+                            text: "拿着信德当作藤牌，可以灭尽那恶者一切的火箭...",
+                            academic: { title: "罗马大盾 (Scutum)", content: "指覆盖全身的长盾，表面以此皮革浸水，能熄灭带火的箭。信心是对神性格的完全信靠。" },
+                            devotional: { title: "信心的选择", content: "火箭是突如其来的怀疑、恐惧或情欲。信心不是感觉，是举起盾牌相信神应许的动作。" }
+                        },
+                        {
+                            ref: "6:17",
+                            icon: "fas fa-hard-hat",
+                            item: "救恩的头盔",
+                            text: "并戴上救恩的头盔...",
+                            academic: { title: "得救的盼望", content: "头盔保护指挥中心（头）。在帖前5:8保罗称其为'得救的盼望'。是对最终救赎的确据。" },
+                            devotional: { title: "保护思想", content: "撒旦的主战场在思想。当我们确信自己的救恩和永恒归宿，当下的挫折就无法击垮我们。" }
+                        },
+                        {
+                            ref: "6:17",
+                            icon: "fas fa-khanda",
+                            item: "圣灵的宝剑",
+                            text: "拿着圣灵的宝剑，就是神的道...",
+                            academic: { title: "Rhema vs Logos", content: "这里用Rhema指'具体说出的话'。不仅是整本圣经（Logos），更是在特定时刻圣灵感动说出的经文。" },
+                            devotional: { title: "反击的武器", content: "耶稣受试探时说'经上记着说'。我们需要熟读圣经，以便圣灵能在危机时刻赐下话语反击。" }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            const container = document.getElementById('app-content');
+            container.innerHTML = ''; // Clear content
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border-l-4 border-indigo-600">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">${chapterData.intro.title}</h2>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex flex-wrap gap-4 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="px-4 py-2 bg-slate-100 rounded-full font-bold text-slate-700 flex items-center">
+                                    <i class="${h.icon} ${h.color} mr-2"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Concept Visual -->
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center text-center relative overflow-hidden">
+                        <i class="fas fa-chess-rook text-9xl absolute -bottom-4 -right-4 text-slate-700 opacity-30"></i>
+                        <h3 class="text-2xl font-bold mb-2 z-10">关键动词：站立得住</h3>
+                        <p class="text-indigo-200 text-sm font-mono mb-4 z-10">(Gr. histēmi)</p>
+                        <p class="text-slate-300 z-10 text-sm">
+                            在第11, 13, 14节重复出现4次。<br>
+                            属灵争战的目标不是攻城略地，<br>而是守住基督已经得胜的阵地。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Armor Radar Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700 w-full border-b pb-2">全副军装：攻防平衡分析</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="armorChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">防御性 (Shield) vs 进攻性 (Sword) vs 基础性 (Belt/Shoes)</p>
+                    </div>
+
+                    <!-- Warfare Levels -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center">
+                        <h3 class="text-lg font-bold mb-4 text-slate-700 w-full border-b pb-2">基督徒的生活战场层级</h3>
+                        <div class="chart-wrapper flex items-end justify-center w-full px-4">
+                            <!-- Custom CSS Bar Chart for Simplicity -->
+                            <div class="flex space-x-4 items-end w-full h-full text-center text-xs text-white">
+                                <div class="w-1/3 bg-blue-400 rounded-t-lg flex flex-col justify-end py-2 hover:bg-blue-500 transition h-[40%]">
+                                    <span class="font-bold">个人/家庭</span>
+                                    <span class="opacity-75">1-4节</span>
+                                </div>
+                                <div class="w-1/3 bg-indigo-500 rounded-t-lg flex flex-col justify-end py-2 hover:bg-indigo-600 transition h-[60%]">
+                                    <span class="font-bold">社会/职场</span>
+                                    <span class="opacity-75">5-9节</span>
+                                </div>
+                                <div class="w-1/3 bg-slate-700 rounded-t-lg flex flex-col justify-end py-2 hover:bg-slate-800 transition h-[90%] relative shadow-xl">
+                                    <i class="fas fa-bolt absolute -top-6 left-1/2 transform -translate-x-1/2 text-amber-500 text-xl animate-bounce"></i>
+                                    <span class="font-bold">灵界争战</span>
+                                    <span class="opacity-75">10-20节</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">从可见的关系延伸至不可见的属灵现实</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterControls = `
+                <div class="sticky top-20 z-40 bg-[#F1F5F9]/95 backdrop-blur py-4 mb-8 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">学术解经</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-50'}">灵修应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content Generation
+            let contentHtml = '';
+
+            // 1. Relationships & Warfare Sections (Standard List Layout)
+            chapterData.sections.slice(0, 2).forEach(section => {
+                 const versesHtml = section.verses.map(verse => createStandardVerseCard(verse)).join('');
+                 contentHtml += `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6">
+                            <div class="w-1 h-8 bg-${section.themeColor}-600 mr-3 rounded"></div>
+                            <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                 `;
+            });
+
+            // 2. Armor Section (Grid Layout Innovation)
+            const armorSection = chapterData.sections[2];
+            const armorCardsHtml = armorSection.verses.map(verse => createArmorCard(verse)).join('');
+            
+            contentHtml += `
+                <div class="mb-12 max-w-6xl mx-auto">
+                    <div class="flex items-center mb-6 justify-center">
+                        <div class="h-[2px] w-12 bg-amber-500 mr-4"></div>
+                        <h3 class="text-2xl font-bold text-slate-800 text-center uppercase tracking-widest">${armorSection.title}</h3>
+                        <div class="h-[2px] w-12 bg-amber-500 ml-4"></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${armorCardsHtml}
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function createStandardVerseCard(verse) {
+            return `
+                <div class="bg-white rounded-xl shadow-sm mb-6 overflow-hidden border border-slate-100">
+                    <div class="p-5 bg-white border-b border-slate-100">
+                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed">"${verse.text}"</p>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+                        <div class="p-6 academic-bg ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <h4 class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2"><i class="fas fa-university mr-1"></i> 学术性</h4>
+                            <h5 class="font-bold text-slate-900 mb-1">${verse.academic.title}</h5>
+                            <p class="text-slate-600 text-sm leading-relaxed">${verse.academic.content}</p>
+                        </div>
+                        <div class="p-6 devotional-bg ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <h4 class="text-amber-700 font-bold text-xs uppercase tracking-widest mb-2"><i class="fas fa-heart mr-1"></i> 灵修性</h4>
+                            <h5 class="font-bold text-slate-900 mb-1">${verse.devotional.title}</h5>
+                            <p class="text-slate-600 text-sm leading-relaxed">${verse.devotional.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createArmorCard(verse) {
+            return `
+                <div class="armor-card bg-white rounded-xl overflow-hidden flex flex-col h-full">
+                    <div class="bg-slate-800 p-4 flex items-center justify-between text-white">
+                        <div class="font-bold text-amber-400"><i class="${verse.icon} mr-2"></i> ${verse.item}</div>
+                        <div class="text-xs text-slate-400">${verse.ref}</div>
+                    </div>
+                    <div class="p-4 bg-slate-50 border-b border-slate-200 flex-grow">
+                        <p class="text-slate-700 text-sm font-serif italic">"${verse.text}"</p>
+                    </div>
+                    <div class="${appState.studyFilter === 'devotional' ? 'hidden' : ''} p-4 border-b border-slate-100">
+                        <p class="text-xs text-slate-500 uppercase font-bold mb-1">权威解经</p>
+                        <h5 class="font-bold text-sm mb-1 text-slate-800">${verse.academic.title}</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">${verse.academic.content}</p>
+                    </div>
+                    <div class="${appState.studyFilter === 'academic' ? 'hidden' : ''} p-4 bg-amber-50/50">
+                        <p class="text-xs text-amber-600 uppercase font-bold mb-1">灵修含义</p>
+                        <h5 class="font-bold text-sm mb-1 text-slate-800">${verse.devotional.title}</h5>
+                        <p class="text-xs text-slate-600 leading-relaxed">${verse.devotional.content}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl font-bold mb-4 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-600">
+                            在研读以弗所书第六章时，我们采用了两种互补的方法来构建完整的信仰图景。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                        <!-- Connecting Line for Desktop -->
+                        <div class="hidden md:block absolute left-1/2 top-10 bottom-10 w-px bg-slate-200 transform -translate-x-1/2"></div>
+
+                        <!-- Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 relative z-10">
+                            <div class="text-slate-600 text-4xl mb-4 text-center"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 text-center">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-center text-slate-400 mb-6 uppercase tracking-wider">挖掘原意</p>
+                            
+                            <dl class="space-y-4 text-sm">
+                                <div>
+                                    <dt class="font-bold text-slate-700">原则：</dt>
+                                    <dd class="text-slate-600 mt-1">关注经文的“当时”意义。强调原文语法（如希腊文动词时态）、历史背景（如罗马军事装备、父权社会结构）和神学脉络。</dd>
+                                </div>
+                                <div>
+                                    <dt class="font-bold text-slate-700">适用范围：</dt>
+                                    <dd class="text-slate-600 mt-1">教义确立、讲道预备、纠正异端、深入研经。</dd>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded mt-4">
+                                    <span class="text-xs font-bold">本章示例：</span>
+                                    <p class="text-xs text-slate-500">解释 "Rhema" (神的话) 与 "Logos" 的区别；考据罗马士兵鞋子的防滑钉。</p>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 relative z-10">
+                            <div class="text-amber-500 text-4xl mb-4 text-center"><i class="fas fa-fire-alt"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-2 text-center">灵修/应用性解经 (Application)</h3>
+                            <p class="text-xs text-center text-slate-400 mb-6 uppercase tracking-wider">连结生命</p>
+                            
+                            <dl class="space-y-4 text-sm">
+                                <div>
+                                    <dt class="font-bold text-slate-700">原则：</dt>
+                                    <dd class="text-slate-600 mt-1">关注经文的“当下”意义。强调圣灵的感动、个人生命的映射、现代场景的应用（如职场、心理健康）。</dd>
+                                </div>
+                                <div>
+                                    <dt class="font-bold text-slate-700">适用范围：</dt>
+                                    <dd class="text-slate-600 mt-1">每日灵修、小组分享、心理辅导、祷告生活。</dd>
+                                </div>
+                                <div class="bg-amber-50 p-3 rounded mt-4">
+                                    <span class="text-xs font-bold text-amber-800">本章示例：</span>
+                                    <p class="text-xs text-amber-700">将“平安的鞋”应用为在焦虑社会中的心理稳定；将“老板”视为神给的管家职分。</p>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+        function initCharts() {
+            // Armor Radar Chart
+            const ctxArmor = document.getElementById('armorChart').getContext('2d');
+            new Chart(ctxArmor, {
+                type: 'radar',
+                data: {
+                    labels: ['真理 (带子)', '公义 (护心镜)', '平安 (鞋)', '信心 (盾牌)', '救恩 (头盔)', '神的话 (宝剑)'],
+                    datasets: [{
+                        label: '全副军装的平衡',
+                        data: [85, 80, 75, 90, 95, 100],
+                        backgroundColor: 'rgba(217, 119, 6, 0.2)', // Amber low opacity
+                        borderColor: 'rgba(217, 119, 6, 1)', // Amber solid
+                        pointBackgroundColor: '#1E293B',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(217, 119, 6, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: '#E2E8F0' },
+                            grid: { color: '#E2E8F0' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#475569'
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

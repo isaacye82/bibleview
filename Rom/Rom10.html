@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>罗马书第十章：信心的听闻与救恩的求告</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        /* Theme: Proclamation Blue (Gospel/Word) & Heartfelt Red (Belief/Heart) */
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #F0F9FF; /* Sky 50 - Open air for preaching */
+            color: #0C4A6E; /* Sky 950 */
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Chart Container Styling */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-wrapper {
+                height: 380px;
+            }
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        /* Active Tab - Proclamation Blue */
+        .active-tab {
+            color: #0284C7; /* Sky 600 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #0284C7;
+            border-radius: 2px;
+        }
+
+        /* Interactive Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: #FFFFFF;
+        }
+        /* Hover effect shifts to Heartfelt Red */
+        .verse-card:hover {
+            border-left-color: #E11D48; /* Rose 600 */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.1), 0 4px 6px -2px rgba(225, 29, 72, 0.05);
+        }
+
+        /* Greek Word Chip */
+        .greek-chip {
+            background-color: #E0F2FE; /* Sky 100 */
+            color: #075985; /* Sky 800 */
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            border: 1px solid #7DD3FC; /* Sky 300 */
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        /* Dual-tone gradient backgrounds */
+        .gradient-romans10 {
+            background: linear-gradient(135deg, #0C4A6E 0%, #E11D48 100%);
+            color: white;
+        }
+
+        /* Animation */
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-sky-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-900 serif">
+                        <i class="fas fa-bullhorn mr-2 text-rose-500"></i> 罗马书 10章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm">口承心信与佳美脚踪</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700">解经方法</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-950 text-sky-200 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 overflow-hidden sm:px-6 lg:px-8 text-center">
+            <p class="text-lg font-serif italic text-rose-300">"可见信道是从听道来的，听道是从基督的话来的。" (10:17)</p>
+            <p class="text-xs text-sky-400 mt-3">交互式研经工具 | 聚焦：福音的易得性与普世性</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "近在咫尺的救恩",
+                summary: "在第9章探讨了神主权的拣选后，第10章转向了人的责任与以色列失败的原因：他们有热心，但不是按着真知识（1-4节）。保罗对比了“律法的义”与“信心的义”，指出救恩不需要“上天入地”的艰难追寻，而是“就在你口中，就在你心里”（5-13节）。这一章也是宣教神学的基石，逻辑严密地推导出“传道”对于“信道”的绝对必要性（14-17节），最后以神对以色列整天伸手的忍耐作结（18-21节）。",
+                highlights: [
+                    { icon: "fas fa-fire", color: "text-rose-600", text: "无知的热心" },
+                    { icon: "fas fa-comment-dots", color: "text-sky-600", text: "口里承认" },
+                    { icon: "fas fa-shoe-prints", color: "text-slate-600", text: "佳美脚踪" }
+                ]
+            },
+            sections: [
+                {
+                    id: "zeal_knowledge",
+                    title: "热心与真知识的错位 (10:1-4)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "10:1-3",
+                            text: "弟兄们，我心里所愿的...是要以色列人得救...他们向神有热心，但不是按着真知识...想要立自己的义...",
+                            academic: {
+                                title: "宗教的悲剧",
+                                keywords: ["Zēlos (热心/嫉妒)", "Epignōsis (真知识/确知)", "Idian Dikaiosynēn (自己的义)"],
+                                content: "“热心”（Zēlos）本身是中性的，甚至值得赞赏，但若缺乏“真知识”（Epignōsis，指对神救赎计划的正确认知），热心就会变成一种毁灭性的力量。犹太人的悲剧在于他们试图建立“自己的义”（基于行为的功德），从而拒绝了“神的义”（基于信心的礼物）。这是所有律法主义宗教的核心错误。"
+                            },
+                            devotional: {
+                                title: "你的热心有导航吗？",
+                                content: "在高速公路上逆行，车速越快（热心越大），结局越惨。许多基督徒非常忙碌、火热，但如果不知道神真正想要的是什么（信靠而非积德），这种忙碌只是在建立自己的巴别塔。停下来检查一下：你的努力是为了换取神的爱，还是为了回应神的爱？"
+                            }
+                        },
+                        {
+                            ref: "10:4",
+                            text: "律法的总结就是基督，使凡信他的都得着义。",
+                            academic: {
+                                title: "律法的终点 (Telos)",
+                                keywords: ["Telos (总结/终点/目标)"],
+                                content: "Telos 有双重含义：1. **终结**（Termination）：基督成全了律法，因此作为获救途径的律法已经终止；2. **目标**（Goal）：律法的一切指向（预表、献祭）都汇聚在基督身上。无论是时间上还是目的上，律法这趟列车已经到站，乘客必须下车换乘“基督号”。"
+                            },
+                            devotional: {
+                                title: "终点站到了",
+                                content: "如果你还在靠守规条来维持与神的关系，你就是在一个已经关门的车站等车。律法的目的是把你带到基督面前。既然见到了基督，就不要再回到律法的阴影下。在基督里，你已经到达了神要求的标准。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "two_righteousness",
+                    title: "两种义的对比：远与近 (10:5-10)",
+                    themeColor: "sky",
+                    verses: [
+                        {
+                            ref: "10:5-8",
+                            text: "摩西写着说...惟有出于信心的义如此说：你不要心里说：谁要升到天上去呢？...谁要下到阴间去呢？...这道离你不远...",
+                            academic: {
+                                title: "救恩的易得性 (Accessibility)",
+                                keywords: ["Engys (近)", "Rhēma (道/话语)"],
+                                content: "保罗巧妙地引用申命记30:11-14，并进行基督论的诠释（Midrash）。律法的义要求人做不可能的事（完全遵行=升天入地），但信心的义宣告基督已经为你完成了最难的事（祂已降世=不用你升天；祂已复活=不用你下阴间）。因此，救恩不再是遥不可及的探险，而是“就在你口中，就在你心里”的接受。"
+                            },
+                            devotional: {
+                                title: "就在你嘴边",
+                                content: "我们常觉得神很远，觉得要得救或得复兴需要做很多大事（禁食、苦修、朝圣）。但神说：不用那么麻烦，救恩就像空气一样靠近你。它近到一个地步，只要你张口承认、心里相信，它就是你的。不要把简单的救恩复杂化。"
+                            }
+                        },
+                        {
+                            ref: "10:9-10",
+                            text: "你若口里认耶稣为主，心里信神叫他从死里复活，就必得救...口里承认就可以得救。",
+                            academic: {
+                                title: "得救的双重机制",
+                                keywords: ["Homologeō (承认/公开宣告)", "Kyrios (主/耶和华)", "Kardia (心)"],
+                                content: "“认耶稣为主”是早期教会最早的信经（Kyrios Iesous），意味着承认耶稣拥有旧约耶和华的地位。心里的“信”（相信复活的事实）与口里的“认”（公开的效忠）是硬币的两面。内心确信导致外在宣告，外在宣告印证内心确信。这不仅是理智的赞同，更是政治性的效忠宣誓（对抗凯撒为主）。"
+                            },
+                            devotional: {
+                                title: "公开你的信仰",
+                                content: "为什么一定要“口里承认”？因为爱是不吐不快的。如果你从不敢在人前承认耶稣，说明你心里的信可能还不够真实。承认主不仅是得救的条件，也是得救的喜乐。试着今天就对一个人说：“耶稣是我的主。”"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mission_chain",
+                    title: "福音传播的逻辑链 (10:11-17)",
+                    themeColor: "slate",
+                    verses: [
+                        {
+                            ref: "10:11-13",
+                            text: "凡信他的人必不至于羞愧...众人同有一位主，他也厚待一切求告他的人...凡求告主名的就必得救。",
+                            academic: {
+                                title: "普世性的恩典",
+                                keywords: ["Pas (凡/所有)", "Ploutōn (富足/厚待)", "Epikaleō (求告)"],
+                                content: "“凡”（Pas）字在11-13节出现了三次，彻底打破了犹太人与希腊人的隔阂。主的恩典是“富足的”（Rich），足够分给所有人而不会枯竭。得救的唯一条件是“求告”（Calling upon），这是一个依赖性的动作，表明承认自己无助并信靠神的能力。"
+                            },
+                            devotional: {
+                                title: "没有配额限制",
+                                content: "神的恩典不是限量供应的。无论你是谁，无论你过去做过什么，只要你“求告”，祂就“厚待”。这个“凡”字包括了你。不要觉得自己太糟糕以至于神不会理你，祂的丰富正是为了贫穷人预备的。"
+                            }
+                        },
+                        {
+                            ref: "10:14-17",
+                            text: "然而，人未曾信他，怎能求他呢？未曾听见...怎能信呢？没有传道的，怎能听见呢？...信道是从听道来的...",
+                            academic: {
+                                title: "宣教的逆向工程",
+                                keywords: ["Kēryssontos (传道/宣讲)", "Akoē (听见/消息/道)"],
+                                content: "保罗运用了严密的逻辑锁链（Sorites）：求告 <- 信 <- 听 <- 传 <- 奉差遣。这确立了“听道”（Hearing the message）在救恩中的工具性地位。没有超自然的“直接植入”，神选择通过愚拙的“传讲”作为信心的媒介。“报福音之人的脚踪何等佳美”引自赛52:7，赞美那些带来和平信息的使者。"
+                            },
+                            devotional: {
+                                title: "你就是那个传信人",
+                                content: "如果没人传，就没人听；没人听，就没人信；没人信，就没人得救。这个逻辑链条把世界的得救直接挂在了你的脚上。你不需要是神学家，你只需要是一个愿意张口的信使。你的脚踪在神眼中是“佳美”的，因为你带去的是让人活命的消息。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "israel_rejection",
+                    title: "以色列的顽梗与外邦的被接纳 (10:18-21)",
+                    themeColor: "rose",
+                    verses: [
+                        {
+                            ref: "10:18-21",
+                            text: "他们的声音传遍天下...我要用那不成子民的惹动你们的愤恨...我整天伸手招呼那悖逆顶嘴的百姓。",
+                            academic: {
+                                title: "神的主权与人的责任",
+                                keywords: ["Parazēloō (激起愤恨/嫉妒)", "Antilegonta (顶嘴/反驳)"],
+                                content: "既然福音如此易得且已被传开，以色列人为何不信？不是因为没听见（18节引用诗19:4证明启示的普遍性），也不是因为不知道（19节引用申32:21预言外邦人得救会激怒他们）。根本原因是“悖逆顶嘴”。第21节描绘了神像一位慈父“整天伸手”（all day long）等待浪子回头的感人形象，即使面对的是背影。"
+                            },
+                            devotional: {
+                                title: "神在等你回头",
+                                content: "这幅画既令人心碎又令人安慰：全能的神，整天伸着手，等待一个拒绝祂的人。如果你还在抗拒神，请回头看看那位伸出双手的父亲。祂的忍耐不是软弱，而是极深的爱。不要让祂的手一直悬在空中。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all' // all, academic, devotional
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab Styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            // Render Views
+            const container = document.getElementById('app-content');
+            container.innerHTML = '';
+            
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            
+            window.scrollTo(0,0);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="md:col-span-2 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <h2 class="text-3xl font-bold mb-6 serif text-sky-900">${chapterData.intro.title}</h2>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                            ${chapterData.intro.summary}
+                        </p>
+                        <div class="flex space-x-6 text-sm">
+                            ${chapterData.intro.highlights.map(h => `
+                                <div class="flex items-center font-bold text-rose-700">
+                                    <i class="${h.icon} ${h.color} mr-2 text-lg"></i> ${h.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Key Visual: The Gospel Distance -->
+                    <div class="gradient-romans10 p-6 rounded-xl shadow-lg flex flex-col justify-center text-center border border-rose-200">
+                        <div class="mb-4">
+                            <i class="fas fa-map-marked-alt text-4xl text-sky-200 mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">救恩的距离</h3>
+                        </div>
+                        
+                        <div class="relative w-full h-24 bg-white/10 rounded-lg flex items-center justify-between px-4 text-xs text-white">
+                            <div class="flex flex-col items-center opacity-50">
+                                <i class="fas fa-cloud-upload-alt text-2xl mb-1"></i>
+                                <span>升天? (太远)</span>
+                            </div>
+                            <div class="flex flex-col items-center opacity-50">
+                                <i class="fas fa-cloud-download-alt text-2xl mb-1"></i>
+                                <span>下阴间? (太深)</span>
+                            </div>
+                            <div class="flex flex-col items-center bg-rose-600 p-2 rounded-lg shadow-md transform scale-110">
+                                <i class="fas fa-heart text-2xl mb-1 text-white"></i>
+                                <span class="font-bold">就在心里/口中</span>
+                            </div>
+                        </div>
+                        <p class="text-xs mt-3 text-sky-100">这道离你不远 (v8)</p>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Salvation Logic Chain Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-sky-100">
+                        <h3 class="text-lg font-bold mb-2 text-sky-800 w-full border-b border-sky-100 pb-2">救恩逆向工程 (v14-15)</h3>
+                        <div class="chart-wrapper relative flex items-center justify-center">
+                            <canvas id="salvationChainChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">奉差遣 -> 传道 -> 听见 -> 信 -> 求告</p>
+                    </div>
+
+                    <!-- Two Righteousness Comparison Chart -->
+                    <div class="bg-white p-6 rounded-xl shadow-sm flex flex-col items-center border border-rose-100">
+                        <h3 class="text-lg font-bold mb-2 text-rose-800 w-full border-b border-rose-100 pb-2">两种义的对比 (v3-6)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="righteousnessChart"></canvas>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-4 text-center">律法的义(行出来) vs 信心的义(信基督)</p>
+                    </div>
+                </div>
+            `;
+
+            initCharts();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Sticky Filters
+            const filterControls = `
+                <div class="sticky top-16 z-40 bg-[#F0F9FF]/95 backdrop-blur py-4 mb-8 border-b border-sky-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateStudyFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-700 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">全部</button>
+                            <button onclick="updateStudyFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅学术</button>
+                            <button onclick="updateStudyFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-sky-50'}">仅灵修</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Content
+            const contentHtml = chapterData.sections.map(section => {
+                let titleColorClass = '';
+                if(section.themeColor === 'rose') titleColorClass = 'text-rose-800 border-rose-200';
+                else if(section.themeColor === 'sky') titleColorClass = 'text-sky-800 border-sky-200';
+                else if(section.themeColor === 'slate') titleColorClass = 'text-slate-700 border-slate-200';
+                else titleColorClass = 'text-slate-700 border-slate-200';
+                
+                const versesHtml = section.verses.map(verse => `
+                    <div class="verse-card rounded-xl shadow-sm mb-8 overflow-hidden border border-sky-100">
+                        <div class="p-5 bg-gradient-to-r from-white to-sky-50 border-b border-sky-100">
+                            <span class="inline-block px-2 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                            <p class="text-slate-800 font-serif text-lg leading-relaxed italic">"${verse.text}"</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-sky-100">
+                            <!-- Academic -->
+                            <div class="p-6 ${appState.studyFilter === 'devotional' ? 'hidden' : ''} hover:bg-rose-50/20 transition">
+                                <h4 class="text-rose-800 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-university mr-2"></i> 权威/学术性解经
+                                </h4>
+                                <div class="mb-3">
+                                    ${verse.academic.keywords.map(kw => `<span class="greek-chip">${kw}</span>`).join('')}
+                                </div>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.academic.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.academic.content}</p>
+                            </div>
+
+                            <!-- Devotional -->
+                            <div class="p-6 ${appState.studyFilter === 'academic' ? 'hidden' : ''} hover:bg-slate-50/20 transition">
+                                <h4 class="text-slate-700 font-bold text-xs uppercase tracking-widest mb-3 flex items-center">
+                                    <i class="fas fa-heart mr-2"></i> 灵修/个人应用
+                                </h4>
+                                <h5 class="font-bold text-sky-900 mb-2">${verse.devotional.title}</h5>
+                                <p class="text-slate-700 text-sm leading-relaxed text-justify">${verse.devotional.content}</p>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                return `
+                    <div class="mb-12 max-w-5xl mx-auto">
+                        <div class="flex items-center mb-6 border-b-2 ${titleColorClass} pb-2">
+                            <h3 class="text-2xl font-bold ${titleColorClass.split(' ')[0]}">${section.title}</h3>
+                        </div>
+                        ${versesHtml}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = filterControls + contentHtml;
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-4 serif text-sky-900">解经原则：易得性与逻辑</h2>
+                        <p class="text-slate-600">
+                            罗马书第10章展示了如何用旧约（申命记）来解释新约的福音，并构建了严密的宣教逻辑。
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Exegetical/Academic -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                            <div class="text-rose-600 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">权威和学术性解经 (Exegetical)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：释经法与修辞</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 基督论释经 (Christological Midrash)。分析保罗如何将申命记30章的"道"重新诠释为道成肉身和复活的基督。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 连锁推导 (Sorites)：分析v14-15的逻辑链条。
+                                    <br>2. 词汇对比："自己的义" vs "神的义"。
+                                </li>
+                                <li><strong>目的：</strong> 证明救恩的易得性（Accessibility）和普世性（Universality）。</li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional/Application -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-sky-500">
+                            <div class="text-sky-500 text-4xl mb-4"><i class="fas fa-praying-hands"></i></div>
+                            <h3 class="text-xl font-bold text-slate-800 mb-4">灵修性解经与应用 (Devotional)</h3>
+                            <p class="text-sm text-slate-500 mb-4 uppercase tracking-wide">关注：宣教与确据</p>
+                            <ul class="space-y-4 text-slate-600 text-sm">
+                                <li><strong>原则：</strong> 行动呼召。将"求告主名"的教义转化为个人的祷告和对他人的传讲。</li>
+                                <li><strong>方法：</strong> 
+                                    <br>1. 简单化（福音就在口中，不要复杂化）。
+                                    <br>2. 紧迫感（如果没有我传，他们怎么信？）。
+                                </li>
+                                <li><strong>目的：</strong> 激发对失丧灵魂的热忱，建立对自己救恩的确信。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Chart Initialization ---
+
+        function initCharts() {
+            // Salvation Chain Chart (Bar - Funnel style or Step)
+            const ctxChain = document.getElementById('salvationChainChart').getContext('2d');
+            new Chart(ctxChain, {
+                type: 'bar',
+                data: {
+                    labels: ['奉差遣', '传道', '听见', '信', '求告', '得救'],
+                    datasets: [{
+                        label: '救恩的逻辑步骤',
+                        data: [100, 85, 70, 55, 40, 25], // Visual steps descending to the result
+                        backgroundColor: [
+                            '#0C4A6E', // Dark Sky
+                            '#0369A1',
+                            '#0284C7',
+                            '#38BDF8',
+                            '#F43F5E', // Rose (Action point)
+                            '#E11D48'  // Rose (Result)
+                        ],
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false },
+                        y: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return "第" + (context.dataIndex + 1) + "步";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Righteousness Comparison Chart (Bar)
+            const ctxRighteousness = document.getElementById('righteousnessChart').getContext('2d');
+            new Chart(ctxRighteousness, {
+                type: 'bar',
+                data: {
+                    labels: ['难度', '距离', '来源', '结果'],
+                    datasets: [{
+                        label: '律法的义',
+                        data: [100, 80, 50, 10], // High difficulty, far distance, self source, low result (failure)
+                        backgroundColor: '#94A3B8', // Slate
+                        borderRadius: 4
+                    }, {
+                        label: '信心的义',
+                        data: [10, 5, 100, 100], // Low difficulty, close distance, God source, high result
+                        backgroundColor: '#E11D48', // Rose
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, display: false },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.datasetIndex === 0 && context.dataIndex === 0) return "行出来 (难)";
+                                    if(context.datasetIndex === 1 && context.dataIndex === 0) return "就在口中 (易)";
+                                    return context.formattedValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
