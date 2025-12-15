@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>腓立比书第一章：锁链中的喜乐凯歌</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* Joyful Gold - Rejoicing */
+            --theme-primary: #d97706; 
+            /* Royal Purple - Christ is King */
+            --theme-accent: #7e22ce;
+            /* Prison Stone - Background Context */
+            --theme-stone: #44403c;
+            /* Light Cream */
+            --theme-bg: #fffbeb;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #292524;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+            box-shadow: 0 0 10px rgba(217, 119, 6, 0.3);
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fed7aa;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(217, 119, 6, 0.2);
+            border-left-color: var(--theme-accent);
+        }
+
+        .academic-box {
+            background-color: #fafaf9; /* Stone 50 */
+            border-left: 3px solid #57534e; /* Stone 600 */
+            color: #44403c;
+        }
+        
+        .devotional-box {
+            background-color: #f3e8ff; /* Purple 50 */
+            border-left: 3px solid #7e22ce; /* Purple 600 */
+            color: #581c87;
+        }
+
+        /* Chart Area */
+        .chart-container {
+            position: relative;
+            height: 320px;
+            width: 100%;
+        }
+
+        /* Chain Breaking Animation */
+        .chain-icon {
+            animation: swing 3s ease-in-out infinite;
+            transform-origin: top center;
+        }
+        @keyframes swing {
+            0% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        /* Heartbeat for "To live is Christ" */
+        .pulse-heart {
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            15% { transform: scale(1.15); }
+            30% { transform: scale(1); }
+            45% { transform: scale(1.15); }
+            60% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-800 serif">
+                        <i class="fas fa-link mr-2 chain-icon text-amber-600"></i> 腓立比书 1章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm text-stone-500 hover:text-amber-700">全景概览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm text-stone-500 hover:text-amber-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm text-stone-500 hover:text-amber-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-amber-100 mb-2">"因我活着就是基督，我死了就有益处。" (1:21)</p>
+            <p class="text-xs opacity-70">腓立比书第一章研经报告 | 团契、兴旺与公民身份</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "监狱里的喜乐与福音的兴旺",
+                summary: "腓立比教会是保罗在欧洲建立的第一间教会，也是他最亲密的属灵伙伴。尽管身陷囹圄（很可能在罗马），保罗在这章中没有表现出丝毫的沮丧。相反，他以'喜乐'为基调，重新诠释了他的处境：锁链没有锁住福音，反而使福音传到了御营全军；死亡不是威胁，而是与基督同在的更美途径。本章展示了一个'以基督为中心'的世界观如何颠覆世俗的价值观。",
+                concepts: [
+                    { title: "同心合意", greek: "Koinonia", color: "text-amber-600", desc: "不仅是团契，更是'合伙关系'，共同分担福音的风险与利益" },
+                    { title: "兴旺", greek: "Prokope", color: "text-purple-600", desc: "工兵术语，指军队为了前进而清除障碍、开辟道路" },
+                    { title: "公民", greek: "Politeuesthe", color: "text-stone-600", desc: "按天国公民的身份行事，不被罗马价值观同化" }
+                ]
+            },
+            sections: [
+                {
+                    id: "prayer",
+                    title: "壹 · 感恩与代祷：福音的合伙人 (1:1-11)",
+                    desc: "确信神必成就大事",
+                    verses: [
+                        {
+                            ref: "1:5-6",
+                            text: "...因为从头一天直到如今，你们是同心合意地兴旺福音。我深信那在你们心里动了善工的，必成全这工...",
+                            academic: {
+                                title: "同心合意 (Koinonia) 的商业背景",
+                                content: "Koinonia常被译为'团契'或'交通'，但在当时的纸莎草纸商业文献中，它常指'合伙企业'或'共同持股'。保罗视腓立比人为'福音企业的合伙人'——他们通过金钱支持（4:15）实际上参与了保罗的使徒工作。第6节的'成全'(Epitelesei)保证了这项神圣工程虽然会有波折，但绝不会烂尾，神是最终的担保人。",
+                            },
+                            devotional: {
+                                title: "你是福音的股东吗？",
+                                content: "我们常把自己看作教会的'消费者'（去听道、享受服务），但保罗看信徒为'合伙人'。当你为宣教奉献、为传道人祷告时，你不是在做慈善，你是在投资神国的事业。你拥有这份永恒事业的股份。神保证这项工程必将竣工，你的投资绝不会打水漂。"
+                            }
+                        },
+                        {
+                            ref: "1:9-10",
+                            text: "我所祷告的，就是要你们的爱心在知识和各样见识上多而又多，使你们能分别是非...",
+                            academic: {
+                                title: "爱心需要知识 (Epignosis)",
+                                content: "保罗祈求的爱心不是盲目的情感泛滥。他特意加上'知识'（Epignosis，真知识）和'见识'（Aisthesis，道德分辨力/洞察力）。'分别是非'(Dokimazein)原意是冶金术语，指通过测试分辨金属的纯度，引申为辨别什么是'更美的事'(Diapheronta)。成熟的爱心必须包含敏锐的道德判断力。",
+                            },
+                            devotional: {
+                                title: "聪明的爱",
+                                content: "有时候我们以为'爱'就是包容一切、不分黑白。但保罗说，真正的爱需要'见识'。就像父母爱孩子，不仅要给糖，更要教他分辨危险。我们需要求神给我们一种'有眼光'的爱，能在复杂的文化中分辨什么是上好的（Excellent），而不只是还可以的（Okay）。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "advance",
+                    title: "贰 · 困境中的反转：福音的推进 (1:12-18)",
+                    desc: "锁链成了扩音器",
+                    verses: [
+                        {
+                            ref: "1:12-13",
+                            text: "弟兄们，我愿意你们知道，我所遭遇的事更是叫福音兴旺...以致我受的捆锁在御营全军...显明是为基督的缘故。",
+                            academic: {
+                                title: "兴旺 (Prokope) 的军事隐喻",
+                                content: "Prokope指工兵部队在主力军到达前，砍伐树木、清除路障的动作。保罗的入狱看似是福音的障碍，实则清除了路障——让福音直接进入了罗马帝国的核心'御营全军'(Praetorium，皇家卫队)。这群精锐士兵轮流看守保罗，被迫听他讲道，成为了最高效的传声筒。",
+                            },
+                            devotional: {
+                                title: "障碍即道路",
+                                content: "你生活中的'监狱'（失业、疾病、甚至疫情）是什么？我们常以为这些是拦阻神旨意的障碍。但神也是最伟大的工兵，祂能利用这些障碍为福音开辟新航线。你的受苦可能正是神安排的'讲台'，让那些平时接触不到福音的人（像御营士兵一样）不得不听见你的见证。"
+                            }
+                        },
+                        {
+                            ref: "1:15-18",
+                            text: "有的传基督是出于嫉妒纷争...然而...无论是假意是真心，基督究竟被传开了。为此，我就欢喜...",
+                            academic: {
+                                title: "动机与结果的分离",
+                                content: "保罗面对一种奇怪的现象：有人传福音是为了加增保罗的苦楚（可能通过建立与保罗竞争的派系）。保罗展现了惊人的胸襟：他区分了'传讲的内容'（客观的基督）和'传讲的动机'（主观的嫉妒）。只要内容纯正（传基督），即便动机不纯，他仍为此欢喜。这与其在加拉太书中对'别的福音'的零容忍形成对比。",
+                            },
+                            devotional: {
+                                title: "超越自我的胸怀",
+                                content: "如果你发现你的'竞争对手'（即使在教会里）做得比你好，甚至是为了气你而做，你会怎么反应？保罗的喜乐源于他不在乎自己的名声，只在乎基督的名声。只要耶稣被高举，哪怕是通过不喜欢我的人，我也欢喜。这只有当'自我'完全死透时才能做到。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "dilemma",
+                    title: "叁 · 生死的抉择：活着就是基督 (1:19-26)",
+                    desc: "终极的人生定义",
+                    verses: [
+                        {
+                            ref: "1:21",
+                            text: "因我活着就是基督，我死了就有益处。",
+                            academic: {
+                                title: "省略句的张力",
+                                content: "希腊原文极其精炼：'Emol gar to zen Christos kai to apothanein kerdos'（For to me to live Christ and to die gain）。没有动词'是'。这意味着'活着'与'基督'完全等同。'益处'(Kerdos)是商业术语，指红利或收益。对保罗而言，死亡不是失去，而是套现（Cashing in）——获取一直以来投资的终极红利。",
+                            },
+                            devotional: {
+                                title: "填空题：活着就是___",
+                                content: "这是一个填空题：'我活着就是______。' 许多人填的是'金钱'、'家庭'、'事业'或'享乐'。如果是这样，那么死亡就是'失去'。唯有当你填上'基督'时，死亡才能变成'益处'。因为死亡无法夺走基督，只会让你更靠近祂。这是战胜死亡恐惧的唯一公式。"
+                            }
+                        },
+                        {
+                            ref: "1:23-24",
+                            text: "我正在两难之间，情愿离世与基督同在...然而，我在肉身活着，为你们更是要紧的。",
+                            academic: {
+                                title: "离世 (Analysai) 的三重隐喻",
+                                content: "'离世'原文指：1. 拔营起寨（军队/游牧）；2. 解开船缆（启航）；3. 解开轭（释放）。保罗渴望这种释放，但他为了教会的益处选择'留下'。这是一种'牺牲性的活着'——不仅愿意为主死，更愿意为了弟兄姊妹的缘故，忍受肉身的限制而活下去。",
+                            },
+                            devotional: {
+                                title: "为了别人而活",
+                                content: "想死（去天堂）有时候可能是一种属灵的逃避。保罗展示了更高级的爱：为了他人的成长，甘愿延迟自己的享乐（与主同在）。如果你觉得活得很累，试着问神：'你要我为了谁的益处而继续留在这里？'找到那个'你们'，你的生命就有了使命感。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "citizen",
+                    title: "肆 · 公民的操守：为信仰站立 (1:27-30)",
+                    desc: "天国政治学",
+                    verses: [
+                        {
+                            ref: "1:27",
+                            text: "只要你们行事为人与基督的福音相称...",
+                            academic: {
+                                title: "行事为人 (Politeuesthe) 的政治含义",
+                                content: "这个词的词根是Polis（城市/城邦）。腓立比是罗马的驻防城（Colony），居民以拥有罗马公民权为荣。保罗借用此概念说：'你们要按天国公民的身份生活。'这暗示基督徒虽然身在罗马帝国，但效忠的对象是天上的君王基督。这在当时极具政治颠覆性。",
+                            },
+                            devotional: {
+                                title: "别忘了你的国籍",
+                                content: "当你身处异国他乡，你的行为代表了你的国家。同样，我们在地上是天国的'大使'。我们的生活方式（Politeuesthe）——我们的价值观、处理冲突的方式、对他人的爱——应当与'福音相称'。不要让地上的'罗马'同化了你，要活出天国公民的尊严。"
+                            }
+                        },
+                        {
+                            ref: "1:29",
+                            text: "因为你们蒙恩，不但得以信服基督，并要为他受苦。",
+                            academic: {
+                                title: "受苦作为恩典 (Echaristhe)",
+                                content: "'蒙恩'原文是Echaristhe（Given as a grace/gift）。保罗将'受苦'与'信服'并列为神赐予的两大礼物。这不是受虐狂，而是因为受苦是与基督联合的最高形式（3:10）。在早期教会看来，能为主受苦是一种特权（Privilege），而非不幸。",
+                            },
+                            devotional: {
+                                title: "包装黑色的礼物",
+                                content: "如果有人送你一个黑色的盒子（受苦），你会觉得是诅咒吗？保罗说那是'恩典'。因为透过受苦，我们的生命被炼净，我们与主的距离被拉近，我们对世界的依恋被切断。不要浪费你的苦难，那是神给你特别的恩宠，让你能体验复活的大能。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Focus</span>
+                            <h2 class="text-3xl font-bold serif text-stone-800">${chapterData.intro.title}</h2>
+                        </div>
+                        <p class="text-stone-600 leading-relaxed mb-6 text-lg">${chapterData.intro.summary}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-stone-50 p-4 rounded-lg border border-stone-200 flex flex-col items-center text-center transition hover:bg-amber-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-stone-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-stone-600">${c.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Advance of Gospel -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-stone-700 to-stone-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+                         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wall-4-light.png')]"></div>
+                         
+                         <h3 class="text-xl font-bold mb-6 z-10 text-center text-amber-200 border-b border-amber-500 pb-2">福音工兵 (1:12)</h3>
+                         
+                         <div class="relative w-full h-48 z-10 flex flex-col items-center justify-center">
+                            <!-- Prokope Visualization -->
+                            <div class="w-full flex items-center justify-center space-x-2">
+                                <div class="w-2 h-20 bg-stone-500 rounded"></div> <!-- Obstacle -->
+                                <div class="w-2 h-24 bg-stone-500 rounded"></div> <!-- Obstacle -->
+                                <div class="text-4xl text-amber-500 animate-pulse"><i class="fas fa-bulldozer"></i></div>
+                                <div class="w-24 h-4 bg-amber-500/50 rounded mt-12 flex items-center justify-center text-[10px] font-bold tracking-widest">GOSPEL RD</div>
+                            </div>
+                            
+                            <div class="mt-6 text-center">
+                                <p class="text-xs text-stone-300">障碍 (监狱) <i class="fas fa-arrow-right mx-1"></i> 开路 (兴旺)</p>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section: Paul's Dilemma Scale -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-stone-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-stone-700"><i class="fas fa-balance-scale text-purple-600 mr-2"></i> 保罗的两难抉择 (1:23)</h3>
+                        <span class="text-xs text-stone-500 bg-stone-100 px-2 py-1 rounded">个人渴望 vs 教会需要</span>
+                    </div>
+                    <div class="flex justify-center items-center h-56 relative">
+                        <!-- Scales CSS -->
+                        <div class="w-64 h-2 bg-stone-300 rounded relative">
+                            <!-- Pivot -->
+                            <div class="absolute top-2 left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-stone-400"></div>
+                            
+                            <!-- Left Pan (Depart) -->
+                            <div class="absolute left-0 top-0 transform -translate-y-8 flex flex-col items-center animate-bounce" style="animation-duration: 3s;">
+                                <div class="bg-purple-100 p-3 rounded-lg border-2 border-purple-500 shadow-md text-center w-28">
+                                    <i class="fas fa-cloud-upload-alt text-purple-600 text-2xl"></i>
+                                    <div class="text-xs font-bold text-purple-800 mt-1">离世同在</div>
+                                    <div class="text-[10px] text-purple-600">好得无比</div>
+                                </div>
+                                <div class="w-0.5 h-8 bg-stone-400"></div>
+                            </div>
+
+                            <!-- Right Pan (Remain) -->
+                            <div class="absolute right-0 top-0 transform -translate-y-4 flex flex-col items-center">
+                                <div class="bg-amber-100 p-3 rounded-lg border-2 border-amber-500 shadow-md text-center w-28">
+                                    <i class="fas fa-users text-amber-600 text-2xl"></i>
+                                    <div class="text-xs font-bold text-amber-800 mt-1">肉身活着</div>
+                                    <div class="text-[10px] text-amber-600">更是要紧</div>
+                                </div>
+                                <div class="w-0.5 h-4 bg-stone-400"></div>
+                            </div>
+                        </div>
+                        <div class="absolute bottom-2 text-xs text-stone-400 italic">"为了你们的进度和喜乐..."</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fffbeb]/95 backdrop-blur py-4 mb-6 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-100">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-100'}">全部</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-stone-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-100'}">学术解经</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-purple-600 text-white font-bold' : 'text-stone-500 hover:bg-stone-100'}">灵修应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-amber-500">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-sm text-amber-600 font-serif italic mt-1">${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-amber-50 to-white p-5 border-b border-amber-100">
+                        <span class="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono border border-amber-200">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed group-hover:text-amber-900 transition-colors">"${verse.text}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-stone-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">权威解经</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-700 mb-2">${verse.academic.title}</h5>
+                            <p class="text-sm text-stone-600 leading-relaxed text-justify">${verse.academic.content}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-purple-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用</h4>
+                            </div>
+                            <h5 class="font-bold text-purple-800 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-sm text-purple-900/80 leading-relaxed text-justify">${verse.devotional.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-3 serif text-stone-800">解经方法论总结</h2>
+                        <p class="text-stone-500">在历史的深井中打水，在生命的田野里浇灌。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-stone-500 text-4xl mb-4"><i class="fas fa-search-plus"></i></div>
+                            <h3 class="text-xl font-bold text-stone-700 mb-2">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">历史语境还原</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-600 mt-1 mr-2"></i> <span><strong>原则：</strong> 深入挖掘希腊文词汇的商业（Koinonia）、军事（Prokope）和政治（Politeuesthe）背景，重现第一世纪罗马驻防城的社会氛围。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-600 mt-1 mr-2"></i> <span><strong>本章应用：</strong> "兴旺"的工兵隐喻；"御营全军"的地理位置；"益处"的商业计算。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-purple-600 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-purple-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-purple-600/70 mb-6 uppercase tracking-wider">价值观的重塑</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-purple-500 mt-1 mr-2"></i> <span><strong>原则：</strong> 捕捉保罗情感的流动（喜乐、深情、两难），将"活着就是基督"的宏大叙事落实到个人生死的抉择和日常的价值观中。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-purple-500 mt-1 mr-2"></i> <span><strong>本章应用：</strong> 在困境中转换视角；定义人生的终极意义；视受苦为恩典的逆向思维。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>
