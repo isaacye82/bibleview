@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>John 10: The Good Shepherd | 约翰福音10章：好牧人</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Pasture Green - Rest/Provision */
+            --theme-primary: #15803d; 
+            /* Gate Brown - Security/Door */
+            --theme-accent: #92400e;
+            /* Wool/Cloud White - Purity */
+            --theme-light: #f0fdf4;
+            /* Danger Red - Thief/Wolf */
+            --theme-danger: #991b1b;
+            /* Background */
+            --theme-bg: #f7fee7;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #d9f99d; /* Lime 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(21, 128, 61, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #475569; /* Slate 600 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #ecfccb; /* Lime 50 */
+            border-left: 3px solid #65a30d; /* Lime 600 */
+            color: #365314;
+        }
+
+        /* Gate Animation */
+        .gate-door {
+            transform-origin: left;
+            transition: transform 1s ease-in-out;
+        }
+        .gate-container:hover .gate-door {
+            transform: perspective(600px) rotateY(-45deg);
+        }
+
+        /* Sheep Icon Bounce */
+        .sheep-icon {
+            animation: graze 3s infinite ease-in-out;
+        }
+        @keyframes graze {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px) rotate(-5deg); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-green-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-green-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-crook mr-2 text-green-600"></i> 约翰福音 10章</span>
+                        <span class="text-xs text-green-700 en-text font-normal ml-9">The Gospel of John Chapter 10</span>
+                    </span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center">
+                        全景概览 <br><span class="text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center">
+                        方法论 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-green-200 mb-1">"我是好牧人，好牧人为羊舍命"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"I am the good shepherd. The good shepherd lays down his life for the sheep."</p>
+            <p class="text-xs opacity-70">约翰福音第10章中英对照研经报告 | The Good Shepherd</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "羊圈的比喻与好牧人",
+                title_en: "Parable of the Sheepfold & The Good Shepherd",
+                summary_zh: "约翰福音第10章紧接着第9章法利赛人（坏牧人）的背景。耶稣用当时人们熟悉的牧羊景象，给出了两个著名的'我是'宣告：'我是羊的门'和'我是好牧人'。本章后半部分发生在'修殿节'，强调了耶稣给予羊群的永恒安全感——谁也不能从祂和父的手中把羊夺去。",
+                summary_en: "John 10 follows the context of the Pharisees (bad shepherds) in John 9. Using familiar pastoral imagery, Jesus gives two famous 'I AM' statements: 'I am the Door' and 'I am the Good Shepherd'. The latter part, set during the Feast of Dedication, emphasizes the eternal security Jesus gives His sheep—no one can snatch them from His or the Father's hand.",
+                concepts: [
+                    { title: "牧人", title_en: "Shepherd", greek: "Poimēn", color: "text-green-700", desc_zh: "旧约中常指以色列的君王或神自己（诗23）。真牧人认识羊，并为羊舍命。", desc_en: "Refers to Israel's kings or God (Ps 23). True shepherd knows sheep and dies for them." },
+                    { title: "门", title_en: "Door", greek: "Thira", color: "text-amber-700", desc_zh: "羊圈的入口。在野外羊圈，牧人横卧在缺口处，自己就成了门。", desc_en: "Entrance to the fold. In open fields, the shepherd lay across the gap, becoming the door." },
+                    { title: "更丰盛", title_en: "Abundantly", greek: "Perissos", color: "text-rose-600", desc_zh: "指'超出寻常'、'满溢'的量。不仅是生存，更是蓬勃的生命力。", desc_en: "'Superabundant', 'overflowing'. Not just survival, but thriving vitality." }
+                ]
+            },
+            sections: [
+                {
+                    id: "true-shepherd",
+                    title: "壹 · 羊圈的比喻：真牧人的声音 (10:1-6)",
+                    title_en: "Parable of the Sheepfold: The Voice",
+                    desc: "按名叫自己的羊 | Calling by Name",
+                    verses: [
+                        {
+                            ref: "10:3-4",
+                            text_zh: "看门的给他开门，羊也听他的声音。他按着名叫自己的羊，把羊领出来... 他在前头走，羊也跟着他，因为认得他的声音。",
+                            text_en: "To him the gatekeeper opens. The sheep hear his voice, and he calls his own sheep by name and leads them out... he goes before them, and the sheep follow him, for they know his voice.",
+                            academic: {
+                                title: "中东牧羊文化 (Middle Eastern Shepherding)",
+                                content_zh: "在古代近东，多个牧人的羊群常混在同一个大圈里过夜。早晨牧人来时，并不把羊强行分开，而是发出特定的呼唤声。羊只认得自己牧人的声音，会从中分离出来跟随。'按着名'（Kat' onoma）表明牧人与每一只羊都有独特的个人关系，这与法利赛人把百姓视为'被咒诅的'（7:49）形成鲜明对比。",
+                                content_en: "In the ancient Near East, flocks mixed in communal folds at night. In the morning, shepherds didn't force separation but called. Sheep, recognizing only their shepherd's voice, would separate and follow. 'By name' (Kat' onoma) implies a unique personal relationship, contrasting sharply with Pharisees who viewed the people as 'accursed' (7:49)."
+                            },
+                            devotional: {
+                                title: "在嘈杂中辨识祂的声音",
+                                content_zh: "世界充满了各种声音：定罪的、诱惑的、焦虑的（就像第9章法利赛人的聒噪）。在这个嘈杂的时代，作为主的羊，我们需要操练一种特殊的听力——认得牧人的声音。那个声音是温柔的、确定的、带来平安的。你是否在每天的早晨先听祂的呼唤，再听世界的新闻？亲密关系建立在对声音的熟悉上。",
+                                content_en: "The world is full of voices: condemning, tempting, anxious (like the Pharisees in Ch 9). In this noisy age, as His sheep, we must practice a special hearing—recognizing the Shepherd's voice. It is gentle, certain, and peaceful. Do you listen for His call before the world's news each morning? Intimacy is built on recognizing His voice."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "door-life",
+                    title: "贰 · 我是羊的门：得救与丰盛 (10:7-10)",
+                    title_en: "I Am the Door: Salvation & Abundance",
+                    desc: "出入得草吃 | Pasture & Protection",
+                    verses: [
+                        {
+                            ref: "10:9-10",
+                            text_zh: "我就是门；凡从我进来的，必然得救，并且出入得草吃。盗贼来，无非要偷窃，杀害，毁坏；我来了，是要叫羊得生命，并且得的更丰盛。",
+                            text_en: "I am the door. If anyone enters by me, he will be saved and will go in and out and find pasture. The thief comes only to steal and kill and destroy. I came that they may have life and have it abundantly.",
+                            academic: {
+                                title: "Zoē (生命) vs Bios (生物性生命)",
+                                content_zh: "耶稣所赐的生命是 *Zoē*（神圣、永恒的生命），而非仅仅 *Bios*（生物层面的生存）。'更丰盛'（Perissos）意味着超越基本需求的满足。这里对比了两种意图：盗贼（假先知/自私的领袖）将羊视为剥削的对象（偷窃/杀害），而耶稣将羊视为给予的对象。'出入得草吃'象征着在神里面的自由与供应。",
+                                content_en: "Jesus gives *Zoē* (divine, eternal life), not just *Bios* (biological existence). 'Abundantly' (Perissos) means surpassing basic needs. The contrast is intentional: The thief (false prophets/selfish leaders) views sheep as objects to exploit; Jesus views them as objects to bless. 'Go in and out' symbolizes freedom and provision in God."
+                            },
+                            devotional: {
+                                title: "生存以上的生活",
+                                content_zh: "很多基督徒仅仅满足于'得救'（不死），但这只是耶稣应许的一半。祂要给你的是'更丰盛'的生命——一种满溢的、生机勃勃的状态。如果你信主后觉得生命枯干、受限制，可能是因为你还没有完全经历祂的丰盛。祂不仅是逃生门，更是通往青草地的门。不要只求生存，要求丰盛。",
+                                content_en: "Many Christians settle for just being 'saved' (not dying), but that's only half the promise. He offers 'abundant' life—overflowing and vibrant. If your faith feels dry or restrictive, you might be missing His abundance. He isn't just a fire escape; He's the gate to green pastures. Don't just seek survival; seek abundance."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "good-shepherd",
+                    title: "叁 · 我是好牧人：舍命的爱 (10:11-18)",
+                    title_en: "I Am the Good Shepherd: Sacrificial Love",
+                    desc: "雇工逃跑，牧人舍命 | Hireling Flees, Shepherd Dies",
+                    verses: [
+                        {
+                            ref: "10:11",
+                            text_zh: "我是好牧人；好牧人为羊舍命。",
+                            text_en: "I am the good shepherd. The good shepherd lays down his life for the sheep.",
+                            academic: {
+                                title: "Kalos (好/美) 与代赎",
+                                content_zh: "希腊文'好'（Kalos）不仅指道德上的良善，更指'高贵'、'美好'、'令人向往'。这与旧约以西结书34章中只知喂养自己的坏牧人形成鲜明对比。'为羊舍命'（Hyper ton probaton）中的介词Hyper意为'代替'或'为了...的益处'。这直接指向十字架上的代赎性牺牲。雇工在危险时逃跑，因为他对羊没有所有权（Ownership）和爱。",
+                                content_en: "'Good' (Kalos) means noble, beautiful, excellent, contrasting with the self-feeding shepherds of Ezekiel 34. 'Lays down his life for' (Hyper) implies substitution or benefit. This points directly to the vicarious Atonement. The hireling flees in danger because he lacks ownership and love for the sheep."
+                            },
+                            devotional: {
+                                title: "你对祂来说很有价值",
+                                content_zh: "如何衡量一样东西的价值？看你愿为它付多大代价。耶稣为你付出的代价是祂自己的命。这意味着在神眼中，你的价值等同于耶稣的生命。当魔鬼控告你一文不值时，你要指着十字架说：'看，那就是我的身价。'好牧人不会在困难时抛弃你，因为你是祂用重价买来的。",
+                                content_en: "Value is measured by what one is willing to pay. Jesus paid for you with His life. This means to God, you are worth the life of Jesus. When the enemy says you are worthless, point to the Cross: 'Look, that is my value.' The Good Shepherd won't abandon you in trouble because you are bought with a price."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "security",
+                    title: "肆 · 修殿节的冲突与永恒安全 (10:22-30)",
+                    title_en: "Feast of Dedication & Eternal Security",
+                    desc: "谁也不能夺去 | No One Can Snatch",
+                    verses: [
+                        {
+                            ref: "10:28-30",
+                            text_zh: "我又赐给他们永生；他们永不灭亡，谁也不能从我手里把他们夺去... 谁也不能从我父手里把他们夺去。我与父原为一。",
+                            text_en: "I give them eternal life, and they will never perish, and no one will snatch them out of my hand... no one is able to snatch them out of the Father's hand. I and the Father are one.",
+                            academic: {
+                                title: "双重保障 (Double Security)",
+                                content_zh: "这发生在修殿节（Hanukkah，记念马加比家族洁净圣殿）。耶稣给出了关于救恩安全感最强烈的宣告。'永不灭亡'在希腊文中使用双重否定（ou me），语气极重。羊的安全不在于羊抓得紧不紧，而在于牧人的手（基督的手）和父神的手（父的手）的双重握持。'原为一'（Hen，中性词）指本质/性质上的一，而非位格上的一，确立了基督的神性。",
+                                content_en: "Set during Hanukkah (Temple rededication). Jesus gives the strongest assurance of security. 'Never perish' uses a double negative (ou me). Security depends not on the sheep's grip, but on the double grip of the Son's hand and the Father's hand. 'Are one' (Hen, neuter) implies unity of essence/nature, affirming Deity."
+                            },
+                            devotional: {
+                                title: "在神手中的安全感",
+                                content_zh: "我们常担心自己会因软弱而'滑出'神的手。但这节经文告诉我们，我们的得救是基于神大能的保守，而非我们表现的优劣。既然'谁也不能'（包括魔鬼、世界、甚至我们自己的软弱）夺去，我们就应当有绝对的安全感。这不是放纵犯罪的借口，而是面对风浪时安息的理由。你在父与子的双重掌心中。",
+                                content_en: "We worry about slipping out of God's hand due to weakness. But this verse says salvation rests on God's power, not our performance. Since 'no one' (devil, world, self) can snatch us, we should have absolute security. This isn't a license to sin, but a reason to rest in storms. You are held in the double grip of the Father and Son."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Focus</span>
+                            <h2 class="text-3xl font-bold serif text-green-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-green-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-green-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Door -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-green-900 to-slate-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden gate-container">
+                         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')]"></div>
+                         
+                         <h3 class="text-xl font-bold mb-1 z-10 text-center text-green-200">羊圈的门</h3>
+                         <p class="text-xs text-slate-300 mb-6 z-10 en-text uppercase tracking-widest border-b border-green-500 pb-2">The Door of the Sheep</p>
+                         
+                         <div class="relative w-full h-48 z-10 flex flex-col items-center justify-center perspective-container">
+                            <!-- Gate Graphic -->
+                            <div class="w-24 h-36 border-4 border-amber-700 bg-amber-900/40 relative gate-door shadow-2xl flex items-center justify-center">
+                                <span class="text-3xl text-amber-500/50 font-serif">I AM</span>
+                            </div>
+                            
+                            <!-- Sheep -->
+                            <div class="absolute bottom-2 right-10 text-white/80 sheep-icon">
+                                <i class="fas fa-sheep text-2xl"></i>
+                            </div>
+
+                            <div class="flex justify-between w-full text-[10px] text-green-200 mt-4 font-mono px-4">
+                                <span>Protection<br>(In)</span>
+                                <span class="text-right text-green-400">Pasture<br>(Out)</span>
+                            </div>
+                         </div>
+                         <p class="text-xs text-center italic mt-4 text-green-200 opacity-80">"凡从我进来的，必然得救"<br>"If anyone enters by me, he will be saved"</p>
+                    </div>
+                </div>
+
+                <!-- Chart Section: Shepherd vs Hireling -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-green-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-balance-scale text-green-700 mr-2"></i> 真假牧人对比 
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Shepherd vs. Hireling (John 10:11-13)</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Leadership Test</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Good Shepherd -->
+                        <div class="border border-green-200 rounded p-4 bg-green-50 relative overflow-hidden">
+                            <div class="absolute -right-4 -top-4 text-8xl text-green-100 -z-10"><i class="fas fa-heart"></i></div>
+                            <h4 class="font-bold text-green-800 mb-3 border-b border-green-200 pb-1">好牧人 (Good Shepherd)</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3 text-xs"><i class="fas fa-key"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-green-900">所有权 (Ownership)</p>
+                                        <p class="text-[10px] text-green-700">The sheep are his own</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3 text-xs"><i class="fas fa-cross"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-green-900">行动 (Action)</p>
+                                        <p class="text-[10px] text-green-700">Lays down life</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-green-200 flex items-center justify-center text-green-700 mr-3 text-xs"><i class="fas fa-shield-alt"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-green-900">动机 (Motive)</p>
+                                        <p class="text-[10px] text-green-700">Love & Care</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Hireling -->
+                        <div class="border border-red-200 rounded p-4 bg-red-50 relative overflow-hidden">
+                             <div class="absolute -right-4 -top-4 text-8xl text-red-100 -z-10"><i class="fas fa-dollar-sign"></i></div>
+                            <h4 class="font-bold text-red-800 mb-3 border-b border-red-200 pb-1">雇工 (Hireling)</h4>
+                            <ul class="space-y-3">
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-red-200 flex items-center justify-center text-red-700 mr-3 text-xs"><i class="fas fa-times"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-red-900">所有权 (Ownership)</p>
+                                        <p class="text-[10px] text-red-700">Sheep are not his</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-red-200 flex items-center justify-center text-red-700 mr-3 text-xs"><i class="fas fa-running"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-red-900">行动 (Action)</p>
+                                        <p class="text-[10px] text-red-700">Flees when wolf comes</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-center">
+                                    <span class="w-6 h-6 rounded-full bg-red-200 flex items-center justify-center text-red-700 mr-3 text-xs"><i class="fas fa-coins"></i></span>
+                                    <div>
+                                        <p class="text-xs font-bold text-red-900">动机 (Motive)</p>
+                                        <p class="text-[10px] text-red-700">Money / Self-preservation</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f7fee7]/95 backdrop-blur py-4 mb-6 border-b border-green-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-green-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-green-100">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">学术 Academic</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-lime-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-green-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-green-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-green-50 to-white p-5 border-b border-green-100">
+                        <span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 text-xs font-bold rounded mb-2 font-mono border border-green-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-green-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-green-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">权威解经 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-lime-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-lime-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-lime-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-lime-700/70 font-serif italic en-text border-t border-lime-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Cultural</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-700 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">还原第一世纪巴勒斯坦的牧羊文化（羊圈、声音、混养）。分析希腊文词汇（如Kalos的美学意义）和"我是"宣告的神学重量。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Restoring 1st-century Palestinian shepherding culture. Analyzing Greek terms (Kalos) and the theological weight of 'I AM'.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-green-700 mb-1"><i class="fas fa-check-circle mr-2"></i> 适用范围 Scope</div>
+                                    <div class="mb-1">确立基督代赎的教义（为羊舍命），辨析真假教会领袖（雇工），以及信徒永恒安全的保证（双重保守）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Establishing Atonement doctrine (laying down life), distinguishing true/false leaders, and the assurance of eternal security.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-lime-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-lime-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-lime-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-lime-600/70 mb-6 uppercase tracking-wider">Intimate & Assuring</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-lime-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">从关系的角度应用（听声音、按名认识）。将神学上的"得救"深化为生活中的"丰盛"。在不确定的世界中建立安全感。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Relational application (hearing voice). Deepening 'salvation' into 'abundance'. Building security in an uncertain world.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-lime-100 pt-3">
+                                    <div class="flex items-center font-bold text-lime-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 适用范围 Scope</div>
+                                    <div class="mb-1">每日灵修的聆听操练，克服对未来的恐惧，以及在自我价值感低落时重申神对个人的爱。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Daily listening practice, overcoming fear of the future, and reaffirming God's personal love when self-worth is low.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>
