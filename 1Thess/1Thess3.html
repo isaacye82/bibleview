@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帖撒罗尼迦前书第三章：坚固信心与圣徒相通</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* Sky 700 - Representing Stability & Faith */
+            --theme-primary: #0369a1; 
+            /* Sky 50 */
+            --theme-light: #f0f9ff;   
+            /* Amber 500 - Representing Joy/Encouragement */
+            --theme-accent: #f59e0b;  
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #f8fafc; /* Cool grey background */
+            color: #1e293b;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(3, 105, 161, 0.15);
+        }
+
+        .academic-box {
+            background-color: #f1f5f9;
+            border-left: 3px solid #475569; /* Slate */
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Light Amber */
+            border-left: 3px solid #f59e0b; /* Amber */
+        }
+
+        /* Chart Area */
+        .chart-container {
+            position: relative;
+            height: 340px;
+            width: 100%;
+        }
+
+        /* Connecting Line Animation */
+        .connecting-line {
+            stroke-dasharray: 10;
+            animation: dash 30s linear infinite;
+        }
+        
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 1000;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-sky-800 serif">
+                        <i class="fas fa-anchor mr-2 text-sky-600"></i> 帖撒罗尼迦前书 3章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm">全景概览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm text-gray-500 hover:text-sky-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm text-gray-500 hover:text-sky-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-300 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-2">"你们若在主里站立得稳，我们就活了。" (3:8)</p>
+            <p class="text-xs opacity-70">帖撒罗尼迦前书第三章研经报告 | 彼此坚固的生命共同体</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "无法忍受的关切与信心的坚固",
+                summary: "在被迫离开帖撒罗尼迦后，保罗的内心备受煎熬。第三章记录了他因'不能再忍'而派遣提摩太回到风暴中心去坚固信徒，以及提摩太带回'好消息'后保罗如释重负的喜乐。本章的核心在于展示基督徒在患难中如何通过彼此联结（Relationship）来站稳脚跟。这不仅是信息的交流，更是生命的互相支撑。",
+                keywords: [
+                    { title: "坚固", greek: "Stērizō", color: "text-sky-700", desc: "设立支柱，使其稳固不摇动" },
+                    { title: "患难", greek: "Thlipsis", color: "text-slate-600", desc: "压力，如同被巨石碾压" },
+                    { title: "好消息", greek: "Euangelion", color: "text-amber-600", desc: "极少用于指代人的消息，足见其分量" }
+                ]
+            },
+            sections: [
+                {
+                    id: "mission",
+                    title: "壹 · 爱的行动：派遣提摩太 (3:1-5)",
+                    desc: "在患难中主动出击",
+                    verses: [
+                        {
+                            ref: "3:1-2",
+                            text: "我们既不能再忍...打发我们的兄弟...提摩太前去，坚固你们...",
+                            academic: {
+                                title: "不能再忍 (Stego)",
+                                content: "该词原意是'屋顶'或'覆盖'，引申为'容纳'、'承受'。保罗使用了极强烈的词汇表达他内心的焦虑已达到容器的极限。派遣提摩太是一个巨大的牺牲，因为这意味着保罗独自一人留在雅典面对哲学家的挑战。提摩太被称为'神的执事/同工'(Synergos)，这是极高的称呼，确立了这位年轻领袖的权柄。",
+                            },
+                            devotional: {
+                                title: "爱是无法按兵不动的",
+                                content: "当你真正爱一个人时，你无法对他受苦坐视不管。保罗的焦虑不是出于对自己事工成败的担心，而是出于对'那诱惑人者'（撒旦）可能破坏信徒信心的担忧。真正的属灵领袖会在危机时刻，为了羊群的益处，甘愿牺牲自己的安舒（独自留在雅典）。"
+                            }
+                        },
+                        {
+                            ref: "3:3-4",
+                            text: "免得有人被诸般患难摇动。因为你们自己知道，我们受患难原是命定的。",
+                            academic: {
+                                title: "受苦的命定 (Keimai)",
+                                content: "'摇动'(Sainesthai)原意指狗摇尾巴，引申为被阿谀奉承动摇，或在恐惧中不知所措。保罗指出受患难是'命定的'(Keimai - 直译为'被放置在那里的')。这反驳了'信耶稣就凡事顺利'的成功神学。在早期教会的教导中，苦难是信仰旅程中不可分割的一部分（Default Setting）。"
+                            },
+                            devotional: {
+                                title: "苦难不是意外",
+                                content: "当苦难来临时，我们常问'为什么是我？'仿佛这是某种意外或惩罚。但圣经告诉我们要调整预期：在这个破碎的世界跟随基督，受苦是'课程大纲'的一部分。知道这是'命定'的，能让我们不再惊讶，从而生出在风暴中站立的勇气。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "report",
+                    title: "贰 · 爱的回报：提摩太的佳音 (3:6-8)",
+                    desc: "生命相连的喜乐",
+                    verses: [
+                        {
+                            ref: "3:6",
+                            text: "但提摩太刚才从你们那里回来，将你们信心和爱心的好消息报给我们...",
+                            academic: {
+                                title: "独特的'福音'用法 (Euangelizomai)",
+                                content: "保罗使用'报好消息'这个词，在新约中绝大多数时候专指'传讲基督的福音'。这是极少数的例外，保罗用此词来描述提摩太带来的关于教会状况的报告。这表明对保罗而言，看到信徒在真理中站立得稳，其喜乐程度等同于福音本身的胜利。"
+                            },
+                            devotional: {
+                                title: "最好的消息",
+                                content: "什么能让你'活过来'？是升职加薪？还是听到你曾帮助过的人在信仰上坚固？保罗说：'你们若在主里站立得稳，我们就活了。'这揭示了属灵生命的相互依存性。我们在基督里是一个身体，肢体的刚强就是我们的生命力。"
+                            }
+                        },
+                        {
+                            ref: "3:8",
+                            text: "因为你们若在主里站立得稳，我们就活了。",
+                            academic: {
+                                title: "条件句中的生命力",
+                                content: "这是一个第一类条件句，假设这已经是事实。保罗不仅是在表达情感，更是在陈述一个属灵事实：使徒的生命活力与他所服事之教会的属灵状况紧密相连。这种'连带感'超越了地理的阻隔。",
+                            },
+                            devotional: {
+                                title: "因为你，我才完整",
+                                content: "个人的灵性修养不仅关乎自己，也直接影响着那些爱你、为你祷告的人。你的坚强能成为别人的'强心剂'。当我们彼此代祷、彼此坚固时，生命就在这种神圣的循环中变得更加丰盛。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prayer",
+                    title: "叁 · 爱的祈祷：补足与成圣 (3:9-13)",
+                    desc: "从当下延伸至永恒",
+                    verses: [
+                        {
+                            ref: "3:10",
+                            text: "我们昼夜切切地祈求，要见你们的面，补满你们信心的不足。",
+                            academic: {
+                                title: "补满 (Katartizo)",
+                                content: "该词用于修补渔网（太4:21）或接驳断骨。这暗示帖撒罗尼迦人的信心虽然真实，但因信主时间短，在教义理解或道德实践上仍有'缺口'（不足）。'信心'在此不仅指信靠的态度，也指信仰的内容（Fides quae creditur）。保罗渴望通过面对面的教导来'装备/修补'他们。",
+                            },
+                            devotional: {
+                                title: "成长的谦卑",
+                                content: "即使是被保罗极力称赞的模范教会，也有'信心的不足'。属灵成长是一个持续的过程，我们需要谦卑地承认自己的缺口，并乐意接受属灵导师的'修补'。完美的信心不是没有缺口，而是愿意不断被真理充满。"
+                            }
+                        },
+                        {
+                            ref: "3:12-13",
+                            text: "又愿主叫你们彼此相爱...好使你们...成为圣洁，无可指摘。",
+                            academic: {
+                                title: "爱是成圣的途径",
+                                content: "保罗祷告的逻辑次序是：爱心增长 -> 心里坚固 -> 成为圣洁。在末世论的背景下（主耶稣同他众圣徒来的时候），'圣洁'不仅是道德上的无瑕疵，更是关系的产物。爱不仅仅是一种情感，更是通往末日审判时'无可指摘'的必经之路。",
+                            },
+                            devotional: {
+                                title: "终极的目标",
+                                content: "我们生活的目标是为那一天——主再来的日子——做准备。那天我们要交出的答卷，不是我们的成就，而是我们的'爱'与'圣洁'。如果你想心里坚固，不仅要研读圣经，更要去爱人，特别是爱那些不可爱的人，因为爱能炼净我们的生命。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-gray-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-gray-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-sm border-t-4 border-sky-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-sky-100 text-sky-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Overview</span>
+                            <h2 class="text-3xl font-bold serif text-sky-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <p class="text-gray-600 leading-relaxed mb-6 text-lg">${chapterData.intro.summary}</p>
+                        
+                        <!-- Keyword Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${chapterData.intro.keywords.map(kw => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-100 flex flex-col items-center text-center transition hover:bg-sky-50">
+                                    <h4 class="font-bold ${kw.color} text-lg mb-1">${kw.title}</h4>
+                                    <p class="text-xs text-gray-400 font-mono mb-2">${kw.greek}</p>
+                                    <p class="text-xs text-gray-600">${kw.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Connection -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-sky-800 to-indigo-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-20">
+                            <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+                                <path d="M0,50 Q50,0 100,50" stroke="white" stroke-width="2" fill="none" class="connecting-line"/>
+                                <path d="M0,60 Q50,10 100,60" stroke="white" stroke-width="1" fill="none" class="connecting-line" style="animation-duration: 25s"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="z-10 text-center mt-4">
+                            <div class="flex justify-between items-center mb-8 px-4 text-sm font-bold text-sky-200">
+                                <span>雅典 (保罗)</span>
+                                <i class="fas fa-exchange-alt"></i>
+                                <span>帖城 (教会)</span>
+                            </div>
+                            
+                            <div class="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20">
+                                <i class="fas fa-user-friends text-4xl text-amber-400 mb-2"></i>
+                                <h3 class="text-xl font-bold">生命的连通器</h3>
+                                <p class="text-xs text-sky-100 mt-2">
+                                    "你们若站稳，<br>我们就活了。"
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="z-10 text-center mt-6">
+                            <p class="text-xs text-sky-300 italic">Distance cannot sever the bond of Spirit.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section: Paul's Emotional Journey -->
+                <div class="bg-white p-6 rounded-xl shadow-sm mb-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-gray-800"><i class="fas fa-heartbeat text-sky-600 mr-2"></i> 保罗的情绪起伏 (Emotional Trajectory)</h3>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">基于 3:1-9 的经文分析</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="emotionChart"></canvas>
+                    </div>
+                </div>
+            `;
+            initChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f8fafc]/95 backdrop-blur py-4 mb-6 border-b border-sky-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-100">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-100'}">全部</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-gray-500 hover:bg-gray-100'}">学术解经</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-500 text-white font-bold' : 'text-gray-500 hover:bg-gray-100'}">灵修应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-sky-500">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-gray-800">${section.title}</h3>
+                                <p class="text-sm text-sky-600 font-serif italic mt-1">${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card bg-white rounded-lg shadow-sm overflow-hidden mb-6 border border-gray-100 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-sky-50 to-white p-5 border-b border-sky-100">
+                        <span class="inline-block px-2 py-0.5 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono">${verse.ref}</span>
+                        <p class="text-gray-800 font-serif text-lg leading-relaxed group-hover:text-sky-900 transition-colors">"${verse.text}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-600">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">权威解经</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2">${verse.academic.title}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify">${verse.academic.content}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-600">
+                                <i class="fas fa-seedling mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify">${verse.devotional.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-3 serif text-sky-900">解经方法论总结</h2>
+                        <p class="text-gray-600">在历史的土壤中挖掘，在生命的田野里结果。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition">
+                            <div class="text-slate-600 text-4xl mb-4"><i class="fas fa-microscope"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">文本的深度解析</p>
+                            
+                            <ul class="space-y-4 text-sm text-gray-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-sky-600 mt-1 mr-2"></i> <span><strong>原则：</strong> 剖析原文词义的细微差别，分析语法结构（如条件句），并置于早期教会受逼迫的历史背景中理解。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-sky-600 mt-1 mr-2"></i> <span><strong>本章应用：</strong> "命定"受苦的神学含义；"报好消息"的特殊用法；"补满"的教牧学意义。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-hands-helping"></i></div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600 mb-6 uppercase tracking-wider">生命的真实共鸣</p>
+                            
+                            <ul class="space-y-4 text-sm text-gray-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>原则：</strong> 捕捉经文中的情感流动，将其投射到现代人际关系和灵性需求上，强调"我们"与经文人物的共性。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>本章应用：</strong> 面对苦难的心态调整；属灵友谊的重要性；成长的谦卑与对圣洁的渴慕。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('emotionChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['不能再忍 (1节)', '打发提摩太 (2节)', '独自等待 (3-5节)', '担忧诱惑 (5节)', '提摩太归来 (6节)', '听闻信心 (7节)', '极度喜乐 (9节)'],
+                    datasets: [{
+                        label: '保罗内心的安宁指数',
+                        data: [20, 30, 25, 10, 80, 90, 100], // Anxiety to Joy
+                        borderColor: '#0369a1', // Sky 700
+                        backgroundColor: 'rgba(3, 105, 161, 0.1)',
+                        pointBackgroundColor: '#f59e0b', // Amber
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: '#f59e0b',
+                        tension: 0.4,
+                        fill: true,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            display: true,
+                            title: { display: true, text: '心理状态 (焦虑 -> 喜乐)' },
+                            min: 0,
+                            max: 110,
+                            grid: { color: '#f1f5f9' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                font: { family: "'Noto Sans SC', sans-serif", size: 10 },
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if(context.dataIndex < 4) return " 焦虑与挂心";
+                                    return " 安慰与喜乐";
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

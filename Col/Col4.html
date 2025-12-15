@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌罗西书第四章：祷告、智慧与团队</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* Incense Indigo - Prayer */
+            --theme-primary: #4338ca; 
+            /* Seasoned Amber - Speech/Salt */
+            --theme-accent: #d97706;
+            /* Fellowship Teal - Community */
+            --theme-team: #0d9488;
+            /* Background */
+            --theme-bg: #f5f3ff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e1b4b;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--theme-primary);
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e7ff;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(67, 56, 202, 0.15);
+            border-left-color: var(--theme-accent);
+        }
+
+        .academic-box {
+            background-color: #f1f5f9; /* Slate 100 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #475569;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #92400e;
+        }
+
+        /* Chart Area */
+        .chart-container {
+            position: relative;
+            height: 320px;
+            width: 100%;
+        }
+
+        /* Door Animation for "Open Door" */
+        .door-icon {
+            transform-origin: left;
+            animation: open-door 3s ease-in-out infinite alternate;
+        }
+        @keyframes open-door {
+            0% { transform: perspective(100px) rotateY(0deg); }
+            100% { transform: perspective(100px) rotateY(-45deg); }
+        }
+
+        /* Salt Sprinkle Animation */
+        .salt-particle {
+            position: absolute;
+            background: #d97706;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            animation: fall 2s linear infinite;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(50px) rotate(180deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-indigo-900 serif">
+                        <i class="fas fa-door-open mr-2 door-icon text-indigo-600"></i> 歌罗西书 4章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm text-slate-500 hover:text-indigo-700">全景概览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm text-slate-500 hover:text-indigo-700">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm text-slate-500 hover:text-indigo-700">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-2">"你们的言语要常常带着和气，好像用盐调和..." (4:6)</p>
+            <p class="text-xs opacity-70">歌罗西书第四章研经报告 | 祷告的门与智慧的口</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "祷告的守望与智慧的行走",
+                summary: "歌罗西书最后的一章，保罗从'上面的事'回到'外面的事'。他首先呼吁信徒为福音的'门'祷告，强调祷告与宣教的战略关系。随后，他教导在充满敌意的世界中如何与外人相处——要爱惜光阴，说话要有智慧。最后，通过长长的问安名单，保罗展示了一个多元化、跨阶层、甚至是包含'失败者'（如马可）的国度团队。",
+                concepts: [
+                    { title: "恒切祷告", greek: "Proskartereo", color: "text-indigo-600", desc: "如同坚守阵地般持续不断，保持警醒" },
+                    { title: "用盐调和", greek: "Halas", color: "text-amber-600", desc: "言语有味、防腐、有智慧，不枯燥" },
+                    { title: "爱惜光阴", greek: "Exagorazo", color: "text-teal-600", desc: "赎回时间，抓住每一个机会（Kairos）" }
+                ]
+            },
+            sections: [
+                {
+                    id: "prayer_witness",
+                    title: "壹 · 向着神的祷告与向着人的见证 (4:1-6)",
+                    desc: "属灵的双向通道",
+                    verses: [
+                        {
+                            ref: "4:2-3",
+                            text: "你们要恒切祷告，在此警醒感恩。也要为我们祷告，求神给我们开传道的门...",
+                            academic: {
+                                title: "恒切 (Proskartereo) 与 门 (Thyran)",
+                                content: "'恒切'意为'坚定地持续'或'随时待命'。保罗将祷告与'警醒'（Grigoreo，不睡觉/保持敏锐）相连，暗示这是一种属灵的守夜。'开门'是宣教的隐喻，指神赐予的宣讲机会。尽管保罗身在'捆锁'中（被关的门），他却祈求福音的'开门'。这是环境受限但视野无限的体现。",
+                            },
+                            devotional: {
+                                title: "不要只盯着锁，要盯着门",
+                                content: "我们在困境中常祈求'神啊，救我出去'，但保罗祈求'神啊，把道传出去'。他没有求神开监狱的门，而是求神开传道的门。当你觉得生活四面楚歌时，试着转换祷告的焦点：不是求神改变环境，而是求神在环境中打开机会，让祂的旨意通行。"
+                            }
+                        },
+                        {
+                            ref: "4:5-6",
+                            text: "你们要爱惜光阴，用智慧与外人交往。你们的言语要常常带着和气，好像用盐调和...",
+                            academic: {
+                                title: "赎回光阴 (Exagorazomenoi)",
+                                content: "'爱惜'原文是'赎回'（Buy up/Redeem）。时间（Kairos，时机）如同被邪恶势力占据的市场，信徒要像精明的商人一样，付出代价把机会买回来用于行善。'用盐调和'在希腊文学中常指'机智'（Wit）和'趣味'。基督徒的言语不应是乏味的宗教说教，而应是有味、有益且令人愉悦的。",
+                            },
+                            devotional: {
+                                title: "你的话有味道吗？",
+                                content: "很多基督徒对非信徒说话时，要么是攻击性的'辣椒'（定罪），要么是乏味的'白开水'（说教）。保罗说要像'盐'——既能防腐（防止对话变质），又能提味（让对话有意义）。我们需要智慧，在'赎回'的每一个瞬间，说出既恩慈（Grace）又真理的话，让人觉得'听君一席话，胜读十年书'。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "team",
+                    title: "贰 · 国度团队的众生相 (4:7-18)",
+                    desc: "不仅仅是问安",
+                    verses: [
+                        {
+                            ref: "4:7-9",
+                            text: "...推基古...阿尼西母...他是我亲爱的、忠心的兄弟，是你们那里的人...",
+                            academic: {
+                                title: "阿尼西母的身份重构",
+                                content: "阿尼西母是从歌罗西逃跑的奴隶（见《腓利门书》）。在罗马法律下他是罪犯，但在保罗笔下，他是'亲爱的、忠心的兄弟'，甚至是'你们那里的人'（One of you）。这是对社会阶层的颠覆。推基古是送信人，负责口头解释书信内容，显示了初期教会信件传递的正式性。",
+                            },
+                            devotional: {
+                                title: "过去的标签失效了",
+                                content: "当你进入基督的团队，过去的耻辱（逃奴）不再定义你。在教会中，我们不再看一个人的出身、黑历史或社会地位，而是看他在基督里的新造。阿尼西母带着这封信回到主人家，本身就是福音改变生命的最强见证。"
+                            }
+                        },
+                        {
+                            ref: "4:10-11, 14",
+                            text: "...巴拿巴的表弟马可...耶数...底马...",
+                            academic: {
+                                title: "马可的复出与底马的伏笔",
+                                content: "马可曾因在宣教途中开小差而被保罗拒绝（徒15:38），导致保罗与巴拿巴决裂。但此时马可已重回核心团队，甚至保罗特别叮嘱教会接待他。这显示了保罗的宽容和马可的成长。相反，底马在此仅被提名字而无赞语，为后来他'贪爱现今的世界'（提后4:10）埋下了伏笔。",
+                            },
+                            devotional: {
+                                title: "给失败者第二次机会",
+                                content: "教会是一个允许失败的地方。马可曾是'逃兵'，后来却写成了《马可福音》。如果你曾经在信仰或服事上跌倒，不要绝望，神和祂的教会仍然有你的位置。同时也要警醒，像底马一样，如果在团队中逐渐失去起初的爱心，最终可能会随流失去。"
+                            }
+                        },
+                        {
+                            ref: "4:12-13",
+                            text: "有你们那里的人以巴弗问你们安...他在祷告之间，常为你们竭力...",
+                            academic: {
+                                title: "祷告的角力 (Agonizomenos)",
+                                content: "以巴弗是歌罗西教会的建立者。保罗形容他的祷告是'竭力'（Agonizomenos），该词源于体育竞技场，指摔跤或搏斗（Agony）。这表明代祷不是轻松的念词，而是一场属灵的搏斗，为了让教会在异端风暴中'站立得稳'。",
+                            },
+                            devotional: {
+                                title: "跪着的摔跤手",
+                                content: "你爱一个群体有多深，看你为他们祷告有多'痛'。以巴弗虽然身在罗马，心却在歌罗西的战场上。真正的牧养不仅是讲道，更是'跪着的摔跤'。在这个快餐时代，我们需要像以巴弗这样愿意在隐秘处为别人灵魂'流汗'的代祷勇士。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-indigo-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Overview</span>
+                            <h2 class="text-3xl font-bold serif text-indigo-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed mb-6 text-lg">${chapterData.intro.summary}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-indigo-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600">${c.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Speech Filter -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-amber-600 to-orange-800 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+                         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/salt-mountains.png')]"></div>
+                         
+                         <h3 class="text-xl font-bold mb-6 z-10 text-center text-white border-b border-white/30 pb-2">言语的调和 (4:6)</h3>
+                         
+                         <div class="relative w-full h-48 z-10 flex flex-col items-center justify-center">
+                            <!-- Funnel Visualization -->
+                            <div class="relative">
+                                <!-- Top: Words In -->
+                                <div class="text-xs text-center mb-1 text-amber-200">思念 / 意念</div>
+                                <div class="w-32 h-20 bg-white/20 backdrop-blur-sm rounded-t-xl border-2 border-white/40 flex items-center justify-center">
+                                    <i class="fas fa-comments text-3xl opacity-80"></i>
+                                </div>
+                                
+                                <!-- Middle: Salt Filter -->
+                                <div class="w-32 h-8 bg-amber-500 flex items-center justify-center relative overflow-hidden">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-amber-900 z-10">智慧 & 恩慈</span>
+                                    <!-- Particles -->
+                                    <div class="salt-particle left-2" style="animation-delay: 0s;"></div>
+                                    <div class="salt-particle left-10" style="animation-delay: 0.5s;"></div>
+                                    <div class="salt-particle left-20" style="animation-delay: 1.2s;"></div>
+                                </div>
+                                
+                                <!-- Bottom: Words Out -->
+                                <div class="w-32 h-16 bg-white/20 backdrop-blur-sm rounded-b-xl border-2 border-white/40 flex items-center justify-center">
+                                    <p class="text-sm font-serif italic text-white">"造就人的好话"</p>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section: The Paul Network -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-indigo-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700"><i class="fas fa-project-diagram text-teal-600 mr-2"></i> 歌罗西书的国度团队网</h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">基于 4:7-17 的人物关系</span>
+                    </div>
+                    <div class="chart-container flex justify-center items-center">
+                        <canvas id="teamChart"></canvas>
+                    </div>
+                </div>
+            `;
+            initChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f5f3ff]/95 backdrop-blur py-4 mb-6 border-b border-indigo-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-indigo-900 serif">逐节研读室</h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-indigo-100">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">学术解经</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-indigo-500">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-indigo-600 font-serif italic mt-1">${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-white p-5 border-b border-indigo-100">
+                        <span class="inline-block px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-bold rounded mb-2 font-mono border border-indigo-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-indigo-900 transition-colors">"${verse.text}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">权威解经</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${verse.academic.title}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify">${verse.academic.content}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-hands-praying mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify">${verse.devotional.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-3 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500">从历史的名单中，读出生命的温度。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">历史重建与词义分析</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-indigo-600 mt-1 mr-2"></i> <span><strong>原则：</strong> 结合《腓利门书》和《使徒行传》重建人物关系网（如马可、阿尼西母），分析"盐"、"门"等隐喻的文化背景。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-indigo-600 mt-1 mr-2"></i> <span><strong>本章应用：</strong> "恒切"的军事含义；"赎回光阴"的商业背景；"老底嘉书信"的历史推测。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-users"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">宣教与团契的实践</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>原则：</strong> 从枯燥的问安名单中提炼出关于"接纳"、"饶恕"和"代祷"的属灵原则，并应用于现代教会生活。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>本章应用：</strong> 职场言语的智慧；给失败者机会；代祷作为属灵争战的武器。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('teamChart').getContext('2d');
+            
+            // A simple bubble/network chart simulation using scatter
+            new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: '保罗 (Paul) - 核心',
+                        data: [{x: 0, y: 0, r: 25}],
+                        backgroundColor: '#4338ca' // Indigo
+                    }, {
+                        label: '送信组 (Tychicus/Onesimus)',
+                        data: [{x: -10, y: 10, r: 15}, {x: -12, y: 5, r: 15}],
+                        backgroundColor: '#0d9488' // Teal
+                    }, {
+                        label: '犹太组 (Aristarchus/Mark/Justus)',
+                        data: [{x: 10, y: 10, r: 12}, {x: 12, y: 15, r: 15}, {x: 8, y: 18, r: 10}],
+                        backgroundColor: '#d97706' // Amber
+                    }, {
+                        label: '外邦组 (Epaphras/Luke/Demas)',
+                        data: [{x: 0, y: -15, r: 20}, {x: 5, y: -12, r: 15}, {x: -5, y: -12, r: 10}],
+                        backgroundColor: '#059669' // Green
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { display: false, min: -20, max: 20 },
+                        y: { display: false, min: -20, max: 20 }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10 } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

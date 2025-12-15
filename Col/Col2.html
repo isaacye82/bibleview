@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歌罗西书第二章：丰盛与自由</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+        :root {
+            /* Fullness Gold - Treasure/Deity */
+            --theme-primary: #b45309; 
+            /* Liberty Cyan - Baptism/Freedom */
+            --theme-accent: #06b6d4;
+            /* Warning Orange - Deception */
+            --theme-warn: #f97316;
+            /* Dark Background */
+            --theme-bg: #1e1b4b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: #fbbf24; /* Amber 400 */
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--theme-primary);
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: #1e293b; /* Slate 800 */
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #334155;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.2);
+            border-left-color: var(--theme-accent);
+        }
+
+        .academic-box {
+            background-color: #334155; /* Slate 700 */
+            border-left: 3px solid #94a3b8; /* Slate 400 */
+            color: #f1f5f9;
+        }
+        
+        .devotional-box {
+            background-color: #451a03; /* Amber 950 */
+            border-left: 3px solid #f59e0b; /* Amber 500 */
+            color: #fef3c7;
+        }
+
+        /* Chart Area */
+        .chart-container {
+            position: relative;
+            height: 320px;
+            width: 100%;
+        }
+
+        /* Lock/Key Animation for "Hidden Treasures" */
+        .key-icon {
+            animation: unlock 2s ease-in-out infinite alternate;
+        }
+        @keyframes unlock {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(45deg); }
+        }
+
+        /* Document Cancel Animation */
+        .cancel-line {
+            position: relative;
+        }
+        .cancel-line::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #ef4444; /* Red */
+            animation: strike 2s ease-out forwards;
+            animation-delay: 1s;
+        }
+        @keyframes strike {
+            to { width: 100%; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-900/90 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-amber-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-amber-100 serif">
+                        <i class="fas fa-key mr-2 key-icon text-amber-500"></i> 歌罗西书 2章
+                    </span>
+                </div>
+                <div class="flex space-x-6 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-sm text-slate-400 hover:text-white">全景概览</button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-sm text-slate-400 hover:text-amber-300">逐节研读</button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-sm text-slate-400 hover:text-amber-300">解经方法论</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black text-slate-500 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-slate-300 mb-2">"你们在他里面也得了丰盛。" (2:10)</p>
+            <p class="text-xs opacity-70">歌罗西书第二章研经报告 | 影儿与实体，捆绑与释放</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "在基督里的丰盛 vs. 虚空的哲学",
+                summary: "在确立了基督的至高地位（第1章）之后，保罗在第2章正面迎击了威胁教会的'歌罗西异端'。这种异端混合了犹太律法主义（饮食、节期）、东方神秘主义（崇拜天使）和希腊哲学（智慧、苦修）。保罗的核心论点是：既然神本性一切的丰盛都有形有体地居住在基督里面，且你们在祂里面已经得了丰盛，为何还要去捡那些贫乏的'小学'？本章以十字架的胜利宣告了所有律法字据的废除。",
+                concepts: [
+                    { title: "丰盛", greek: "Pleroma", color: "text-amber-500", desc: "神性完全的充满，毫无缺欠" },
+                    { title: "世上的小学", greek: "Stoicheia", color: "text-slate-400", desc: "初级的、幼稚的宇宙元素或灵体" },
+                    { title: "字据", greek: "Cheirographon", color: "text-red-500", desc: "亲手签署的欠债证明，已被撤去" }
+                ]
+            },
+            sections: [
+                {
+                    id: "warning",
+                    title: "壹 · 智慧的宝藏与欺哄的言语 (2:1-5)",
+                    desc: "真知识的源头",
+                    verses: [
+                        {
+                            ref: "2:3",
+                            text: "所积蓄的一切智慧知识，都在他里面藏着。",
+                            academic: {
+                                title: "反诺斯底的声明",
+                                content: "诺斯底主义者声称拥有'隐藏的'（Apokryphos）特殊知识，只有入教的精英才能获得。保罗借用这个词，宣称一切真正的智慧都'藏'（Apokryphoi）在基督里。这意味着基督徒不需要去寻找额外的、高级的启示；认识基督就是拥有了打开所有智慧宝库的钥匙。",
+                            },
+                            devotional: {
+                                title: "不要去垃圾堆找宝藏",
+                                content: "当我们在生活中遇到困难，无论是婚姻、工作还是心理问题，我们往往倾向于去寻找最新的'专家理论'或'心灵鸡汤'。保罗提醒我们，最大的智慧库是基督。如果我们忽略了圣经的原则而去追求世俗的技巧，就像是守着金山去乞讨。回到基督里，那里有你所需要的一切答案。"
+                            }
+                        },
+                        {
+                            ref: "2:4-5",
+                            text: "我说这话，免得有人用花言巧语迷惑你们...见你们循规蹈矩，信基督的心也坚固...",
+                            academic: {
+                                title: "军事隐喻：循规蹈矩与坚固",
+                                content: "'循规蹈矩'(Taxis)指军队排列整齐的阵型；'坚固'(Stereoma)指坚固的防线或壁垒。保罗虽然未到过歌罗西，但在灵里视察了他们的'阅兵式'。这表明异端虽然来势汹汹，但教会的防线尚未崩溃，保罗是在进行防御性的加固。",
+                            },
+                            devotional: {
+                                title: "信仰的阵型",
+                                content: "面对异端邪说或世俗价值观的冲击（花言巧语），我们需要的是'阵型'。孤独的基督徒容易被击破，但当我们在真理上彼此对齐，在信心上形成防线时，就能站立得稳。你的生活是有属灵纪律（Taxis）的吗？还是混乱无序的？"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "victory",
+                    title: "贰 · 基督里的丰盛与十字架的得胜 (2:6-15)",
+                    desc: "核心教义的宣告",
+                    verses: [
+                        {
+                            ref: "2:8-9",
+                            text: "你们要谨慎，恐怕有人用他的理学和虚空的妄言...神本性一切的丰盛都有形有体地居住在基督里面。",
+                            academic: {
+                                title: "理学 (Philosophia) 与 丰盛 (Pleroma)",
+                                content: "这里的'理学'并非指所有哲学，而是特指当时那些基于'世上小学'（Stoicheia，可能指星宿崇拜或初级宗教规条）的传统。与之相对的是基督的'丰盛'。'有形有体'(Somatikos)是关键，强调道成肉身的真实性，反驳了认为物质邪恶、神灵不会拥有肉体的早期异端思想。",
+                            },
+                            devotional: {
+                                title: "你还缺什么吗？",
+                                content: "异端总是在暗示：'光信耶稣是不够的，你还需要...（特殊的体验、严格的戒律、深奥的知识）。'保罗的回答是：'神一切的丰盛都在耶稣里，而你在耶稣里。'如果你在一个装满水的海洋里，你还需要去买瓶装水吗？不要让任何人贬低你在基督里的圆满。"
+                            }
+                        },
+                        {
+                            ref: "2:14-15",
+                            text: "又涂抹了在律例上所写...的字据，把它撤去，钉在十字架上...将一切执政的、掌权的掳来...",
+                            academic: {
+                                title: "字据 (Cheirographon) 的撤销",
+                                content: "'字据'指亲笔签名的债务借据。我们的罪使我们欠了律法的债。神处理这笔债的方式不是'忽视'，而是'执行死刑'——将其钉在十字架上（随耶稣一同死）。第15节描绘了罗马将军凯旋游行（Triumph）的画面：基督将战败的魔鬼（执政掌权的）公开示众，宣告彻底的胜利。",
+                            },
+                            devotional: {
+                                title: "债务已清",
+                                content: "你是否仍常被罪疚感控告？仿佛手里捏着一张还不清的欠条？看一看十字架。那张写满你罪状的欠条（Past, Present, Future）已经被那枚穿透耶稣手腕的钉子，一同钉死在木头上了。它被'撤去'了。魔鬼想拿着欠条来讨债，但基督已经撕毁了它。你是自由的。"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "shadow",
+                    title: "叁 · 影儿与实体：驳斥宗教主义 (2:16-23)",
+                    desc: "从律法主义中释放",
+                    verses: [
+                        {
+                            ref: "2:16-17",
+                            text: "所以，不拘在饮食上，或节期...都不要让人论断你们。这些原是后事的影儿；那形体却是基督。",
+                            academic: {
+                                title: "影儿 (Skia) vs 实体 (Soma)",
+                                content: "保罗列举了犹太律法主义的特征：饮食条例、节期（年度）、月朔（月度）、安息日（每周）。他用柏拉图式的'影子/实体'比喻指出：旧约的礼仪只是基督到来前的投影。当实体（基督）来了，若还去拥抱影子，就是倒退。这确立了新约信徒不需要遵守旧约礼仪律的原则。",
+                            },
+                            devotional: {
+                                title: "拥抱实体",
+                                content: "如果你已经见到了你爱人的本人，你还会抱着他的照片说话吗？旧约的规条（安息日、洁净礼）就像照片（影儿），目的是指向耶稣。既然我们已经拥有了耶稣，就不应再被'不可拿、不可尝、不可摸'的规条束缚。信仰的核心是与基督的关系，而不是遵守一套宗教清单。"
+                            }
+                        },
+                        {
+                            ref: "2:18, 23",
+                            text: "...故意谦虚和敬拜天使...用私意崇拜，自表谦虚，苦待己身，其实在克制肉体的情欲上是毫无功效。",
+                            academic: {
+                                title: "苦修主义的无用性",
+                                content: "异端提倡通过'苦待己身'（Asceticism）来获得灵性提升。'敬拜天使'可能是为了通过天使这个中介接触至高的神。保罗一针见血地指出：这些人为的宗教活动看起来很有智慧（Show of wisdom），但在解决罪的核心问题（克制肉体情欲）上，毫无功效（No value）。外表的压抑不能改变内心的败坏。",
+                            },
+                            devotional: {
+                                title: "真正的改变",
+                                content: "我们常以为通过更严格的自律、更刻苦的修行就能胜过罪。但保罗说那是'毫无功效'的。禁欲往往导致两种结果：要么是骄傲（我做到了），要么是崩溃（我做不到）。胜过罪的力量不在于外面的'不可'，而在于里面与基督的连结（持定元首）。唯有生命的连结能带来真正的得胜。"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-400');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-400');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-slate-800/80 p-8 rounded-xl shadow-lg border-t-4 border-amber-500 border border-slate-700">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-amber-900/50 text-amber-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3 border border-amber-700">Overview</span>
+                            <h2 class="text-3xl font-bold serif text-amber-100">${chapterData.intro.title}</h2>
+                        </div>
+                        <p class="text-slate-300 leading-relaxed mb-6 text-lg">${chapterData.intro.summary}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-900 p-4 rounded-lg border border-slate-700 flex flex-col items-center text-center transition hover:border-amber-500 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-400">${c.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Cross Transaction -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-slate-900 to-black text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden border border-red-900/30">
+                         
+                         <h3 class="text-xl font-bold mb-6 z-10 text-center text-red-200 border-b border-red-800 pb-2">债务已清 (2:14)</h3>
+                         
+                         <div class="relative w-full h-48 z-10 flex flex-col justify-center items-center">
+                            <!-- Document -->
+                            <div class="bg-yellow-100 text-slate-900 p-4 rounded shadow-lg transform rotate-2 w-32 relative text-xs font-mono">
+                                <p class="mb-1 border-b border-slate-300">DEBT RECORD</p>
+                                <p>Name: Sinner</p>
+                                <p>Debt: Infinite</p>
+                                <p class="mt-2 text-red-700 font-bold border-2 border-red-700 p-1 transform -rotate-12 inline-block opacity-80">PAID IN FULL</p>
+                                
+                                <!-- Nail -->
+                                <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-slate-800 rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-inner border-2 border-slate-600"></div>
+                            </div>
+                            
+                            <!-- Cross Shadow -->
+                            <div class="absolute inset-0 bg-black/10 z-[-1] flex justify-center items-center pointer-events-none">
+                                <div class="w-2 h-48 bg-slate-800"></div>
+                                <div class="absolute w-32 h-2 bg-slate-800 top-1/3"></div>
+                            </div>
+                         </div>
+                         
+                         <div class="text-center mt-4 z-10">
+                            <p class="text-xs text-slate-400 italic">"把它撤去，钉在十字架上"</p>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Chart Section: Shadow vs Substance -->
+                <div class="bg-slate-900 p-6 rounded-xl shadow-lg mb-8 border border-slate-800">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-200"><i class="fas fa-adjust text-amber-500 mr-2"></i> 影儿 vs 实体 (2:17)</h3>
+                        <span class="text-xs text-slate-500 bg-slate-950 px-2 py-1 rounded border border-slate-700">宗教仪式 vs 基督本身</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="shadowChart"></canvas>
+                    </div>
+                </div>
+            `;
+            initChart();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#0f172a]/95 backdrop-blur py-4 mb-6 border-b border-amber-900/30">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-100 serif">逐节研读室</h2>
+                        <div class="flex bg-slate-800 rounded-lg shadow-sm p-1 border border-slate-700">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-slate-400 hover:bg-slate-700'}">全部</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-400 hover:bg-slate-700'}">学术解经</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-800 text-amber-100 font-bold' : 'text-slate-400 hover:bg-slate-700'}">灵修应用</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-amber-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-amber-100">${section.title}</h3>
+                                <p class="text-sm text-amber-500 font-serif italic mt-1">${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card rounded-lg shadow-lg overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-5 border-b border-slate-700">
+                        <span class="inline-block px-2 py-0.5 bg-amber-900/40 text-amber-200 text-xs font-bold rounded mb-2 font-mono border border-amber-800">${verse.ref}</span>
+                        <p class="text-slate-200 font-serif text-lg leading-relaxed group-hover:text-white transition-colors">"${verse.text}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-700">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-300">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">权威解经</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-100 mb-2">${verse.academic.title}</h5>
+                            <p class="text-sm text-slate-200 leading-relaxed text-justify">${verse.academic.content}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-400">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-100 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-sm text-amber-200 leading-relaxed text-justify">${verse.devotional.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-3 serif text-amber-100">解经方法论总结</h2>
+                        <p class="text-slate-400">分辨虚假的影儿，拥抱真实的基督。</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-slate-800 p-8 rounded-xl shadow-lg border-t-4 border-slate-500 hover:shadow-xl transition hover:bg-slate-700">
+                            <div class="text-slate-400 text-4xl mb-4"><i class="fas fa-search"></i></div>
+                            <h3 class="text-xl font-bold text-slate-200 mb-2">权威/学术性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400/70 mb-6 uppercase tracking-wider">文化背景与词源分析</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-300">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-slate-500 mt-1 mr-2"></i> <span><strong>原则：</strong> 深入分析诺斯底主义早期的特征（神秘知识、天使崇拜、禁欲），解析关键隐喻（如字据、影儿、丰盛）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-slate-500 mt-1 mr-2"></i> <span><strong>本章应用：</strong> "字据"的商业背景；"理学"的特定指代；"有形有体"的神学含义。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-slate-800 p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:bg-slate-700">
+                            <div class="text-amber-400 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-100 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-400/70 mb-6 uppercase tracking-wider">自由与丰盛的体验</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-300">
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>原则：</strong> 强调在基督里的自由（Freedom）和满足感（Sufficiency）。将教义真理（债务消除）转化为个人的确据和喜乐。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check-circle text-amber-500 mt-1 mr-2"></i> <span><strong>本章应用：</strong> 摆脱罪疚感的捆绑；分辨现代的"花言巧语"；在基督里找到完全的满足。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('shadowChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['饮食条例', '宗教节期', '月朔', '安息日', '苦待己身', '敬拜天使'],
+                    datasets: [
+                        {
+                            label: '影儿 (Shadow) - 律法主义',
+                            data: [30, 40, 25, 50, 20, 10], // Arbitrary values showing "effort"
+                            backgroundColor: '#94a3b8', // Slate 400
+                            borderColor: '#94a3b8',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '实体 (Substance) - 基督',
+                            data: [100, 100, 100, 100, 100, 100], // Fullness
+                            backgroundColor: '#f59e0b', // Amber 500
+                            borderColor: '#f59e0b',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 110,
+                            grid: { color: '#334155' },
+                            ticks: { display: false }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#cbd5e1', font: { family: "'Noto Sans SC', sans-serif" } }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#e2e8f0' } },
+                        title: { display: true, text: '宗教仪文 vs 基督里的丰盛', color: '#e2e8f0' }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
