@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 14: The Great Banquet & The Cost | 路加福音第十四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Banquet Burgundy - Wine, Sacrifice, Royalty */
+            --theme-primary: #881337; 
+            /* Humility Earth - Lowliness, Soil, Foundation */
+            --theme-accent: #78350f;
+            /* Cross Slate - Cost, Tower, Stone */
+            --theme-stone: #475569;
+            /* Background */
+            --theme-bg: #fff1f2;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #4a044e;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fda4af; /* Rose 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(136, 19, 55, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Seat Simulator Animation */
+        .table-scene {
+            position: relative;
+            height: 200px;
+            background-color: #fce7f3;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #be123c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .table-long {
+            width: 80%;
+            height: 40px;
+            background-color: #78350f;
+            border-radius: 4px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            align-items: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+        }
+
+        .chair {
+            width: 30px;
+            height: 30px;
+            background-color: #db2777;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+            position: absolute;
+        }
+        
+        .chair:hover { transform: scale(1.1); }
+
+        .seat-high { right: 10%; top: 30%; background-color: #be123c; } /* High seat */
+        .seat-low { left: 10%; top: 30%; background-color: #64748b; } /* Low seat */
+        
+        .player-token {
+            width: 30px;
+            height: 30px;
+            background-color: #fbbf24;
+            border: 2px solid #b45309;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        /* Animation States */
+        .move-to-high { top: 30%; right: 10%; left: auto; transform: none; }
+        .move-to-low { top: 30%; left: 10%; transform: none; }
+        
+        .shamed .player-token { animation: shame-move 1.5s forwards; }
+        .honored .player-token { animation: honor-move 1.5s forwards; }
+
+        @keyframes shame-move {
+            0% { top: 30%; right: 10%; left: auto; transform: none; } /* At high */
+            20% { transform: scale(1.2); }
+            100% { top: 30%; left: 10%; right: auto; transform: none; background-color: #9ca3af; } /* Move to low */
+        }
+
+        @keyframes honor-move {
+            0% { top: 30%; left: 10%; right: auto; transform: none; } /* At low */
+            20% { transform: scale(1.2); }
+            100% { top: 30%; right: 10%; left: auto; transform: none; background-color: #f59e0b; box-shadow: 0 0 15px gold; } /* Move to high */
+        }
+
+        /* Cost Tower Visual */
+        .tower-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        
+        .tower-block {
+            width: 60px;
+            height: 20px;
+            background-color: #cbd5e1;
+            border: 1px solid #94a3b8;
+            transition: background-color 0.3s;
+        }
+        
+        .built { background-color: #475569; border-color: #334155; }
+        .unfinished { background-color: #fca5a5; opacity: 0.5; border-style: dashed; }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-rose-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-rose-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-chair mr-2 text-rose-600"></i> 路加福音 14章</span>
+                        <span class="text-xs text-rose-700 en-text font-normal ml-8">Luke Chapter 14</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        筵席与代价 <br><span class="text-[10px] uppercase opacity-70 en-text">Banquet & Cost</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-rose-200 mb-1">"凡自高的，必降为卑；自卑的，必升为高。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"For everyone who exalts himself will be humbled, and he who humbles himself will be exalted."</p>
+            <p class="text-xs opacity-70">路加福音第十四章中英对照研经报告 | Humility & Discipleship</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "慷慨的邀请与严苛的代价",
+                title_en: "The Generous Invitation & The Severe Cost",
+                summary_zh: "路加福音第14章发生在法利赛人首领的家里和前往耶路撒冷的路上。这一章以'吃饭'（筵席）为背景，讨论了天国的社交礼仪：谦卑、包容和恩典。耶稣打破了当时的社会阶级观念，呼召人邀请'贫穷的、残废的'赴席。然而，当大批群众跟随祂时，话锋一转，耶稣提出了极其严苛的门徒条件——'恨'自己的亲人并背起十字架。恩典是免费的（来赴席），但做门徒是昂贵的（计算花费）。",
+                summary_en: "Luke 14 is set in a Pharisee's house and on the road to Jerusalem. Using 'dining' (banquet) as a backdrop, Jesus discusses Kingdom etiquette: humility, inclusion, and grace. He shatters social hierarchies, calling hosts to invite 'the poor and crippled'. However, turning to the crowds, He pivots to the severe conditions of discipleship—'hating' family and bearing the cross. Grace is free (come to the banquet), but discipleship is costly (count the cost).",
+                concepts: [
+                    { title: "自卑", title_en: "Humbles Himself", greek: "Tapeinoō", color: "text-amber-700", desc_zh: "不是自卑感，而是主动降低身份，不求名利。这是升高的前提。", desc_en: "Not self-pity, but voluntary lowliness. The prerequisite for exaltation." },
+                    { title: "勉强", title_en: "Compel", greek: "Anagkazō", color: "text-rose-700", desc_zh: "即'极力劝勉'。表现了神对他人的迫切爱意，不愿一人沉沦。", desc_en: "Urge strongly. Reflects God's urgent love, desiring none to perish." },
+                    { title: "爱/恨", title_en: "Hate", greek: "Miseō", color: "text-slate-600", desc_zh: "希伯来惯用语，指'优先次序'。爱神胜过一切，相比之下如同恨。", desc_en: "Hebraism for priority. Loving God so much that other loves seem like hate." }
+                ]
+            },
+            sections: [
+                {
+                    id: "sabbath",
+                    title: "壹 · 安息日治病：律法与怜悯 (14:1-6)",
+                    title_en: "Healing on Sabbath: Law vs Mercy",
+                    desc: "设下的网罗 | The Trap Set",
+                    verses: [
+                        {
+                            ref: "14:3-5",
+                            text_zh: "耶稣...问律法师和法利赛人说：'安息日治病，可以不可以？'...又对他们说：'你们中间谁有驴或牛，在安息日掉在井里，不立时拉它上来呢？'",
+                            text_en: "Jesus... asked the lawyers and Pharisees, 'Is it lawful to heal on the Sabbath, or not?'... And he said to them, 'Which of you, having a son or an ox that has fallen into a well on a Sabbath day, will not immediately pull him out?'",
+                            academic: {
+                                title: "沉默的控诉 (The Accusing Silence)",
+                                content_zh: "这是一个陷阱（窥探祂）。患水臌的人被放在显眼处。耶稣先发制人，用法律问题（可以不可以）挑战他们。他们的'不言语'暴露了内心的矛盾：如果说'可以'，就违背传统；说'不可以'，就显得冷酷。耶稣用'牛驴掉井'的例证（Qal Wahomer，从轻到重）指出：如果为了财产（牛）可以犯安息日，为了人的生命岂不更应当吗？这揭示了他们看重财物胜过看重人。",
+                                content_en: "A trap (watching Him). The dropsy man was placed there. Jesus preempts with a legal question. Their 'silence' exposes inner conflict: 'Yes' breaks tradition; 'No' seems cruel. Jesus uses the 'ox in a well' analogy (Qal Wahomer): If you break Sabbath for property (ox), how much more for human life? This reveals they valued assets more than people."
+                            },
+                            devotional: {
+                                title: "不要为了规条牺牲爱 (Don't Sacrifice Love for Rules)",
+                                content_zh: "法利赛人为了维护'安息日'的神学正确性，对面前受苦的人视而不见。我们是否也会为了维护某种'属灵习惯'或'教会传统'，而对身边人的需要冷漠？真正的安息日精神是释放和怜悯。如果你所谓的'坚持真理'让你变得冷酷无情，那你可能已经掉进了律法主义的井里。",
+                                content_en: "Pharisees ignored suffering to maintain 'Sabbath correctness'. Do we sacrifice compassion for 'spiritual habits' or 'traditions'? The true Sabbath spirit is liberation and mercy. If your 'standing for truth' makes you cold, you might have fallen into the well of legalism."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "seating",
+                    title: "贰 · 末席的比喻：谦卑的智慧 (14:7-11)",
+                    title_en: "Parable of the Lowest Seat: Wisdom of Humility",
+                    desc: "谁在那个位子上？ | Who is in that Seat?",
+                    verses: [
+                        {
+                            ref: "14:10-11",
+                            text_zh: "...你去坐末位，好叫那请你的人来对你说：'朋友，请上坐。'...因为凡自高的，必降为卑；自卑的，必升为高。",
+                            text_en: "...go and sit in the lowest place, so that when your host comes he may say to you, 'Friend, move up higher.'... For everyone who exalts himself will be humbled, and he who humbles himself will be exalted.",
+                            academic: {
+                                title: "荣誉与羞耻的文化 (Honor-Shame Culture)",
+                                content_zh: "在古代近东，'座次'决定身份和荣誉。争夺首位是社会常态。耶稣的教导不仅是社交智慧（避免尴尬），更是天国原则。'凡自高的...'是神学被动语态（Divine Passive），意即'神必使他降为卑'。在这个国度里，地位不是争来的，而是神赐予的（Invited up）。真正的尊荣来自上帝的评估，而非人的位置。",
+                                content_en: "In ANE culture, 'seating' defined honor. Scrambling for the best seat was normal. Jesus' teaching isn't just etiquette, but Kingdom principle. 'Will be humbled' is a Divine Passive (God will humble him). In this Kingdom, status isn't seized but granted by God. True honor comes from God's estimation, not human positioning."
+                            },
+                            devotional: {
+                                title: "抢夺麦克风 (Grabbing the Mic)",
+                                content_zh: "我们本能地想被看见、被认可、坐'首位'。在教会服事中，你是否因为没有被点名表扬而感到受伤？或者因为别人抢了你的风头而嫉妒？耶稣说：去坐末位。主动选择不显眼的位置。因为如果你是金子，神会在适当的时候把你举起来；如果你只是镀金，抢到首位也终会被羞辱。",
+                                content_en: "We instinctively want to be seen and occupy the 'head table'. Do you feel hurt when unrecognized in ministry? Jesus says: Sit in the lowest place. Choose obscurity. If you are gold, God will exalt you in time; if you are gilt, seizing the top spot will only lead to shame."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "banquet",
+                    title: "叁 · 大筵席的比喻：拒绝与勉强 (14:15-24)",
+                    title_en: "Parable of the Great Banquet: Rejection & Compulsion",
+                    desc: "借口与恩典的广度 | Excuses & Breadth of Grace",
+                    verses: [
+                        {
+                            ref: "14:18-23",
+                            text_zh: "众人一口同音地推辞...主人就动怒...快出去，到城里大街小巷，领那贫穷的、残废的...都进来...勉强人进来，坐满我的屋子。",
+                            text_en: "But they all alike began to make excuses... Then the master of the house became angry... 'Go out quickly to the streets... and bring in the poor and crippled... compel people to come in, that my house may be filled.'",
+                            academic: {
+                                title: "弥赛亚筵席的重新定向 (Redirecting the Messianic Banquet)",
+                                content_zh: "那个感叹'在神国里吃饭的有福了'的人，认为犹太人理所当然会参加。耶稣用比喻打破这种优越感。那些'被请的人'（宗教领袖/犹太精英）因着地上的挂虑（地、牛、妻子=财富、工作、家庭）拒绝了邀请。结果，恩典转向了'贫穷的、残废的'（边缘人）和'路上、篱笆那里'（外邦人）。'勉强'（Compel）表达了神不愿意看到筵席空置的迫切心肠。",
+                                content_en: "The man exclaimed 'Blessed is he who eats bread in the Kingdom', assuming Jewish entitlement. Jesus shatters this. The 'invited' (elites) refused due to earthly ties (land, oxen, wife). Grace then turns to the 'poor/crippled' (outcasts) and 'highways' (Gentiles). 'Compel' shows God's urgent desire not to leave His banquet empty."
+                            },
+                            devotional: {
+                                title: "你的借口是什么？(What is Your Excuse?)",
+                                content_zh: "这三个借口看起来都很合理：买地（资产管理）、试牛（工作发展）、娶妻（家庭生活）。它们本身不是罪，但当它们成为拒绝神邀请的理由时，就成了偶像。阻碍我们赴席的往往不是'坏事'，而是'好事'。不要让'次好的'（Good）阻挡了'上好的'（Best）。神正在邀请你进入更深的团契，你今天有空吗？",
+                                content_en: "The excuses seem reasonable: Real estate, career, family. Not sins in themselves, but idols when they displace God. 'Good' things often block the 'Best' things. God is inviting you to deeper communion. Are you too busy with 'good' things to accept the Best?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "cost",
+                    title: "肆 · 跟随的代价：爱与恨 (14:25-33)",
+                    title_en: "The Cost of Discipleship: Love & Hate",
+                    desc: "计算花费 | Count the Cost",
+                    verses: [
+                        {
+                            ref: "14:26-27",
+                            text_zh: "人到我这里来，若不爱我胜过爱自己的父母、妻子、儿女、弟兄、姐妹，和自己的性命，就不能作我的门徒...凡不背着自己十字架跟从我的，也不能...",
+                            text_en: "If anyone comes to me and does not hate his own father and mother and wife and children and brothers and sisters, yes, and even his own life, he cannot be my disciple... Whoever does not bear his own cross...",
+                            academic: {
+                                title: "闪族语言的'恨' (Semitic 'Hate')",
+                                content_zh: "耶稣并不是教导憎恨家人（违背十诫）。在希伯来语境中，'爱'与'恨'常用于表达'选择'和'优先次序'（如'雅各是我所爱的，以扫是我所恶的'）。意思是：对基督的忠诚必须是绝对的（Supreme），以至于相比之下，对家人的爱显得像恨一样冷淡。这是对门徒全人委身的终极要求。'计算花费'的比喻（盖楼、打仗）表明，这是理性的决定，而非一时冲动。",
+                                content_en: "Jesus isn't teaching malice (violating Commandments). In Semitic idiom, 'Love/Hate' expresses 'Choice/Priority' (e.g., Jacob/Esau). Meaning: Loyalty to Christ must be so absolute that other loves seem like hate by comparison. It's a demand for supreme allegiance. 'Counting the cost' (Tower/War) shows this is a rational decision, not emotional impulse."
+                            },
+                            devotional: {
+                                title: "你是粉丝还是跟随者？(Fan or Follower?)",
+                                content_zh: "很多人是被'免费的饼'（五饼二鱼）或'免费的医治'吸引来的。但耶稣突然转身，对这群'粉丝'提出了极其苛刻的要求。救恩是免费的，但作门徒是昂贵的——它要你付出一切（Everything）。你是否计算过代价？如果跟随耶稣意味着被家人误解、失去晋升机会、甚至舍弃生命，你还跟吗？不想付代价的信仰，最终会像那座烂尾楼，成为笑柄。",
+                                content_en: "Crowds followed for free bread/healing. Jesus turns and demands everything from these 'fans'. Salvation is free; discipleship costs everything. Have you counted the cost? If following Jesus means family misunderstanding, career loss, or death, will you still follow? A cost-free faith ends up like an unfinished tower—a mockery."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "salt",
+                    title: "伍 · 失味的盐：无用的结局 (14:34-35)",
+                    title_en: "Tasteless Salt: Useless Ending",
+                    desc: "失去特质的危险 | Danger of Losing Distinctiveness",
+                    verses: [
+                        {
+                            ref: "14:34-35",
+                            text_zh: "盐本是好的；盐若失了味，可用什么叫它再咸呢？或用在田里，或堆在粪里，都不合式，只好丢在外面。",
+                            text_en: "Salt is good, but if salt has lost its taste, how shall its saltiness be restored? It is of no use either for the soil or for the manure pile. It is thrown away.",
+                            academic: {
+                                title: "盐的化学特性 (Chemistry of Salt)",
+                                content_zh: "死海周边的盐常混有石膏等杂质。当氯化钠流失后，剩下的白色粉末看起来像盐，却毫无咸味（防腐/调味功能）。这种'失味的盐'既不能做肥料（会破坏土壤酸碱度），也不能做防腐剂，只能被丢弃。这比喻指那些名义上的门徒，虽然有基督徒的外表，却失去了为基督受苦、舍己的本质（咸味），对世界毫无影响力。",
+                                content_en: "Dead Sea salt was mixed with impurities. If NaCl leached out, the residue looked like salt but was tasteless. This 'tasteless salt' ruins soil (bad fertilizer) and can't preserve. It symbolizes nominal disciples who look Christian but lack the essence of self-denial and sacrifice. They have no impact on the world and are 'thrown out'."
+                            },
+                            devotional: {
+                                title: "不要做'糖衣'基督徒 (Don't Be a Sugar-Coated Christian)",
+                                content_zh: "世界不需要更多'甜美'的基督徒（只会说好听话、妥协），世界需要'咸'的基督徒（有防腐作用、有真理的味道）。如果你为了融入世界而失去了你的独特性（圣洁、舍己），你就失去了存在的价值。保持你的咸味，哪怕这会让你在伤口上撒盐（让人感到刺痛）。",
+                                content_en: "The world doesn't need more 'sweet' Christians (compromising); it needs 'salty' ones (preserving, truthful). If you blend in so much you lose your distinctiveness (holiness), you lose your value. Keep your saltiness, even if it stings the world's wounds."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            seatPos: 'low', // low, high
+            towerProgress: 0,
+            hasCounted: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function trySit(seat) {
+            const token = document.getElementById('player-token');
+            const msg = document.getElementById('seat-msg');
+            const scene = document.getElementById('seat-vis');
+            
+            // Reset animations
+            scene.classList.remove('shamed', 'honored');
+            void token.offsetWidth; // trigger reflow
+
+            if (seat === 'high') {
+                // Try to sit high -> moved to low (Shame)
+                token.style.top = '30%'; token.style.right = '10%'; token.style.left = 'auto'; // Initial position
+                setTimeout(() => {
+                    scene.classList.add('shamed');
+                    msg.innerHTML = "<span class='text-red-600 font-bold'>自高必降为卑！被请到末座。(Humbled!)</span>";
+                }, 100);
+            } else {
+                // Sit low -> moved to high (Honor)
+                token.style.top = '30%'; token.style.left = '10%'; token.style.right = 'auto'; // Initial position
+                setTimeout(() => {
+                    scene.classList.add('honored');
+                    msg.innerHTML = "<span class='text-green-700 font-bold'>朋友，请上座！(Friend, move up higher!)</span>";
+                }, 100);
+            }
+        }
+
+        function buildTower() {
+            const blocks = document.querySelectorAll('.tower-block');
+            const status = document.getElementById('tower-status');
+            const costBtn = document.getElementById('cost-btn');
+            
+            if (!appState.hasCounted) {
+                // Did not count cost -> Fail halfway
+                for(let i=0; i<3; i++) blocks[i].classList.add('built');
+                for(let i=3; i<6; i++) blocks[i].className = 'tower-block unfinished';
+                status.innerHTML = "<span class='text-red-600'>没计算花费，半途而废！被人耻笑。(Mocked!)</span>";
+                costBtn.innerText = "先计算花费 (Count Cost First)";
+                appState.hasCounted = true;
+            } else {
+                // Counted cost -> Finish
+                blocks.forEach(b => b.classList.remove('unfinished'));
+                blocks.forEach(b => b.classList.add('built'));
+                status.innerHTML = "<span class='text-green-700'>计算代价，欢喜做完！(Finished!)</span>";
+                costBtn.innerText = "重置 (Reset)";
+                appState.hasCounted = false; // Reset logic for demo
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Parables</span>
+                            <h2 class="text-3xl font-bold serif text-rose-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-rose-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-rose-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Seat Simulator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-rose-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-rose-900">座位模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Seat Simulator</p>
+                         
+                         <div id="seat-vis" class="table-scene mb-4">
+                            <div class="table-long">
+                                <span>Low End</span>
+                                <span>High End</span>
+                            </div>
+                            <div class="chair seat-low" onclick="trySit('low')">末</div>
+                            <div class="chair seat-high" onclick="trySit('high')">首</div>
+                            <div id="player-token" class="player-token"><i class="fas fa-user"></i></div>
+                         </div>
+                         
+                         <p id="seat-msg" class="text-center text-sm text-slate-500 mb-4 h-6">选择座位 (Click a Seat)</p>
+                         <p class="text-[10px] text-center text-slate-400 italic">"凡自卑的必升为高..."</p>
+                    </div>
+                </div>
+
+                <!-- Feature: Cost Calculator -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-calculator text-slate-500 mr-2"></i> 计算代价：盖楼的比喻
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Counting the Cost</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 14:28</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="tower-container mb-4">
+                            <div class="tower-block"></div>
+                            <div class="tower-block"></div>
+                            <div class="tower-block"></div>
+                            <div class="tower-block"></div>
+                            <div class="tower-block"></div>
+                            <div class="tower-block"></div>
+                        </div>
+                        
+                        <p id="tower-status" class="text-center text-sm text-slate-600 mb-2">准备开工... (Ready to build...)</p>
+
+                        <button id="cost-btn" onclick="buildTower()" class="px-6 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-full font-bold text-sm transition">
+                             直接开工 (Build Now)
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fff1f2]/95 backdrop-blur py-4 mb-6 border-b border-rose-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-rose-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-rose-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-rose-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-rose-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-rose-50 to-white p-5 border-b border-rose-100">
+                        <span class="inline-block px-2 py-0.5 bg-rose-100 text-rose-800 text-xs font-bold rounded mb-2 font-mono border border-rose-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-rose-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-rose-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-rose-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Linguistic</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">文化背景分析（荣辱文化、座位次序）。希腊文词源（爱与恨的语义）。拉比辩论逻辑（Qal Wahomer）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Honor-Shame culture analysis. Greek semantics (Love/Hate). Rabbinic logic (Qal Wahomer).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解"恨"在希伯来语境中的相对含义（优先次序）。分辨"免费的救恩"与"昂贵的门徒身份"。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand 'Hate' as priority. Distinguish free salvation vs costly discipleship.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Heart & Choice</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">挑战内心的动机（是否为了名利）。检查生命中的偶像（什么是你不能舍弃的）。操练主动的谦卑（坐末位）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Chicling inner motives. Identifying idols. Practicing voluntary humility.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">每天计算代价。不要让"好"拦阻"最好"。在被忽略时选择喜乐。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Count the cost daily. Don't let 'good' block 'best'. Choose joy when overlooked.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

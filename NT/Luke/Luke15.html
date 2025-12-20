@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 15: The Lost & Found | 路加福音第十五章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Joy Gold - Celebration, Value, Light */
+            --theme-primary: #d97706; 
+            /* Homecoming Green - Life, Restoration, Field */
+            --theme-accent: #15803d;
+            /* Compassion Red - Father's Heart, Sacrifice */
+            --theme-dark: #9f1239;
+            /* Background */
+            --theme-bg: #fffbeb;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #451a03;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fde68a; /* Amber 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #f0fdf4; /* Green 50 */
+            border-left: 3px solid #15803d; /* Green 600 */
+            color: #14532d;
+        }
+
+        /* Lost Coin Animation */
+        .dark-room {
+            position: relative;
+            height: 240px;
+            background-color: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: none; /* Hide default cursor */
+        }
+
+        .flashlight-beam {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, rgba(255, 255, 200, 0.9) 0%, rgba(255, 255, 200, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.2s;
+            mix-blend-mode: hard-light;
+        }
+
+        .dust-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        .hidden-coin {
+            position: absolute;
+            font-size: 1.5rem;
+            color: #fbbf24; /* Gold */
+            opacity: 0; /* Hidden in dark */
+            transition: opacity 0.2s, transform 0.5s;
+            z-index: 10;
+        }
+
+        .room-lit .hidden-coin {
+            opacity: 1;
+            text-shadow: 0 0 10px gold;
+        }
+
+        .broom {
+            position: absolute;
+            font-size: 3rem;
+            color: #a16207;
+            pointer-events: none;
+            transform-origin: bottom center;
+            opacity: 0;
+        }
+        
+        .sweeping .broom {
+            opacity: 1;
+            animation: sweep-anim 0.5s infinite alternate;
+        }
+
+        @keyframes sweep-anim {
+            from { transform: rotate(-20deg) translate(-20px, -20px); }
+            to { transform: rotate(20deg) translate(20px, -20px); }
+        }
+
+        .found-celebration {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(251, 191, 36, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s;
+        }
+        
+        .found-celebration.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Two Sons Visual */
+        .son-card {
+            transition: all 0.5s ease;
+        }
+        .son-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-amber-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-search-location mr-2 text-amber-600"></i> 路加福音 15章</span>
+                        <span class="text-xs text-amber-700 en-text font-normal ml-8">Luke Chapter 15</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        失而复得 <br><span class="text-[10px] uppercase opacity-70 en-text">Lost & Found</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-amber-200 mb-1">"因为我这个儿子是死而复活，失而复得的。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"For this my son was dead, and is alive again; he was lost, and is found."</p>
+            <p class="text-xs opacity-70">路加福音第十五章中英对照研经报告 | Joy of Restoration</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "失落与寻回：天父的心肠",
+                title_en: "Lost & Found: The Heart of the Father",
+                summary_zh: "路加福音第15章被誉为'福音中的福音'。面对法利赛人对祂接待罪人的批评，耶稣连讲了三个比喻：失羊、失钱、浪子。这三个故事层层递进，展示了神对失丧者主动的寻找、极度的珍视以及寻回后巨大的喜乐。核心不仅在于罪人的悔改，更在于父亲（神）那打破常规、不计前嫌的慈爱。这一章揭示了天国最深刻的快乐源泉——一个罪人的悔改。",
+                summary_en: "Luke 15 is often called 'The Gospel within the Gospel'. Responding to Pharisees' criticism for welcoming sinners, Jesus tells three parables: Lost Sheep, Lost Coin, Prodigal Son. These stories escalate in intensity, revealing God's active search, immense valuation, and explosive joy over the found. The core is not just the sinner's repentance, but the Father's unconventional, unconditional love. This chapter unveils Heaven's deepest joy—one sinner repenting.",
+                concepts: [
+                    { title: "接待", title_en: "Receives", greek: "Prosdechomai", color: "text-amber-600", desc_zh: "不仅是允许进入，更是热切欢迎、甚至同桌吃饭（团契）。", desc_en: "Not just admit, but welcome warmly and eat with (fellowship)." },
+                    { title: "悔改", title_en: "Repent", greek: "Metanoia", color: "text-green-700", desc_zh: "思想的转变。在浪子喻中表现为'醒悟过来'。", desc_en: "Change of mind. In the Prodigal story, shown as 'came to himself'." },
+                    { title: "慈心", title_en: "Compassion", greek: "Splanchnizomai", color: "text-rose-700", desc_zh: "指内脏的翻腾。父亲看见浪子时那种撕心裂肺的爱。", desc_en: "Movement of bowels/guts. The visceral love of the Father seeing the son." }
+                ]
+            },
+            sections: [
+                {
+                    id: "sheep",
+                    title: "壹 · 迷失的羊：牧人的寻找 (15:1-7)",
+                    title_en: "The Lost Sheep: The Shepherd's Search",
+                    desc: "一只的价值 | The Value of One",
+                    verses: [
+                        {
+                            ref: "15:4-7",
+                            text_zh: "...谁有一百只羊，失去一只，不把这九十九只撇在旷野，去找那失去的羊，直到找着呢？...我告诉你们，一个罪人悔改，在天上也要这样为他欢喜...",
+                            text_en: "...having a hundred sheep, if he has lost one of them, does not leave the ninety-nine in the open country, and go after the one that is lost, until he finds it?... there will be more joy in heaven over one sinner who repents...",
+                            academic: {
+                                title: "直到找着 (Until He Finds It)",
+                                content_zh: "这个比喻强调的是牧人的'主动性'和'坚持'。羊迷路了，通常无法自己回来，甚至不知道自己迷路。牧人'撇下九十九只'不是不负责任，而是为了那'一只'处于危险中的生命。'直到找着'（Until he finds it）表明了神不可抗拒的恩典和不达目的誓不罢休的爱。这里没有责备羊的迷路，只有扛在肩上的喜乐。",
+                                content_en: "Emphasizes the Shepherd's initiative and persistence. Sheep can't find their way back. Leaving the 99 isn't negligence, but prioritizing the one in danger. 'Until he finds it' shows irresistible grace and relentless love. There is no scolding, only the joy of carrying it on his shoulders."
+                            },
+                            devotional: {
+                                title: "你就是那一只 (You Are The One)",
+                                content_zh: "我们常觉得自己在茫茫人海中微不足道，神真的在乎我吗？耶稣说，为了你这一只，祂愿意走遍旷野。当你感到孤独、迷茫、回不了家时，请记住：好牧人正在寻找你，且祂不会停止，直到找到你。你不需要自己走回家，祂会把你扛在肩上带回家。",
+                                content_en: "We feel insignificant. Does God care? Jesus says He scours the wilderness for YOU. When lonely or lost, remember: The Shepherd is searching, and He won't stop 'until He finds'. You don't have to walk back; He carries you home."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "coin",
+                    title: "贰 · 失落的钱：圣灵的光照 (15:8-10)",
+                    title_en: "The Lost Coin: The Spirit's Illumination",
+                    desc: "细细的寻找 | Seeking Diligently",
+                    verses: [
+                        {
+                            ref: "15:8-10",
+                            text_zh: "...有十块钱，若失落一块，岂不点上灯，打扫屋子，细细的找，直到找着吗？...神使者面前也是这样为他欢喜。",
+                            text_en: "...having ten silver coins, if she loses one coin, does not light a lamp and sweep the house and seek diligently until she finds it?... there is joy before the angels of God...",
+                            academic: {
+                                title: "无生命者的价值 (Value of the Inanimate)",
+                                content_zh: "羊迷路可能是因为愚蠢，但钱币失落是因为主人的疏忽或环境的原因。钱币本身没有生命，不会呼救，也无法悔改，但这并不减少它的价值。妇人（常被视为圣灵或教会的象征）'点灯、打扫、细找'，象征着神在黑暗和尘土中寻找那些甚至不知道自己失落的人。这强调了神寻找我们的努力，完全独立于我们的回应能力。",
+                                content_en: "Sheep stray by folly; coins are lost by circumstance. The coin is inanimate, can't cry out or repent, yet retains value. The Woman (symbolizing Spirit/Church) lighting, sweeping, seeking represents God searching in the dust for those unaware of their lostness. It highlights God's effort independent of our ability to respond."
+                            },
+                            devotional: {
+                                title: "在尘土中被寻回 (Found in the Dust)",
+                                content_zh: "有时候我们觉得自己像那枚掉在角落里的硬币，被生活的灰尘覆盖，毫无生气，甚至没有力气呼求。但神会为你'点上灯'，搅动你的环境（打扫屋子），只为了找到你。即使你觉得自己一文不值，但在神眼中，你仍是祂宝贵的银币，祂印记在你身上。祂必在黑暗中寻见你。",
+                                content_en: "Sometimes we feel like a coin in a dusty corner—lifeless, unable to cry out. But God lights a lamp and disturbs your environment (sweeping) just to find you. Even if you feel worthless, you bear His image. He will find you in the dark."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prodigal",
+                    title: "叁 · 浪子的回归：父亲的拥抱 (15:11-24)",
+                    title_en: "The Prodigal's Return: The Father's Embrace",
+                    desc: "死而复活 | Dead and Alive Again",
+                    verses: [
+                        {
+                            ref: "15:20-24",
+                            text_zh: "相离还远，他父亲看见，就动了慈心，跑去抱着他的颈项，连连与他亲嘴...父亲却吩咐仆人说：'把那上好的袍子快拿出来给他穿...'",
+                            text_en: "But while he was still a long way off, his father saw him and felt compassion, and ran and embraced him and kissed him... But the father said... 'Bring quickly the best robe...'",
+                            academic: {
+                                title: "不仅是接纳，更是恢复 (Restoration, Not Just Acceptance)",
+                                content_zh: "小儿子的要求（'分家产'）等同于咒诅父亲早死。他的回归最初只是为了生存（'把我当作雇工'）。父亲的反应打破了所有尊严规范：'跑'（在中东老年人跑步被视为不体面）。父亲在儿子认罪之前就拥抱了他，并在儿子说完'不配称为儿子'后打断了他，直接吩咐恢复其地位：袍子（荣耀）、戒指（权柄）、鞋（自由人）。这表明救恩是完全的恢复，而非降级留用。",
+                                content_en: "The son's request meant wishing the father dead. His return was pragmatic ('make me a servant'). The father breaks dignity norms by 'running'. He embraces the son *before* the confession and interrupts the 'make me a servant' plea to command full restoration: Robe (honor), Ring (authority), Sandals (freedom). Salvation is full sonship, not probation."
+                            },
+                            devotional: {
+                                title: "当你搞砸了一切 (When You've Blown It)",
+                                content_zh: "你是否觉得自己的罪太大，或者堕落太深，即便回转也只能做个'二等基督徒'？浪子的故事告诉你：不。父亲没有让他做雇工，而是恢复了他儿子的身份。神不记念你的过去，只庆祝你的归来。不要因为羞耻而停留在猪圈，也不要满足于做雇工。回家吧，那里有戒指和筵席等着你。",
+                                content_en: "Do you feel you've sinned too much to be more than a 'second-class Christian'? The Father says No. He didn't hire him; He restored him. God celebrates your return, not your past. Don't stay in the pigsty of shame, nor settle for servanthood. Come home to the Ring and the Feast."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "elder-brother",
+                    title: "肆 · 大儿子的迷失：自义的愤怒 (15:25-32)",
+                    title_en: "The Elder Brother: Lost in Self-Righteousness",
+                    desc: "家里的浪子 | The Prodigal in the House",
+                    verses: [
+                        {
+                            ref: "15:28-31",
+                            text_zh: "大儿子却生气，不肯进去...对父亲说：'我服事你这多年，从来没有违背过你的命...但你这个儿子...' 父亲对他说：'儿啊！你常和我同在，我一切所有的都是你的。'",
+                            text_en: "But he was angry and refused to go in... 'Look, these many years I have served you, and I never disobeyed your command... But when this son of yours came...' And he said to him, 'Son, you are always with me, and all that is mine is yours.'",
+                            academic: {
+                                title: "两种迷失 (Two Kinds of Lostness)",
+                                content_zh: "大儿子虽然身在家里，心却在流浪。他把父子关系看作'服事/雇工'关系（'我服事你'原文是Douleuo，意为像奴隶一样服事），期待的是工价（一只山羊羔）。他称弟弟为'你这个儿子'，拒绝承认兄弟关系。这比喻直接针对法利赛人：他们也是遵守律法却不认识父的心肠。真正的迷失不仅是离家出走，也是在家中却由于自义而远离父亲的爱。",
+                                content_en: "The elder son is lost at home. He views sonship as 'slavery' (Douleuo), expecting wages (a goat). He disowns his brother ('this son of yours'). This targets the Pharisees: obeying law but missing the Father's heart. Lostness isn't just leaving; it's also staying with a heart of self-righteousness, alienated from love."
+                            },
+                            devotional: {
+                                title: "你是大儿子吗？(Are You the Elder Brother?)",
+                                content_zh: "我们在教会久了，很容易变成大儿子：勤劳服事、不犯大罪，但内心对那些'浪子回头'的人充满嫉妒和论断。如果你觉得神亏待了你（'从来没有给过我...'），或者你因别人的蒙恩而生气，那么你正站在门外。父亲也出来劝你：'我一切所有的都是你的。' 享受父的同在本身就是最大的赏赐，不要因为计较而错过了欢庆。",
+                                content_en: "Long-time believers easily become the Elder Brother: hardworking but resentful of grace shown to others. If you feel God owes you or are angry at sinners' blessings, you are standing outside. The Father pleads: 'All I have is yours.' Enjoying His presence is the reward. Don't miss the party because of comparison."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            coinFound: false,
+            coinPos: { top: 0, left: 0 }
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function initCoinGame() {
+            const container = document.getElementById('dark-room');
+            const light = document.getElementById('flashlight');
+            const coin = document.getElementById('hidden-coin');
+            
+            // Random position for coin
+            const x = Math.random() * 80 + 10;
+            const y = Math.random() * 80 + 10;
+            appState.coinPos = { top: y, left: x };
+            
+            coin.style.top = `${y}%`;
+            coin.style.left = `${x}%`;
+            
+            // Reset
+            appState.coinFound = false;
+            document.getElementById('found-overlay').classList.remove('active');
+            container.classList.remove('room-lit', 'sweeping');
+            coin.style.transform = 'scale(1)';
+
+            // Mouse move handler
+            container.addEventListener('mousemove', (e) => {
+                if (appState.coinFound) return;
+                
+                const rect = container.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                // Move flashlight
+                light.style.left = `${mouseX}px`;
+                light.style.top = `${mouseY}px`;
+                
+                // Check collision with coin
+                const coinX = (appState.coinPos.left / 100) * rect.width;
+                const coinY = (appState.coinPos.top / 100) * rect.height;
+                
+                const dist = Math.sqrt(Math.pow(mouseX - coinX, 2) + Math.pow(mouseY - coinY, 2));
+                
+                if (dist < 40) { // Found!
+                    foundCoin(container);
+                }
+            });
+        }
+
+        function foundCoin(container) {
+            if (appState.coinFound) return;
+            appState.coinFound = true;
+            
+            container.classList.add('room-lit', 'sweeping');
+            document.getElementById('hidden-coin').style.transform = 'scale(1.5) rotate(360deg)';
+            
+            setTimeout(() => {
+                document.getElementById('found-overlay').classList.add('active');
+            }, 1000);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Parables</span>
+                            <h2 class="text-3xl font-bold serif text-amber-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-amber-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-amber-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Lost Coin Seeker -->
+                    <div class="lg:col-span-4 bg-slate-900 p-6 rounded-xl shadow-lg flex flex-col border border-slate-700 relative overflow-hidden">
+                         <h3 class="text-xl font-bold mb-1 text-center text-yellow-200">寻找失钱模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Find the Lost Coin</p>
+                         
+                         <div id="dark-room" class="dark-room mb-4">
+                            <div id="flashlight" class="flashlight-beam"></div>
+                            <div id="hidden-coin" class="hidden-coin"><i class="fas fa-coins"></i></div>
+                            <!-- Dust particles -->
+                            ${Array(20).fill(0).map(() => `<div class="dust-particle" style="top:${Math.random()*100}%; left:${Math.random()*100}%"></div>`).join('')}
+                            <div class="broom"><i class="fas fa-broom"></i></div>
+                            
+                            <div id="found-overlay" class="found-celebration">
+                                <i class="fas fa-check-circle text-4xl text-white mb-2"></i>
+                                <span class="text-white font-bold">找到了！(Found!)</span>
+                                <span class="text-xs text-white opacity-80">天使在欢庆 (Angels Rejoice)</span>
+                            </div>
+                         </div>
+                         
+                         <p class="text-center text-xs text-slate-400 mb-2 italic">移动鼠标/手指寻找 (Move to Search)</p>
+                         
+                         <button onclick="initCoinGame()" class="w-full py-2 bg-amber-600 hover:bg-amber-700 text-white rounded font-bold transition shadow-md">
+                             <i class="fas fa-redo mr-2"></i> 重新藏钱 (Hide Coin)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: Two Sons Comparison -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-green-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-user-friends text-green-600 mr-2"></i> 两个儿子的迷失
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Two Ways to be Lost</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 15:11-32</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Younger Son -->
+                        <div class="p-6 bg-red-50 rounded-lg border border-red-200 son-card">
+                            <h4 class="text-lg font-bold text-red-900 mb-2 border-b border-red-200 pb-2">小儿子 (Younger Son)</h4>
+                            <div class="space-y-2 text-sm text-red-800">
+                                <p><strong>迷失方式：</strong> 离家出走，放荡 (Rebellion)</p>
+                                <p><strong>核心罪：</strong> 爱世界，寻求自主 (Flesh)</p>
+                                <p><strong>结局：</strong> 悔改，进入筵席 (Restored)</p>
+                            </div>
+                            <div class="mt-4 text-xs text-slate-500 italic">"我得罪了天，又得罪了你..."</div>
+                        </div>
+                        
+                        <!-- Elder Son -->
+                        <div class="p-6 bg-slate-50 rounded-lg border border-slate-200 son-card">
+                            <h4 class="text-lg font-bold text-slate-900 mb-2 border-b border-slate-200 pb-2">大儿子 (Elder Son)</h4>
+                            <div class="space-y-2 text-sm text-slate-800">
+                                <p><strong>迷失方式：</strong> 在家流浪，自义 (Religious Pride)</p>
+                                <p><strong>核心罪：</strong> 像奴隶一样服事，没有爱 (Spirit)</p>
+                                <p><strong>结局：</strong> 生气，站在门外 (Alienated)</p>
+                            </div>
+                            <div class="mt-4 text-xs text-slate-500 italic">"我服事你这多年，从来没有..."</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 p-4 bg-green-50 rounded text-center border border-green-200">
+                        <p class="text-green-900 font-bold">父亲的心 (The Father's Heart)</p>
+                        <p class="text-sm text-green-800 mt-1">对小儿子：跑去迎接 (Ran to him) | 对大儿子：出来劝他 (Came out to entreat him)</p>
+                        <p class="text-xs text-green-700 italic mt-1 en-text">Both are loved; both need grace.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Init game
+            setTimeout(initCoinGame, 500);
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fffbeb]/95 backdrop-blur py-4 mb-6 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-green-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-amber-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-amber-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-amber-50 to-white p-5 border-b border-amber-100">
+                        <span class="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono border border-amber-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-amber-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-amber-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-amber-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-green-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-green-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-green-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-green-700/70 font-serif italic en-text border-t border-green-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Literary & Theological</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">比喻的三重结构分析（羊、钱、人）。文化习俗研究（寻钱的紧迫性、父亲跑步的羞耻）。神学主题（喜乐、悔改、恩典）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Triadic parable analysis. Cultural customs (Urgency of coin, Shame of running). Theological themes (Joy, Repentance, Grace).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解神的"主动性"（寻找）。分辨两种迷失（叛逆vs自义）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand God's 'Initiative' (Seeking). Distinguish two types of lostness (Rebellion vs Self-righteousness).</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-green-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-green-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-green-600/70 mb-6 uppercase tracking-wider">Identity & Grace</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">确信个人价值（被神寻找）。克服羞耻感（父亲的拥抱）。警惕宗教里的迷失（大儿子心态）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Assurance of worth (Sought by God). Overcoming shame (Father's embrace). Beware religious lostness (Elder brother mentality).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-green-100 pt-3">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">当你迷失时，停下来让神找到。当你服事时，检查是否带有大儿子的苦毒。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">When lost, stop and let God find you. When serving, check for elder brother's bitterness.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

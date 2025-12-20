@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 8: Seeds, Storms & Faith | 路加福音第八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Soil Brown - The Word, The Heart */
+            --theme-primary: #854d0e; 
+            /* Storm Blue - Authority over Nature */
+            --theme-accent: #0369a1;
+            /* Blood Red - Healing, Jairus, Faith */
+            --theme-dark: #9f1239;
+            /* Background */
+            --theme-bg: #fefce8;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #422006;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fde047; /* Yellow 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(133, 77, 14, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fff7ed; /* Orange 50 */
+            border-left: 3px solid #ea580c; /* Orange 600 */
+            color: #7c2d12;
+        }
+
+        /* Soil Growth Animation */
+        .soil-visual {
+            position: relative;
+            height: 200px;
+            background-color: #fef9c3;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border: 2px solid #ca8a04;
+        }
+
+        .ground-base {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #713f12; /* Dirt */
+            z-index: 10;
+        }
+
+        .seed-anim {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #3f2e18;
+            border-radius: 50%;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+        }
+
+        .plant-anim {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            transform-origin: bottom center;
+            font-size: 3rem;
+            color: #15803d;
+            transition: all 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .sun-anim {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: #facc15;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+        .thorn-anim {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            font-size: 2.5rem;
+            color: #991b1b;
+            transform: translateX(-50%) scale(0);
+            transition: all 1s;
+        }
+
+        /* Animation States */
+        .state-sowing .seed-anim {
+            animation: drop 1s forwards;
+        }
+        
+        .state-rocky .plant-anim {
+            transform: translateX(-50%) scale(0.5);
+            color: #a16207; /* Withered */
+        }
+        .state-rocky .sun-anim { opacity: 1; }
+
+        .state-thorns .plant-anim {
+            transform: translateX(-50%) scale(0.6);
+            opacity: 0.5;
+        }
+        .state-thorns .thorn-anim {
+            transform: translateX(-50%) scale(1.2);
+        }
+
+        .state-good .plant-anim {
+            transform: translateX(-50%) scale(1.5);
+        }
+
+        @keyframes drop {
+            0% { top: 20px; opacity: 1; }
+            100% { top: 150px; opacity: 1; }
+        }
+
+        /* Touch Power Visual */
+        .power-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #f43f5e, #be123c);
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(190, 18, 60, 0.5);
+            transition: transform 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .power-circle:active {
+            transform: scale(0.9);
+        }
+
+        .ripple-effect {
+            position: absolute;
+            border: 2px solid #f43f5e;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0;
+            top: 0;
+            left: 0;
+        }
+
+        .active-ripple .ripple-effect {
+            animation: ripple 1s ease-out;
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-yellow-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-yellow-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-leaf mr-2 text-yellow-600"></i> 路加福音 8章</span>
+                        <span class="text-xs text-yellow-700 en-text font-normal ml-8">Luke Chapter 8</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        听道与行道 <br><span class="text-[10px] uppercase opacity-70 en-text">Hearing & Doing</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-yellow-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-yellow-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-yellow-200 mb-1">"那落在好土里的，就是人听了道，持守在诚实良善的心里，并且忍耐着结实。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"As for that in the good soil, they are those who, hearing the word, hold it fast in an honest and good heart, and bear fruit with patience."</p>
+            <p class="text-xs opacity-70">路加福音第八章中英对照研经报告 | Word & Power</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "听道、信心与生命的突破",
+                title_en: "Hearing, Faith, and Life Breakthroughs",
+                summary_zh: "路加福音第8章的核心主题是'如何听神的话'以及'信心的超越'。这一章以撒种的比喻开始，强调了心田（听道态度）对生命果效的决定性作用。随后，通过平静风浪、格拉森赶鬼、医治血漏妇人和复活睚鲁女儿这一系列神迹，展示了耶稣对自然界、灵界、疾病和死亡的绝对权柄。贯穿其中的线索是：那些单纯信靠并'听了神之道而遵行'的人，就是耶稣真正的亲人。",
+                summary_en: "Luke 8 centers on 'how to hear God's Word' and 'transcending faith'. It begins with the Parable of the Sower, emphasizing the decisive role of the heart's soil in bearing fruit. Through a sequence of miracles—calming the storm, the Gerasene demoniac, the bleeding woman, and Jairus' daughter—Jesus demonstrates absolute authority over nature, spirits, disease, and death. The unifying thread is that those who simply trust and 'hear the word of God and do it' are Jesus' true family.",
+                concepts: [
+                    { title: "奥秘", title_en: "Secrets/Mysteries", greek: "Mysterion", color: "text-purple-700", desc_zh: "神国度的真理，向寻求者显明，向无心者隐藏。", desc_en: "Kingdom truths revealed to seekers but hidden from the indifferent." },
+                    { title: "信心", title_en: "Faith", greek: "Pistis", color: "text-amber-600", desc_zh: "不是一种感觉，而是对耶稣话语和位格的完全依赖。", desc_en: "Not a feeling, but total reliance on Jesus' word and person." },
+                    { title: "能力", title_en: "Power", greek: "Dynamis", color: "text-rose-700", desc_zh: "从耶稣身上流出的神圣力量，回应信心的触摸。", desc_en: "Divine energy flowing from Jesus in response to the touch of faith." }
+                ]
+            },
+            sections: [
+                {
+                    id: "sower",
+                    title: "壹 · 撒种的比喻：心的土壤 (8:1-15)",
+                    title_en: "Parable of the Sower: Soils of the Heart",
+                    desc: "听道的四种反应 | Four Responses to the Word",
+                    verses: [
+                        {
+                            ref: "8:11-15",
+                            text_zh: "...种子就是神的道...那落在好土里的，就是人听了道，持守在诚实良善的心里，并且忍耐着结实。",
+                            text_en: "...The seed is the word of God... As for that in the good soil, they are those who, hearing the word, hold it fast in an honest and good heart, and bear fruit with patience.",
+                            academic: {
+                                title: "忍耐着结实 (Bearing Fruit with Patience)",
+                                content_zh: "路加的记载特别强调了'忍耐'（Hypomonē）。与其他福音书相比，路加更关注基督徒生命的持久性。好土的特征不仅是'领受'（Unlike the path），也不仅是'一时欢喜'（Unlike the rock），更不是被'今生的思虑'挤住（Unlike thorns），而是'持守'（Katechō）并'忍耐'。这表明属灵果实是持续顺服和经受时间考验的结果。",
+                                content_en: "Luke uniquely emphasizes 'patience' (Hypomonē). Unlike other Gospels, Luke focuses on the endurance of Christian life. Good soil isn't just 'receiving' or 'momentary joy', nor being 'choked' by cares, but 'holding fast' (Katechō) and 'enduring'. Spiritual fruit results from sustained obedience and passing the test of time."
+                            },
+                            devotional: {
+                                title: "检查你的心田 (Check Your Soil)",
+                                content_zh: "我们常问'为什么神不说话？'，其实问题往往不在于播种者，而在于土壤。也许你的心像路旁一样坚硬（不信），或者像磐石一样浅薄（只有情绪没有根基），或者被荆棘挤住（忧虑和享乐）。好消息是，土壤是可以被耕耘的。求圣灵松软你的心土，拔除荆棘，使神的话语能深深扎根。",
+                                content_en: "We ask 'Why doesn't God speak?', but the issue is the soil, not the Sower. Is your heart hard like the path (unbelief), shallow like rock (emotional but rootless), or choked by thorns (worry/pleasure)? The good news: soil can be tilled. Ask the Spirit to soften your heart and weed out thorns so the Word can root deep."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "lamp",
+                    title: "贰 · 灯与家人：显露与关系 (8:16-21)",
+                    title_en: "The Lamp & The Family: Revelation & Relationship",
+                    desc: "听道后的责任 | Responsibility of Hearing",
+                    verses: [
+                        {
+                            ref: "8:18, 21",
+                            text_zh: "所以，你们应当小心怎样听...听了神之道而遵行的人就是我的母亲，我的弟兄了。",
+                            text_en: "Take heed then how you hear... My mother and my brothers are those who hear the word of God and do it.",
+                            academic: {
+                                title: "属灵的新家庭 (New Spiritual Family)",
+                                content_zh: "耶稣重新定义了家庭关系。在犹太文化中，血缘关系至关重要。但耶稣指出，天国的亲属关系建立在'听道并行道'的基础上。这不仅是对肉身家庭的相对化，更是对属灵家庭的提升。'小心怎样听'是因为听道不仅带来知识，更带来责任——凡有的（回应真理的），还要加给他；凡没有的，连他自以为有的也要夺去。",
+                                content_en: "Jesus redefines family. In Jewish culture, bloodline was paramount. Jesus asserts Kingdom kinship is built on 'hearing and doing'. This relativizes biological family and elevates spiritual family. 'Take heed how you hear' implies responsibility—response to truth brings more; neglect brings loss."
+                            },
+                            devotional: {
+                                title: "听道即行道 (Hearing is Doing)",
+                                content_zh: "听神的话不是一种被动的活动，而是一种主动的顺服。耶稣重新定义了家人的概念，不是靠血缘，而是靠顺服。真正的'听'必然带来行动。若想与耶稣建立最亲密的关系，秘诀不在于神学知识，而在于遵行祂的话。每一次顺服，都是在加深你与主的亲属关系。",
+                                content_en: "Hearing God's word is not passive, but active obedience. Jesus redefines family not by blood, but by obedience. True 'hearing' necessitates action. The secret to intimacy with Jesus isn't theological knowledge, but doing His word. Every act of obedience deepens your kinship with the Lord."
+                            }
+                        },
+                        {
+                            ref: "8:17",
+                            text_zh: "因为掩藏的事没有不显出来的；隐瞒的事没有不露出来被人知道的。",
+                            text_en: "For nothing is hidden that will not be made manifest, nor is anything secret that will not be known and come to light.",
+                            academic: {
+                                title: "终末的显露 (Eschatological Unveiling)",
+                                content_zh: "灯的比喻表明，天国的奥秘（目前以种子形式隐藏）终将完全显露。没有任何秘密（无论是福音真理还是人的隐秘动机）能永远隐藏。这既是对门徒传扬真理的鼓励，也是对虚伪之人的警告。在末日审判的光照下，一切都将赤露敞开。",
+                                content_en: "The lamp imagery suggests that the Kingdom mystery (currently hidden/seed form) is destined for full revelation. Nothing secret (Gospel truth or human motives) will remain hidden at the end. It encourages proclaiming truth and warns against hypocrisy. In the light of final judgment, all will be laid bare."
+                            },
+                            devotional: {
+                                title: "隐藏的事终必显露 (Hidden Things Revealed)",
+                                content_zh: "不管是你暗中做的善事，还是暗中犯的罪，最终都会像灯放在灯台上一样显露出来。既然一切都要曝光，何不现在就活在光明中？真诚地面对神，不需要伪装。让神的光照进你生命的每一个角落，因为你最真实的身份，就是神所看见的那个你。",
+                                content_en: "Whether secret good deeds or secret sins, all will be revealed like a lamp on a stand. Since all will be exposed, why not live in the light now? Be authentic before God. Let His light shine into every corner, for your true identity is who you are in His sight."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "storm",
+                    title: "叁 · 平静风浪：自然的顺服 (8:22-25)",
+                    title_en: "Calming the Storm: Nature's Obedience",
+                    desc: "信心在哪里？ | Where is Your Faith?",
+                    verses: [
+                        {
+                            ref: "8:24-25",
+                            text_zh: "门徒来叫醒了他，说：'夫子！夫子！我们丧命啦！' 耶稣醒了，斥责那狂风大浪...他对门徒说：'你们的信心在哪里呢？'",
+                            text_en: "And they went and woke him, saying, 'Master, Master, we are perishing!' And he awoke and rebuked the wind and the raging waves... He said to them, 'Where is your faith?'",
+                            academic: {
+                                title: "谁是掌权者？(Who is in Control?)",
+                                content_zh: "在古代近东神话中，海（Yam）常象征混乱和邪恶的势力。耶稣'斥责'（Epetimesen）风浪，如同斥责污鬼一样，显示了祂作为造物主对被造界和灵界的双重权柄。门徒的问题不在于没有信心，而在于信心'在哪里'——是在环境上，还是在主身上？他们在风浪中看见的是死亡，而耶稣在风浪中看见的是安息（睡觉）。",
+                                content_en: "In ANE mythology, the sea (Yam) symbolized chaos. Jesus 'rebuked' (Epetimesen) the storm like a demon, showing Creator-authority over nature and spirits. The disciples' problem wasn't lack of faith, but misplaced faith—in the storm or the Lord? They saw death; Jesus saw rest (sleeping)."
+                            },
+                            devotional: {
+                                title: "风浪中的安息 (Rest in the Storm)",
+                                content_zh: "你现在的'风浪'是什么？是财务危机、家庭冲突还是未知的将来？耶稣问：'你的信心在哪里？' 如果你的信心在环境上，你会恐慌；如果你的信心在耶稣身上，你可以在风暴中安睡。记住，只要耶稣在船上，船就不会沉。呼求祂，然后像祂一样安息。",
+                                content_en: "What is your 'storm' now? Finance, conflict, uncertainty? Jesus asks: 'Where is your faith?' Faith in circumstances brings panic; faith in Jesus brings rest. Remember, if Jesus is in the boat, it won't sink. Call on Him, then rest like Him."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "gerasene",
+                    title: "肆 · 格拉森赶鬼：灵界的释放 (8:26-39)",
+                    title_en: "Gerasene Demoniac: Spiritual Liberation",
+                    desc: "一人与群鬼 | One Man vs Legion",
+                    verses: [
+                        {
+                            ref: "8:30, 35",
+                            text_zh: "耶稣问他说：'你名叫什么？' ...众人...看见鬼所离开的那人，坐在耶稣脚前，穿着衣服，心里明白过来...",
+                            text_en: "Jesus then asked him, 'What is your name?'... and they found the man from whom the demons had gone, sitting at the feet of Jesus, clothed and in his right mind...",
+                            academic: {
+                                title: "群 (Legion) 与拯救的代价 (Cost of Salvation)",
+                                content_zh: "'群'（Legion）是罗马军团的单位（约6000人），暗示这人被巨大的黑暗势力辖制。鬼魔请求进入猪群（不洁的动物），结果猪群投海（深渊的象征）。这展示了撒但的本质是'偷窃、杀害、毁坏'。当地人因损失了猪而害怕，请求耶稣离开，反映了他们看重经济利益过于人的灵魂。而被鬼附者得释放后的形象（坐、穿、明白）是救恩的完美图画。",
+                                content_en: "'Legion' (Roman unit ~6000) implies massive oppression. Demons drove pigs (unclean) into the sea (abyss), showing Satan's nature to destroy. Locals valued economy (pigs) over the soul, asking Jesus to leave. The restored man (sitting, clothed, sane) is a perfect picture of salvation."
+                            },
+                            devotional: {
+                                title: "你的生命有什么改变？(What Has Changed?)",
+                                content_zh: "这个被鬼附的人从赤身露体、住在坟茔里、昼夜喊叫，变成了'穿着衣服，心里明白，坐在耶稣脚前'。这是福音的大能。当你遇见耶稣后，你的生命有什么明显的改变？你是否从混乱、自我伤害中被释放，进入了平安和理智？去，回家告诉你的亲属，主为你做了何等大的事。",
+                                content_en: "From naked, screaming in tombs to clothed, sane, at Jesus' feet. This is Gospel power. Since meeting Jesus, what has changed in you? Are you freed from chaos to peace? Go home and tell how much the Lord has done for you."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "healing",
+                    title: "伍 · 绝望中的触摸：血漏妇人与睚鲁女儿 (8:40-56)",
+                    title_en: "Touch in Despair: Bleeding Woman & Jairus' Daughter",
+                    desc: "谁摸我？不要怕，只要信 | Who Touched Me? Only Believe",
+                    verses: [
+                        {
+                            ref: "8:44-46, 50",
+                            text_zh: "...摸他的衣裳繸子，血漏立刻就止住了...耶稣说：'总有人摸我，因我觉得有能力从我身上出去。'...耶稣听见就对他说：'不要怕，只要信！你的女儿就必得救。'",
+                            text_en: "...touched the fringe of his garment, and immediately her discharge of blood ceased... Jesus said, 'Someone touched me, for I perceive power has gone out from me.'... Jesus... 'Do not fear; only believe, and she will be well.'",
+                            academic: {
+                                title: "三明治结构与洁净 (Markan Sandwich & Purity)",
+                                content_zh: "这是经典的'三明治'叙事（睚鲁求救 -> 妇人得医 -> 睚鲁女儿复活）。两者都处于极度绝望：12年的慢性死亡（血漏导致礼仪不洁）和12岁生命的夭折。妇人的触摸按律法会使耶稣不洁，但耶稣的能力反向流出。耶稣坚持要妇人当众承认，是为了不仅医治她的身体，更恢复她的社会地位（称她为'女儿'）。对睚鲁的挑战则是：在绝望（死讯）面前，仍然选择'信'而非'怕'。",
+                                content_en: "A 'Sandwich' narrative. Both desperate: 12 years of dying (unclean) vs death at 12. Her touch should defile Jesus, but power flowed out. Jesus made her confess to restore her socially ('Daughter'). Jairus' challenge: Choose 'Believe' over 'Fear' even in the face of death."
+                            },
+                            devotional: {
+                                title: "拥挤还是触摸？(Pressing or Touching?)",
+                                content_zh: "众人都'拥挤'耶稣，但只有一人'触摸'了祂。拥挤是凑热闹，触摸是带着信心的绝望投靠。今天在教会里，你是那个拥挤群众的一员，还是那个凭信心触摸主的人？耶稣感觉到信心的触摸。不要只在人群中观望，伸出你信心的手，接触那位能力的源头。",
+                                content_en: "Crowds 'pressed', but one 'touched'. Pressing is casual; touching is desperate faith. Are you just in the crowd, or touching Him? Jesus feels faith. Don't just watch; reach out to the Source of power."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            soilState: 'idle' // idle, sowing, rocky, thorns, good
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function simulateGrowth(type) {
+            const container = document.getElementById('soil-vis');
+            const scene = document.getElementById('plant-scene');
+            
+            // Reset
+            scene.innerHTML = `
+                <div class="ground-base"></div>
+                <div class="seed-anim"></div>
+                <div class="plant-anim"><i class="fas fa-seedling"></i></div>
+                <div class="sun-anim"><i class="fas fa-sun"></i></div>
+                <div class="thorn-anim"><i class="fas fa-exclamation-triangle"></i></div>
+            `;
+            
+            container.className = "soil-visual state-sowing";
+            
+            setTimeout(() => {
+                if (type === 'rocky') {
+                    container.className = "soil-visual state-rocky";
+                } else if (type === 'thorns') {
+                    container.className = "soil-visual state-thorns";
+                } else if (type === 'good') {
+                    container.className = "soil-visual state-good";
+                    setTimeout(() => {
+                        const plant = document.querySelector('.plant-anim');
+                        plant.innerHTML = '<i class="fas fa-tree"></i>';
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function touchPower() {
+            const circle = document.getElementById('power-circle');
+            circle.classList.add('active-ripple');
+            
+            const msg = document.getElementById('power-msg');
+            msg.innerText = "有能力流出！(Power Released!)";
+            msg.classList.add('text-rose-600', 'font-bold');
+
+            setTimeout(() => {
+                circle.classList.remove('active-ripple');
+            }, 1000);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-yellow-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Parables</span>
+                            <h2 class="text-3xl font-bold serif text-yellow-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-yellow-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-yellow-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Growth Simulator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-yellow-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-yellow-800">心田生长模拟</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Growth Simulator</p>
+                         
+                         <div id="soil-vis" class="soil-visual mb-4">
+                            <div id="plant-scene">
+                                <div class="ground-base"></div>
+                                <div class="seed-anim"></div>
+                            </div>
+                         </div>
+                         
+                         <div class="grid grid-cols-3 gap-2">
+                            <button onclick="simulateGrowth('rocky')" class="py-2 bg-slate-400 hover:bg-slate-500 text-white rounded text-xs font-bold transition">土浅 (Rocky)</button>
+                            <button onclick="simulateGrowth('thorns')" class="py-2 bg-red-800 hover:bg-red-900 text-white rounded text-xs font-bold transition">荆棘 (Thorns)</button>
+                            <button onclick="simulateGrowth('good')" class="py-2 bg-green-700 hover:bg-green-800 text-white rounded text-xs font-bold transition">好土 (Good)</button>
+                         </div>
+                         <p class="text-[10px] text-center mt-2 text-slate-400 italic">"忍耐着结实 (Bear fruit with patience)"</p>
+                    </div>
+                </div>
+
+                <!-- Feature: Power Touch -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-rose-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-hand-sparkles text-rose-600 mr-2"></i> 触摸与能力
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Touch & Power</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 8:46</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div id="power-circle" class="power-circle mb-4" onclick="touchPower()">
+                            <i class="fas fa-fingerprint text-2xl"></i>
+                            <div class="ripple-effect"></div>
+                        </div>
+                        <p id="power-msg" class="text-xs text-slate-500">点击圆圈模拟触摸 (Click to Touch)</p>
+                        <div class="mt-4 bg-rose-50 p-3 rounded text-center w-full">
+                            <p class="text-sm text-rose-900 font-serif">"总有人摸我，因我觉得有能力从我身上出去。"</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fefce8]/95 backdrop-blur py-4 mb-6 border-b border-yellow-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-yellow-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-yellow-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-yellow-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-yellow-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-yellow-700 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-yellow-50 to-white p-5 border-b border-yellow-100">
+                        <span class="inline-block px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs font-bold rounded mb-2 font-mono border border-yellow-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-yellow-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-yellow-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-yellow-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-rose-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-rose-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-rose-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-rose-700/70 font-serif italic en-text border-t border-rose-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Symbolic & Theological</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-yellow-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">比喻中的神学隐喻（如"忍耐结实"的路加特色）。文学结构分析（三明治结构）。自然与灵界的双重权柄。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Theological metaphor in parables (Luke's 'patience'). Literary structure (Markan Sandwich). Dual authority over nature/spirits.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-yellow-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">将神迹视为"身份的启示"而非仅仅是"能力的展示"。理解"听道"必须伴随"行道"（结实）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">View miracles as 'Revelation of Identity' not just 'Display of Power'. Understand 'Hearing' implies 'Doing' (Fruit).</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-rose-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-rose-600/70 mb-6 uppercase tracking-wider">Faith & Family</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">检查信心的落脚点（是在环境上还是在主身上）。在绝望中操练"接触"神。重新定义"家人"（属灵关系）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Check locus of faith (circumstance vs Lord). Practicing 'touching' God in despair. Redefining 'Family' (spiritual ties).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-rose-100 pt-3">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要只做"听众"，要做"家人"。在风暴中寻找主的安息。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Don't just be an 'audience', be 'family'. Find His rest in the storm.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

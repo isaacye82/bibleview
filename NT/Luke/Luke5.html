@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 5: Calling & Transformation | 路加福音第五章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Deep Sea Blue - The Lake, Depth, Mystery */
+            --theme-primary: #0c4a6e; 
+            /* New Wine Red - Transformation, Joy */
+            --theme-accent: #be123c;
+            /* Net Brown - Work, Obedience */
+            --theme-earth: #78350f;
+            /* Background */
+            --theme-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #164e63;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #bae6fd; /* Sky 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(12, 74, 110, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fff1f2; /* Rose 50 */
+            border-left: 3px solid #be123c; /* Rose 700 */
+            color: #881337;
+        }
+
+        /* Deep Launch Animation */
+        .lake-scene {
+            position: relative;
+            height: 240px;
+            background: linear-gradient(to bottom, #7dd3fc 0%, #0284c7 40%, #0c4a6e 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #075985;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .boat {
+            position: absolute;
+            bottom: 40%;
+            left: 10%;
+            font-size: 3rem;
+            color: #78350f;
+            transition: all 2s ease-in-out;
+            z-index: 10;
+        }
+
+        .net {
+            position: absolute;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            border: 2px dashed rgba(255,255,255,0.5);
+            border-radius: 50%;
+            transition: all 1s ease;
+            opacity: 0;
+        }
+
+        .fish {
+            position: absolute;
+            font-size: 1rem;
+            color: #fcd34d;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        /* Animation States */
+        .launched .boat {
+            left: 50%;
+            transform: translateX(-50%) scale(0.8);
+        }
+
+        .casting .net {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            opacity: 1;
+            background: radial-gradient(circle, rgba(255,255,255,0.1), transparent);
+            animation: pulse-net 2s infinite;
+        }
+
+        .casting .fish {
+            opacity: 1;
+            animation: fish-swim 3s infinite;
+        }
+
+        @keyframes pulse-net {
+            0% { transform: translateX(-50%) scale(1); border-color: rgba(255,255,255,0.5); }
+            50% { transform: translateX(-50%) scale(1.05); border-color: rgba(255,255,255,0.8); }
+            100% { transform: translateX(-50%) scale(1); border-color: rgba(255,255,255,0.5); }
+        }
+
+        @keyframes fish-swim {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -10px) rotate(10deg); }
+            50% { transform: translate(-5px, 5px) rotate(-5deg); }
+            75% { transform: translate(5px, 10px) rotate(5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+
+        /* Roof Visual */
+        .roof-container {
+            position: relative;
+            width: 100%;
+            height: 100px;
+            background-color: #fef3c7;
+            border: 2px solid #d97706;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .roof-tiles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, #d97706, #d97706 10px, #b45309 10px, #b45309 20px);
+            transition: transform 1s ease;
+        }
+        .man-on-bed {
+            color: #1e3a8a;
+            font-size: 2rem;
+            transform: translateY(-50px);
+            transition: transform 1s ease 0.5s; /* Delay for roof opening */
+        }
+        
+        .roof-open .roof-tiles {
+            transform: translateX(120%);
+        }
+        .roof-open .man-on-bed {
+            transform: translateY(0);
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-sky-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-ship mr-2 text-sky-600"></i> 路加福音 5章</span>
+                        <span class="text-xs text-sky-700 en-text font-normal ml-8">Luke Chapter 5</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        呼召与更新 <br><span class="text-[10px] uppercase opacity-70 en-text">Calling & New Wine</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-sky-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-sky-200 mb-1">"从今以后，你要得人了。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Do not be afraid; from now on you will be catching men."</p>
+            <p class="text-xs opacity-70">路加福音第五章中英对照研经报告 | Obedience & Grace</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "开往水深之处：平凡人的非凡呼召",
+                title_en: "Launch into the Deep: Extraordinary Call for Ordinary Men",
+                summary_zh: "路加福音第5章标志着耶稣事工从'独自行动'转向'建立团队'。这一章记载了三个关键的呼召与洁净事件：渔夫彼得在绝望中顺服得鱼，被社会遗弃的麻风病人得洁净，瘫子因朋友的信心得赦免。本章高潮在于耶稣呼召被鄙视的税吏利未，并用'新酒装在新皮袋'的比喻，宣告了恩典时代的全新法则——祂来不是召义人，乃是召罪人悔改。",
+                summary_en: "Luke 5 marks the shift from Jesus' solo ministry to team building. It records three key events of calling and cleansing: Peter the fisherman finding abundance in obedience, a social outcast leper being cleansed, and a paralytic forgiven through friends' faith. The chapter culminates in the calling of the despised tax collector Levi and the parable of 'New Wine in New Wineskins', declaring the new law of the Age of Grace—He came not to call the righteous, but sinners to repentance.",
+                concepts: [
+                    { title: "水深之处", title_en: "The Deep", greek: "Bathos", color: "text-sky-700", desc_zh: "字面指深水区。象征离开安全舒适的浅滩，进入充满未知与神迹的领域。", desc_en: "Lit. deep water. Symbolizes leaving the safe shallows for the unknown realm of miracles." },
+                    { title: "得人", title_en: "Catch Men", greek: "Zōgrōn", color: "text-amber-700", desc_zh: "字面意为'活捉'。不是为了杀死（像捕鱼），而是为了以此赋予新的生命。", desc_en: "Lit. 'taking alive'. Not to kill (like fish), but to capture for life." },
+                    { title: "新酒", title_en: "New Wine", greek: "Oinos Neos", color: "text-rose-700", desc_zh: "指福音那充满活力、发酵膨胀的生命力，旧的宗教形式（皮袋）无法限制它。", desc_en: "The fermenting, expansive vitality of the Gospel, which old religious forms cannot contain." }
+                ]
+            },
+            sections: [
+                {
+                    id: "fishing",
+                    title: "壹 · 第一次呼召：彼得的顺服 (5:1-11)",
+                    title_en: "The First Call: Peter's Obedience",
+                    desc: "从整夜劳力到依从你话 | From Toil to Trust",
+                    verses: [
+                        {
+                            ref: "5:4-5",
+                            text_zh: "...把船开到水深之处，下网打鱼。西门说：'夫子，我们整夜劳力，并没有打着什么。但依从你的话，我就下网。'",
+                            text_en: "...Put out into the deep and let down your nets for a catch. And Simon answered, 'Master, we toiled all night and took nothing! But at your word I will let down the nets.'",
+                            academic: {
+                                title: "从'夫子'到'主' (From Master to Lord)",
+                                content_zh: "彼得起初称耶稣为'夫子'（Epistata，尊敬的老师），这时他还在以专业渔夫的经验判断（白天深水很难打到鱼）。但当神迹发生后，他俯伏在耶稣膝前称'主啊'（Kyrie，神性称呼），并说'离开我，我是个罪人'。这是对神性威严的自然反应（Mysterium Tremendum）。耶稣将'打鱼'升华为'得人'（Zōgrōn），这是生命方向的彻底转换。",
+                                content_en: "Peter first calls Jesus 'Master' (Epistata), relying on his fisherman's logic (fishing is bad in deep day water). After the miracle, he falls down calling Him 'Lord' (Kyrie), realizing his sinfulness before the Divine (Mysterium Tremendum). Jesus sublimates 'fishing' to 'catching men' (Zōgrōn)—a total vocational pivot."
+                            },
+                            devotional: {
+                                title: "你的'深水区'在哪里？(Where is Your Deep Water?)",
+                                content_zh: "我们习惯在'浅滩'（安全、可控、凭经验）生活。但耶稣常常呼召我们在最不合逻辑的时候（白天）、做最挑战经验的事（下网）。'依从你的话'（At your word）是信心的转折点。当你觉得'我已经试过一切都没用'时，正是神迹即将发生的时刻。不要怕水深，因为主在船上。",
+                                content_en: "We love the 'shallows' (safe, controllable). But Jesus calls us to the deep when it makes no sense. 'At your word' is the pivot of faith. When you feel 'I've tried everything and failed', that's exactly when the miracle is primed. Don't fear the deep; the Lord is in the boat."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "leper",
+                    title: "贰 · 触摸不可触摸的：洁净大麻风 (5:12-16)",
+                    title_en: "Touching the Untouchable: Cleansing the Leper",
+                    desc: "超越律法的怜悯 | Mercy Beyond Law",
+                    verses: [
+                        {
+                            ref: "5:13",
+                            text_zh: "耶稣伸手摸他，说：'我肯，你洁净了吧！'大麻风立刻就离了他的身。",
+                            text_en: "And Jesus stretched out his hand and touched him, saying, 'I will; be clean.' And immediately the leprosy left him.",
+                            academic: {
+                                title: "接触的逆转 (The Reversal of Touch)",
+                                content_zh: "根据利未记，接触麻风病人会使人'不洁净'。但耶稣主动'伸手摸他'。在这里，不是污秽传染给了耶稣，而是耶稣的洁净传染给了病人。'我肯'（I will / Thelo）显示了神的主权意愿。耶稣不仅医治了他的身体，通过'摸'这一动作，也医治了他长期被社会隔离的心理创伤。",
+                                content_en: "Per Leviticus, touching a leper makes one 'unclean'. But Jesus 'touched' him. Instead of defilement transmitting to Jesus, Jesus' purity transmitted to the leper. 'I will' shows sovereign desire. The touch healed not just the body, but the trauma of social isolation."
+                            },
+                            devotional: {
+                                title: "带着本相来到主前 (Come As You Are)",
+                                content_zh: "这人满身长了大麻风，但他没有等到'好一点'才来找耶稣。他带着最丑陋、最羞耻的样子俯伏在地。我们也常觉得必须把自己'清理干净'才能亲近神。但耶稣的触摸告诉我们：祂不嫌弃我们的污秽。把你生命中那个觉得'不可触摸'的角落交给祂，祂肯，也能洁净。",
+                                content_en: "He was 'full of leprosy', yet didn't wait to get better before coming. He came in his shame. We often feel we must 'clean up' to approach God. Jesus' touch proves He isn't repelled by our filth. Bring your 'untouchable' secret to Him; He is willing and able to cleanse."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "paralytic",
+                    title: "叁 · 拆通房顶：信心的突破 (5:17-26)",
+                    title_en: "Through the Roof: Breakthrough of Faith",
+                    desc: "赦罪与行走的权柄 | Authority to Forgive & Walk",
+                    verses: [
+                        {
+                            ref: "5:20, 24",
+                            text_zh: "耶稣见他们的信心，就对瘫子说：'你的罪赦了。'...但要叫你们知道，人子在地上有赦罪的权柄...",
+                            text_en: "And when he saw their faith, he said, 'Man, your sins are forgiven you.'... But that you may know that the Son of Man has authority on earth to forgive sins...",
+                            academic: {
+                                title: "群体的信心 (Corporate Faith)",
+                                content_zh: "经文说耶稣看见'他们的'（复数）信心，这包括了抬瘫子的朋友。这表明信心的群体性力量。法利赛人认为这亵渎神，因为只有神能赦罪。耶稣用'哪一样容易'的辩论（Rabbinic debate）证明：祂既然能行看得见的难事（叫瘫子行走），就证明祂拥有看不见的权柄（赦罪）。",
+                                content_en: "Jesus saw 'their' (plural) faith. This highlights corporate faith. Pharisees cried blasphemy, as only God forgives. Jesus used the 'which is easier' argument to prove: If He can do the visible hard thing (heal), He holds the invisible authority (forgive)."
+                            },
+                            devotional: {
+                                title: "你需要抬担架的朋友 (Friends Who Carry Stretchers)",
+                                content_zh: "瘫子无法自己来到耶稣面前，他需要朋友。你的属灵生命中，有没有愿意为你'拆房顶'（克服障碍）把你带到神面前的朋友？或者，你是否愿意成为那样不顾一切帮助软弱肢体的人？有时候，我们的得救和医治，是因着别人的信心。",
+                                content_en: "The paralytic couldn't come alone. Do you have friends who will 'remove roofs' (overcome obstacles) to bring you to Jesus? Or will you be that friend? Sometimes, our healing comes through the faith of others."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "levi",
+                    title: "肆 · 呼召利未：医生的逻辑 (5:27-32)",
+                    title_en: "Calling Levi: The Physician's Logic",
+                    desc: "跟从与筵席 | Following & Feasting",
+                    verses: [
+                        {
+                            ref: "5:27-28, 31",
+                            text_zh: "...看见一个税吏，名叫利未...就对他说：'你跟从我来！' 他就撇下所有的，起来，跟从了耶稣...无病的人用不着医生...",
+                            text_en: "...saw a tax collector named Levi... And he said to him, 'Follow me.' And leaving everything, he rose and followed him... Those who are well have no need of a physician...",
+                            academic: {
+                                title: "激进的门徒代价 (Radical Discipleship)",
+                                content_zh: "渔夫彼得还可以回去打鱼（约21章），但税吏利未一旦离职就无法回头（职位会被人顶替）。这是一种破釜沉舟的跟随。利未立刻为耶稣大摆筵席，这不仅是庆祝，也是公开的见证。耶稣用'医生与病人'的比喻回应了法利赛人的批评：圣洁不是通过'隔离'（Separation）来保持，而是通过'接触'（Contact）来医治。",
+                                content_en: "Peter could return to fishing; Levi couldn't return to tax collecting (job would be filled). It was a point of no return. Levi threw a feast as public witness. Jesus' 'Physician' metaphor counters Pharisaic separation: Holiness isn't kept by isolation, but heals through contact."
+                            },
+                            devotional: {
+                                title: "承认自己是病人 (Admitting Sickness)",
+                                content_zh: "世界上只有一种人不能得救：那就是自以为'健康'的人。法利赛人因自义而拒绝了这位大医生。我们来到神面前，必须先卸下'我很不错'的面具，承认自己灵里的病态。耶稣的诊所只对那些挂号承认自己'有病'的人开放。",
+                                content_en: "Only the 'healthy' (self-righteous) cannot be saved. Pharisees rejected the Physician. We must drop the mask of 'I'm fine' and admit spiritual sickness. Jesus' clinic is open only to those who admit they are ill."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "wineskins",
+                    title: "伍 · 新酒与新皮袋：结构的更新 (5:33-39)",
+                    title_en: "New Wine & Wineskins: Structural Renewal",
+                    desc: "形式与生命的不兼容 | Incompatibility of Form & Life",
+                    verses: [
+                        {
+                            ref: "5:37-38",
+                            text_zh: "也没有人把新酒装在旧皮袋里...新酒必须装在新皮袋里。",
+                            text_en: "And no one puts new wine into old wineskins... But new wine must be put into fresh wineskins.",
+                            academic: {
+                                title: "发酵的张力 (Tension of Fermentation)",
+                                content_zh: "新酒在发酵时会释放气体，需要有延展性的新皮袋。旧皮袋已经硬化，会被撑破。这比喻指旧约的律法主义形式（如法利赛人的禁食规条）无法承载新约恩典的爆发力与喜乐。试图把耶稣的生命塞进僵化的宗教传统中，只会造成破坏。必须有新的结构（新皮袋）来适应圣灵的新工作。",
+                                content_en: "Fermenting new wine needs stretchy skins. Old skins burst. This means Old Covenant legalism (fasting rules) cannot contain the explosive joy of New Covenant Grace. Forcing Jesus' life into rigid religious traditions causes ruin. New structures (fresh skins) are needed for the Spirit's work."
+                            },
+                            devotional: {
+                                title: "保持柔软的心 (Keeping a Soft Heart)",
+                                content_zh: "我们信主久了，很容易变成'旧皮袋'——习惯于某种敬拜方式、事奉模式，对新的改变感到抗拒。'陈酒'（老习惯）总让人觉得好喝。但圣灵的工作常是'新酒'，充满挑战和张力。求神使我们的心保持柔软（新皮袋），随时准备为着主的缘故而被扩张、被改变。",
+                                content_en: "Long-time believers easily become 'old wineskins'—rigid in habits, resisting change. 'Old wine' tastes better (comfort). But the Spirit brings 'New Wine'—challenging and dynamic. Ask God for a soft heart (fresh skin), ready to stretch and change for His sake."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            boatStatus: 'shore' // shore, deep
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function launchBoat() {
+            const boat = document.getElementById('peter-boat');
+            const net = document.getElementById('fish-net');
+            const btn = document.getElementById('launch-btn');
+            const scene = document.getElementById('scene-container');
+            const status = document.getElementById('launch-status');
+            
+            if (appState.boatStatus === 'shore') {
+                scene.classList.add('launched');
+                status.innerText = "开往水深之处... (Launching to the Deep...)";
+                
+                setTimeout(() => {
+                    scene.classList.add('casting');
+                    status.innerHTML = "<span class='text-sky-200 font-bold'>圈住许多鱼，网险些裂开！(Great Catch!)</span>";
+                    btn.innerHTML = '<i class="fas fa-undo mr-2"></i> 回到岸边 (Return)';
+                    appState.boatStatus = 'deep';
+                }, 2000);
+            } else {
+                scene.classList.remove('casting');
+                setTimeout(() => {
+                    scene.classList.remove('launched');
+                    status.innerText = "在岸边整夜劳力... (Toiling at shore...)";
+                    btn.innerHTML = '<i class="fas fa-water mr-2"></i> 开船 (Launch)';
+                    appState.boatStatus = 'shore';
+                }, 500);
+            }
+        }
+
+        function removeRoof() {
+            const roof = document.getElementById('roof-vis');
+            roof.classList.toggle('roof-open');
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-sky-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-sky-100 text-sky-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">The Call</span>
+                            <h2 class="text-3xl font-bold serif text-sky-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-sky-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-sky-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Deep Launch Simulator -->
+                    <div class="lg:col-span-4 bg-sky-900 p-6 rounded-xl shadow-lg flex flex-col border border-sky-700 text-white">
+                         <h3 class="text-xl font-bold mb-1 text-center text-sky-200">深海下网模拟器</h3>
+                         <p class="text-xs text-sky-400 mb-4 text-center en-text uppercase tracking-widest">Deep Launch Simulator</p>
+                         
+                         <div id="scene-container" class="lake-scene mb-4">
+                            <div id="peter-boat" class="boat"><i class="fas fa-ship"></i></div>
+                            <div id="fish-net" class="net"></div>
+                            
+                            <!-- Fish particles -->
+                            ${Array(8).fill(0).map((_,i) => `<div class="fish" style="top:${Math.random()*80}%; left:${Math.random()*80}%; animation-delay:${i*0.2}s"><i class="fas fa-fish"></i></div>`).join('')}
+                         </div>
+                         
+                         <p id="launch-status" class="text-center text-sm text-sky-300 mb-4 h-6">在岸边整夜劳力... (Toiling at shore...)</p>
+
+                         <button id="launch-btn" onclick="launchBoat()" class="w-full py-2 bg-sky-600 hover:bg-sky-500 rounded font-bold transition shadow-md border border-sky-400">
+                             <i class="fas fa-water mr-2"></i> 开船 (Launch)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: Roof Breaker -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-amber-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-hammer text-amber-600 mr-2"></i> 拆通房顶的信心
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Faith Through the Roof</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 5:19</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div id="roof-vis" class="roof-container mb-4" onclick="removeRoof()">
+                            <div class="roof-tiles"></div>
+                            <div class="man-on-bed"><i class="fas fa-procedures"></i></div>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-2">点击房顶查看神迹 (Click Roof to See Miracle)</p>
+                        <div class="text-center bg-amber-50 p-3 rounded w-full">
+                            <p class="text-sm text-amber-900 font-serif">"你的罪赦了... 起来，拿你的褥子回家去吧！"</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f0f9ff]/95 backdrop-blur py-4 mb-6 border-b border-sky-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-sky-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-sky-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-sky-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-sky-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-sky-700 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-sky-50 to-white p-5 border-b border-sky-100">
+                        <span class="inline-block px-2 py-0.5 bg-sky-100 text-sky-800 text-xs font-bold rounded mb-2 font-mono border border-sky-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-sky-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-sky-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-sky-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-rose-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-rose-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-rose-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-rose-700/70 font-serif italic en-text border-t border-rose-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Vocational & Ritual</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-sky-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">职业背景分析（彼得的渔夫身份）。洁净礼仪研究（麻风病的社会与宗教隔离）。词源追踪（"得人"的希腊文原意）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Vocational analysis (Fisherman Peter). Ritual purity study (Leprosy). Etymological tracing (Catch men).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-sky-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">观察耶稣如何颠覆宗教成规（接触不洁、呼召罪人）。理解"跟从"的绝对代价。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Observe Jesus subverting ritual norms. Understand the absolute cost of 'following'.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-rose-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-rose-600/70 mb-6 uppercase tracking-wider">Surrender & Renewal</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">在绝望中顺服（依从你的话）。在污秽中寻求洁净（主肯）。在僵化中寻求更新（新皮袋）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Obedience in despair (At your word). Cleansing in filth (I will). Renewal in rigidity (New wineskins).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-rose-100 pt-3">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">把你的"船"（职业/生活）交给主掌管。不要等到完美了才来跟随。保持柔软受教的心。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Give your 'boat' (career/life) to the Lord. Don't wait for perfection to follow. Keep a teachable heart.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 13: Repentance & The Kingdom | 路加福音第十三章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Fig Green - Life, Growth, Second Chance */
+            --theme-primary: #15803d; 
+            /* Warning Rust - Repentance, Urgency, Blood */
+            --theme-accent: #9a3412;
+            /* Narrow Door Blue - Striving, Focus */
+            --theme-dark: #1e3a8a;
+            /* Background */
+            --theme-bg: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #14532d;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #bbf7d0; /* Green 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(21, 128, 61, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fff7ed; /* Orange 50 */
+            border-left: 3px solid #ea580c; /* Orange 600 */
+            color: #7c2d12;
+        }
+
+        /* Fig Tree Animation */
+        .fig-container {
+            position: relative;
+            height: 240px;
+            background: linear-gradient(to bottom, #dbeafe 0%, #dcfce7 60%, #a16207 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border: 2px solid #86efac;
+        }
+
+        .tree-trunk {
+            width: 15px;
+            height: 100px;
+            background-color: #5d4037;
+            position: relative;
+            transition: transform 1s ease;
+            transform-origin: bottom center;
+        }
+
+        .tree-leaves {
+            position: absolute;
+            bottom: 90px;
+            width: 80px;
+            height: 80px;
+            background-color: #4d7c0f; /* Darkish green (barren looking) */
+            border-radius: 50% 50% 40% 40%;
+            transition: all 1s ease;
+            opacity: 0.8;
+        }
+
+        .soil-mound {
+            position: absolute;
+            bottom: 0;
+            width: 60px;
+            height: 20px;
+            background-color: #3f2e18;
+            border-radius: 50% 50% 0 0;
+            transform: scale(0);
+            transition: transform 1s ease;
+        }
+
+        .axe {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            font-size: 2rem;
+            color: #525252;
+            opacity: 0;
+            transform: translateX(-40px) rotate(-45deg);
+            transition: all 0.5s ease;
+        }
+
+        /* States */
+        .state-cut .axe { opacity: 1; transform: translateX(0) rotate(0deg); }
+        .state-cut .tree-trunk { transform: rotate(90deg); transition-delay: 0.5s; }
+        .state-cut .tree-leaves { transform: translateY(100px) rotate(90deg); opacity: 0.5; transition-delay: 0.5s; }
+        
+        .state-dig .soil-mound { transform: scale(1); }
+        .state-dig .tree-leaves { background-color: #15803d; transform: scale(1.1); } /* Greener */
+
+        /* Woman Bent Over Visual */
+        .back-container {
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+        
+        .person-spine {
+            width: 4px;
+            height: 60px;
+            background-color: #475569;
+            border-radius: 2px;
+            transform-origin: bottom center;
+            transform: rotate(45deg); /* Bent */
+            transition: transform 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+        
+        .person-head {
+            width: 15px;
+            height: 15px;
+            background-color: #475569;
+            border-radius: 50%;
+            position: absolute;
+            top: -15px;
+            left: -5px;
+        }
+
+        .healed .person-spine {
+            transform: rotate(0deg); /* Straight */
+            background-color: #15803d;
+        }
+        .healed .person-head {
+            background-color: #15803d;
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-green-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-green-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-tree mr-2 text-green-600"></i> 路加福音 13章</span>
+                        <span class="text-xs text-green-700 en-text font-normal ml-8">Luke Chapter 13</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        宽容与窄门 <br><span class="text-[10px] uppercase opacity-70 en-text">Grace & The Gate</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-green-200 mb-1">"若不悔改，都要如此灭亡！"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Unless you repent, you will all likewise perish."</p>
+            <p class="text-xs opacity-70">路加福音第十三章中英对照研经报告 | Urgency & Opportunity</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "宽限期：悔改的紧迫性",
+                title_en: "The Grace Period: Urgency of Repentance",
+                summary_zh: "路加福音第13章充满了'时不我待'的紧迫感。耶稣利用当时的两起悲剧（彼拉多杀人、西罗亚楼倒塌）打破了人们'因果报应'的迷思，指出'无常'是悔改的呼声。通过不结实无花果树的比喻，祂展示了神的'最后宽限'。本章还包括安息日释放被鬼附18年的女人，以及关于'窄门'的严肃教导——许多人想要进去却是不能。",
+                summary_en: "Luke 13 is charged with urgency. Jesus uses two tragedies (Pilate's massacre, Siloam tower) to shatter the myth of 'karma', framing calamity as a call to repentance. The Parable of the Barren Fig Tree illustrates God's 'final extension' of grace. The chapter also features the Sabbath liberation of a woman bound for 18 years, and the stern teaching on the 'Narrow Door'—many will seek to enter and not be able.",
+                concepts: [
+                    { title: "悔改", title_en: "Repent", greek: "Metanoeō", color: "text-amber-700", desc_zh: "不是为了应付灾难，而是生命方向的根本扭转。", desc_en: "Fundamental turnaround of life, not just disaster management." },
+                    { title: "宽容/掘开", title_en: "Let it alone", greek: "Aphiēmi", color: "text-green-600", desc_zh: "管园的（耶稣）为树求情，但这恩典是为了结出果子，而非无限期拖延。", desc_en: "The Vinedresser pleads for time. Grace is for fruit-bearing, not indefinite delay." },
+                    { title: "努力/竭力", title_en: "Strive", greek: "Agōnizomai", color: "text-blue-800", desc_zh: "竞技场术语，指'痛苦地搏斗'。进窄门需要这种属灵的拼搏。", desc_en: "Athletic term, 'to agonize'. Entering the narrow door requires spiritual combat." }
+                ]
+            },
+            sections: [
+                {
+                    id: "repent",
+                    title: "壹 · 灾难与悔改：破除因果论 (13:1-5)",
+                    title_en: "Disaster & Repentance: Breaking Karma",
+                    desc: "灾难是对幸存者的警告 | Calamity as Warning",
+                    verses: [
+                        {
+                            ref: "13:2-3",
+                            text_zh: "耶稣说：'你们以为这些加利利人比众加利利人更有罪，所以受这害吗？我告诉你们，不是的！你们若不悔改，都要如此灭亡！'",
+                            text_en: "He answered them, 'Do you think that these Galileans were worse sinners than all the other Galileans, because they suffered in this way? No, I tell you; but unless you repent, you will all likewise perish.'",
+                            academic: {
+                                title: "神义论的纠正 (Correction of Theodicy)",
+                                content_zh: "当时的犹太神学认为'遭灾=犯罪受罚'（约伯记朋友的逻辑）。耶稣断然否定了这种直接的因果联系。彼拉多屠杀（人为之恶）和西罗亚楼倒塌（自然/意外之灾）并不是因为受害者'更有罪'。耶稣将焦距从'为什么是他们？'（神学思辨）转向'我该怎么办？'（存在主义危机）。每一次灾难都是神对幸存者发出的'最后通牒'——如果不悔改，灭亡是全人类共同的结局。",
+                                content_en: "Jewish theology linked suffering directly to specific sin. Jesus rejects this. Neither Pilate's cruelty (human evil) nor the Tower's fall (accident) meant victims were 'worse sinners'. Jesus shifts focus from 'Why them?' (speculation) to 'What about me?' (existential crisis). Every disaster is a divine ultimatum to survivors: without repentance, perishing is the universal fate."
+                            },
+                            devotional: {
+                                title: "不要读新闻，要读信号 (Don't Just Read News)",
+                                content_zh: "当我们看到新闻中的悲剧时，第一反应往往是'他们真倒霉'或'这离我很远'。耶稣说：'不，这与你有关。' 每一个救护车的警笛声，都在提醒我们生命的脆弱和审判的真实。不要用别人的悲剧来建立自己的优越感，而要以此作为检查自己灵魂的契机：如果倒塌的是我这座楼，我预备好见神了吗？",
+                                content_en: "Seeing tragedy, we think 'How unlucky' or 'That's far away'. Jesus says, 'It's about you.' Every siren reminds us of fragility and judgment. Don't use others' tragedy to feel superior; use it to audit your soul. If my tower fell today, am I ready to meet God?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "fig-tree",
+                    title: "贰 · 不结实的无花果树：恩典的期限 (13:6-9)",
+                    title_en: "The Barren Fig Tree: Limit of Grace",
+                    desc: "今年且留着 | Let It Alone This Year Also",
+                    verses: [
+                        {
+                            ref: "13:7-9",
+                            text_zh: "...'看哪，我三年来...找果子，竟找不着。把它砍了吧，何必白占地土呢！' 管园的说：'主啊，今年且留着，等我周围掘开土，加上粪...'",
+                            text_en: "...'Look, for three years now I have come seeking fruit... Cut it down. Why should it use up the ground?' And he answered him, 'Sir, let it alone this year also, until I dig around it and put on manure...'",
+                            academic: {
+                                title: "中保的代求 (Intercession of the Vinedresser)",
+                                content_zh: "无花果树常象征以色列，也象征任何享受恩典的群体。'三年'可能指耶稣事工的时间，或树木成熟的合理期待期。主人（神）的要求是公义的——无果即砍。管园的（耶稣）不仅求情（Let it alone），更承诺付诸行动（掘土加粪——提供额外的养分和机会）。但这恩典不是廉价的，它有一个期限：'以后若不结果子，再把它砍了。' 恩典的目的是生产果子，而不是纵容不育。",
+                                content_en: "Fig tree symbolizes Israel/Church. 'Three years' implies ample time. The Owner (God) demands justice: cut it. The Vinedresser (Jesus) intercedes, promising action (digging/manure—extra grace/nutrients). But grace isn't cheap; it has a deadline: 'If not, cut it down.' Grace aims for fruit, not enabling sterility."
+                            },
+                            devotional: {
+                                title: "你在'加粪期'吗？(Are You in the 'Manure' Phase?)",
+                                content_zh: "或许你正处于人生的困难期，感觉像被'掘开了土'（动荡不安），甚至被'加上了粪'（遭遇臭不可闻的环境）。这可能正是主的恩典！祂在给你最后的机会，给你额外的养分，为了逼出你的生命果子。不要抱怨环境的恶劣，要抓住这个'宽限期'（Grace Period）结出悔改的果子。机会不会永远存在。",
+                                content_en: "Maybe you feel 'dug around' (unsettled) or 'manured' (in a messy situation). This might be Grace! He's giving extra nutrients to force fruit. Don't complain about the smell; seize this 'Grace Period' to bear fruit. The opportunity won't last forever."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "healing",
+                    title: "叁 · 驼背女人得医治：直立的尊严 (13:10-17)",
+                    title_en: "Healing the Crippled Woman: Dignity Restored",
+                    desc: "撒但的捆绑与安息日的释放 | Satan's Bond & Sabbath Release",
+                    verses: [
+                        {
+                            ref: "13:12-16",
+                            text_zh: "耶稣...说：'女人，你脱离这病了！' 于是按手在她身上，她立刻直起腰来...这亚伯拉罕的后裔被撒但捆绑了十八年，不当在安息日解开她的绑吗？",
+                            text_en: "Jesus... said to her, 'Woman, you are freed from your disability.' And he laid his hands on her, and immediately she was made straight... ought not this woman, a daughter of Abraham whom Satan bound for eighteen years, be loosed... on the Sabbath day?",
+                            academic: {
+                                title: "属灵的直立 (Spiritual Uprightness)",
+                                content_zh: "这女人的病源是'被鬼附'（Spirit of infirmity），导致身体弯曲，只能看地，不能看天。这象征着人类被罪压伤、目光向下的状态。管会堂的看重'规条'（Rule），耶稣看重'人'（Person）。耶稣称她为'亚伯拉罕的女儿'（赋予她尊贵的身份），并指出安息日的真义就是'解开捆绑'（Loosing）。这是对宗教形式主义的有力反击。",
+                                content_en: "Her bent condition was demonic, forcing her to gaze at earth, not heaven—a symbol of humanity crushed by sin. The ruler valued 'Rules'; Jesus valued the 'Person'. Calling her 'Daughter of Abraham' restored dignity. Jesus defines Sabbath as 'loosing bonds'. A powerful strike against religious formalism."
+                            },
+                            devotional: {
+                                title: "抬起头来 (Lift Your Head)",
+                                content_zh: "你是否被某种重担（债务、羞耻、瘾癖）压得'腰弯'，以至于只能看到地上的灰尘，看不见天上的荣光？撒但想让你永远低头，让你以为你的一生就这样了。但耶稣的手按在你身上，说：'你脱离这病了！' 敬拜不仅是唱诗，更是让灵魂在基督里'直起腰来'，恢复神儿女尊贵的站姿。",
+                                content_en: "Are you bent double by burdens (debt, shame, addiction), seeing only dirt, not heaven? Satan wants you permanently bowed. But Jesus lays hands on you: 'You are freed!' Worship is the soul 'standing up straight' in Christ, recovering the dignity of a child of God."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "narrow-door",
+                    title: "肆 · 窄门：得救的人少吗？ (13:22-30)",
+                    title_en: "The Narrow Door: Are Few Saved?",
+                    desc: "努力进窄门 | Strive to Enter",
+                    verses: [
+                        {
+                            ref: "13:24-27",
+                            text_zh: "耶稣对众人说：'你们要努力进窄门。我告诉你们，将来有许多人想要进去，却是不能...我不认识你们...离开我去吧！'",
+                            text_en: "He said to them, 'Strive to enter through the narrow door. For many, I tell you, will seek to enter and will not be able... I do not know where you come from. Depart from me...'",
+                            academic: {
+                                title: "竭力 (Agonizomai) 的神学",
+                                content_zh: "有人问神学问题（得救人数），耶稣回答实践问题（你要努力）。'努力'原文是Agonizomai（痛苦搏斗，Agony的词源），指运动员的拼搏。这表明得救虽然是恩典，但进入天国需要极大的专注和排他性的委身。'窄门'意味着不能带着世界的行李（罪、骄傲、多余的关注）进去。仅仅'吃过喝过'（参加过教会活动）不等于被主'认识'（建立生命关系）。",
+                                content_en: "Asked a theological stat (how many saved?), Jesus gives a practical command (You strive). 'Strive' is Agonizomai (agony/combat). Salvation is grace, but entry requires intense focus. The 'Narrow Door' rejects worldly baggage (sin, pride). 'Eating and drinking' with Him (nominal Christianity) doesn't equal being 'known' by Him (relationship)."
+                            },
+                            devotional: {
+                                title: "不仅仅是'想'进 (More Than 'Wanting' to Enter)",
+                                content_zh: "许多人'想要'（Seek）进天国，但只有'努力'（Strive）的人进去了。'想要'只是一种愿望，'努力'是一种行动。不要以为受了洗、坐在教堂里就自动进了保险箱。耶稣说那是'窄'的。这意味着你必须侧身、甚至抛弃大包小包的自我才能挤进去。你是在门外徘徊观望，还是正在'痛苦搏斗'着进入？",
+                                content_en: "Many 'seek' (want) to enter; few 'strive' (act). 'Wanting' is a wish; 'Striving' is action. Baptism or church-going isn't an automatic pass. 'Narrow' means shedding the baggage of self. Are you observing the door, or agonizing to squeeze through?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "lament",
+                    title: "伍 · 耶路撒冷的哀叹：母鸡与小鸡 (13:31-35)",
+                    title_en: "Lament over Jerusalem: Hen & Chicks",
+                    desc: "被拒绝的爱 | Love Rejected",
+                    verses: [
+                        {
+                            ref: "13:34-35",
+                            text_zh: "耶路撒冷啊...我多次愿意聚集你的儿女，好像母鸡把小鸡聚集在翅膀底下，只是你们不愿意。...从今以后，你们不得再见我...",
+                            text_en: "O Jerusalem... How often would I have gathered your children together as a hen gathers her brood under her wings, and you were not willing!... Behold, your house is left to you desolate.",
+                            academic: {
+                                title: "神圣的悲怆 (Divine Pathos)",
+                                content_zh: "面对希律（狐狸）的威胁，耶稣展现了超越政治的勇气（'我必须前行'）。但面对耶路撒冷的硬心，耶稣展现了神圣的悲伤。'母鸡'的比喻极其温柔，象征神渴望保护祂的子民免受即将来临的审判（罗马的鹰？）。审判的原因不是神不爱，而是人'不愿意'。这也是对犹太民族命运的预言：圣殿（你们的家）将被废弃。",
+                                content_en: "Facing Herod (fox), Jesus shows courage. Facing Jerusalem, He shows pathos. The 'Hen' metaphor is tender, God wanting to shield His people from judgment (Roman eagle?). Judgment comes not from lack of love, but human 'unwillingness'. Prophecy: The Temple ('your house') will be desolate."
+                            },
+                            devotional: {
+                                title: "躲在翅膀底下 (Hide Under the Wings)",
+                                content_zh: "当暴风雨来临时，小鸡本能地躲到母鸡翅膀下。这是最安全的地方。神对我们的爱也是如此，祂张开双臂想要保护我们，但最大的悲剧是我们'不愿意'——我们宁愿在外面淋雨，靠自己奔跑，也不愿降服在祂的遮盖下。今天，不要硬着心，快跑向那个为你张开的避难所吧。",
+                                content_en: "In storms, chicks hide under the hen. It's safe. God loves us like this, arms spread to protect. The tragedy is our 'unwillingness'—preferring to run in the rain than submit to His cover. Don't harden your heart; run to the Refuge open for you."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            treeStatus: 'barren' // barren, dung, fruit, cut
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function actOnTree(action) {
+            const treeVis = document.getElementById('tree-vis');
+            const axe = document.getElementById('axe');
+            const mound = document.getElementById('mound');
+            const msg = document.getElementById('tree-msg');
+            
+            // Reset
+            treeVis.classList.remove('state-cut', 'state-dig');
+            
+            if (action === 'cut') {
+                treeVis.classList.add('state-cut');
+                appState.treeStatus = 'cut';
+                msg.innerHTML = "<span class='text-red-600 font-bold'>树被砍了！(Cut Down!) - 不悔改的结局</span>";
+            } else if (action === 'grace') {
+                treeVis.classList.add('state-dig');
+                appState.treeStatus = 'dung';
+                msg.innerHTML = "<span class='text-green-700 font-bold'>松土加粪... (Digging...) - 宽限期开始</span>";
+                
+                // Add a small leaf after delay
+                setTimeout(() => {
+                    const leaf = document.createElement('div');
+                    leaf.className = 'absolute w-4 h-4 bg-green-400 rounded-full top-10 left-10 animate-bounce';
+                    document.querySelector('.tree-leaves').appendChild(leaf);
+                    msg.innerHTML += " <br>看！发芽了？(Look! A sprout?)";
+                }, 1500);
+            }
+        }
+
+        function healWoman() {
+            const container = document.getElementById('woman-vis');
+            const btn = document.getElementById('heal-btn');
+            
+            if (container.classList.contains('healed')) {
+                container.classList.remove('healed');
+                btn.innerText = "耶稣按手 (Jesus Touches)";
+                btn.classList.replace('bg-slate-600', 'bg-blue-600');
+            } else {
+                container.classList.add('healed');
+                btn.innerText = "恢复弯曲 (Reset)";
+                btn.classList.replace('bg-blue-600', 'bg-slate-600');
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Warning</span>
+                            <h2 class="text-3xl font-bold serif text-amber-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-amber-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-amber-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Fig Tree Simulator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-green-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-green-900">宽限期模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Grace Period Simulator</p>
+                         
+                         <div id="tree-vis" class="fig-container mb-4">
+                            <div class="tree-trunk">
+                                <div class="tree-leaves"></div>
+                            </div>
+                            <div id="mound" class="soil-mound"></div>
+                            <div id="axe" class="axe"><i class="fas fa-axe"></i></div>
+                         </div>
+                         
+                         <p id="tree-msg" class="text-center text-sm text-slate-500 mb-4 h-8">三年不结果子... (No fruit for 3 years...)</p>
+
+                         <div class="grid grid-cols-2 gap-2">
+                             <button onclick="actOnTree('cut')" class="py-2 bg-red-700 hover:bg-red-800 text-white rounded font-bold text-xs transition shadow-md">
+                                 <i class="fas fa-times mr-1"></i> 砍了吧 (Cut It)
+                             </button>
+                             <button onclick="actOnTree('grace')" class="py-2 bg-green-600 hover:bg-green-700 text-white rounded font-bold text-xs transition shadow-md">
+                                 <i class="fas fa-sprout mr-1"></i> 掘土加粪 (Grace)
+                             </button>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Feature: The Straightened Woman -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-blue-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-child text-blue-600 mr-2"></i> 属灵的直立
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Spiritual Uprightness</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 13:13</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div id="woman-vis" class="back-container">
+                            <div class="person-spine">
+                                <div class="person-head"></div>
+                            </div>
+                        </div>
+                        <button id="heal-btn" onclick="healWoman()" class="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-lg text-sm font-bold mb-2">
+                            耶稣按手 (Jesus Touches)
+                        </button>
+                        <p class="text-xs text-slate-500 italic">"女人，你脱离这病了！"</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f0fdf4]/95 backdrop-blur py-4 mb-6 border-b border-green-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-green-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-green-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-green-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-green-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-green-50 to-white p-5 border-b border-green-100">
+                        <span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 text-xs font-bold rounded mb-2 font-mono border border-green-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-green-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-green-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-green-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Theological</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">纠正神义论（苦难不等于罪）。比喻的神学隐喻（无花果树代表以色列/教会）。词源研究（Agonizomai 竭力）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Correcting theodicy. Theological metaphors in parables. Etymology study ('Strive').</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">区分"想要"与"努力"。理解"神的宽容"是为了悔改，而非纵容。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Distinguish 'wishing' from 'striving'. Understand patience is for repentance, not license.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Urgency & Intimacy</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">利用灾难新闻作为属灵警钟。在宽限期中抓住机会悔改。躲在神的翅膀荫下。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Using news as spiritual alarm. Seizing the grace period. Hiding under God's wings.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要看别人（为何他遭灾），要看自己（我悔改了吗）。从"弯腰看地"转为"直立看天"。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Look at self, not others, in tragedy. Move from 'looking down' to 'looking up'.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 7: Faith & Forgiveness | 路加福音第七章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Authority Slate - Centurion, Discipline, Structure */
+            --theme-primary: #334155; 
+            /* Resurrection Teal - Life, Hope, Nain */
+            --theme-accent: #0d9488;
+            /* Alabaster Pink - Love, Tears, Perfume */
+            --theme-rose: #be123c;
+            /* Background */
+            --theme-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #cbd5e1; /* Slate 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(51, 65, 85, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f1f5f9; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fff1f2; /* Rose 50 */
+            border-left: 3px solid #be123c; /* Rose 700 */
+            color: #881337;
+        }
+
+        /* Two Debtors Scale Animation */
+        .debt-scale-container {
+            position: relative;
+            height: 200px;
+            background-color: white;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .debt-bar {
+            width: 60px;
+            background: linear-gradient(to top, #be123c, #fb7185);
+            border-radius: 8px 8px 0 0;
+            transition: height 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .heart-icon {
+            font-size: 1.5rem;
+            color: #be123c;
+            position: absolute;
+            top: -40px;
+            transition: transform 0.5s ease;
+        }
+
+        .debt-label {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.7rem;
+            color: #64748b;
+            width: 100px;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Alabaster Jar Animation */
+        .jar-container {
+            position: relative;
+            width: 120px;
+            height: 160px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+
+        .jar {
+            width: 60px;
+            height: 100px;
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border-radius: 30px 30px 10px 10px;
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.5s;
+            z-index: 10;
+        }
+
+        .jar::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 15px;
+            width: 30px;
+            height: 25px;
+            background-color: #fce7f3;
+            border-radius: 5px;
+        }
+
+        .perfume-cloud {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(244, 63, 94, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .broken .jar {
+            transform: rotate(15deg) translateY(10px);
+            clip-path: polygon(0 0, 100% 0, 100% 60%, 80% 100%, 0 100%); /* Cracked look simulation */
+            background: #fdf2f8;
+        }
+
+        .broken .perfume-cloud {
+            animation: spread-scent 2s forwards;
+        }
+
+        @keyframes spread-scent {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+            100% { transform: translate(-50%, -100%) scale(2.5); opacity: 0; }
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-slate-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hand-holding-heart mr-2 text-rose-600"></i> 路加福音 7章</span>
+                        <span class="text-xs text-slate-500 en-text font-normal ml-8">Luke Chapter 7</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        信心与赦免 <br><span class="text-[10px] uppercase opacity-70 en-text">Faith & Forgiveness</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-slate-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-slate-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-rose-200 mb-1">"她的爱多，因为她得的赦免多"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Her sins, which are many, are forgiven—for she loved much."</p>
+            <p class="text-xs opacity-70">路加福音第七章中英对照研经报告 | Grace & Tears</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "令人惊叹的信心与爱",
+                title_en: "Amazing Faith and Love",
+                summary_zh: "路加福音第7章展示了耶稣对各样人群的怜悯与权柄：从外邦的百夫长到绝望的寡妇，从困惑的先知（施洗约翰）到声名狼藉的罪人。这一章的两个高潮分别是对百夫长信心的'希奇'（Amazing Faith），以及对有罪女人之爱的接纳（Amazing Love）。贯穿全章的是耶稣作为'先知'（复活死人）和'救主'（赦免罪恶）的双重身份。",
+                summary_en: "Luke 7 displays Jesus' compassion and authority across the spectrum: from a Gentile centurion to a desperate widow, from a confused prophet (John) to a notorious sinner. The chapter's twin peaks are Jesus 'marveling' at the Centurion's faith and His acceptance of the Sinful Woman's love. Threaded through is Jesus' identity as both 'Prophet' (raising the dead) and 'Savior' (forgiving sins).",
+                concepts: [
+                    { title: "不配", title_en: "Unworthy", greek: "Hikanos", color: "text-slate-600", desc_zh: "百夫长自认不配（Not worthy），耶稣却以此为大信心。真正的配得感来自承认自己的不配。", desc_en: "Centurion felt 'not worthy'. True worthiness comes from acknowledging unworthiness." },
+                    { title: "动了怜悯", title_en: "Compassion", greek: "Splanchnizomai", color: "text-teal-600", desc_zh: "字面指'内脏翻腾'。耶稣对拿因寡妇的深切同情，是复活神迹的动力。", desc_en: "Lit. 'bowels moved'. Visceral empathy for the widow drove the miracle." },
+                    { title: "债", title_en: "Debt", greek: "Opheilē", color: "text-rose-700", desc_zh: "罪被比喻为债务。爱与感恩的程度取决于对这笔被豁免之债务的认知。", desc_en: "Sin as debt. The depth of love/gratitude depends on realizing the size of the cancelled debt." }
+                ]
+            },
+            sections: [
+                {
+                    id: "centurion",
+                    title: "壹 · 权柄与谦卑：百夫长的仆人 (7:1-10)",
+                    title_en: "Authority & Humility: The Centurion's Servant",
+                    desc: "这么大的信心 | Such Great Faith",
+                    verses: [
+                        {
+                            ref: "7:6-9",
+                            text_zh: "...主啊，不要劳动...我也自以为不配去见你，只要你说一句话...耶稣听见这话，就希奇他...",
+                            text_en: "...Lord, do not trouble yourself... I did not presume to come to you. But say the word... When Jesus heard these things, he marveled at him...",
+                            academic: {
+                                title: "外邦人的信心逻辑 (Logic of Gentile Faith)",
+                                content_zh: "百夫长是一个富有同情心的外邦人（为犹太人建会堂）。他用军事术语理解耶稣的权柄：只要有上级授权，话语就能跨越空间生效。犹太长老认为他'配得'（Worthy），但他自认'不配'（Not Worthy）。这种对耶稣话语绝对权柄的信赖，甚至不需要耶稣亲临现场，是连以色列中都未曾见过的信心。",
+                                content_en: "The Centurion, a compassionate Gentile, understood Jesus via military analogy: authorized words act across space. While Jewish elders called him 'worthy', he deemed himself 'not worthy'. This reliance on the absolute authority of Jesus' Word, not needing His physical presence, was faith unmatched in Israel."
+                            },
+                            devotional: {
+                                title: "让神的话语掌权 (Let the Word Rule)",
+                                content_zh: "我们常觉得需要一种特殊的'感觉'或'经历'才算神同在。但百夫长的信心是：'只要你说一句话'。这是何等省力的信心！不需要情绪的起伏，不需要神迹的排场，单单信靠主口里的话。你是否愿意在这个充满噪音的世界里，仅凭主的一句话就得着安息？",
+                                content_en: "We often seek a 'feeling' or 'experience' as proof of God. But Centurion faith says: 'Only say the word.' This is restful faith! No need for emotional hype, just reliance on His Word. Are you willing to find rest in this noisy world solely on what He has spoken?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "widow",
+                    title: "贰 · 死亡与生命：拿因城寡妇之子 (7:11-17)",
+                    title_en: "Death & Life: The Widow's Son at Nain",
+                    desc: "未被祈求的神迹 | Unsolicited Miracle",
+                    verses: [
+                        {
+                            ref: "7:13-14",
+                            text_zh: "主看见那寡妇，就怜悯她，对她说：'不要哭！' 于是进前按着杠...说：'少年人，我吩咐你起来！'",
+                            text_en: "And when the Lord saw her, he had compassion on her and said to her, 'Do not weep.' Then he came up and touched the bier... 'Young man, I say to you, arise.'",
+                            academic: {
+                                title: "神的造访 (Divine Visitation)",
+                                content_zh: "这是路加独有的记载。'独生子'（Monogenes）的死意味着寡妇失去了经济支柱和社会地位，面临绝境。耶稣'按着杠'（接触尸体本是不洁），表明祂的生命力胜过死亡的污秽。这个神迹不仅呼应了以利亚（王上17），更显明神'眷顾'（Episkeptomai，意为造访）了祂的百姓。这是出于纯粹的恩典，甚至在没人代求的情况下发生。",
+                                content_en: "Luke alone records this. The death of an 'only son' meant total destitution for the widow. Jesus 'touched the bier' (ritually unclean), showing Life overcoming Death's impurity. Echoing Elijah (1 Kings 17), it proves God has 'visited' His people. A miracle of pure grace, enacted without anyone even asking."
+                            },
+                            devotional: {
+                                title: "在你还没祈求的时候 (Before You Even Ask)",
+                                content_zh: "拿因城的寡妇甚至悲伤得无法祈求。但主'看见'了，就动了怜悯。这是一个巨大的安慰：当你痛得无法祷告，当你觉得神已遗忘你时，祂的眼目并未离开。祂的怜悯不取决于你的祷告质量，而取决于祂慈爱的心肠。祂会主动走进你的送葬队伍，把悲哀变为跳舞。",
+                                content_en: "The widow was too grief-stricken to pray. But the Lord 'saw' and had compassion. This is a huge comfort: When you are too hurt to pray, He still sees. His mercy doesn't depend on your prayer eloquence but on His heart. He intervenes in your funeral procession to turn mourning into dancing."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "john",
+                    title: "叁 · 困惑与称赞：施洗约翰 (7:18-35)",
+                    title_en: "Doubt & Praise: John the Baptist",
+                    desc: "那将要来的是你吗？ | Are You the One?",
+                    verses: [
+                        {
+                            ref: "7:22-23",
+                            text_zh: "...你们去，把所看见所听见的事告诉约翰...凡不因我跌倒的，就有福了。",
+                            text_en: "...Go and tell John what you have seen and heard... And blessed is the one who is not offended by me.",
+                            academic: {
+                                title: "弥赛亚的记号 (Signs of the Messiah)",
+                                content_zh: "约翰在监里期待的是审判的火（太3:11），但耶稣带来的是怜悯和医治。这种落差引发了疑惑。耶稣回答时引用了以赛亚书35章和61章（瞎子看见、穷人听福音），证明祂正在做弥赛亚该做的事，只是方式不同。耶稣称赞约翰是'妇人所生最大'，但指出天国里最小的比他还大——因为天国子民见证了约翰只能预言的十字架救恩。",
+                                content_en: "In prison, John expected judgment fire; Jesus brought mercy. This gap caused doubt. Jesus cites Isaiah 35/61 (healing, gospel to poor), proving He is the Messiah, just acting differently than expected. Jesus praises John as the 'greatest born of women', yet the 'least in the Kingdom' is greater, having witnessed the Cross John only prophesied."
+                            },
+                            devotional: {
+                                title: "当神不如你愿 (When God Disappoints)",
+                                content_zh: "即使是伟大的先知也会怀疑，特别是当环境（监狱）与应许（弥赛亚国度）似乎矛盾时。耶稣没有责备约翰，而是给了他确据。'凡不因我跌倒的就有福了'——这是一种成熟的信心，即使神的工作方式不符合我的预期，即使祂没有立刻救我脱离苦难，我依然信靠祂的良善。",
+                                content_en: "Even prophets doubt when circumstances (prison) contradict promises (Kingdom). Jesus didn't rebuke but reassured. 'Blessed is he not offended'—mature faith trusts God's goodness even when His methods defy our expectations or when He doesn't immediately rescue us."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sinful-woman",
+                    title: "肆 · 爱与赦免：有罪的女人 (7:36-50)",
+                    title_en: "Love & Forgiveness: The Sinful Woman",
+                    desc: "多得恩免，多有爱心 | Forgiven Much, Loved Much",
+                    verses: [
+                        {
+                            ref: "7:47",
+                            text_zh: "所以我告诉你，她许多的罪都赦免了，因为她的爱多；但那赦免少的，他的爱就少。",
+                            text_en: "Therefore I tell you, her sins, which are many, are forgiven—for she loved much. But he who is forgiven little, loves little.",
+                            academic: {
+                                title: "两个债户的比喻 (Parable of Two Debtors)",
+                                content_zh: "西门（法利赛人）看女人是'罪人'，看耶稣是'不懂分辨的先知'。耶稣通过50两与500两银子的比喻，揭示了属灵的经济学：爱是赦免的果子，而非原因（'因为'hoti在此处指证明）。女人的奢侈行动（眼泪、头发、香膏）证明她已经领受了巨大的赦免。西门的冷淡（没给水洗脚）证明他自认为无需太多赦免，因此爱也少。",
+                                content_en: "Simon saw a 'sinner' and an 'ignorant prophet'. Jesus uses the 50 vs 500 denarii parable to teach spiritual economics: Love is the evidence, not cause, of forgiveness. The woman's lavish acts (tears, hair, perfume) proved she grasped the immense forgiveness she received. Simon's coldness proved he felt little need for forgiveness, hence little love."
+                            },
+                            devotional: {
+                                title: "打破你的玉瓶 (Break Your Alabaster Jar)",
+                                content_zh: "这个女人不在乎众人的眼光，只在乎耶稣的脚。她的敬拜是'枉费'的，却是馨香的。我们对神的爱往往是有保留的、计算代价的，因为我们还没有深刻体会到自己被赦免了多少。当你真正意识到那'五百两银子'的债被免去时，你也会忍不住打破玉瓶，献上最深的感恩。爱神深浅，取决于你觉得自己被赦免了多少。",
+                                content_en: "She ignored the crowd, focusing only on Jesus' feet. Her worship was 'wasteful' yet fragrant. Our love is often calculated because we don't realize how much we've been forgiven. When you grasp the '500 denarii' debt cancelled, you too will break your jar in gratitude. Your love for God mirrors your realization of His forgiveness."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            debtValue: 50, // 50 to 500
+            jarBroken: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function updateDebt(val) {
+            appState.debtValue = val;
+            const bar = document.getElementById('love-bar');
+            const heart = document.getElementById('heart-icon');
+            const label = document.getElementById('debt-label');
+            
+            // Visual logic
+            // Max height 150px approx
+            const height = (val / 500) * 100; 
+            bar.style.height = height + '%';
+            
+            // Heart scale
+            const scale = 0.5 + (val / 500);
+            heart.style.transform = `scale(${scale})`;
+            
+            label.innerText = `赦免: ${val} 两银子\n(Forgiven: ${val} Denarii)`;
+            
+            if(val > 400) {
+                heart.style.color = "#be123c"; // Deep red
+            } else {
+                heart.style.color = "#fb7185"; // Light red
+            }
+        }
+
+        function breakJar() {
+            if (appState.jarBroken) return;
+            appState.jarBroken = true;
+            
+            const container = document.getElementById('jar-vis');
+            container.classList.add('broken');
+            
+            const text = document.getElementById('jar-text');
+            text.innerText = "爱多，因为赦免多！(Loved Much!)";
+            text.classList.add('text-rose-600', 'font-bold');
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Miracles</span>
+                            <h2 class="text-3xl font-bold serif text-slate-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-slate-100 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Debt Scale -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-rose-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-rose-900">爱的天平</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Scale of Love</p>
+                         
+                         <div class="debt-scale-container mb-4">
+                            <div class="debt-bar" id="love-bar" style="height: 20%;">
+                                <div id="heart-icon" class="heart-icon"><i class="fas fa-heart"></i></div>
+                                <div id="debt-label" class="debt-label">赦免: 50 两</div>
+                            </div>
+                         </div>
+                         
+                         <label class="text-xs text-slate-500 mb-2">拖动滑块调整欠债数额 (Adjust Debt)</label>
+                         <input type="range" min="50" max="500" value="50" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer" oninput="updateDebt(this.value)">
+                         <div class="flex justify-between text-xs text-slate-400 mt-1">
+                            <span>50 (Little)</span>
+                            <span>500 (Much)</span>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Feature: Alabaster Jar -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-rose-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-flask text-rose-500 mr-2"></i> 打破玉瓶
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Breaking the Alabaster Jar</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 7:37</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div id="jar-vis" class="jar-container" onclick="breakJar()">
+                            <div class="perfume-cloud"></div>
+                            <div class="jar"></div>
+                        </div>
+                        <p id="jar-text" class="text-center text-xs text-slate-500 mt-4">点击玉瓶释放香气 (Click to Break)</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f8fafc]/95 backdrop-blur py-4 mb-6 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-slate-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-500 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-rose-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-slate-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-slate-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-slate-50 to-white p-5 border-b border-slate-200">
+                        <span class="inline-block px-2 py-0.5 bg-slate-200 text-slate-800 text-xs font-bold rounded mb-2 font-mono border border-slate-300">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-slate-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-slate-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-rose-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-rose-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-rose-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-rose-700/70 font-serif italic en-text border-t border-rose-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Social & Cultural</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-700 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">社会背景分析（犹太人看外邦人、法利赛人看罪人）。类比逻辑（军事权柄、债务比喻）。情感词汇研究（希奇、动了怜悯）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Social context analysis. Analogical logic. Study of emotive words (Marvel, Compassion).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-slate-700 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">观察耶稣如何打破社会隔阂（触摸、吃饭）。理解"爱与赦免"的因果关系。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Observe Jesus breaking social barriers. Understand the causality of 'Love & Forgiveness'.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-rose-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-rose-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-rose-600/70 mb-6 uppercase tracking-wider">Faith & Gratitude</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">信心的单纯化（只要一句话）。在困苦中看见神的主动怜悯。通过数算恩典（赦免）来激发爱心。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Simplifying faith. Seeing God's initiative in suffering. Fueling love by counting grace.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-rose-100 pt-3">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要等到完美才来找神。打破你的"玉瓶"（最珍贵之物）献给主。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Don't wait for perfection. Break your 'alabaster jar' for Him.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

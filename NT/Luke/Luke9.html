@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 9: The Turning Point | 路加福音第九章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Turning Indigo - The resolve to go to Jerusalem */
+            --theme-primary: #312e81; 
+            /* Glory White - Transfiguration */
+            --theme-accent: #e2e8f0;
+            /* Road Dust Brown - Discipleship, The Way */
+            --theme-earth: #78350f;
+            /* Background */
+            --theme-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #c7d2fe; /* Indigo 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(49, 46, 129, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f1f5f9; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #eff6ff; /* Blue 50 */
+            border-left: 3px solid #1d4ed8; /* Blue 700 */
+            color: #1e3a8a;
+        }
+
+        /* Mountain vs Valley Animation */
+        .scene-toggle {
+            position: relative;
+            height: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.8s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+        }
+
+        .mountain-view {
+            background: linear-gradient(to top, #1e3a8a 0%, #000 100%);
+            color: white;
+        }
+        
+        .valley-view {
+            background: linear-gradient(to bottom, #dbeafe 0%, #f1f5f9 100%);
+            color: #334155;
+        }
+
+        .glory-light {
+            position: absolute;
+            top: 20%;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            animation: pulse-glory 3s infinite;
+            filter: blur(10px);
+        }
+
+        .chaos-cloud {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%2364748b" fill-opacity="0.3" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,250.7C960,235,1056,181,1152,160C1248,139,1344,149,1392,154.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            animation: wave-move 5s linear infinite;
+        }
+
+        @keyframes pulse-glory {
+            0% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.6; }
+        }
+
+        @keyframes wave-move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-20%); }
+        }
+
+        /* Plow Animation */
+        .plow-path {
+            position: relative;
+            height: 60px;
+            background-color: #d6d3d1; /* dirt */
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .furrow {
+            height: 4px;
+            background-color: #573a2e; /* dark soil */
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 0%;
+            transition: width 2s linear, transform 0.5s;
+        }
+
+        .plow-tool {
+            position: absolute;
+            left: 0%;
+            top: 30%;
+            font-size: 1.5rem;
+            color: #78350f;
+            transition: left 2s linear;
+        }
+
+        .look-back .furrow {
+            transform: skewY(10deg);
+            background-color: #ef4444; /* red warning */
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-indigo-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-indigo-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-mountain mr-2 text-indigo-600"></i> 路加福音 9章</span>
+                        <span class="text-xs text-indigo-700 en-text font-normal ml-8">Luke Chapter 9</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        转折点 <br><span class="text-[10px] uppercase opacity-70 en-text">Turning Point</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-indigo-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-indigo-200 mb-1">"耶稣被接上升的日子将到，他就定意向耶路撒冷去。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"When the days drew near for him to be taken up, he set his face to go to Jerusalem."</p>
+            <p class="text-xs opacity-70">路加福音第九章中英对照研经报告 | Glory & Suffering</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "分水岭：荣耀、失败与决意",
+                title_en: "The Watershed: Glory, Failure, and Resolve",
+                summary_zh: "路加福音第9章是整卷书的地理和神学枢纽（9:51）。本章包含了大量关键事件：差遣十二门徒、彼得的认信、登山变像、山下的赶鬼失败，以及门徒关于谁为大的争论。在变像山上，耶稣谈论'去世'的事；下山后，祂'定意'（Set his face）面向耶路撒冷。这标志着从加利利的公开事工转向通往十字架的受难之路。这一章不断在'基督的荣耀'与'门徒的迟钝'之间制造张力。",
+                summary_en: "Luke 9 is the geographical and theological pivot of the Gospel (9:51). It packs critical events: Sending the Twelve, Peter's confession, Transfiguration, failure in the valley, and arguments over greatness. On the mountain, Jesus discusses His 'exodus'; descending, He 'sets His face' toward Jerusalem. This marks the shift from Galilean ministry to the Passion journey, creating tension between Christ's glory and the disciples' dullness.",
+                concepts: [
+                    { title: "去世/出埃及", title_en: "Exodus", greek: "Exodos", color: "text-indigo-600", desc_zh: "耶稣在变像山上谈论的'去世'，原文是'Exodus'，暗示新的救赎与释放。", desc_en: "Lit. 'Departure/Exodus'. Implies a new deliverance like Moses'." },
+                    { title: "定意", title_en: "Set His Face", greek: "Stērizō", color: "text-slate-700", desc_zh: "坚定不移地转向。借用以赛亚书50:7受苦仆人的语言（'硬着脸面'）。", desc_en: "To fix firmly. Echoes Isaiah 50:7's Suffering Servant ('set my face like flint')." },
+                    { title: "背起", title_en: "Take Up", greek: "Airō", color: "text-amber-700", desc_zh: "路加特意加上'天天'（Daily），强调跟随主是持续的舍己。", desc_en: "Luke adds 'daily', emphasizing discipleship as continuous self-denial." }
+                ]
+            },
+            sections: [
+                {
+                    id: "mission",
+                    title: "壹 · 差遣与供应：五个饼的信心 (9:1-17)",
+                    title_en: "Mission & Provision: Faith of Five Loaves",
+                    desc: "能力的赐予与人的有限 | Power Given & Human Limits",
+                    verses: [
+                        {
+                            ref: "9:1-3",
+                            text_zh: "耶稣叫齐了十二个门徒，给他们能力、权柄，制伏一切的鬼，医治各样的病...说：'行路的时候，不要带拐杖...'",
+                            text_en: "And he called the twelve together and gave them power and authority over all demons and to cure diseases... and said to them, 'Take nothing for your journey...'",
+                            academic: {
+                                title: "依赖性的训练 (Training in Dependence)",
+                                content_zh: "这是门徒第一次被赋予权柄（Dynamis）和权能（Exousia）独立出击。'不要带'的命令是为了训练他们对神供应的绝对信靠。紧接着的'五饼二鱼'神迹（唯一四福音皆载的神迹）强化了这一课：当门徒面对巨大需求（五千人）感到资源匮乏时，耶稣展示了天国的经济学——把微不足道的交在主手中，经过祝福和擘开，就能成为丰盛的供应。",
+                                content_en: "Disciples' first authorized mission. 'Take nothing' trains absolute trust. The Feeding of 5000 (in all 4 Gospels) reinforces this: facing immense need with scarcity, Jesus demonstrates Kingdom economics—meager resources surrendered, blessed, and broken become abundant provision."
+                            },
+                            devotional: {
+                                title: "把你的'不够'交出来 (Give Your 'Not Enough')",
+                                content_zh: "门徒说：'我们不过有...'（We have no more than...）。我们也常盯着手中的资源说：'我只有这点钱、这点才干、这点时间，怎么够呢？' 但耶稣说：'拿过来给我。' 你的匮乏在主手中不是限制，而是神迹的原料。事奉的关键不在于你拥有多少，而在于你是否愿意让主擘开你仅有的。",
+                                content_en: "Disciples said, 'We have no more than...' We also focus on scarcity. But Jesus says, 'Bring it to me.' Your lack is not a limit, but raw material for a miracle. Ministry isn't about what you possess, but letting Him break what you offer."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "confession",
+                    title: "贰 · 认信与代价：背起十字架 (9:18-27)",
+                    title_en: "Confession & Cost: Taking Up the Cross",
+                    desc: "身份的确认与跟随的条件 | Identity Confirmed & Conditions Follow",
+                    verses: [
+                        {
+                            ref: "9:20, 23",
+                            text_zh: "...彼得回答说：'是神所立的基督。'...耶稣又对众人说：'若有人要跟从我，就当舍己，天天背起他的十字架来跟从我。'",
+                            text_en: "...Peter answered, 'The Christ of God.'... And he said to all, 'If anyone would come after me, let him deny himself and take up his cross daily and follow me.'",
+                            academic: {
+                                title: "天天的舍己 (Daily Self-Denial)",
+                                content_zh: "这是路加福音特有的强调点——'天天'（Kath' hemeran）。马太和马可只说'背起十字架'（可能暗示一次性的殉道），路加将其扩展为一种生活方式。十字架不仅是死亡的刑具，更是向自我意愿死去的象征。'舍己'不是苦修，而是拒绝'自我中心'的主权。在彼得认出荣耀的基督之后，耶稣立即揭示了受苦的弥赛亚，这是为了矫正门徒的政治性期待。",
+                                content_en: "Luke adds 'daily', expanding 'cross-bearing' from martyrdom to lifestyle. It means dying to self-will every day. 'Deny self' is dethroning the ego. After Peter's confession of glory, Jesus immediately reveals the Suffering Messiah to correct their political expectations."
+                            },
+                            devotional: {
+                                title: "日常的十字架 (The Everyday Cross)",
+                                content_zh: "我们常以为背十字架是指做惊天动地的大事，但路加告诉我们，那是'天天'的事。忍耐一个唠叨的同事、原谅一个无礼的家人、放弃原本属于你的权利去服事人——这就是今天的十字架。十字架不是脖子上的装饰，而是每天向老我死去的决志。今天，你要在哪里背起它？",
+                                content_en: "We think cross-bearing is heroic. Luke says it's 'daily'. Patience with a colleague, forgiving family, yielding rights—that's today's cross. It's not jewelry, but a decision to die to self. Where will you pick it up today?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "transfiguration",
+                    title: "叁 · 登山变像：荣耀的预演 (9:28-36)",
+                    title_en: "Transfiguration: Rehearsal of Glory",
+                    desc: "新的出埃及 | The New Exodus",
+                    verses: [
+                        {
+                            ref: "9:30-31",
+                            text_zh: "忽然有摩西、以利亚两个人，同耶稣说话；他们在荣光里显现，谈论耶稣去世的事，就是他在耶路撒冷将要成的事。",
+                            text_en: "And behold, two men were talking with him, Moses and Elijah, who appeared in glory and spoke of his departure, which he was about to accomplish at Jerusalem.",
+                            academic: {
+                                title: "去世 (Exodos) 的神学意义",
+                                content_zh: "只有路加告诉我们他们在谈论什么：'去世'（Exodos）。这不仅指死亡，更指'出埃及'。耶稣是新摩西，要在耶路撒冷通过十字架和复活，带领百姓脱离罪和死亡的奴役，完成终极的救赎。父神的声音'这是我的儿子，你们要听他'，确立了耶稣超越律法（摩西）和先知（以利亚）的至高权威。",
+                                content_en: "Only Luke reveals the topic: 'Departure' (Exodos). It links Jesus to Moses. Jesus will lead a New Exodus at Jerusalem, delivering people from sin via the Cross. The Father's voice establishes Jesus' authority superseding Law (Moses) and Prophets (Elijah)."
+                            },
+                            devotional: {
+                                title: "山上的光，山下的路 (Light on the Mountain, Road in the Valley)",
+                                content_zh: "彼得想停留在山上的荣耀中（搭三座棚），但这荣光是为了让他们有力气面对山下的黑暗。我们都需要'山上'的时刻（灵修、特会、神的同在），但目的不是逃避现实，而是为了得着力量去走'去世'（Exodos，即背负十架）的路。荣耀不是终点，而是为受苦装备的加油站。",
+                                content_en: "Peter wanted to stay in glory. But the glory was fuel for the valley. We need 'mountain' moments (worship, presence), not to escape, but to gain strength for the 'exodus' road of suffering. Glory is the gas station for the cross."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "failure",
+                    title: "肆 · 山下的失败与争论 (9:37-50)",
+                    title_en: "Failure & Argument Below",
+                    desc: "无能与骄傲 | Impotence & Pride",
+                    verses: [
+                        {
+                            ref: "9:41, 46",
+                            text_zh: "耶稣说：'嗳！这又不信又悖谬的世代啊...' 门徒中间起了议论，谁将为大。",
+                            text_en: "Jesus answered, 'O faithless and twisted generation...' An argument arose among them as to which of them was the greatest.",
+                            academic: {
+                                title: "荣耀后的反差 (Contrast after Glory)",
+                                content_zh: "紧接荣耀变像之后的是令人沮丧的失败：门徒赶鬼无能，接着又争论谁为大。这是人性的真实写照：在属灵高峰之后往往紧随着肉体的跌倒。耶稣用小孩子作比喻，颠覆了他们的价值观——在天国里，'最小的'（谦卑、无权势）才是最大的。这与当时强调地位荣辱的文化截然相反。",
+                                content_en: "Glory is followed by failure: powerless against demons, then arguing over greatness. This reflects human nature. Jesus uses a child to invert their values—the 'least' is greatest. This countered the honor-shame culture of the day."
+                            },
+                            devotional: {
+                                title: "当你在争论'谁为大'时 (Arguing Greatness)",
+                                content_zh: "门徒刚刚经历了赶鬼失败，却还在争论谁最大。这是多么讽刺！我们的骄傲常在最软弱时表现得最强硬。耶稣把小孩子放在中间，提醒我们：真正的伟大不在于能力或地位，而在于像孩子一样单纯地依赖神，并接纳微小的人。你是在争竞，还是在接纳？",
+                                content_en: "Disciples argued greatness right after failing. How ironic! Pride often peaks in failure. Jesus points to a child: Greatness isn't power, but dependent trust and welcoming the small. Are you competing or welcoming?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "journey",
+                    title: "伍 · 决意上耶路撒冷：不回头的呼召 (9:51-62)",
+                    title_en: "Set Face to Jerusalem: Call of No Return",
+                    desc: "手扶着犁向后看 | Hand to the Plow",
+                    verses: [
+                        {
+                            ref: "9:51, 62",
+                            text_zh: "耶稣被接上升的日子将到，他就定意向耶路撒冷去...耶稣说：'手扶着犁向后看的，不配进神的国。'",
+                            text_en: "When the days drew near for him to be taken up, he set his face to go to Jerusalem... Jesus said to him, 'No one who puts his hand to the plow and looks back is fit for the kingdom of God.'",
+                            academic: {
+                                title: "定意 (Set His Face) 的神学转折",
+                                content_zh: "这是路加福音的枢纽经文。'定意'（Sterizo）是一个坚定的军事术语。尽管撒玛利亚人不接待（种族仇恨），雅各约翰想降火（错误的灵），还有三个想跟从却有借口的人（舒适、家庭责任、告别），耶稣的要求是绝对的：跟从主优先于舒适（无枕头之地）、优先于社会义务（埋葬父亲）、优先于情感牵挂（辞别家里）。扶犁耕地需要目光专注前方，回头会导致犁沟歪斜，象征心怀二意无法事奉神。",
+                                content_en: "The pivot verse. 'Set his face' implies resolve. Despite Samaritan rejection, disciples' violence, and half-hearted followers (comfort, duty, farewell), Jesus demands absolute priority. Following Him supersedes comfort, social duty, and family ties. Plowing requires forward focus; looking back ruins the furrow. Double-mindedness disqualifies from the Kingdom."
+                            },
+                            devotional: {
+                                title: "不要回头 (Don't Look Back)",
+                                content_zh: "跟随耶稣是一条单行道。罗得的妻子回头，变成了盐柱；以色列人回头，想念埃及的韭菜。我们也常被过去的舒适、习惯或未了的俗事牵绊。'手扶着犁'意味着工作已经开始，如果你一直回头看过去，你的现在就会走歪。定睛在耶路撒冷（神的旨意）上，像耶稣一样'定意'前行吧。",
+                                content_en: "Following Jesus is a one-way street. Lot's wife looked back; Israel looked back to Egypt. We are often pulled by past comforts. 'Hand to the plow' means work has started. Looking back ruins your walk. Fix your eyes on Jerusalem (God's will) and set your face like Jesus."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            scene: 'mountain', // mountain, valley
+            plowState: 'start' // start, forward, back
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function toggleScene() {
+            const container = document.getElementById('scene-vis');
+            const btn = document.getElementById('scene-btn');
+            
+            if (appState.scene === 'mountain') {
+                container.classList.remove('mountain-view');
+                container.classList.add('valley-view');
+                document.getElementById('glory-light').style.display = 'none';
+                document.getElementById('chaos-cloud').style.display = 'block';
+                document.getElementById('scene-text').innerHTML = "山下：混乱与失败 (Valley: Chaos & Failure)";
+                document.getElementById('scene-text').className = "text-center text-slate-600 font-bold mb-2";
+                btn.innerText = "回到山上 (Go to Mountain)";
+                btn.className = "px-6 py-2 bg-slate-600 text-white rounded-full hover:bg-slate-700 transition";
+                appState.scene = 'valley';
+            } else {
+                container.classList.remove('valley-view');
+                container.classList.add('mountain-view');
+                document.getElementById('glory-light').style.display = 'block';
+                document.getElementById('chaos-cloud').style.display = 'none';
+                document.getElementById('scene-text').innerHTML = "山上：荣耀与神性 (Mountain: Glory & Divinity)";
+                document.getElementById('scene-text').className = "text-center text-indigo-200 font-bold mb-2";
+                btn.innerText = "下到山下 (Go to Valley)";
+                btn.className = "px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition";
+                appState.scene = 'mountain';
+            }
+        }
+
+        function runPlow(direction) {
+            const furrow = document.getElementById('furrow-line');
+            const tool = document.getElementById('plow-tool');
+            const status = document.getElementById('plow-status');
+            const container = document.getElementById('plow-container');
+            
+            // Reset
+            furrow.style.width = '0%';
+            tool.style.left = '0%';
+            container.classList.remove('look-back');
+            
+            setTimeout(() => {
+                if (direction === 'forward') {
+                    furrow.style.width = '90%';
+                    tool.style.left = '90%';
+                    status.innerText = "直行：专心跟随 (Straight: Focused Following)";
+                    status.className = "text-xs text-green-600 font-bold mt-1";
+                } else {
+                    container.classList.add('look-back');
+                    furrow.style.width = '50%'; // Stops halfway or goes crooked
+                    tool.style.left = '50%';
+                    status.innerText = "回头：路走歪了 (Looking Back: Crooked Path)";
+                    status.className = "text-xs text-red-600 font-bold mt-1";
+                }
+            }, 100);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-indigo-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Transition</span>
+                            <h2 class="text-3xl font-bold serif text-indigo-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-indigo-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-indigo-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Mountain & Valley -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-indigo-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-indigo-900">两个世界</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Mountain vs Valley</p>
+                         
+                         <div id="scene-vis" class="scene-toggle mountain-view mb-4">
+                            <div id="glory-light" class="glory-light"></div>
+                            <div id="chaos-cloud" class="chaos-cloud" style="display:none;"></div>
+                            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                <i class="fas fa-mountain text-9xl opacity-20"></i>
+                            </div>
+                         </div>
+                         
+                         <p id="scene-text" class="text-center text-indigo-800 font-bold mb-2">山上：荣耀与神性 (Mountain: Glory & Divinity)</p>
+
+                         <div class="flex justify-center">
+                             <button id="scene-btn" onclick="toggleScene()" class="px-6 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition shadow-md font-bold text-sm">
+                                 下到山下 (Go to Valley)
+                             </button>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Feature: The Plow -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-amber-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-plow text-amber-700 mr-2"></i> 跟随的代价：扶犁不回头
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Cost of Discipleship</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 9:62</span>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                        <div id="plow-container" class="plow-path mb-2">
+                            <div id="furrow-line" class="furrow"></div>
+                            <div id="plow-tool" class="plow-tool"><i class="fas fa-tractor"></i></div> <!-- Using tractor as plow proxy -->
+                        </div>
+                        <p id="plow-status" class="text-xs text-slate-500 mt-1 h-4">点击按钮开始耕耘 (Click to Plow)</p>
+                        
+                        <div class="flex gap-4 mt-2">
+                            <button onclick="runPlow('forward')" class="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded">
+                                向前看 (Look Forward)
+                            </button>
+                            <button onclick="runPlow('back')" class="flex-1 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded">
+                                向后看 (Look Back)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f8fafc]/95 backdrop-blur py-4 mb-6 border-b border-indigo-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-indigo-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-indigo-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-indigo-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-indigo-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-indigo-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-white p-5 border-b border-indigo-100">
+                        <span class="inline-block px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs font-bold rounded mb-2 font-mono border border-indigo-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-indigo-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-indigo-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-indigo-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-blue-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-blue-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-blue-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-blue-700/70 font-serif italic en-text border-t border-blue-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Narrative</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-indigo-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">叙事神学（"定意往耶路撒冷"作为分水岭）。旧约类型学（摩西/以利亚/新出埃及）。词源研究（"去世/Exodos"的深层含义）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Narrative Theology (Turning point). OT Typology (New Exodus). Etymology ('Exodos').</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-indigo-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">在"荣耀"与"受苦"的张力中理解基督身份。将"跟随"理解为生活方式的彻底改变（天天）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand Christ in tension of Glory/Suffering. See 'Following' as radical lifestyle change.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-blue-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-blue-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-blue-600/70 mb-6 uppercase tracking-wider">Surrender & Focus</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-blue-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">不仅要经历"山上"的荣耀，更要拥抱"山下"的使命。处理属灵骄傲（谁为大）。专注跟随（不回头）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Embrace both Mountain Glory and Valley Mission. Deal with spiritual pride. Focused following.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-blue-100 pt-3">
+                                    <div class="flex items-center font-bold text-blue-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">把你的匮乏交给主（五饼二鱼）。在做重大决定前付代价祷告。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Give your lack to Him. Pray costly prayers before decisions.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

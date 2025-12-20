@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 19: The Seeker & The King | 路加福音第十九章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Sycamore Green - Seeking, Growth, Zacchaeus */
+            --theme-primary: #15803d; 
+            /* Royal Purple - Triumphal Entry, Kingship */
+            --theme-accent: #7e22ce;
+            /* Tear Blue - Weeping, Sorrow, Compassion */
+            --theme-dark: #1e3a8a;
+            /* Background */
+            --theme-bg: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #14532d;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #bbf7d0; /* Green 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(21, 128, 61, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #f3e8ff; /* Purple 50 */
+            border-left: 3px solid #7e22ce; /* Purple 600 */
+            color: #581c87;
+        }
+
+        /* Zacchaeus Animation */
+        .tree-scene {
+            position: relative;
+            height: 240px;
+            background: linear-gradient(to bottom, #dbeafe 0%, #dcfce7 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border: 2px solid #16a34a;
+        }
+
+        .sycamore {
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 150px;
+            height: 200px;
+            background-color: #5d4037; /* Trunk */
+            border-radius: 10px 10px 0 0;
+            z-index: 1;
+        }
+        .sycamore::before { /* Leaves */
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            width: 250px;
+            height: 150px;
+            background-color: #15803d;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .branch-platform {
+            position: absolute;
+            top: 60px;
+            left: 80px;
+            width: 60px;
+            height: 10px;
+            background-color: #5d4037;
+            z-index: 2;
+        }
+
+        .zacchaeus {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #ea580c;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: all 1s ease-in-out;
+            z-index: 3;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .jesus-figure {
+            position: absolute;
+            bottom: 20px;
+            right: 20%;
+            font-size: 3rem;
+            color: #7e22ce;
+            z-index: 5;
+        }
+
+        /* States */
+        .on-ground .zacchaeus { bottom: 20px; left: 10%; } /* Initial */
+        .climbing .zacchaeus { bottom: 160px; left: 25%; } /* In tree */
+        .come-down .zacchaeus { bottom: 20px; left: 45%; } /* By Jesus */
+
+        /* Stones Crying Out */
+        .stone-pile {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .rock {
+            width: 40px;
+            height: 30px;
+            background-color: #94a3b8;
+            border-radius: 50% 50% 10% 10%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #475569;
+            font-size: 0.6rem;
+            font-weight: bold;
+            transition: all 0.1s;
+        }
+        
+        .rock-shout {
+            animation: shake 0.5s infinite;
+            background-color: #cbd5e1;
+            color: #7e22ce;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-green-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-green-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-tree mr-2 text-green-600"></i> 路加福音 19章</span>
+                        <span class="text-xs text-green-700 en-text font-normal ml-8">Luke Chapter 19</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        寻找与作王 <br><span class="text-[10px] uppercase opacity-70 en-text">Seeking & Kingship</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-green-200 mb-1">"人子来，为要寻找、拯救失丧的人。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"For the Son of Man came to seek and to save the lost."</p>
+            <p class="text-xs opacity-70">路加福音第十九章中英对照研经报告 | Salvation & Responsibility</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "失丧者的救主与被拒的君王",
+                title_en: "Savior of the Lost & The Rejected King",
+                summary_zh: "路加福音第19章是耶稣前往耶路撒冷旅程的终点。本章开始于耶利哥，以撒该这个'大罪人'的悔改作为'寻找拯救失丧者'使命的完美注脚。接着，耶稣通过十锭银子的比喻，纠正了众人对神国立即显现的错误期待，强调了忠心与交账。随后，耶稣凯旋进京，以君王的身份接受欢呼，却随即为耶路撒冷的即将毁灭而哀哭。这一章将个人的救恩与国家的审判交织在一起。",
+                summary_en: "Luke 19 marks the culmination of Jesus' journey to Jerusalem. It begins in Jericho with the repentance of Zacchaeus, the 'chief sinner', perfectly illustrating the mission 'to seek and save the lost'. Jesus then corrects expectations of the Kingdom's immediate appearance with the Parable of the Ten Minas, emphasizing faithfulness and accountability. He enters Jerusalem as King, accepted with shouts but weeping over the city's impending doom. The chapter weaves individual salvation with national judgment.",
+                concepts: [
+                    { title: "寻找", title_en: "Seek", greek: "Zēteō", color: "text-green-700", desc_zh: "撒该想要'看看'耶稣，但实际上是耶稣来'寻找'他。救恩是神的主动。", desc_en: "Zacchaeus wanted to 'see', but Jesus came to 'seek' him. Salvation is Divine initiative." },
+                    { title: "必须", title_en: "Must", greek: "Dei", color: "text-purple-700", desc_zh: "神圣的必然性。耶稣'必'住在撒该家；正如祂'必'受死一样。", desc_en: "Divine necessity. Jesus 'must' stay at his house, just as He 'must' suffer." },
+                    { title: "眷顾", title_en: "Visitation", greek: "Episkopē", color: "text-blue-800", desc_zh: "神亲临考察、审判或施恩的时刻。耶路撒冷因不知道这时刻而灭亡。", desc_en: "Time of divine inspection/grace. Jerusalem perished for not knowing it." }
+                ]
+            },
+            sections: [
+                {
+                    id: "zacchaeus",
+                    title: "壹 · 撒该的故事：渴望与被寻 (19:1-10)",
+                    title_en: "The Story of Zacchaeus: Desire & Being Found",
+                    desc: "撒该，快下来！ | Zacchaeus, Come Down!",
+                    verses: [
+                        {
+                            ref: "19:5-6, 9-10",
+                            text_zh: "耶稣到了那里，抬头一看，对他说：'撒该，快下来！今天我必住在你家里。'...耶稣说：'今天救恩到了这家...人子来，为要寻找、拯救失丧的人。'",
+                            text_en: "And when Jesus came to the place, he looked up and said to him, 'Zacchaeus, hurry and come down, for I must stay at your house today.'... And Jesus said... 'Today salvation has come to this house... For the Son of Man came to seek and to save the lost.'",
+                            academic: {
+                                title: "神圣的必然性 (The Divine 'Must')",
+                                content_zh: "撒该是税吏长（Chief Tax Collector），富有但被社会排斥。他爬上桑树（Sycamore）是为了克服身体缺陷（矮）看耶稣。耶稣'抬头一看'并叫出他的名字，表明神的主动性。'必'（Dei）是一个神学词汇，表明这是神计划的一部分。这顿饭不仅是社交，更是接纳与团契。众人的私语（'他竟到罪人家里去住宿'）衬托了恩典的 scandalous（冒犯性）。",
+                                content_en: "Zacchaeus, a wealthy but outcast Chief Tax Collector, climbed a sycamore to overcome his stature. Jesus 'looked up' and called him by name, showing Divine Initiative. 'Must' (Dei) indicates divine plan. The meal signifies acceptance. The crowd's grumbling ('guest of a sinner') highlights the scandalous nature of Grace."
+                            },
+                            devotional: {
+                                title: "克服障碍去见主 (Overcoming Obstacles to See Him)",
+                                content_zh: "撒该面临双重障碍：外在的（人群拥挤）和内在的（身量矮小、羞耻感）。但他不顾体面地爬上了树。我们想见主时，也会遇到障碍（忙碌、罪疚感、他人的眼光）。你是否愿意像撒该一样，放下尊严，迫切地想要'看一看耶稣'？当你迈出那一步时，你会发现，其实祂早已在树下等你。",
+                                content_en: "Zacchaeus faced obstacles: external (crowd) and internal (short stature, shame). Yet he climbed, dignity aside. We too face barriers (busyness, guilt). Are you willing to be desperate to 'see Jesus'? When you take that step, you'll find He is already waiting under the tree."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "minas",
+                    title: "贰 · 十锭银子的比喻：忠心与交账 (19:11-27)",
+                    title_en: "Parable of the Ten Minas: Faithfulness & Accountability",
+                    desc: "占领直到我来 | Engage in Business Until I Come",
+                    verses: [
+                        {
+                            ref: "19:13, 26",
+                            text_zh: "便叫了他的十个仆人来，交给他们十锭银子，说：'你们去做生意，直等我回来。'...凡有的，还要加给他；没有的，连他所有的也要夺过来。",
+                            text_en: "Calling ten of his servants, he gave them ten minas, and said to them, 'Engage in business until I come.'... Everyone who has, more will be given, but from the one who has not, even what he has will be taken away.",
+                            academic: {
+                                title: "历史背景与神学意图 (Historical Context & Intent)",
+                                content_zh: "这个比喻影射了阿基老（Archelaus）去罗马求封王位的历史事件（遭到犹太代表团的反对：'我们不愿意这个人作我们的王'）。这不仅是对当时政治的映射，更是对耶稣'离去'（受难复活升天）和'再来'（审判）的预言。不同于马太的'按才受托'（恩赐不同），这里每人一锭（Mina，约3个月工资），强调'同样的机会'。奖赏是'权柄'（管十座城），表明今天的忠心是为明天的治理做准备。",
+                                content_en: "Alludes to Archelaus seeking kingship in Rome (opposed by Jews: 'We do not want this man to reign'). It prophesies Jesus' departure and return. Unlike Matthew's Talents (different gifts), here all get one Mina (same opportunity). The reward is 'Authority' (ruling cities), showing faithfulness today prepares for governance tomorrow."
+                            },
+                            devotional: {
+                                title: "不要把银子包在手巾里 (Don't Wrap It in a Cloth)",
+                                content_zh: "第三个仆人的错误在于'为了保全而隐藏'。他认为主人是严厉的，所以不敢冒险。这种'由于恐惧而产生的不作为'是神所定罪的。神给我们的恩典（生命、真理、资源）不是为了让我们以此'避险'，而是要我们去'做生意'（投资天国）。为了神的国度冒险，好过为了安全感而埋没恩典。",
+                                content_en: "The third servant erred by 'hiding for safety'. Thinking the master harsh, he feared risk. God condemns this 'inaction born of fear'. Grace is given not for safe-keeping, but for 'business' (Kingdom investment). Risking for the Kingdom is better than burying grace for security."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "entry",
+                    title: "叁 · 凯旋进京：石头若不呼叫 (19:28-40)",
+                    title_en: "Triumphal Entry: If Stones Keep Silent",
+                    desc: "和平君王的加冕 | Coronation of the Prince of Peace",
+                    verses: [
+                        {
+                            ref: "19:38, 40",
+                            text_zh: "说：'奉主名来的王是应当称颂的！在天上有和平；在至高之处有荣光。'...耶稣说：'若是他们闭口不说，这些石头必要呼叫起来！'",
+                            text_en: "Saying, 'Blessed is the King who comes in the name of the Lord! Peace in heaven and glory in the highest!'... He answered, 'I tell you, if these were silent, the very stones would cry out.'",
+                            academic: {
+                                title: "无法压抑的见证 (Unsuppressible Witness)",
+                                content_zh: "耶稣骑驴进京应验了撒迦利亚书9:9。门徒的颂赞呼应了天使在圣诞夜的歌声（路2:14），但有一个关键区别：'在天上有和平'（而非地上）。这意味着地上的耶路撒冷即将拒绝和平的君王，和平暂时被收回天上。法利赛人要求耶稣责备门徒，耶稣指出：弥赛亚的显现是宇宙性的大事，受造界（石头）都无法保持沉默。这是对'创造主权'的宣示。",
+                                content_en: "Jesus riding a colt fulfills Zech 9:9. Disciples' praise echoes the Christmas angels (Luke 2:14), but with a twist: 'Peace in HEAVEN' (not earth). Jerusalem is rejecting the King, so peace returns to heaven. Jesus tells Pharisees that creation (stones) must testify to the Messiah's arrival. A declaration of Creator Sovereignty."
+                            },
+                            devotional: {
+                                title: "让石头羞愧的赞美 (Praise that Shames the Stones)",
+                                content_zh: "如果你闭口不赞美，石头就要呼叫了！受造之物都知道敬拜造物主，何况蒙恩的人呢？我们常因害怕人的眼光（像法利赛人的压力）而在这个世界面前保持沉默。但耶稣配得公开的荣耀。不要让石头代替你发声。在你的工作、生活、网络中，大声地承认祂是王！",
+                                content_en: "If you are silent, stones will cry out! Creation knows to worship; how much more the redeemed? We often stay silent fearing man's opinion. But Jesus deserves public glory. Don't let a rock replace your voice. In work, life, online—loudly confess He is King!"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "weeping",
+                    title: "肆 · 为城哀哭与洁净圣殿 (19:41-48)",
+                    title_en: "Weeping over Jerusalem & Cleansing Temple",
+                    desc: "不懂眷顾的时候 | Not Knowing the Time of Visitation",
+                    verses: [
+                        {
+                            ref: "19:41-44",
+                            text_zh: "耶稣快到耶路撒冷，看见城，就为它哀哭，说：'巴不得你在这日子知道关系你平安的事...因你不知道眷顾你的时候。'",
+                            text_en: "And when he drew near and saw the city, he wept over it, saying, 'Would that you, even you, had known on this day the things that make for peace!... because you did not know the time of your visitation.'",
+                            academic: {
+                                title: "审判中的悲悯 (Compassion in Judgment)",
+                                content_zh: "在这里，我们看到审判者流泪了。耶稣预言了公元70年罗马军队的围困（筑垒、四面困住、扫平）。这不仅是政治灾难，更是神学上的悲剧——因为他们错过了'眷顾的时候'（Kairos of Visitation）。这里的'平安'（Shalom）不仅是免于战争，更是接纳弥赛亚带来的与神和好。随后洁净圣殿的行动，是对这'不知道眷顾'的宗教体系的最后判决。",
+                                content_en: "The Judge weeps. Jesus predicts the AD 70 Roman siege (embankments, leveled). It's a theological tragedy: missing the 'Time of Visitation'. 'Peace' (Shalom) meant accepting the Messiah. Cleansing the Temple follows as the final verdict on a religious system that missed God's arrival."
+                            },
+                            devotional: {
+                                title: "不要错过你的时刻 (Don't Miss Your Moment)",
+                                content_zh: "神在每个人生命中都有'眷顾的时候'——圣灵特别感动你、呼召你悔改或顺服的时刻。耶路撒冷的悲剧在于他们太忙于宗教活动，却错过了造访他们的主。你是否因为忙碌、骄傲或偏见，正在错过神对你的造访？对圣灵的感动要敏感，因为那个机会可能一去不返。",
+                                content_en: "God has 'times of visitation' for everyone—moments when the Spirit moves you. Jerusalem was too busy with religion to notice God visiting. Are you missing God's visit due to busyness or pride? Be sensitive to the Spirit; that window may not stay open forever."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            zacchaeusPos: 'ground' // ground, tree, down
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function moveZacchaeus() {
+            const container = document.getElementById('zac-scene');
+            const btn = document.getElementById('zac-btn');
+            const msg = document.getElementById('zac-msg');
+
+            if (appState.zacchaeusPos === 'ground') {
+                appState.zacchaeusPos = 'tree';
+                container.classList.remove('on-ground');
+                container.classList.add('climbing');
+                msg.innerText = "爬上桑树看耶稣... (Climbing to see Jesus...)";
+                btn.innerText = "听耶稣呼召 (Hear the Call)";
+            } else if (appState.zacchaeusPos === 'tree') {
+                appState.zacchaeusPos = 'down';
+                container.classList.remove('climbing');
+                container.classList.add('come-down');
+                msg.innerHTML = "<span class='text-green-700 font-bold'>急忙下来，欢欢喜喜接待！(Came down joyfully!)</span>";
+                btn.innerText = "重置 (Reset)";
+            } else {
+                appState.zacchaeusPos = 'ground';
+                container.classList.remove('come-down');
+                container.classList.add('on-ground');
+                msg.innerText = "身量矮小，看不见... (Too short to see...)";
+                btn.innerText = "爬树 (Climb Tree)";
+            }
+        }
+
+        function triggerStoneShout(type) {
+            const stones = document.querySelectorAll('.rock');
+            const msg = document.getElementById('stone-msg');
+            
+            if (type === 'silence') {
+                msg.innerHTML = "<span class='text-red-600'>人闭口不言... (People are silent...)</span>";
+                setTimeout(() => {
+                    stones.forEach(s => s.classList.add('rock-shout'));
+                    msg.innerHTML = "<span class='text-purple-700 font-bold'>石头呼叫起来了！(Stones are crying out!)</span>";
+                }, 500);
+            } else {
+                stones.forEach(s => s.classList.remove('rock-shout'));
+                msg.innerHTML = "<span class='text-green-700'>和散那！(Hosanna!) - 我们来赞美</span>";
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">The Seeker</span>
+                            <h2 class="text-3xl font-bold serif text-green-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-green-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-green-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Zacchaeus Simulator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-green-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-green-800">撒该下树模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Zacchaeus Simulator</p>
+                         
+                         <div id="zac-scene" class="tree-scene mb-4 on-ground">
+                            <div class="sycamore"></div>
+                            <div class="branch-platform"></div>
+                            <div class="zacchaeus">Zac</div>
+                            <div class="jesus-figure"><i class="fas fa-person-rays"></i></div>
+                         </div>
+                         
+                         <p id="zac-msg" class="text-center text-sm text-slate-500 mb-4 h-6">身量矮小，看不见... (Too short to see...)</p>
+
+                         <button id="zac-btn" onclick="moveZacchaeus()" class="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded font-bold transition shadow-md">
+                             <i class="fas fa-tree mr-2"></i> 爬树 (Climb Tree)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: Stones Crying Out -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-purple-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-gem text-purple-600 mr-2"></i> 石头若不呼叫
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Stones Crying Out</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 19:40</span>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="stone-pile mb-4">
+                            <div class="rock">ROCK</div>
+                            <div class="rock">STONE</div>
+                            <div class="rock">PRAISE</div>
+                            <div class="rock">LORD</div>
+                        </div>
+                        <p id="stone-msg" class="text-sm text-slate-600 mb-4 h-6">选择一种状态 (Choose State)</p>
+                        
+                        <div class="flex justify-center gap-4">
+                            <button onclick="triggerStoneShout('silence')" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-xs font-bold">
+                                人闭口 (People Silent)
+                            </button>
+                            <button onclick="triggerStoneShout('praise')" class="px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-800 rounded text-xs font-bold">
+                                人赞美 (People Praise)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f0fdf4]/95 backdrop-blur py-4 mb-6 border-b border-green-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-green-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-green-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-purple-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-green-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-green-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-green-50 to-white p-5 border-b border-green-100">
+                        <span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 text-xs font-bold rounded mb-2 font-mono border border-green-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-green-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-green-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-green-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-purple-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-purple-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-purple-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-purple-700/70 font-serif italic en-text border-t border-purple-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Political</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">历史背景分析（阿基老的王位之争）。词源研究（Dei - 必须）。地理意义（耶利哥到耶路撒冷的上升之路）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Historical context (Archelaus). Etymology (Dei). Geographical significance (Ascent to Jerusalem).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解"神的主权"（必须）与"人的责任"（赚取）的平衡。将比喻置于"王权"的框架下解读。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Balance Divine Sovereignty (Must) with Human Responsibility (Trade). Read parables through 'Kingship' lens.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-purple-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-purple-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-purple-600/70 mb-6 uppercase tracking-wider">Seeking & Serving</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-purple-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">克服障碍去"看"耶稣（撒该）。在等待中"做生意"（忠心服事）。察验"眷顾的时候"。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Overcoming obstacles to 'see' (Zacchaeus). 'Doing business' while waiting. Discern 'time of visitation'.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-purple-100 pt-3">
+                                    <div class="flex items-center font-bold text-purple-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要做埋藏恩赐的仆人。抓住神感动你的时刻。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Don't bury your gifts. Seize the moment God moves you.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

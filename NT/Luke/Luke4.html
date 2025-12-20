@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 4: The Spirit & The Scroll | 路加福音第四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Anointing Gold - The Spirit, The Messiah, Jubilee */
+            --theme-primary: #d97706; 
+            /* Wilderness Brown - Temptation, Fasting, Earth */
+            --theme-accent: #78350f;
+            /* Authority Blue - Command over demons, Power */
+            --theme-dark: #1e3a8a;
+            /* Background */
+            --theme-bg: #fffbeb;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #451a03;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fcd34d; /* Amber 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(217, 119, 6, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #eff6ff; /* Blue 50 */
+            border-left: 3px solid #1d4ed8; /* Blue 700 */
+            color: #1e3a8a;
+        }
+
+        /* The Scroll Animation */
+        .scroll-container {
+            position: relative;
+            width: 80%;
+            height: 180px;
+            margin: 0 auto;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .scroll-paper {
+            width: 100%;
+            height: 100%;
+            background-color: #fef3c7; /* Parchment */
+            border-top: 10px solid #78350f; /* Wood rollers */
+            border-bottom: 10px solid #78350f;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: all 1s ease;
+            overflow: hidden;
+            transform-origin: top center;
+        }
+
+        .scroll-content {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 1s ease 0.5s;
+        }
+
+        .scroll-text-highlight {
+            color: #b45309;
+            font-weight: bold;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+        }
+
+        /* Rolled State */
+        .rolled .scroll-paper {
+            height: 40px;
+            background: linear-gradient(to right, #92400e, #d97706, #92400e);
+            border: none;
+            border-radius: 20px;
+        }
+        .rolled .scroll-content {
+            display: none;
+        }
+        
+        /* Unrolled State */
+        .unrolled .scroll-paper {
+            height: 220px;
+        }
+        .unrolled .scroll-content {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
+        }
+
+        /* Word Definition Popup */
+        .definition-box {
+            margin-top: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border: 1px solid #eab308;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: #713f12;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+        }
+        .definition-show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Shield Interaction */
+        .shield-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        .shield-btn {
+            width: 60px;
+            height: 70px;
+            background-color: #cbd5e1;
+            clip-path: polygon(50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%, 0 20%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.5rem;
+            color: #475569;
+        }
+        .shield-btn:hover, .shield-active {
+            background-color: #d97706;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-amber-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-scroll mr-2 text-amber-600"></i> 路加福音 4章</span>
+                        <span class="text-xs text-amber-700 en-text font-normal ml-8">Luke Chapter 4</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        试探与宣言 <br><span class="text-[10px] uppercase opacity-70 en-text">Temptation & Manifesto</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-amber-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-amber-200 mb-1">"主的灵在我身上，因为他用膏膏我"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"The Spirit of the Lord is upon me, because he has anointed me."</p>
+            <p class="text-xs opacity-70">路加福音第四章中英对照研经报告 | Identity & Mission</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "弥赛亚的验证与宣言",
+                title_en: "Validation and Manifesto of the Messiah",
+                summary_zh: "路加福音第4章是耶稣公开事工的序幕。在约旦河受洗（第3章）之后，耶稣首先被圣灵引到旷野受试探，验证了祂作为'神的儿子'的顺服与资格。随后，祂回到家乡拿撒勒，在会堂宣读以赛亚书，发表了著名的'拿撒勒宣言'，定义了祂的弥赛亚使命是释放与自由（禧年）。本章展示了从'被圣灵充满'（4:1）到'满有圣灵的能力'（4:14）的过程，以及祂的话语所带出的绝对权柄。",
+                summary_en: "Luke 4 serves as the prologue to Jesus' public ministry. Following His baptism (Ch 3), Jesus is first led by the Spirit into the wilderness to be tested, validating His obedience and qualification as the 'Son of God'. He then returns to Nazareth, reading from Isaiah in the synagogue to deliver the 'Nazareth Manifesto', defining His Messianic mission as liberation and jubilee. This chapter showcases the progression from being 'full of the Spirit' (4:1) to moving 'in the power of the Spirit' (4:14), and the absolute authority of His word.",
+                concepts: [
+                    { title: "试探", title_en: "Temptation", greek: "Peirasmos", color: "text-amber-700", desc_zh: "对神子身份（Identity）和使命手段（Means）的测试。", desc_en: "Testing of Sonship identity and the means of mission." },
+                    { title: "受膏", title_en: "Anointed", greek: "Chriō", color: "text-yellow-600", desc_zh: "弥赛亚（Christos）的动词形式。指圣灵的赋权以执行特定任务。", desc_en: "Verb form of Christos. Spirit's empowerment for specific task." },
+                    { title: "禧年", title_en: "Acceptable Year", greek: "Dechtos Eniautos", color: "text-blue-700", desc_zh: "指利未记25章的禧年。债务免除、奴隶释放、土地归还。", desc_en: "The Jubilee of Lev 25. Debt cancellation, slave release, land return." }
+                ]
+            },
+            sections: [
+                {
+                    id: "temptation",
+                    title: "壹 · 旷野的试探：身份的验证 (4:1-13)",
+                    title_en: "The Wilderness Temptation: Validation of Identity",
+                    desc: "圣灵充满与魔鬼的攻击 | Full of Spirit & Devil's Attack",
+                    verses: [
+                        {
+                            ref: "4:3-4",
+                            text_zh: "魔鬼对他说：'你若是神的儿子，可以吩咐这块石头变成食物。' 耶稣回答说：'经上记着说：人活着不是单靠食物...' ",
+                            text_en: "The devil said to him, 'If you are the Son of God, command this stone to become bread.' And Jesus answered him, 'It is written, Man shall not live by bread alone.'",
+                            academic: {
+                                title: "神子身份的顺服 (Sonship as Obedience)",
+                                content_zh: "魔鬼的攻击点在于'你若是神的儿子'（Identity）。第一个亚当在丰盛的园子里失败了，第二个亚当（耶稣）在匮乏的旷野里得胜了。耶稣引用申命记8:3，表明真正的神子不是滥用特权满足自己，而是完全依靠父神的话语生活。这确立了弥赛亚事工的原则：不靠物质的神迹来笼络人心，而靠对神的顺服。",
+                                content_en: "The devil attacks 'If you are the Son of God' (Identity). The First Adam failed in a garden of plenty; the Second Adam (Jesus) succeeded in a desert of lack. Citing Deut 8:3, Jesus defines Sonship not as privilege abuse, but total reliance on the Father's Word. This establishes the ministry principle: obedience over material miracles."
+                            },
+                            devotional: {
+                                title: "你的'石头'是什么？(What is Your Stone?)",
+                                content_zh: "当我们面临匮乏、压力或需求时，试探就来了：'既然神爱你，为什么让你受苦？用你自己的方法解决吧！' 魔鬼想让我们把石头变成饼（用此时此地的方法满足肉体），但神呼召我们信靠祂的话语。真正的信心是在饥饿中仍能说：'神的话比面包更重要。' 你今天是否愿意在缺乏中信靠祂的供应？",
+                                content_en: "In lack or stress, the temptation comes: 'If God loves you, why suffer? Fix it yourself!' The devil wants us to turn stones to bread (satisfy flesh now), but God calls us to trust His Word. True faith says in hunger: 'God's Word is more vital than bread.' Will you trust His provision in your lack today?"
+                            }
+                        },
+                        {
+                            ref: "4:5-8",
+                            text_zh: "...魔鬼又领他上了高山...说：'这一切权柄...我都要给你...你若在我面前下拜...' 耶稣说：'经上记着说：当拜主你的神...'",
+                            text_en: "...And the devil took him up... and said to him, 'To you I will give all this authority... if you will worship me...' Jesus answered him, 'It is written, You shall worship the Lord your God...'",
+                            academic: {
+                                title: "权柄的捷径 (Shortcut to Authority)",
+                                content_zh: "这涉及'政治性弥赛亚'的诱惑。魔鬼提供了一条绕过十字架获得万国权柄的捷径。耶稣引用申命记6:13，重申对神的专一敬拜。这表明目的（获得万国）不能通过错误的手段（向世界妥协）来达成。真正的权柄来自顺服神，而非与恶者交易。",
+                                content_en: "The temptation of a 'Political Messiah'. The devil offers a shortcut to world rule, bypassing the Cross. Citing Deut 6:13, Jesus reaffirms exclusive worship. The end (gaining nations) does not justify the means (compromise). True authority comes from submission to God, not deals with evil."
+                            },
+                            devotional: {
+                                title: "为了成功，你愿意拜谁？(Who Will You Bow To?)",
+                                content_zh: "这个世界常向我们许诺：'只要你稍微妥协一点（在道德上、在信仰上），这些机会、名声、财富就是你的。' 这就是向魔鬼下拜。捷径总是诱人的，但那是通往奴役的路。耶稣选择了十字架的苦路，最终赢得了天上地下所有的权柄。拒绝捷径，单单敬拜神，这是得胜的秘诀。",
+                                content_en: "The world promises: 'Compromise a little (morals, faith), and this success is yours.' That is bowing to the devil. Shortcuts are tempting but lead to slavery. Jesus chose the Cross and won all authority. Reject shortcuts, worship God alone—this is the secret of victory."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "manifesto",
+                    title: "贰 · 拿撒勒宣言：禧年的福音 (4:16-30)",
+                    title_en: "Nazareth Manifesto: The Gospel of Jubilee",
+                    desc: "受膏者的使命 | Mission of the Anointed",
+                    verses: [
+                        {
+                            ref: "4:18-19",
+                            text_zh: "主的灵在我身上，因为他用膏膏我，叫我传福音给贫穷的人；差遣我报告：被虏的得释放，瞎眼的得看见，叫那受压制的得自由，报告神悦纳人的禧年。",
+                            text_en: "The Spirit of the Lord is upon me, because he has anointed me to proclaim good news to the poor. He has sent me to proclaim liberty to the captives and recovering of sight to the blind, to set at liberty those who are oppressed, to proclaim the year of the Lord's favor.",
+                            academic: {
+                                title: "弥赛亚的就职演说 (Messianic Inaugural Address)",
+                                content_zh: "耶稣引用以赛亚书61:1-2（结合58:6），定义了祂的使命。'贫穷人'不仅指经济贫困，也指灵里谦卑依靠神的人。'禧年'（Year of Favor）是所有债务被取消、奴隶得自由的时刻。值得注意的是，耶稣在读到'神报仇的日子'之前停住了（卷起书卷），表明祂第一次来临是恩典的时期，审判留待将来。这展示了福音的整全性：灵性、身体和社会性的释放。",
+                                content_en: "Jesus cites Isa 61:1-2 (mixed with 58:6) to define His mission. 'Poor' implies both economic poverty and spiritual humility. 'Jubilee' is when debts are cancelled and slaves freed. Notably, He stopped reading before 'the day of vengeance', signaling His First Coming is for Grace; judgment is later. This shows the holistic Gospel: spiritual, physical, and social liberation."
+                            },
+                            devotional: {
+                                title: "你还在被囚禁吗？(Are You Still Captive?)",
+                                content_zh: "耶稣宣告祂来了是要叫'被虏的得释放'。你生命中是否还有未得释放的领域？是罪的锁链、过去的创伤、还是对他人的恐惧？禧年已经开始了！不要活得像个还要还债的奴隶。宣告耶稣的自由，走出你心灵的牢房。祂的膏油有能力断开一切的轭。",
+                                content_en: "Jesus came to 'proclaim liberty'. Are there areas in your life still captive? Chains of sin, past trauma, or fear? The Jubilee has begun! Don't live like a slave paying debts. Claim Jesus' freedom and walk out of your mental prison. His anointing breaks every yoke."
+                            }
+                        },
+                        {
+                            ref: "4:24-27",
+                            text_zh: "...没有先知在自己家乡被人悦纳的...以利亚...撒勒法的寡妇...以利沙...乃缦...",
+                            text_en: "...no prophet is acceptable in his hometown... Elijah... widow of Zarephath... Elisha... Naaman...",
+                            academic: {
+                                title: "恩典的普世性与排他性 (Universality & Exclusivity of Grace)",
+                                content_zh: "拿撒勒人最初因耶稣的'恩言'而希奇，但当耶稣指出恩典将临到外邦人（撒勒法的寡妇和叙利亚的乃缦）时，他们的民族主义骄傲被刺痛了，转而变为杀意。这预示了福音将转向外邦人，以及以色列对弥赛亚的拒绝。这也是路加福音'普世救恩'主题的早期伏笔。",
+                                content_en: "Nazarenes marveled at 'gracious words' until Jesus pointed out Grace extending to Gentiles (Widow of Zarephath, Naaman). Their nationalist pride turned to murderous rage. This foreshadows the Gospel turning to Gentiles and Israel's rejection. A key Lukan theme of 'Universal Salvation'."
+                            },
+                            devotional: {
+                                title: "面对拒绝 (Facing Rejection)",
+                                content_zh: "我们常渴望被接纳，特别是被亲近的人接纳。但耶稣在自己的家乡被厌弃，甚至被赶出城。如果连完美的神子都经历拒绝，当你因信仰被误解或排斥时，不要感到奇怪。有时候，最亲近的人反而成了最难传福音的对象。在被拒绝时，学习像耶稣一样——不争辩，只是从他们中间“直行过去了”。",
+                                content_en: "We crave acceptance, especially from those close to us. Yet Jesus was rejected in His hometown. If the perfect Son of God faced rejection, don't be surprised when you are misunderstood for your faith. Sometimes those closest are the hardest to reach. In rejection, learn from Jesus—He didn't argue, but simply 'passed through their midst and went away'."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "authority",
+                    title: "叁 · 迦百农的权柄：话语的力量 (4:31-44)",
+                    title_en: "Authority in Capernaum: Power of the Word",
+                    desc: "胜过黑暗国度 | Victory over Darkness",
+                    verses: [
+                        {
+                            ref: "4:32, 36",
+                            text_zh: "他们很希奇他的教训，因为他的话里有权柄...用权柄能力吩咐污鬼，污鬼就出来了。",
+                            text_en: "and they were astonished at his teaching, for his word possessed authority... with authority and power he commands the unclean spirits, and they come out!",
+                            academic: {
+                                title: "权柄 (Exousia) 的彰显",
+                                content_zh: "在拿撒勒，耶稣被拒绝；在迦百农，祂展示了神国的权柄。这种权柄不同于文士的引用权威，而是本质性的力量。污鬼的认信（'我知道你是谁，乃是神的圣者'）是一种防御机制（试图通过命名来控制），但耶稣命令其闭嘴。这显示了天国对黑暗权势的绝对压制。医治彼得岳母的热病也同样是用'斥责'（Rebuke），视疾病为一种敌对势力。",
+                                content_en: "Rejected in Nazareth, Jesus shows Authority in Capernaum. Unlike scribes, His authority is intrinsic. The demon's confession ('I know who you are') was a defensive attempt to control, but Jesus silenced it. This shows Kingdom dominance over darkness. Healing the fever also involved 'rebuking', treating illness as a hostile force."
+                            },
+                            devotional: {
+                                title: "把混乱带到主面前 (Bring Chaos to the Lord)",
+                                content_zh: "无论是会堂里捣乱的污鬼，还是彼得岳母家中令人焦虑的高烧，耶稣的话语都能带来秩序和平安。你的生活中有哪些'混乱'（Chaos）？是无法控制的情绪、家庭的纷争、还是身体的疾病？不要试图自己'管理'这些混乱，要把它们带到有权柄的主面前，听祂斥责风浪，带来平静。",
+                                content_en: "Whether a disrupting demon or a high fever, Jesus' Word brings order. What 'chaos' is in your life? Uncontrollable emotions, family strife, sickness? Don't try to 'manage' it alone. Bring it to the Authoritative Lord. Let Him rebuke the storm and bring peace."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            scrollState: 'rolled', // rolled, unrolled
+            defenses: { d1: false, d2: false, d3: false }
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function toggleScroll() {
+            const container = document.getElementById('scroll-vis');
+            const hint = document.getElementById('scroll-hint');
+            
+            if (appState.scrollState === 'rolled') {
+                container.classList.remove('rolled');
+                container.classList.add('unrolled');
+                appState.scrollState = 'unrolled';
+                hint.innerText = "点击红色文字查看含义 (Click highlighted text)";
+            } else {
+                container.classList.remove('unrolled');
+                container.classList.add('rolled');
+                appState.scrollState = 'rolled';
+                hint.innerText = "点击展开书卷 (Click to Unroll)";
+                // Hide definition
+                document.getElementById('def-box').classList.remove('definition-show');
+            }
+        }
+
+        function showDefinition(term) {
+            const box = document.getElementById('def-box');
+            let content = "";
+            
+            if (term === 'poor') content = "<strong>贫穷 (Poor):</strong> 不仅指经济缺乏，更指灵里谦卑、除了神一无所有的人。";
+            if (term === 'captives') content = "<strong>被掳 (Captives):</strong> 被罪、成瘾、撒但权势囚禁的人。";
+            if (term === 'blind') content = "<strong>瞎眼 (Blind):</strong> 肉眼失明，以及灵里看不见真理的人。";
+            if (term === 'favor') content = "<strong>禧年 (Year of Favor):</strong> 债务免除、自由回归的时刻。恩典的时代。";
+
+            box.innerHTML = content;
+            box.classList.add('definition-show');
+        }
+
+        function activateShield(id) {
+            const btn = document.getElementById(`shield-${id}`);
+            const text = document.getElementById('defense-text');
+            
+            // Toggle
+            if (appState.defenses[id]) {
+                appState.defenses[id] = false;
+                btn.classList.remove('shield-active');
+                text.innerText = "点击盾牌抵挡试探 (Click Shield to Resist)";
+            } else {
+                appState.defenses[id] = true;
+                btn.classList.add('shield-active');
+                
+                if (id === 'd1') text.innerText = "经上记着说：人活着不是单靠食物！(Deut 8:3)";
+                if (id === 'd2') text.innerText = "经上记着说：当拜主你的神！(Deut 6:13)";
+                if (id === 'd3') text.innerText = "经上记着说：不可试探主你的神！(Deut 6:16)";
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Ministry Begins</span>
+                            <h2 class="text-3xl font-bold serif text-amber-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-amber-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-amber-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Jubilee Scroll -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-amber-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-amber-900">禧年书卷</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Jubilee Scroll</p>
+                         
+                         <div id="scroll-vis" class="scroll-container rolled" onclick="toggleScroll()">
+                            <div class="scroll-paper">
+                                <div class="scroll-content font-serif text-sm px-4 leading-relaxed">
+                                    主的灵在我身上...<br>
+                                    传福音给<span class="scroll-text-highlight" onclick="event.stopPropagation(); showDefinition('poor')">贫穷的人</span><br>
+                                    <span class="scroll-text-highlight" onclick="event.stopPropagation(); showDefinition('captives')">被掳的</span>得释放<br>
+                                    <span class="scroll-text-highlight" onclick="event.stopPropagation(); showDefinition('blind')">瞎眼的</span>得看见<br>
+                                    报告神悦纳人的<span class="scroll-text-highlight" onclick="event.stopPropagation(); showDefinition('favor')">禧年</span>
+                                </div>
+                            </div>
+                         </div>
+                         
+                         <p id="scroll-hint" class="text-center text-xs text-slate-400 mt-2 h-4">点击展开书卷 (Click to Unroll)</p>
+                         <div id="def-box" class="definition-box"></div>
+                    </div>
+                </div>
+
+                <!-- Feature: The Shield of Scripture -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-shield-alt text-amber-600 mr-2"></i> 抵挡试探的盾牌
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Shield Against Temptation</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">"It is Written"</span>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p id="defense-text" class="text-sm font-bold text-slate-800 min-h-[3rem] flex items-center justify-center bg-slate-50 p-2 rounded mb-4 border border-slate-200">
+                            点击盾牌抵挡试探 (Click Shield to Resist)
+                        </p>
+                        <div class="shield-container">
+                            <div id="shield-d1" class="shield-btn" onclick="activateShield('d1')" title="Stone to Bread"><i class="fas fa-bread-slice"></i></div>
+                            <div id="shield-d2" class="shield-btn" onclick="activateShield('d2')" title="Kingdoms"><i class="fas fa-crown"></i></div>
+                            <div id="shield-d3" class="shield-btn" onclick="activateShield('d3')" title="Jump"><i class="fas fa-dove"></i></div>
+                        </div>
+                        <div class="flex justify-around text-xs text-slate-400 mt-2">
+                            <span>肉体 (Flesh)</span>
+                            <span>荣耀 (Glory)</span>
+                            <span>试探神 (Test God)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fffbeb]/95 backdrop-blur py-4 mb-6 border-b border-amber-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-amber-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-amber-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-blue-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-amber-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-amber-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-amber-50 to-white p-5 border-b border-amber-100">
+                        <span class="inline-block px-2 py-0.5 bg-amber-100 text-amber-800 text-xs font-bold rounded mb-2 font-mono border border-amber-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-amber-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-amber-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-amber-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-blue-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-blue-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-blue-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-blue-700/70 font-serif italic en-text border-t border-blue-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Theological & Contextual</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">类型学解经（新亚当vs旧亚当）。旧约背景（禧年、以赛亚书）。词源分析（魔鬼的试探、圣灵的膏抹）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Typological exegesis (New Adam). OT Context (Jubilee, Isaiah). Etymology (Temptation, Anointing).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解耶稣作为"完全的人"的得胜。把握"禧年"在整全福音中的核心地位。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand Jesus' victory as 'True Human'. Grasp 'Jubilee' as central to holistic Gospel.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-blue-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-blue-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-blue-600/70 mb-6 uppercase tracking-wider">Warfare & Freedom</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-blue-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">用神的话语抵挡试探。在生活中应用"禧年"的释放原则。将生活中的混乱带到主权之下。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Resist temptation with the Word. Apply 'Jubilee' freedom daily. Bring chaos under His Lordship.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-blue-100 pt-3">
+                                    <div class="flex items-center font-bold text-blue-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">识别魔鬼的谎言（身份攻击）。不以此时此地的满足代替对神的信靠。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Identify lies (Identity attacks). Don't trade trust in God for immediate satisfaction.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

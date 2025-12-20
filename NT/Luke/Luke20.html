@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 20: Authority & The Cornerstone | 路加福音第二十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Temple Stone - Authority, Conflict, Hardness */
+            --theme-primary: #57534e; 
+            /* Vineyard Purple - Owner, Fruit, Judgment */
+            --theme-accent: #7e22ce;
+            /* Cornerstone Cyan - Foundation, Stability, Christ */
+            --theme-dark: #0891b2;
+            /* Background */
+            --theme-bg: #f5f5f4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #292524;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #d6d3d1; /* Stone 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(87, 83, 78, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #ecfeff; /* Cyan 50 */
+            border-left: 3px solid #0891b2; /* Cyan 600 */
+            color: #164e63;
+        }
+
+        /* Cornerstone Animation */
+        .stone-scene {
+            position: relative;
+            height: 240px;
+            background: linear-gradient(to bottom, #e7e5e4 0%, #a8a29e 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            border: 4px solid #44403c;
+        }
+
+        .wall {
+            width: 200px;
+            height: 100px;
+            display: flex;
+            flex-wrap: wrap-reverse;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .brick {
+            width: 48px;
+            height: 24px;
+            background-color: #d6d3d1;
+            border-radius: 2px;
+            border: 1px solid #a8a29e;
+        }
+
+        .cornerstone {
+            position: absolute;
+            bottom: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #22d3ee, #0891b2);
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            z-index: 10;
+            transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+        }
+
+        /* Animation States */
+        .stone-build .cornerstone {
+            bottom: 0;
+            width: 200px;
+            height: 40px;
+            border-radius: 0;
+            background: #0891b2;
+        }
+
+        .stone-crush .cornerstone {
+            bottom: 0;
+            width: 100px;
+            height: 100px;
+            transform: translateX(-50%) rotate(45deg);
+            background: #be123c; /* Crushing Red */
+        }
+        
+        .crushed-effect {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(159, 18, 57, 0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+        
+        .stone-crush .crushed-effect { opacity: 1; }
+
+        /* Coin Flip Visual */
+        .coin-container {
+            perspective: 1000px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        
+        .coin {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 4px solid #d4d4d4;
+        }
+        
+        .face-caesar { background-color: #e5e5e5; color: #525252; }
+        .face-god { background-color: #fef3c7; color: #b45309; transform: rotateY(180deg); border-color: #fbbf24; }
+        
+        .flipped { transform: rotateY(180deg); }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-gavel mr-2 text-stone-600"></i> 路加福音 20章</span>
+                        <span class="text-xs text-stone-500 en-text font-normal ml-8">Luke Chapter 20</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        权柄与辩论 <br><span class="text-[10px] uppercase opacity-70 en-text">Authority & Debate</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-stone-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-stone-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-stone-200 mb-1">"匠人所弃的石头已作了房角的头块石头。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"The stone that the builders rejected has become the cornerstone."</p>
+            <p class="text-xs opacity-70">路加福音第二十章中英对照研经报告 | Authority & Rejection</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "圣殿中的交锋：谁拥有权柄？",
+                title_en: "Clash in the Temple: Who Holds Authority?",
+                summary_zh: "路加福音第20章记录了耶稣在耶路撒冷圣殿中与宗教领袖的最后交锋。继洁净圣殿后，祭司长、文士和长老轮番上阵，试图在权柄、纳税、复活等问题上陷害耶稣。耶稣通过'凶恶园户'的比喻宣告了对他们的审判，并用'房角石'的预言揭示了自己的身份。这一章展示了属天智慧如何粉碎属世的狡辩，以及被弃的石头如何成为救恩的根基。",
+                summary_en: "Luke 20 records the final confrontation between Jesus and religious leaders in the Temple. Following the cleansing, priests, scribes, and elders attack Him with questions on authority, taxes, and resurrection. Jesus pronounces judgment via the 'Wicked Tenants' parable and reveals His identity through the 'Cornerstone' prophecy. This chapter displays Heavenly Wisdom crushing worldly sophistry, and the Rejected Stone becoming the foundation of salvation.",
+                concepts: [
+                    { title: "权柄", title_en: "Authority", greek: "Exousia", color: "text-stone-700", desc_zh: "合法的权利。犹太领袖质问耶稣权柄的来源（天还是人）。", desc_en: "Lawful right. Leaders questioned the source of Jesus' authority (Heaven or man)." },
+                    { title: "房角石", title_en: "Cornerstone", greek: "Kephalē Gōnias", color: "text-cyan-700", desc_zh: "建筑的关键基石。对信者是根基，对不信者是绊脚石。", desc_en: "Key foundation stone. Foundation to believers, stumbling block to unbelievers." },
+                    { title: "复活", title_en: "Resurrection", greek: "Anastasis", color: "text-purple-700", desc_zh: "不是死尸复苏，而是进入像天使一样不死的全新生命状态。", desc_en: "Not resuscitation, but entering a new, deathless state like angels." }
+                ]
+            },
+            sections: [
+                {
+                    id: "authority",
+                    title: "壹 · 权柄的质问：天上的还是人间的 (20:1-8)",
+                    title_en: "Question of Authority: From Heaven or Man?",
+                    desc: "无法回答的反问 | The Unanswerable Counter-Question",
+                    verses: [
+                        {
+                            ref: "20:2-4",
+                            text_zh: "...你仗着什么权柄做这些事？...约翰的洗礼是从天上来的，是从人间来的呢？",
+                            text_en: "...Tell us by what authority you do these things?... Was the baptism of John from heaven or from man?",
+                            academic: {
+                                title: "困境与反转 (Dilemma & Reversal)",
+                                content_zh: "宗教领袖试图设陷阱：如果耶稣说权柄来自神，他们就告他亵渎；如果说来自人，就否定了他的弥赛亚身份。耶稣用反问（约翰的洗礼）将陷阱推回给他们。他们陷入了两难：承认约翰来自天，就必须信约翰所见证的耶稣；说来自人，又怕百姓。他们的回答'不知道'暴露了他们是'不可知论的投机主义者'，因此丧失了评判真理的资格。",
+                                content_en: "Leaders set a trap: Claiming divine authority = blasphemy; human authority = imposter. Jesus counters with John's baptism, trapping them. Admitting John was from heaven means believing his witness to Jesus; saying from man risks the crowd's anger. Their 'we do not know' exposes them as agnostic opportunists, forfeiting the right to judge Truth."
+                            },
+                            devotional: {
+                                title: "诚实是得着真理的前提 (Honesty: Prerequisite for Truth)",
+                                content_zh: "这些领袖并不是真的在寻求真理，而是在寻求把柄。当一个人在心里已经预设了立场，或者为了利益（怕百姓）而回避真相时，神就不会向他启示。耶稣拒绝回答他们，因为他们不配得着答案。在神面前，诚实（哪怕是诚实的怀疑）比虚伪的'神学探讨'更宝贵。你是真想知道，还是只想辩论？",
+                                content_en: "They weren't seeking truth, but a trap. When one has a preset agenda or evades truth for expediency (fear of crowd), God withholds revelation. Jesus refused to answer because they were unworthy. Honesty (even honest doubt) is more precious to God than hypocritical 'theological discussion'. Do you want to know, or just argue?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "tenants",
+                    title: "贰 · 凶恶园户：救恩历史的浓缩 (20:9-19)",
+                    title_en: "Wicked Tenants: Salvation History Condensed",
+                    desc: "被弃的房角石 | The Rejected Cornerstone",
+                    verses: [
+                        {
+                            ref: "20:13, 17",
+                            text_zh: "家主说：...我要打发我的爱子去...匠人所弃的石头已作了房角的头块石头。",
+                            text_en: "Then the owner of the vineyard said... I will send my beloved son... The stone that the builders rejected has become the cornerstone.",
+                            academic: {
+                                title: "葡萄园神学的终局 (End of Vineyard Theology)",
+                                content_zh: "这比喻基于以赛亚书5章（葡萄园之歌）。园户（以色列领袖）不仅打伤仆人（先知），更杀害承受产业的（圣子）。这揭示了受难并非意外，而是人恶意的顶点。结局是'把葡萄园转给别人'（外邦人/教会）。'房角石'（引用诗篇118:22）具有双重功能：对建造者是根基，对敌挡者是审判（跌碎/砸烂）。这是对以色列神权政治终结的宣判。",
+                                content_en: "Based on Isaiah 5 (Song of Vineyard). Tenants (leaders) beat servants (prophets) and killed the Heir (Son). The Passion is the climax of human malice. Result: Vineyard given to others (Gentiles/Church). 'Cornerstone' (Ps 118:22) has dual function: Foundation for builders, Judgment (crushing) for opposers. A verdict on the end of Israel's theocracy."
+                            },
+                            devotional: {
+                                title: "你是建造者还是绊脚者？(Builder or Stumbler?)",
+                                content_zh: "耶稣是房角石。对于信靠祂的人，祂是生命的磐石，所有的建造都基于祂；对于拒绝祂的人，祂是绊脚的石头，最终会成为审判的巨石。你与这块石头的关系是什么？不要像那些园户一样，以为可以把神的产业（生命、恩赐、教会）据为己有。管家心态带来忠心，霸占心态带来灭亡。",
+                                content_en: "Jesus is the Cornerstone. To believers, He is the Rock foundation; to rejecters, a stumbling block and crushing stone. What is your relationship with this Stone? Don't be like the tenants, claiming God's property (life, gifts) as your own. Stewardship brings faithfulness; usurpation brings destruction."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "taxes",
+                    title: "叁 · 纳税问题：该撒与神 (20:20-26)",
+                    title_en: "Paying Taxes: Caesar & God",
+                    desc: "归属权的界定 | Defining Ownership",
+                    verses: [
+                        {
+                            ref: "20:24-25",
+                            text_zh: "...这像和这号是谁的？...凯撒的物当归给凯撒，神的物当归给神。",
+                            text_en: "...Whose likeness and inscription does it have?... Then render to Caesar the things that are Caesar's, and to God the things that are God's.",
+                            academic: {
+                                title: "像 (Eikon) 的神学含义",
+                                content_zh: "这是政治与宗教的双重陷阱。耶稣通过看银钱（Denarius）破解了困局：既然你们使用凯撒的货币（享受其经济便利），就应当纳税（归还债务）。但更深层的含义在于'像'。钱币上有凯撒的像，所以属于凯撒；人身上有'神的像'（创1:27），所以人（全人）应当归给神。这确立了有限的政治义务和无限的宗教委身。",
+                                content_en: "A political/religious trap. Jesus solves it by the coin (Denarius): Using Caesar's money implies debt to him (taxes). But deeper: Coin bears Caesar's image -> belongs to Caesar; Man bears God's image (Gen 1:27) -> belongs to God. This establishes limited political duty vs infinite religious devotion."
+                            },
+                            devotional: {
+                                title: "你身上有谁的印记？(Whose Image Do You Bear?)",
+                                content_zh: "我们可以把税款给政府，把时间给工作，但我们的'核心'（心、灵魂、爱）只能给神。因为我们是按着神的形象造的，唯有归回神，我们才能找到归宿。不要把属于神的（你的敬拜和终极忠诚）廉价地卖给世界（凯撒）。你属于神，这是你尊贵的来源。",
+                                content_en: "Give taxes to gov, time to work, but your 'Core' (heart, soul) belongs only to God. Bearing His image, we only find rest in Him. Don't cheaply sell what belongs to God (worship/loyalty) to the world (Caesar). You belong to God; that is your dignity."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "resurrection",
+                    title: "肆 · 复活辩论：活人的神 (20:27-40)",
+                    title_en: "Resurrection Debate: God of the Living",
+                    desc: "像天使一样 | Like Angels",
+                    verses: [
+                        {
+                            ref: "20:35-38",
+                            text_zh: "...惟有算为配得那世界...也不再死...乃是与天使一样...神原不是死人的神，乃是活人的神...",
+                            text_en: "...but those who are considered worthy to attain to that age... cannot die anymore... they are equal to angels... Now he is not God of the dead, but of the living...",
+                            academic: {
+                                title: "末世的身体与立约的恒久性",
+                                content_zh: "撒都该人（不信复活）用极端的例子（七兄弟娶一妻）嘲讽复活。耶稣指出他们错误的假设：复活不是今生肉体关系的延续，而是全新状态（像天使，不嫁不娶，不死）。接着耶稣引用摩西五经（出3:6，撒都该人只信五经），指出神自称'我是亚伯拉罕的神'。如果亚伯拉罕已彻底灭亡，神就是死人的神，这于神的荣耀有损。既然神与他们立了永约，他们必须在神面前活着。复活是立约关系的必然结果。",
+                                content_en: "Sadducees mocked resurrection. Jesus corrects their premise: Resurrection isn't biological continuation but transformation (angel-like, no marriage). Citing Torah (Ex 3:6), He argues: God says 'I AM the God of Abraham'. If patriarchs are extinct, God is God of corpses. Since the Covenant is eternal, they must be alive to Him. Resurrection is the necessary outcome of Covenant."
+                            },
+                            devotional: {
+                                title: "死亡不是终点 (Death is Not the End)",
+                                content_zh: "对于在基督里的人，死亡只是一个逗号，而不是句号。我们与神的关系是如此紧密，以至于死亡都无法切断。'在他那里，人都是活的'（20:38）。这是我们面对亲人离世和自身死亡时的最大安慰。我们不是走向虚无，而是走向更丰盛、更荣耀、不再有死亡的生命。",
+                                content_en: "For those in Christ, death is a comma, not a period. Our bond with God is too strong for death to break. 'To him all are alive.' This is our comfort in loss and mortality. We aren't heading to nothingness, but to a life more abundant, glorious, and deathless."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "david-son",
+                    title: "伍 · 大卫的子孙：超越的主 (20:41-47)",
+                    title_en: "Son of David: The Transcendent Lord",
+                    desc: "大卫怎么称他为主？ | How Does David Call Him Lord?",
+                    verses: [
+                        {
+                            ref: "20:41-44",
+                            text_zh: "耶稣对他们说：'人怎么说基督是大卫的子孙呢？...大卫既称他为主，他怎么又是大卫的子孙呢？'",
+                            text_en: "But he said to them, 'How can they say that the Christ is David's son?... David thus calls him Lord, so how is he his son?'",
+                            academic: {
+                                title: "基督论的高峰 (Christological Climax)",
+                                content_zh: "在回应了所有挑战后，耶稣反问了一个关于弥赛亚身份的核心问题。引用诗篇110:1，大卫称弥赛亚为'我主'。在犹太文化中，祖先绝不会称后裔为主。这表明弥赛亚不仅是'大卫的子孙'（人性/肉身），更是'大卫的主'（神性/先存）。这暗示了道成肉身的奥秘，也宣告了祂超越大卫的神性权柄。",
+                                content_en: "Jesus poses the ultimate question. Citing Ps 110:1, David calls Messiah 'My Lord'. Ancestors never address descendants as Lord. This implies Messiah is not just 'Son of David' (Humanity) but 'Lord of David' (Divinity/Pre-existence). It hints at Incarnation and asserts His authority superseding David."
+                            },
+                            devotional: {
+                                title: "你的耶稣太小了吗？(Is Your Jesus Too Small?)",
+                                content_zh: "当时的犹太人只期待一个像大卫一样的政治君王。耶稣打破了这个框框，表明祂是坐在神右边的主。我们是否也限制了耶稣？只把祂当作好老师、甚至是个人的'许愿精灵'？祂是万王之王，是大卫的主。正确的信仰始于对耶稣神性荣耀的正确认识。当尊祂为主，而非仅仅是'子孙'（满足我们愿望的工具）。",
+                                content_en: "Jews expected a political king like David. Jesus broke that box, revealing Himself as Lord at God's right hand. Do we limit Jesus? A teacher? A genie? He is King of Kings. True faith begins with recognizing His Divine Glory. Honor Him as Lord, not just a means to our ends."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            stoneStatus: 'foundation', // foundation, crushing
+            coinFlipped: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function toggleStone() {
+            const container = document.getElementById('stone-vis');
+            const btn = document.getElementById('stone-btn');
+            const msg = document.getElementById('stone-msg');
+            
+            if (appState.stoneStatus === 'foundation') {
+                // Switch to crushing
+                container.classList.remove('stone-build');
+                container.classList.add('stone-crush');
+                msg.innerHTML = "<span class='text-red-600 font-bold'>掉在身上：砸得稀烂 (Judgment)</span>";
+                btn.innerText = "重置为根基 (Reset to Foundation)";
+                btn.classList.replace('bg-cyan-600', 'bg-slate-600');
+                appState.stoneStatus = 'crushing';
+            } else {
+                // Switch to foundation
+                container.classList.remove('stone-crush');
+                container.classList.add('stone-build');
+                msg.innerHTML = "<span class='text-cyan-700 font-bold'>房角的头块石头 (Foundation)</span>";
+                btn.innerText = "变为审判石 (Turn to Judgment)";
+                btn.classList.replace('bg-slate-600', 'bg-cyan-600');
+                appState.stoneStatus = 'foundation';
+            }
+        }
+
+        function flipCoin() {
+            const coin = document.getElementById('coin-obj');
+            coin.classList.toggle('flipped');
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-stone-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-stone-100 text-stone-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Authority</span>
+                            <h2 class="text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-stone-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-stone-100 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Cornerstone Tester -->
+                    <div class="lg:col-span-4 bg-stone-800 p-6 rounded-xl shadow-lg flex flex-col border border-stone-600 relative overflow-hidden">
+                         <h3 class="text-xl font-bold mb-1 text-center text-cyan-200">房角石测试器</h3>
+                         <p class="text-xs text-stone-400 mb-4 text-center en-text uppercase tracking-widest">Cornerstone Simulator</p>
+                         
+                         <div id="stone-vis" class="stone-scene mb-4 stone-build">
+                            <div class="crushed-effect"></div>
+                            <div class="wall">
+                                <div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                                <div class="brick"></div><div class="brick"></div><div class="brick"></div>
+                                <div class="brick"></div><div class="brick"></div>
+                            </div>
+                            <div class="cornerstone" onclick="toggleStone()">JESUS</div>
+                         </div>
+                         
+                         <p id="stone-msg" class="text-center text-sm text-stone-300 mb-4 h-6">房角的头块石头 (Foundation)</p>
+
+                         <button id="stone-btn" onclick="toggleStone()" class="w-full py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded font-bold transition shadow-md border border-cyan-500">
+                             <i class="fas fa-sync-alt mr-2"></i> 变为审判石 (Turn to Judgment)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: Caesar vs God -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-slate-200">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-coins text-slate-500 mr-2"></i> 归属权的翻转
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Render unto Caesar...</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 20:25</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div class="coin-container" onclick="flipCoin()">
+                            <div id="coin-obj" class="coin">
+                                <div class="coin-face face-caesar">
+                                    <div class="text-center">
+                                        <i class="fas fa-user-circle text-3xl"></i><br>Caesar
+                                    </div>
+                                </div>
+                                <div class="coin-face face-god">
+                                    <div class="text-center">
+                                        <i class="fas fa-cross text-3xl"></i><br>GOD
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2 italic">点击翻转硬币 (Click to Flip)</p>
+                        
+                        <div class="grid grid-cols-2 gap-8 mt-4 w-full text-center">
+                            <div class="p-2 border-r border-slate-200">
+                                <p class="text-sm font-bold text-slate-600">钱币 (Coin)</p>
+                                <p class="text-xs text-slate-400">印着凯撒的像<br>归给凯撒</p>
+                            </div>
+                            <div class="p-2">
+                                <p class="text-sm font-bold text-amber-600">人 (Man)</p>
+                                <p class="text-xs text-slate-400">印着神的像 (Gen 1:27)<br>归给神</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f5f5f4]/95 backdrop-blur py-4 mb-6 border-b border-stone-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-stone-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-stone-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-stone-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-stone-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-stone-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-stone-50 to-white p-5 border-b border-stone-200">
+                        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-800 text-xs font-bold rounded mb-2 font-mono border border-stone-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-stone-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-stone-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-cyan-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-cyan-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-cyan-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-cyan-700/70 font-serif italic en-text border-t border-cyan-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Logic & Typology</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">辩论逻辑分析（反问、两难困境）。旧约引用与类型学（葡萄园、房角石）。神学概念辨析（像Eikon的含义）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Debate logic analysis (Counter-questions). OT Typology (Vineyard, Cornerstone). Theological concept (Eikon).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-stone-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">观察耶稣如何用智慧化解陷阱。理解"复活"对现今生命的意义。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Observe Jesus' wisdom in traps. Understand significance of 'Resurrection' for now.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-cyan-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-cyan-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-cyan-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-cyan-600/70 mb-6 uppercase tracking-wider">Identity & Lordship</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-cyan-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">诚实面对真理。确认生命的主权（归给神）。建立在磐石（基督）之上。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Honesty with Truth. Confirming Lordship (Render to God). Building on the Rock (Christ).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-cyan-100 pt-3">
+                                    <div class="flex items-center font-bold text-cyan-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要做投机主义者。把全人献给神。尊耶稣为主。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Don't be an opportunist. Offer whole self to God. Honor Jesus as Lord.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

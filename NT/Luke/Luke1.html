@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luke 1: The Dawn of Promise | 路加福音第一章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Marian Blue - Mary, Submission, Sky */
+            --theme-primary: #1e40af; 
+            /* Dayspring Gold - Dawn, Joy, Holy Spirit */
+            --theme-accent: #f59e0b;
+            /* Temple Brown - History, Zacharias, Scroll */
+            --theme-dark: #78350f;
+            /* Background */
+            --theme-bg: #fffbf0;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e3a8a;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #bfdbfe; /* Blue 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fff7ed; /* Orange 50 */
+            border-left: 3px solid #ea580c; /* Orange 600 */
+            color: #7c2d12;
+        }
+
+        /* Canticle Wave Animation */
+        .wave-container {
+            position: relative;
+            height: 120px;
+            background: linear-gradient(180deg, #1e40af 0%, #60a5fa 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .wave-bar {
+            width: 6px;
+            margin: 0 2px;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 3px;
+            animation: sound-wave 1s infinite ease-in-out;
+        }
+
+        @keyframes sound-wave {
+            0%, 100% { height: 20%; }
+            50% { height: 80%; }
+        }
+
+        .magnificat-mode .wave-container {
+            background: linear-gradient(180deg, #1e40af 0%, #3b82f6 100%); /* Blue */
+        }
+        
+        .benedictus-mode .wave-container {
+            background: linear-gradient(180deg, #b45309 0%, #fbbf24 100%); /* Gold */
+        }
+
+        /* Silence Toggle */
+        .mouth-icon {
+            transition: all 0.3s ease;
+        }
+        .silenced {
+            opacity: 0.5;
+            filter: grayscale(100%);
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-blue-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-sun mr-2 text-yellow-500"></i> 路加福音 1章</span>
+                        <span class="text-xs text-blue-700 en-text font-normal ml-8">Luke Chapter 1</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        黎明与颂歌 <br><span class="text-[10px] uppercase opacity-70 en-text">Dawn & Songs</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-blue-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-yellow-200 mb-1">"因我们神怜悯的心肠，叫清晨的日光从高天临到我们"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Because of the tender mercy of our God, whereby the sunrise shall visit us from on high."</p>
+            <p class="text-xs opacity-70">路加福音第一章中英对照研经报告 | Promise & Fulfillment</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "应许的黎明：沉默被打破",
+                title_en: "The Dawn of Promise: Silence Broken",
+                summary_zh: "路加福音第1章是新约中最长的序曲。在经历了旧约先知沉默的400年后，神再次说话。这一章通过两条平行的线索——撒迦利亚/伊利莎白（代表旧约的义人与祭司传统）和约瑟/马利亚（代表卑微的拿撒勒人）——编织出救恩历史的宏大开端。天使加百列两次显现，两个神奇的受孕，两首伟大的颂歌（尊主颂、撒迦利亚颂），共同宣告了那'清晨的日光'即将临到。",
+                summary_en: "Luke 1 is the grand overture of the New Testament. After 400 years of prophetic silence, God speaks. The chapter weaves two parallel threads—Zechariah/Elizabeth (representing the OT righteous/priestly tradition) and Joseph/Mary (representing the humble Nazarenes)—to inaugurate salvation history. Two angelic visits, two miraculous conceptions, and two majestic canticles (Magnificat, Benedictus) announce that the 'Dayspring from on high' is at hand.",
+                concepts: [
+                    { title: "确知", title_en: "Certainty", greek: "Asphaleia", color: "text-slate-700", desc_zh: "路加写作的目的。指无可动摇的稳固性，基于详细的考查。", desc_en: "Luke's purpose. Unshakable firmness based on careful investigation." },
+                    { title: "尊主为大", title_en: "Magnify", greek: "Megalynō", color: "text-blue-700", desc_zh: "字面意为'使之变大'。像放大镜一样，让神的属性在生命中显大。", desc_en: "Lit. 'to make great'. Like a lens magnifying God's attributes in life." },
+                    { title: "清晨的日光", title_en: "Dayspring", greek: "Anatolē", color: "text-yellow-600", desc_zh: "指太阳升起、嫩芽生长。弥赛亚带来的新时代曙光。", desc_en: "Sunrise or Sprout. The dawn of the Messianic age." }
+                ]
+            },
+            sections: [
+                {
+                    id: "prologue",
+                    title: "壹 · 历史的序言 (1:1-4)",
+                    title_en: "The Historical Prologue",
+                    desc: "按着次序写 | An Orderly Account",
+                    verses: [
+                        {
+                            ref: "1:3-4",
+                            text_zh: "...这些事我既从起头都详细考察了，就定意要按着次序写给你，使你知道所学之道都是确实的。",
+                            text_en: "...it seemed good to me also, having followed all things closely for some time past, to write an orderly account for you... that you may have certainty concerning the things you have been taught.",
+                            academic: {
+                                title: "路加的历史法 (Luke's Historiography)",
+                                content_zh: "路加是唯一一位像希腊化历史学家（如修昔底德）那样写序言的福音书作者。'详细考察'（Parakoloutheō）意为'紧紧跟随'或'调查'。'按着次序'不一定是时间次序，更可能是神学或逻辑次序。路加强调信仰不是建立在神话上，而是建立在可考查的历史事实之上（Facts），目的是带出'确据'（Certainty）。",
+                                content_en: "Luke is the only Evangelist to write a formal historiographical preface. 'Followed closely' implies rigorous investigation. 'Orderly' suggests logical or theological arrangement, not just chronological. Luke emphasizes that faith is built on verifiable historical facts, aiming to produce 'certainty'."
+                            },
+                            devotional: {
+                                title: "你的信仰有根基吗？(Is Your Faith Grounded?)",
+                                content_zh: "很多时候我们的信仰建立在感觉或传统上，经不起风浪。路加告诉我们，基督教信仰是'确实的'，是经得起详细考察的。我们在灵修中不应只追求感动的泪水，也应当像路加一样'详细考察'神的话语，建立理性的确据。真理的知识是信心的压舱石。",
+                                content_en: "Often our faith rests on feelings, vulnerable to storms. Luke assures us Christianity is 'certain', withstanding scrutiny. In devotion, seek not just emotional tears but 'careful investigation' of the Word. Rational certainty is the ballast of faith."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "zechariah",
+                    title: "贰 · 圣殿中的静默：撒迦利亚 (1:5-25)",
+                    title_en: "Silence in the Temple: Zechariah",
+                    desc: "义人的遗憾与神的介入 | Regret of the Righteous",
+                    verses: [
+                        {
+                            ref: "1:13, 20",
+                            text_zh: "天使对他说：'...你的祈祷听见了'...只因你不信我的话，你必哑巴，不能说话...",
+                            text_en: "But the angel said to him... 'your prayer has been heard'... And behold, you will be silent and unable to speak... because you did not believe my words...",
+                            academic: {
+                                title: "祷告的延迟与应验 (Delay & Fulfillment)",
+                                content_zh: "撒迦利亚可能早已停止为求子祷告（因为这年纪已经老迈），但神仍记得他多年前的祈求。'你的祈祷听见了'。他在圣殿烧香（象征祷告上升）时遇见加百列，这表明神没有忘记义人的眼泪。他的'不信'导致了'哑巴'，这既是惩罚也是神迹的记号——既然你不信神的话，你就暂且不能说话，直到话语成就。",
+                                content_en: "Zechariah likely stopped praying for a son years ago (due to age), but God remembered. 'Your prayer has been heard'. The encounter at the altar of incense (symbolizing prayer) shows God forgets no tears. His muteness is both penalty and sign—doubt silenced his voice until the Word was fulfilled."
+                            },
+                            devotional: {
+                                title: "当神回应你已经放弃的祷告 (When God Answers Old Prayers)",
+                                content_zh: "你是否有过已经放弃的祷告？也许是为某个家人得救，或是为一个长久的捆绑。撒迦利亚已经接受了无子的命运，但神没有。神的时刻表往往在我们的'不可能'之后开始。如果神让你在等待中'哑口无言'，那是因为祂要在静默中酝酿更大的赞美。不要因为时间久了就以为神听不见。",
+                                content_en: "Do you have abandoned prayers? Zechariah accepted childlessness, but God didn't. God's timeline starts after our 'impossible'. If God silences you in waiting, He is brewing a greater praise. Never assume God is deaf just because He is slow."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mary",
+                    title: "叁 · 拿撒勒的对话：马利亚 (1:26-38)",
+                    title_en: "Dialogue in Nazareth: Mary",
+                    desc: "不可能中的顺服 | Submission in the Impossible",
+                    verses: [
+                        {
+                            ref: "1:34, 38",
+                            text_zh: "马利亚对天使说：'我没有出嫁，怎么有这事呢？'...说：'我是主的使女，情愿照你的话成就在我身上。'",
+                            text_en: "Mary said to the angel, 'How will this be, since I am a virgin?'... 'Behold, I am the servant of the Lord; let it be to me according to your word.'",
+                            academic: {
+                                title: "处女怀孕与圣灵荫庇 (Virgin Birth & Overshadowing)",
+                                content_zh: "马利亚的提问源于生物学的不可能，而非撒迦利亚式的不信。天使解释这是'圣灵'的工作，'荫庇'（Episkiazō）这个词曾用于云彩遮盖会幕（出40:35），表明马利亚的子宫成为了新约的至圣所，孕育着神的儿子。马利亚的回答'情愿...'（Fiat）是历史上最伟大的顺服时刻之一，她冒着失去名誉甚至生命的风险，承接了神的计划。",
+                                content_en: "Mary asked out of biological impossibility, not doubt. The angel points to the Spirit. 'Overshadow' (Episkiazō) recalls the cloud on the Tabernacle (Ex 40:35); Mary's womb becomes the Holy of Holies. Her 'Let it be' (Fiat) is the ultimate submission, risking reputation and life to carry God's plan."
+                            },
+                            devotional: {
+                                title: "情愿照你的话成就 (Let It Be)",
+                                content_zh: "神对你生命的计划可能会打乱你所有的安排（正如对马利亚一样）。你会感到害怕、困惑。但信心的最高境界不是'求神成全我的计划'，而是'愿神的计划成就在我身上'。把自己看作'主的使女/仆人'，意味着放弃对自己生命的主权，完全向神敞开。这是蒙大恩的起点。",
+                                content_en: "God's plan may disrupt yours (as with Mary). Fear and confusion are natural. But supreme faith isn't 'God bless my plan', but 'Let Your plan happen to me'. Seeing yourself as 'Lord's servant' means surrendering sovereignty. This is the starting point of great favor."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "magnificat",
+                    title: "肆 · 尊主颂：颠覆的国度 (1:39-56)",
+                    title_en: "The Magnificat: The Subversive Kingdom",
+                    desc: "卑微者的升高 | Exaltation of the Lowly",
+                    verses: [
+                        {
+                            ref: "1:46-53",
+                            text_zh: "马利亚说：'我心尊主为大...他叫有权柄的失位，叫卑贱的升高；叫饥饿的得饱，叫富足的空手回去。'",
+                            text_en: "Mary said, 'My soul magnifies the Lord... He has brought down the mighty from their thrones and exalted those of humble estate; he has filled the hungry with good things...'",
+                            academic: {
+                                title: "社会秩序的大反转 (The Great Reversal)",
+                                content_zh: "这首诗深受哈拿之歌（撒上2章）的影响。它不仅是赞美，更是一首'革命之歌'。马利亚预见到弥赛亚的国度将彻底颠覆世界的价值观：权力和财富不再是优势，甚至可能成为障碍；而卑微和饥饿成为了蒙恩的资格。神站在弱者一边，这是路加福音一贯的神学主题。",
+                                content_en: "Echoing Hannah's song (1 Sam 2), this is a 'Revolutionary Hymn'. Mary foresees the Kingdom inverting worldly values: Power/Wealth become liabilities; humility/hunger become qualifications for grace. God sides with the marginalized—a key Lukan theme."
+                            },
+                            devotional: {
+                                title: "放大镜的焦点 (Focus of the Magnifying Glass)",
+                                content_zh: "'尊主为大'就像是用放大镜看神。当我们遭遇困难时，我们往往把问题'放大'，觉得神很小。马利亚虽然面临未婚先孕的巨大压力，她的心却选择'放大'神的主权和怜悯。当你觉得环境艰难时，检查一下你手里的放大镜对准了哪里？对准神，问题就变小了。",
+                                content_en: "'Magnify' is like using a lens. In trouble, we magnify problems, shrinking God. Mary, facing social stigma, chose to 'magnify' God's sovereignty. Where is your magnifying glass pointed? Focus on God, and problems shrink."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "benedictus",
+                    title: "伍 · 撒迦利亚颂：清晨的日光 (1:57-80)",
+                    title_en: "The Benedictus: The Dayspring",
+                    desc: "预备主的道 | Preparing the Way",
+                    verses: [
+                        {
+                            ref: "1:76-79",
+                            text_zh: "孩子啊！你要称为至高者的先知...叫他的百姓因罪得赦，就知道救恩...叫清晨的日光从高天临到我们...",
+                            text_en: "And you, child, will be called the prophet of the Most High... to give knowledge of salvation to his people in the forgiveness of their sins... whereby the sunrise shall visit us...",
+                            academic: {
+                                title: "救恩的政治与属灵含义",
+                                content_zh: "撒迦利亚虽然期盼'从仇敌手中被救出来'（政治性解救），但他更深地意识到真正的救恩在于'罪得赦'（属灵性解救）。他称约翰为'先知'，是为那'清晨的日光'（弥赛亚）开路的。'清晨的日光'（Anatole）是一个充满希望的弥赛亚头衔，象征着在漫长的黑暗死荫之后，神的光辉终于破晓。",
+                                content_en: "While hoping for deliverance from 'enemies' (political), Zechariah grasps that true salvation is 'forgiveness of sins' (spiritual). John is the 'prophet' preparing for the 'Sunrise' (Messiah). 'Anatole' (Dayspring) is a hopeful title: after long darkness, God's light finally breaks."
+                            },
+                            devotional: {
+                                title: "做光的开路者 (Be the Herald of Light)",
+                                content_zh: "施洗约翰的角色是'预备道路'。我们每个人在这个世代也有同样的呼召：不是成为光本身，而是为光作见证。你的生活、你的言语是否在为你周围的人'清除障碍'，让他们能更容易地看到那'清晨的日光'？还是我们成了别人认识神的拦阻？让我们像约翰一样，指引人看向那光。",
+                                content_en: "John's role was 'preparing the way'. We share this calling: not to be the Light, but to witness to it. Does your life clear obstacles for others to see the 'Dayspring'? Or are we stumbling blocks? Like John, let us point people to the Light."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            canticleMode: 'magnificat', // magnificat or benedictus
+            zechariahMuted: true
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function toggleCanticle(mode) {
+            appState.canticleMode = mode;
+            const container = document.getElementById('wave-vis');
+            const title = document.getElementById('canticle-title');
+            const desc = document.getElementById('canticle-desc');
+            
+            if (mode === 'magnificat') {
+                container.classList.remove('benedictus-mode');
+                container.classList.add('magnificat-mode');
+                title.innerText = "尊主颂 (Magnificat)";
+                title.className = "text-xl font-bold text-blue-800";
+                desc.innerText = "颠覆性的赞美：卑微升高，富足空手。(Subversive Praise: Humble exalted)";
+            } else {
+                container.classList.remove('magnificat-mode');
+                container.classList.add('benedictus-mode');
+                title.innerText = "撒迦利亚颂 (Benedictus)";
+                title.className = "text-xl font-bold text-amber-800";
+                desc.innerText = "先知性的赞美：清晨日光，罪得赦免。(Prophetic Praise: Sunrise & Forgiveness)";
+            }
+        }
+
+        function toggleSilence() {
+            appState.zechariahMuted = !appState.zechariahMuted;
+            const icon = document.getElementById('mouth-icon');
+            const status = document.getElementById('silence-status');
+            
+            if (appState.zechariahMuted) {
+                icon.classList.add('silenced');
+                icon.className = "fas fa-comment-slash text-4xl text-slate-400 mouth-icon silenced";
+                status.innerText = "因不信而哑口 (Muted by Unbelief)";
+            } else {
+                icon.classList.remove('silenced');
+                icon.className = "fas fa-comment-dots text-4xl text-amber-600 mouth-icon";
+                status.innerText = "因信而被圣灵充满 (Filled with Spirit)";
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-800">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Prologue</span>
+                            <h2 class="text-3xl font-bold serif text-blue-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-blue-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-blue-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Canticle Resonator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-blue-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-blue-900">颂歌共鸣器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">Canticle Resonator</p>
+                         
+                         <div id="wave-vis" class="wave-container magnificat-mode mb-4">
+                            ${Array(20).fill(0).map((_, i) => `<div class="wave-bar" style="animation-delay: ${i * 0.1}s"></div>`).join('')}
+                         </div>
+                         
+                         <div class="text-center mb-4">
+                            <h4 id="canticle-title" class="text-xl font-bold text-blue-800">尊主颂 (Magnificat)</h4>
+                            <p id="canticle-desc" class="text-xs text-slate-500 mt-2">颠覆性的赞美：卑微升高，富足空手。(Subversive Praise)</p>
+                         </div>
+
+                         <div class="flex justify-center gap-2">
+                            <button onclick="toggleCanticle('magnificat')" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-bold transition">
+                                马利亚 Mary
+                            </button>
+                            <button onclick="toggleCanticle('benedictus')" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded text-xs font-bold transition">
+                                撒迦利亚 Zechariah
+                            </button>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Feature: The Silence of Zechariah -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-amber-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-comment-slash text-amber-600 mr-2"></i> 哑口与赞美
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Silence & Praise</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Luke 1:20 vs 1:64</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center justify-center py-6 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition" onclick="toggleSilence()">
+                        <i id="mouth-icon" class="fas fa-comment-slash text-4xl text-slate-400 mouth-icon silenced mb-3"></i>
+                        <p id="silence-status" class="font-bold text-slate-600">因不信而哑口 (Muted by Unbelief)</p>
+                        <p class="text-xs text-slate-400 mt-2">点击切换状态 (Click to Toggle)</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fffbf0]/95 backdrop-blur py-4 mb-6 border-b border-blue-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-blue-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-blue-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-blue-800 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-blue-800">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-blue-800 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-blue-50 to-white p-5 border-b border-blue-100">
+                        <span class="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 text-xs font-bold rounded mb-2 font-mono border border-blue-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-blue-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-blue-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-blue-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Theological</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-blue-800 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">历史序言分析（The Prologue）。新旧约平行对比（撒迦利亚vs亚伯拉罕，马利亚vs哈拿）。神学术语研究（荫庇、清晨日光）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Analyzing the Prologue. OT/NT parallels (Zechariah/Abraham, Mary/Hannah). Theological term study (Overshadow, Dayspring).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-blue-800 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">确立信仰的历史根基（Facts）。理解"救恩历史"（Heilsgeschichte）的展开。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Establishing historical basis of faith (Facts). Understanding the unfolding of 'Salvation History'.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Faith & Submission</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">学习完全的顺服（"情愿照你的话"）。在困惑中保持静默等候。用"尊主为大"的眼光看问题。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Learning total submission ('Let it be'). Waiting in silence during confusion. Viewing problems through 'Magnifying the Lord'.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">当你面对"不可能"时，像马利亚一样信靠。当你无话可说时，像撒迦利亚一样预备赞美。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Trust like Mary in the 'impossible'. Prepare praise like Zechariah when speechless.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>
