@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew 18: Community & Forgiveness | 马太福音第十八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Mercy Cyan - Forgiveness, Cleansing, Peace */
+            --theme-primary: #0891b2; 
+            /* Humility Gold - Childlikeness, Kingdom Value */
+            --theme-accent: #d97706;
+            /* Debt Indigo - Severity, Debt, Prison */
+            --theme-dark: #312e81;
+            /* Background */
+            --theme-bg: #ecfeff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #164e63;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #a5f3fc; /* Cyan 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(8, 145, 178, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Debt Calculator Visualization */
+        .debt-visual-container {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #cffafe;
+            overflow: hidden;
+        }
+
+        .bar-container {
+            margin-bottom: 15px;
+        }
+
+        .bar-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .bar-track {
+            height: 24px;
+            background-color: #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .debt-huge { background: linear-gradient(90deg, #312e81 0%, #4338ca 100%); width: 0%; }
+        .debt-tiny { background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%); width: 0%; }
+
+        /* Lost Sheep Radar */
+        .radar-scope {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            background-color: #0f172a;
+            border-radius: 50%;
+            margin: 0 auto;
+            border: 2px solid #334155;
+            overflow: hidden;
+        }
+
+        .radar-sweep {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #22d3ee);
+            transform-origin: 0 0;
+            animation: sweep 3s infinite linear;
+        }
+
+        .dot {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+        
+        .dot-sheep { top: 20%; right: 20%; background-color: #facc15; box-shadow: 0 0 5px #facc15; }
+
+        @keyframes sweep {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-cyan-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-cyan-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-users mr-2 text-cyan-600"></i> 马太福音 18章</span>
+                        <span class="text-xs text-cyan-700 en-text font-normal ml-8">Matthew Chapter 18</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        天国群体 <br><span class="text-[10px] uppercase opacity-70 en-text">Community</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-cyan-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-cyan-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-cyan-200 mb-1">"你们若不从心里饶恕你的弟兄，我天父也要这样待你们了。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"So also my heavenly Father will do to every one of you, if you do not forgive your brother from your heart."</p>
+            <p class="text-xs opacity-70">马太福音第十八章中英对照研经报告 | Humility & Forgiveness</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "天国群体的生活守则：谦卑与饶恕",
+                title_en: "Rules of Life in the Kingdom Community: Humility & Forgiveness",
+                summary_zh: "马太福音第18章是耶稣第四大讲章（教会生活讲章）。在这一章，耶稣处理了门徒中间的争竞（谁为大），确立了以'谦卑像小孩子'为核心的价值观。随后，祂教导了如何处理教会内部的罪与冲突：从严厉警告'绊倒人'的祸，到温柔寻找'迷失的羊'，再到具体的'挽回弟兄'步骤。全章的高潮是关于饶恕的教导——'不饶恕的恶仆'比喻，揭示了我们饶恕他人的动力源于我们已被巨额赦免。",
+                summary_en: "Matthew 18 is the fourth major discourse (Ecclesiastical Discourse). Here, Jesus addresses rivalry among disciples ('Who is the greatest?'), establishing 'childlike humility' as the core value. He then teaches on handling sin and conflict within the community: from the stern warning against 'stumbling blocks', to the gentle search for the 'lost sheep', and the practical steps of 'restoring a brother'. The climax is the teaching on forgiveness—the parable of the 'Unforgiving Servant', revealing that our motivation to forgive stems from the massive debt we've been forgiven.",
+                concepts: [
+                    { title: "小孩子", title_en: "Child", greek: "Paidion", color: "text-amber-600", desc_zh: "不是指天真无邪，而是指社会地位低下、无权无势、完全依赖。", desc_en: "Not innocence, but low status, powerlessness, and total dependence." },
+                    { title: "绊倒", title_en: "Stumble", greek: "Skandalizō", color: "text-rose-700", desc_zh: "指设下陷阱使人跌倒犯罪，导致其属灵生命的毁灭。", desc_en: "To entrap or cause to sin, leading to spiritual ruin." },
+                    { title: "饶恕", title_en: "Forgive", greek: "Aphiēmi", color: "text-cyan-600", desc_zh: "字面意为'释放'、'让它去'。指免除债务，不再追究。", desc_en: "Lit. 'to send away' or 'release'. Canceling a debt, letting it go." }
+                ]
+            },
+            sections: [
+                {
+                    id: "humility",
+                    title: "壹 · 天国的门槛：回转像小孩 (18:1-5)",
+                    title_en: "Threshold of the Kingdom: Turn and Become Like Children",
+                    desc: "地位的反转 | Reversal of Status",
+                    verses: [
+                        {
+                            ref: "18:3-4",
+                            text_zh: "...你们若不回转，变成小孩子的样式，断不得进天国...凡自己谦卑像这小孩子的，他在天国里就是最大的。",
+                            text_en: "...unless you turn and become like children, you will never enter the kingdom of heaven... Whoever humbles himself like this child is the greatest in the kingdom of heaven.",
+                            academic: {
+                                title: "社会地位的颠覆 (Subversion of Status)",
+                                content_zh: "在第一世纪，孩子处于社会底层，没有法律地位或权利。门徒争论'谁为大'是基于属世的权力金字塔。耶稣把一个孩子放在中间，不仅仅是作为一个道德榜样（谦虚），更是作为一个'身份模型'。进天国需要'回转'（Strephō，彻底改变方向），从追求向上的权力，转为拥抱向下的依赖和无权势。",
+                                content_en: "In the 1st century, children were at the bottom of society, with no legal status. Disciples argued about 'greatness' based on a worldly power pyramid. Jesus placing a child in the midst wasn't just a moral example (modesty) but a 'status model'. Entering the Kingdom requires a 'turn' (Strephō) from seeking upward power to embracing downward dependence and powerlessness."
+                            },
+                            devotional: {
+                                title: "你是追求'大'还是追求'小'？(Seeking Big or Small?)",
+                                content_zh: "我们的本性都想做'大'（被尊重、有影响力、掌权）。但天国的重力是反向的。当我们觉得自己'够资格'、'有资历'时，我们离天国最远。只有当你承认自己像孩子一样无助、一无所有、单单仰望父时，我们才在天国里算为大。每天早晨，试着向神祷告：'父啊，我是你的孩子，今天没有你的牵引，我一步也走不了。'",
+                                content_en: "Our nature seeks 'Big' (respect, influence, power). Kingdom gravity is reversed. When we feel 'qualified' or 'senior', we are furthest from the Kingdom. Only when we admit we are helpless like a child, owning nothing, looking solely to the Father, are we great. Pray daily: 'Father, I am your child; I cannot take a step today without Your hand.'"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "stumbling",
+                    title: "贰 · 严厉的警告：绊倒人的祸 (18:6-9)",
+                    title_en: "Stern Warning: Woe to Stumbling Blocks",
+                    desc: "对软弱者的保护 | Protecting the Vulnerable",
+                    verses: [
+                        {
+                            ref: "18:6-7",
+                            text_zh: "凡使这信我的一个小子跌倒的，倒不如把大磨石拴在这人的颈项上，沉在深海里...",
+                            text_en: "but whoever causes one of these little ones who believe in me to sin, it would be better for him to have a great millstone fastened around his neck and to be drowned in the depth of the sea...",
+                            academic: {
+                                title: "磨石与深海 (Millstone & Deep Sea)",
+                                content_zh: "'大磨石'原文指驴推的巨型磨石。对于犹太人，'深海'是极其可怕的地方（没有得体的安葬）。这种极端的修辞（加上后面砍手挖眼的比喻）强调了保护'信徒中微小者'的绝对重要性。任何导致初信者或软弱者犯罪、离弃信仰的行为（不论是错误的教导还是傲慢的态度），其后果比肉体的死亡更可怕。",
+                                content_en: "'Great millstone' implies a huge stone turned by a donkey. For Jews, the 'depth of the sea' was a horrific fate (no proper burial). This extreme rhetoric (plus cutting hand/eye) emphasizes the absolute gravity of protecting 'little believers'. Causing a novice or weak believer to sin or apostatize (via false teaching or arrogance) incurs a fate worse than physical death."
+                            },
+                            devotional: {
+                                title: "你是绊脚石还是铺路石？(Stumbling Block or Stepping Stone?)",
+                                content_zh: "我们常关注自己的灵命成长，却很少留意自己对他人的影响。你的言语（批评、抱怨）、你的生活方式（放纵自由）、你的态度（属灵骄傲）是否正在绊倒身边那个'小子'？基督徒的自由必须被爱心限制。宁可牺牲自己的权益（砍手挖眼般的痛苦），也不要让一个软弱的肢体跌倒。",
+                                content_en: "We focus on our growth but overlook our impact. Does your speech (criticism), lifestyle (indulgent liberty), or attitude (spiritual pride) stumble a 'little one'? Christian liberty must be limited by love. Better to sacrifice your rights (painful like cutting a hand) than cause a weak limb to fall."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "lost-sheep",
+                    title: "叁 · 迷羊的比喻：天父的心意 (18:10-14)",
+                    title_en: "Parable of the Lost Sheep: The Father's Will",
+                    desc: "个体的价值 | Value of the One",
+                    verses: [
+                        {
+                            ref: "18:12-14",
+                            text_zh: "...一个人若有一百只羊，一只走迷了路...岂不撇下这九十九只...去寻找那只迷路的羊吗？...你们在天上的父也是这样，不愿意这小子里失丧一个。",
+                            text_en: "...If a man has a hundred sheep, and one of them has gone astray, does he not leave the ninety-nine... and go in search of the one that went astray?... So it is not the will of my Father... that one of these little ones should perish.",
+                            academic: {
+                                title: "主动的牧养 (Active Shepherding)",
+                                content_zh: "这比喻不仅出现在路加福音（强调悔改），在这里更强调神对'已经在圈内却走迷'之人的挽回。'撇下九十九只'不是不负责任，而是突显了对那一只'处于危险中'的羊的优先关注。这是对之前'谁为大'的回答：真正的领袖不是高高在上，而是那个愿意付代价去寻找迷失者的牧人。",
+                                content_en: "Unlike Luke (emphasizing repentance), here it stresses restoring the one 'already in the fold but straying'. 'Leaving the 99' highlights priority for the one in danger. This answers 'Who is greatest': True leadership isn't sitting on a throne, but the Shepherd paying the cost to find the lost."
+                            },
+                            devotional: {
+                                title: "一个都不失落 (None Shall Perish)",
+                                content_zh: "在神的经济学里，每一个'一'都是无价的。如果你觉得自己是被遗忘的那一只，请记住，好牧人正在寻找你。同样，如果你在圈内，不要满足于'九十九只'的安全感，要体会父神的心，去寻找那些暂时迷失的弟兄姐妹。教会不是为了那些已经在这里的人，而是为了那些还未回来的人。",
+                                content_en: "In God's economics, every 'one' is priceless. If you feel lost, remember the Shepherd is seeking you. If you are safe in the fold, don't be complacent. Share the Father's heart to seek the straying. The church exists not just for those present, but for those yet to return."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "discipline",
+                    title: "肆 · 教会纪律：挽回的步骤 (18:15-20)",
+                    title_en: "Church Discipline: Steps of Restoration",
+                    desc: "权柄与同心 | Authority & Agreement",
+                    verses: [
+                        {
+                            ref: "18:15-17",
+                            text_zh: "倘若你的弟兄得罪你，你就去，趁着只有他和你在一处的时候，指出他的错来...他若不听...",
+                            text_en: "If your brother sins against you, go and tell him his fault, between you and him alone... But if he does not listen...",
+                            academic: {
+                                title: "为了得着弟兄 (To Gain the Brother)",
+                                content_zh: "这是处理教会内部罪恶的黄金法则。目的不是惩罚，而是'得着'（挽回）弟兄。步骤极其谨慎：1. 私下指出（保护隐私/给面子）；2. 带两三个人（确立见证/客观性）；3. 告诉教会（最后的权柄）；4. 看作外邦人（不再视为内部团契成员，但仍是宣教对象）。'捆绑与释放'在此指教会有权柄判定某行为是否违背真理，并据此接纳或逐出。",
+                                content_en: "The Golden Rule for church conflict. The goal is not punishment, but to 'gain' (restore) the brother. Steps are careful: 1. Private (protect reputation); 2. Two or three witnesses (objectivity); 3. Church (final authority); 4. Treat as Gentile (remove from fellowship, view as mission field). 'Binding/Loosing' here refers to the Church's authority to judge actions and define membership."
+                            },
+                            devotional: {
+                                title: "面对冲突的勇气 (Courage in Conflict)",
+                                content_zh: "我们通常要么'背后议论'（Gossip），要么'隐忍不发'（导致苦毒）。耶稣要求我们通过'私下当面指出'来直面冲突。这需要极大的爱和勇气。如果你真的爱那个弟兄，你就不会在背后说他，也不会任凭他在罪中沉沦。只有在真理中的对抗，才能带来真正的和解。",
+                                content_en: "We usually gossip or suppress (leading to bitterness). Jesus demands direct, private confrontation. This takes immense love and courage. If you truly love the brother, you won't talk behind his back, nor let him drown in sin. Only truth-in-love confrontation brings true reconciliation."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "unforgiving",
+                    title: "伍 · 不饶恕的恶仆：恩典的算术 (18:21-35)",
+                    title_en: "The Unforgiving Servant: Arithmetic of Grace",
+                    desc: "无限的债务与有限的冒犯 | Infinite Debt vs Finite Offense",
+                    verses: [
+                        {
+                            ref: "18:21-22, 32-33",
+                            text_zh: "...彼得说：'到七次可以吗？' 耶稣说：'...七十个七次。'...你这恶奴才！...你不应当怜恤你的同伴，像我怜恤你吗？",
+                            text_en: "...Peter said, 'As many as seven times?' Jesus said, '...seventy-seven times.'... 'You wicked servant!... Should not you have had mercy on your fellow servant, as I had mercy on you?'",
+                            academic: {
+                                title: "一千万 vs 十两 (10,000 Talents vs 100 Denarii)",
+                                content_zh: "彼得以为'七次'很慷慨（拉比教导三次）。耶稣的'七十个七次'意为'不计其数'（暗指创世记4:24拉麦的报复反转为无限宽恕）。比喻中的对比令人咋舌：一千万银子（约6000万得那利，相当于加利利省数年的税收，根本无法偿还）vs 十两银子（100得那利，约3个月工资）。主人的豁免是基于'动了慈心'。恶仆的罪在于：他忘记了自己刚被豁免的巨债，却按'公义'去追讨同伴的小债。",
+                                content_en: "Peter thought '7 times' generous (Rabbis said 3). Jesus' '77 times' means unlimited (reversing Lamech's revenge in Gen 4:24). The contrast is staggering: 10,000 talents (~60 million denarii, unpayable national debt) vs 100 denarii (3 months' wages). The Master forgave out of 'pity'. The servant's sin: forgetting his massive cancelled debt while enforcing 'justice' on a peer's tiny debt."
+                            },
+                            devotional: {
+                                title: "你还在算账吗？(Are You Still Keeping Score?)",
+                                content_zh: "当我们觉得别人欠我们太多、无法原谅时，是因为我们把显微镜对准了那'十两银子'，却把望远镜倒过来看自己欠神的'一千万'。不饶恕的本质是健忘——忘记了自己曾也是那个跪在地上求宽恕的绝望罪人。饶恕不是一种感觉，而是一种基于'我已被赦免'这一事实的理智决定。不流通恩典的管道，最终会被堵死。",
+                                content_en: "When we find others unforgivable, we are magnifying the '100 denarii' while minimizing our '10,000 talent' debt to God. Unforgiveness is amnesia—forgetting we were the desperate beggar on the floor. Forgiveness isn't a feeling; it's a decision based on the fact 'I am forgiven'. A pipe that doesn't flow grace eventually gets clogged."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            calculated: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function calculateDebt() {
+            const hugeBar = document.getElementById('huge-debt-bar');
+            const tinyBar = document.getElementById('tiny-debt-bar');
+            const result = document.getElementById('calc-result');
+            
+            if (!appState.calculated) {
+                hugeBar.style.width = '100%';
+                tinyBar.style.width = '1%'; // Just a sliver
+                
+                hugeBar.innerText = "60,000,000 Days Wages";
+                tinyBar.innerText = "100 Days";
+                
+                result.innerHTML = "<span class='text-cyan-700 font-bold'>比例 Ratio: 600,000 : 1</span><br><span class='text-xs text-slate-500'>你欠神的 vs 人欠你的 (Your debt to God vs Others to You)</span>";
+                appState.calculated = true;
+            } else {
+                hugeBar.style.width = '0%';
+                tinyBar.style.width = '0%';
+                hugeBar.innerText = "";
+                tinyBar.innerText = "";
+                result.innerText = "点击计算差距 (Click to Compare)";
+                appState.calculated = false;
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-cyan-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-cyan-100 text-cyan-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Community</span>
+                            <h2 class="text-3xl font-bold serif text-cyan-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-cyan-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-cyan-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Debt Calculator -->
+                    <div class="lg:col-span-4 bg-slate-50 p-6 rounded-xl shadow-lg flex flex-col border border-slate-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-slate-700">恩典计算器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Grace Calculator</p>
+                         
+                         <div class="debt-visual-container mb-4">
+                            <!-- Huge Debt -->
+                            <div class="bar-container">
+                                <div class="bar-label">
+                                    <span>一千万银子 (10,000 Talents)</span>
+                                    <i class="fas fa-mountain text-indigo-800"></i>
+                                </div>
+                                <div class="bar-track">
+                                    <div id="huge-debt-bar" class="bar-fill debt-huge"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Tiny Debt -->
+                            <div class="bar-container">
+                                <div class="bar-label">
+                                    <span>十两银子 (100 Denarii)</span>
+                                    <i class="fas fa-coins text-amber-500"></i>
+                                </div>
+                                <div class="bar-track">
+                                    <div id="tiny-debt-bar" class="bar-fill debt-tiny"></div>
+                                </div>
+                            </div>
+                         </div>
+                         
+                         <p id="calc-result" class="text-center text-sm text-slate-500 mb-4 h-10 flex flex-col justify-center">点击计算差距 (Click to Compare)</p>
+
+                         <button onclick="calculateDebt()" class="w-full py-2 bg-cyan-600 hover:bg-cyan-700 rounded text-white font-bold transition shadow-md">
+                             <i class="fas fa-calculator mr-2"></i> 计算债务 (Calculate)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: The Lost Sheep & Steps -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Lost Sheep Radar -->
+                    <div class="bg-slate-900 p-6 rounded-xl shadow-lg border border-slate-700 text-white">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-cyan-200"><i class="fas fa-crosshairs mr-2"></i> 寻找迷羊</h3>
+                            <span class="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">Matt 18:12</span>
+                        </div>
+                        <div class="radar-scope mb-4">
+                            <div class="radar-sweep"></div>
+                            <div class="dot dot-sheep"></div>
+                        </div>
+                        <p class="text-center text-sm text-slate-300 italic">"天父不愿意这小子里失丧一个"<br><span class="text-xs opacity-60">"Not the will of my Father that one should perish"</span></p>
+                    </div>
+
+                    <!-- Steps of Reconciliation -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-amber-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-slate-700"><i class="fas fa-hand-holding-heart text-amber-600 mr-2"></i> 挽回的步骤</h3>
+                            <span class="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded">Matt 18:15-17</span>
+                        </div>
+                        <ul class="space-y-3">
+                            <li class="flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-3">1</span>
+                                <div class="text-sm text-slate-600">私下指出 <span class="text-xs text-slate-400 italic">(Private)</span></div>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-3">2</span>
+                                <div class="text-sm text-slate-600">带一两个人 <span class="text-xs text-slate-400 italic">(Witnesses)</span></div>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-3">3</span>
+                                <div class="text-sm text-slate-600">告诉教会 <span class="text-xs text-slate-400 italic">(Church)</span></div>
+                            </li>
+                            <li class="flex items-center">
+                                <span class="w-6 h-6 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center text-xs font-bold mr-3">4</span>
+                                <div class="text-sm text-slate-600">看作外邦人 <span class="text-xs text-slate-400 italic">(Removal)</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#ecfeff]/95 backdrop-blur py-4 mb-6 border-b border-cyan-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-cyan-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-cyan-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-cyan-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-cyan-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-cyan-700 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-cyan-50 to-white p-5 border-b border-cyan-100">
+                        <span class="inline-block px-2 py-0.5 bg-cyan-100 text-cyan-800 text-xs font-bold rounded mb-2 font-mono border border-cyan-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-cyan-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-cyan-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-cyan-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Culture & Context</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-cyan-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">社会学分析（第一世纪孩子地位）。夸张修辞解析（大磨石、无限次饶恕）。比喻的货币价值对比（千万 vs 十两）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Sociological analysis (Status of children). Rhetorical hyperbole (Millstone, 77 times). Monetary contrast in parables.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-cyan-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解"教会纪律"不是惩罚性法律，而是挽回性过程。理解饶恕是基于神学的（被赦免），而非心理的（感觉好）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand Discipline as restorative, not punitive. Understand Forgiveness as theological (forgiven), not psychological.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Identity & Practice</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">身份认同（我是无助的孩子，我是被赦免的仆人）。群体生活实践（面对冲突、保护软弱者）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Identity (Helpless child, Forgiven servant). Community practice (Facing conflict, Protecting the weak).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">当你想争大时，看小孩子；当你想记仇时，看十字架上的赦免。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">When seeking greatness, look at the child; when holding a grudge, look at the forgiveness of the Cross.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

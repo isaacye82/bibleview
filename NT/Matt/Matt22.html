@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew 22: The Wedding & The Debates | 马太福音第二十二章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Royal Crimson - The King's Feast, Authority, Love */
+            --theme-primary: #be123c; 
+            /* Coin Silver - Taxes, Logic, Sadducees */
+            --theme-accent: #64748b;
+            /* Eternity Gold - Resurrection, Divine Nature */
+            --theme-gold: #b45309;
+            /* Background */
+            --theme-bg: #fff1f2;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #4c0519;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fda4af; /* Rose 300 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(190, 18, 60, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Wedding Garment Animation */
+        .banquet-hall {
+            position: relative;
+            height: 220px;
+            background: linear-gradient(to bottom, #fff1f2 0%, #ffe4e6 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #be123c;
+        }
+
+        .king-eye {
+            position: absolute;
+            top: 20px;
+            font-size: 2rem;
+            color: #be123c;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .guest {
+            width: 60px;
+            height: 90px;
+            background-color: #9ca3af; /* Default gray clothes */
+            border-radius: 30px 30px 0 0;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10px;
+            transition: all 1s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .guest::after { /* Head */
+            content: '';
+            position: absolute;
+            top: -30px;
+            width: 40px;
+            height: 40px;
+            background-color: #fca5a5;
+            border-radius: 50%;
+        }
+
+        .robe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fbbf24; /* Gold Wedding Robe */
+            border-radius: 30px 30px 0 0;
+            opacity: 0; /* Initially hidden */
+            transition: opacity 1s ease;
+        }
+
+        /* States */
+        .has-robe .robe { opacity: 1; }
+        .has-robe .guest { transform: scale(1.1); box-shadow: 0 0 20px #fbbf24; }
+        
+        .no-robe .guest { 
+            background-color: #4b5563; 
+            transform: scale(0.8) rotate(5deg);
+            filter: grayscale(100%);
+        }
+        .no-robe::before { /* Bound hands illusion */
+            content: '';
+            position: absolute;
+            top: 40px;
+            width: 70%;
+            height: 10px;
+            background-color: #1f2937;
+        }
+
+        .darkness-overlay {
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+        
+        .cast-out .darkness-overlay { opacity: 0.8; }
+
+        /* Coin Flip Visual */
+        .coin-flip-container {
+            perspective: 1000px;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            cursor: pointer;
+        }
+        
+        .coin {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .coin.flipped { transform: rotateY(180deg); }
+        
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        
+        .coin-front { background-color: #cbd5e1; color: #334155; border: 4px solid #94a3b8; } /* Caesar */
+        .coin-back { background-color: #fecaca; color: #be123c; border: 4px solid #fda4af; transform: rotateY(180deg); } /* Heart/God */
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-rose-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-rose-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-crown mr-2 text-rose-600"></i> 马太福音 22章</span>
+                        <span class="text-xs text-rose-700 en-text font-normal ml-8">Matthew Chapter 22</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        婚宴与辩论 <br><span class="text-[10px] uppercase opacity-70 en-text">Feast & Debates</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-rose-200 mb-1">"被召的人多，选上的人少"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"For many are called, but few are chosen."</p>
+            <p class="text-xs opacity-70">马太福音第二十二章中英对照研经报告 | Invitation & Responsibility</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "王的筵席与智者的交锋",
+                title_en: "The King's Banquet & The Clash of Wisdom",
+                summary_zh: "马太福音第22章是冲突的延续。耶稣通过'娶亲筵席的比喻'，进一步宣告了救恩历史的转折：被邀请者（以色列领袖）拒绝了，恩典转向了岔路口的人（外邦人/罪人）。随后，宗教领袖们轮番上阵（法利赛人、希律党、撒都该人），试图在政治、神学和律法上陷害耶稣。耶稣以惊人的智慧一一化解，最后反问他们关于基督身分的问题，使众人哑口无言。",
+                summary_en: "Matthew 22 continues the conflict. Through the 'Parable of the Wedding Banquet', Jesus announces the pivot in salvation history: the invited (Jewish leaders) refused, so grace turns to the street corners (Gentiles/Sinners). Then, religious leaders (Pharisees, Herodians, Sadducees) take turns trying to trap Jesus politically, theologically, and legally. Jesus dismantles them with divine wisdom and counters with a question about the Messiah's identity, silencing them.",
+                concepts: [
+                    { title: "礼服", title_en: "Wedding Garment", greek: "Endyma Gamou", color: "text-rose-600", desc_zh: "象征称义的义袍或信徒的义行。是赴宴的必要条件。", desc_en: "Symbolizes the robe of righteousness or righteous acts. Essential for the feast." },
+                    { title: "凯撒", title_en: "Caesar", greek: "Kaisar", color: "text-slate-600", desc_zh: "代表世俗政权。耶稣确立了政教分离且各归其主的原则。", desc_en: "Represents secular power. Jesus establishes the principle of rendering to each their due." },
+                    { title: "活人", title_en: "Living", greek: "Zōntōn", color: "text-amber-700", desc_zh: "神是亚伯拉罕的神，表明列祖在神面前依然活着。", desc_en: "God of Abraham implies the patriarchs are still alive before Him." }
+                ]
+            },
+            sections: [
+                {
+                    id: "banquet",
+                    title: "壹 · 娶亲筵席：恩典与责任 (22:1-14)",
+                    title_en: "The Wedding Banquet: Grace & Responsibility",
+                    desc: "被召与选上 | Called vs Chosen",
+                    verses: [
+                        {
+                            ref: "22:11-14",
+                            text_zh: "...见那里有一个没有穿礼服的...王这就对用人说：'捆起他的手脚来，把他丢在外边的黑暗里...'",
+                            text_en: "...saw there a man who had no wedding garment... Then the king said to the attendants, 'Bind him hand and foot and cast him into the outer darkness...'",
+                            academic: {
+                                title: "双重审判 (Double Judgment)",
+                                content_zh: "这个比喻包含两个阶段：1. 拒绝邀请的人（以色列领袖）被毁灭（预言公元70年耶路撒冷被毁）；2. 接受邀请但轻慢恩典的人（没穿礼服）。按照当时的习俗，王可能会为宾客预备礼服。此人不穿，代表他虽然回应了呼召进入教会（可见的国度），却拒绝披戴基督的义或活出悔改的生命。这表明'被召'（进入有形教会）不等于'选上'（得救）。",
+                                content_en: "Two stages of judgment: 1. Those who refused (Israel's leaders) are destroyed (prophecy of AD 70). 2. Those who accepted but presumed on grace (no garment). Customarily, kings might provide robes. Refusing it implies entering the Church (visible kingdom) but rejecting Christ's righteousness or repentance. 'Called' (invited) does not guarantee 'Chosen' (saved)."
+                            },
+                            devotional: {
+                                title: "你穿上礼服了吗？(Are You Dressed?)",
+                                content_zh: "我们很容易像那个随便的客人，以为只要'出席'了礼拜就是给神面子。但神看重的不是出席率，而是'装饰'——你是否披戴了基督？你的生命是否因着这份邀请而改变？恩典是免费的（我们在岔路口被捡回来），但恩典绝不是廉价的。不要把神的宽容当作放纵的机会。",
+                                content_en: "We easily act like the casual guest, thinking 'showing up' honors God. But God looks for the 'attire'—have you put on Christ? Has the invitation changed you? Grace is free (we were found on street corners), but never cheap. Do not treat God's leniency as a license for apathy."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "taxes",
+                    title: "贰 · 纳税问题：该撒与神 (22:15-22)",
+                    title_en: "Paying Taxes: Caesar and God",
+                    desc: "政治的陷阱 | The Political Trap",
+                    verses: [
+                        {
+                            ref: "22:20-21",
+                            text_zh: "...'这像和这号是谁的？' 他们说：'是凯撒的。' ...'这样，凯撒的物当归给凯撒；神的物当归给神。'",
+                            text_en: "...'Whose likeness and inscription is this?' They said, 'Caesar's.'...'Therefore render to Caesar the things that are Caesar's, and to God the things that are God's.'",
+                            academic: {
+                                title: "像 (Eikon) 的神学 (Theology of the Image)",
+                                content_zh: "这是一个完美的智慧回答。法利赛人（反罗马）和希律党（亲罗马）联手设局：说'纳'则得罪百姓，说'不纳'则得罪罗马。耶稣要求看银钱，既然他们口袋里装着刻有凯撒像的钱，就证明他们已经在使用凯撒的经济系统，理应纳税。但更深层的含义是：钱币上有凯撒的像，所以钱归凯撒；人身上有'神的像'（创1:27），所以人（全人）应当归给神。这确立了有限的政治义务和无限的宗教义务。",
+                                content_en: "A perfect retort. Pharisees (anti-Rome) and Herodians (pro-Rome) set a trap. Jesus asks for the coin. Using Caesar's currency implies participating in his economy, thus owing tax. But the deeper meaning: The coin bears Caesar's image, so it belongs to him; Humans bear 'God's Image' (Gen 1:27), so they belong wholly to God. This defines limited political duty vs infinite religious duty."
+                            },
+                            devotional: {
+                                title: "你把自己归给了谁？(To Whom Do You Render Yourself?)",
+                                content_zh: "我们每天都在为税务、账单、工作忙碌，这是'归给凯撒'的部分，是应当尽的责任。但耶稣提醒我们，还有一个更高的归属权。你的心、你的灵魂、你的爱，上面刻着谁的形象？是世界的，还是神的？不要把属于神的（你的全人）廉价地卖给世界（凯撒）。",
+                                content_en: "We busy ourselves with taxes, bills, work—rendering to Caesar what is due. But Jesus reminds us of a higher ownership. Whose image is stamped on your heart, soul, and love? The world's or God's? Don't cheaply sell what belongs to God (your whole self) to the world (Caesar)."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "resurrection",
+                    title: "叁 · 复活辩论：活人的神 (22:23-33)",
+                    title_en: "Resurrection Debate: God of the Living",
+                    desc: "超越生死的逻辑 | Logic Beyond Death",
+                    verses: [
+                        {
+                            ref: "22:29-32",
+                            text_zh: "...你们错了；因为不明白圣经，也不晓得神的大能...神不是死人的神，乃是活人的神。",
+                            text_en: "...You are wrong, because you know neither the Scriptures nor the power of God... He is not God of the dead, but of the living.",
+                            academic: {
+                                title: "时态的论证 (Argument from Tense)",
+                                content_zh: "撒都该人（不信复活）用'七兄弟娶一妻'的极端的例子来嘲笑复活。耶稣指出他们的两个无知：1. 不晓得神的大能（复活后不再嫁娶，如天使般存在，非地上生命的延续）；2. 不明白圣经（出3:6）。神说'我**是**（I am）亚伯拉罕的神'，而非'我**曾是**（I was）'。既然神现在仍是他们的神，说明亚伯拉罕等人虽然肉体死了，但在神面前依然活着。这证明了灵魂不朽和复活的必然。",
+                                content_en: "Sadducees (denying resurrection) used an extreme case to mock it. Jesus exposes two ignorances: 1. Power of God (Resurrection isn't biological continuation but transformation like angels); 2. Scripture (Ex 3:6). God said 'I AM the God of Abraham', not 'I WAS'. Since God is their God NOW, the patriarchs must still be alive to Him. This proves immortality and resurrection."
+                            },
+                            devotional: {
+                                title: "你的神是活人的神吗？(Is Your God the God of the Living?)",
+                                content_zh: "很多时候，我们拜的神像是一个'死人'的神——只存在于历史书里，或者只管死后的事。但耶稣说，神是**现在**活着的的神。既然亚伯拉罕、以撒、雅各都还在神面前活着，那么我们在基督里离去的亲人也并没有消失。死亡不是终点，只是状态的改变。让我们以'永恒'的视角来活在当下。",
+                                content_en: "Often we worship a God of the 'dead'—confined to history or the afterlife. Jesus says He is the God of the LIVING. Since the patriarchs are alive to Him, our loved ones in Christ are not gone. Death is not the end, but a change of state. Let us live today with an 'eternal' perspective."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "commandment",
+                    title: "肆 · 最大诫命：爱神爱人 (22:34-40)",
+                    title_en: "The Greatest Commandment: Love God & Neighbor",
+                    desc: "律法的总纲 | Summary of the Law",
+                    verses: [
+                        {
+                            ref: "22:37-40",
+                            text_zh: "...你要尽心、尽性、尽意爱主你的神...爱人如己。这两条诫命是律法和先知一切道理的总纲。",
+                            text_en: "...You shall love the Lord your God with all your heart... and... You shall love your neighbor as yourself. On these two commandments depend all the Law and the Prophets.",
+                            academic: {
+                                title: "示玛 (Shema) 与邻舍",
+                                content_zh: "法利赛人试图让耶稣在613条律法中分轻重。耶稣引用了'示玛'（申6:5，爱神）和利未记19:18（爱邻舍）。'总纲'（Kremannymj）原意是'悬挂'，意味着整本圣经都挂在这两个挂钩上。如果没有爱，律法就会掉下来变成一堆散乱的规条。这两个爱是不可分割的：爱神是爱人的源头，爱人是爱神的证明。",
+                                content_en: "Pharisees sought to weigh the 613 laws. Jesus cites the 'Shema' (Deut 6:5, Love God) and Lev 19:18 (Love Neighbor). 'Depend' (Hang) means all Scripture hangs on these two hooks. Without love, the Law collapses into disjointed rules. The two loves are inseparable: Love for God is the source; love for neighbor is the proof."
+                            },
+                            devotional: {
+                                title: "爱的优先次序 (The Priority of Love)",
+                                content_zh: "宗教很容易变成一堆枯燥的规条和义务。耶稣把一切带回原点：爱。如果你在忙碌的事奉中失去了对神的爱，或者在坚持真理时失去了对人的爱，你就失去了核心。爱是律法的灵魂，也是我们行事为人的唯一动机。检查你的心：你是被规条驱动，还是被爱驱动？",
+                                content_en: "Religion easily becomes dry rules and duties. Jesus brings it back to the start: Love. If you lose love for God in busy ministry, or love for people in defending truth, you lose the core. Love is the soul of the Law and our only motive. Check your heart: Are you driven by rules or by love?"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            guestStatus: 'outside' // outside, check, in, out
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function checkGuest(hasRobe) {
+            const hall = document.getElementById('banquet-vis');
+            const guest = document.getElementById('guest-figure');
+            const eye = document.getElementById('king-eye');
+            const status = document.getElementById('guest-status');
+            
+            // Reset
+            hall.classList.remove('has-robe', 'no-robe', 'cast-out');
+            guest.style.opacity = '1';
+            eye.style.opacity = '1';
+            
+            if (hasRobe) {
+                status.innerText = "王进来了... 穿着礼服！(The King enters... Wearing Robe!)";
+                hall.classList.add('has-robe');
+                setTimeout(() => {
+                    status.innerHTML = "<span class='text-green-700 font-bold'>请坐席！(Welcome to the Feast!)</span>";
+                }, 1000);
+            } else {
+                status.innerText = "王进来了... 没穿礼服！(The King enters... No Robe!)";
+                hall.classList.add('no-robe');
+                setTimeout(() => {
+                    status.innerText = "朋友，你进到这里怎么不穿礼服呢？(Friend, how did you get in here?)";
+                    setTimeout(() => {
+                        hall.classList.add('cast-out');
+                        status.innerHTML = "<span class='text-slate-200 font-bold bg-black px-2'>丢在黑暗里！(Cast into darkness!)</span>";
+                    }, 1500);
+                }, 1000);
+            }
+        }
+
+        function flipCoin() {
+            const coin = document.getElementById('coin-obj');
+            coin.classList.toggle('flipped');
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Parable</span>
+                            <h2 class="text-3xl font-bold serif text-rose-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-rose-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-rose-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Garment Inspector -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-rose-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-rose-900">礼服检查器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Garment Inspector</p>
+                         
+                         <div id="banquet-vis" class="banquet-hall mb-4">
+                            <div class="darkness-overlay"></div>
+                            <div id="king-eye" class="king-eye"><i class="fas fa-eye"></i></div>
+                            <div id="guest-figure" class="guest">
+                                <div class="robe"></div>
+                            </div>
+                         </div>
+                         
+                         <p id="guest-status" class="text-center text-sm text-slate-500 mb-4 h-6">选择状态进入筵席 (Enter Feast)</p>
+
+                         <div class="grid grid-cols-2 gap-2">
+                            <button onclick="checkGuest(true)" class="py-2 bg-rose-600 hover:bg-rose-700 text-white rounded text-xs font-bold transition">
+                                <i class="fas fa-tshirt mr-1"></i> 穿礼服 (With Robe)
+                            </button>
+                            <button onclick="checkGuest(false)" class="py-2 bg-slate-500 hover:bg-slate-600 text-white rounded text-xs font-bold transition">
+                                <i class="fas fa-user mr-1"></i> 没穿礼服 (No Robe)
+                            </button>
+                         </div>
+                    </div>
+                </div>
+
+                <!-- Feature: Caesar vs God -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                    <!-- Coin Flip -->
+                    <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200 flex flex-col items-center">
+                        <div class="flex justify-between items-center w-full mb-4">
+                            <h3 class="text-lg font-bold text-slate-700"><i class="fas fa-coins text-slate-500 mr-2"></i> 归属权的试金石</h3>
+                            <span class="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded">Matt 22:21</span>
+                        </div>
+                        
+                        <div class="coin-flip-container" onclick="flipCoin()">
+                            <div id="coin-obj" class="coin">
+                                <div class="coin-face coin-front">
+                                    <div class="text-center">
+                                        <i class="fas fa-user-circle text-2xl"></i><br>Caesar
+                                    </div>
+                                </div>
+                                <div class="coin-face coin-back">
+                                    <div class="text-center">
+                                        <i class="fas fa-heart text-2xl"></i><br>GOD
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2">点击银币翻转 (Click to Flip)</p>
+                        
+                        <div class="mt-4 w-full grid grid-cols-2 text-center text-xs">
+                            <div class="border-r border-slate-200 pr-2">
+                                <strong class="text-slate-700">凯撒的物 (Caesar's)</strong><br>
+                                税收、公民义务<br>
+                                <span class="italic text-slate-400">印着谁的像？</span>
+                            </div>
+                            <div class="pl-2">
+                                <strong class="text-rose-700">神的物 (God's)</strong><br>
+                                生命、灵魂、敬拜<br>
+                                <span class="italic text-rose-400">印着神的像(Imago Dei)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- The Great Commandment -->
+                    <div class="bg-gradient-to-br from-rose-50 to-white p-6 rounded-xl shadow-lg border border-rose-100">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-bold text-rose-800"><i class="fas fa-heart text-rose-600 mr-2"></i> 律法的总纲</h3>
+                            <span class="text-xs bg-rose-100 text-rose-800 px-2 py-1 rounded">Matt 22:40</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-xl mr-4">1</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700">爱神 (Love God)</h4>
+                                    <p class="text-xs text-slate-500">尽心、尽性、尽意 (All heart, soul, mind)</p>
+                                </div>
+                            </div>
+                            <div class="w-0.5 h-6 bg-rose-200 ml-6"></div>
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xl mr-4">2</div>
+                                <div>
+                                    <h4 class="font-bold text-slate-700">爱人 (Love Neighbor)</h4>
+                                    <p class="text-xs text-slate-500">爱人如己 (As yourself)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="mt-4 text-xs text-slate-600 italic bg-white p-2 rounded border border-rose-100">
+                            "这两条诫命是律法和先知一切道理的总纲（挂钩）。" <br> Without Love, the Law falls.
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fff1f2]/95 backdrop-blur py-4 mb-6 border-b border-rose-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-rose-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-rose-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-rose-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-rose-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-rose-50 to-white p-5 border-b border-rose-100">
+                        <span class="inline-block px-2 py-0.5 bg-rose-100 text-rose-800 text-xs font-bold rounded mb-2 font-mono border border-rose-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-rose-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-rose-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-rose-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Logic & Imago Dei</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">文化习俗还原（婚宴礼服）。逻辑论证分析（时态论证复活）。神学类比（凯撒的像 vs 神的像）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Cultural reconstruction (Wedding garment). Logical analysis (Tense argument for resurrection). Theological analogy (Caesar's image vs God's image).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-rose-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">区分被召与选上。在公民义务与信仰责任之间建立正确的层级。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Distinguish Called vs Chosen. Hierarchy between civic duty and religious duty.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Wholeheartedness</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">不仅出席，更要装饰生命（礼服）。全人归主（神的物归给神）。用永恒的眼光看当下。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Not just attending, but adorning life (Garment). Total surrender (Render self to God). Eternal perspective on now.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">检查你的爱：是否尽心、尽性、尽意？检查你的归属：是否完全属于神？</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Check your love: Is it all heart/soul/mind? Check your ownership: Do you belong wholly to God?</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

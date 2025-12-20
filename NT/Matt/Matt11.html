@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew 11: Rest for the Weary | 马太福音第十一章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Rest Green - Life, Peace, Pastures */
+            --theme-primary: #15803d; 
+            /* Yoke Brown - Wood, Discipleship, Humility */
+            --theme-accent: #a16207;
+            /* Doubt Indigo - Prison, Questions, Mystery */
+            --theme-dark: #312e81;
+            /* Background */
+            --theme-bg: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1a2e05;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #bbf7d0; /* Green 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(21, 128, 61, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Yoke Animation */
+        .yoke-visual {
+            position: relative;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, #ecfccb 0%, #f7fee7 100%);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #d9f99d;
+        }
+
+        .ox {
+            width: 60px;
+            height: 60px;
+            background-color: #a16207;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.8rem;
+            transition: all 1s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .yoke-bar {
+            position: absolute;
+            bottom: 90px;
+            height: 12px;
+            background-color: #713f12;
+            border-radius: 6px;
+            transition: all 1s ease;
+        }
+
+        .burden {
+            width: 50px;
+            height: 50px;
+            background-color: #475569;
+            position: absolute;
+            bottom: 40px;
+            right: 20px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.7rem;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        /* Animation States */
+        /* State 1: Alone */
+        .state-alone .ox-me { left: 50%; transform: translateX(-50%); }
+        .state-alone .ox-jesus { opacity: 0; left: 50%; transform: translateX(-50%) scale(0.5); }
+        .state-alone .yoke-bar { width: 0; left: 50%; opacity: 0; }
+        .state-alone .burden { opacity: 1; right: 35%; width: 80px; height: 80px; bottom: 30px; background-color: #334155; content: "Heavy"; }
+
+        /* State 2: Yoked */
+        .state-yoked .ox-me { left: 35%; transform: translateX(0); }
+        .state-yoked .ox-jesus { opacity: 1; left: 65%; transform: translateX(-50%); background-color: #ca8a04; } /* Lighter/Gold for Jesus */
+        .state-yoked .yoke-bar { width: 140px; left: 35%; opacity: 1; }
+        .state-yoked .burden { opacity: 0; } /* Burden lifted/shared */
+
+        /* Floating particles for rest */
+        .particle {
+            position: absolute;
+            background-color: #84cc16;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float-up 3s infinite;
+        }
+        @keyframes float-up {
+            0% { transform: translateY(0) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-green-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-green-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-leaf mr-2 text-green-600"></i> 马太福音 11章</span>
+                        <span class="text-xs text-green-700 en-text font-normal ml-8">Matthew Chapter 11</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        安息与负轭 <br><span class="text-[10px] uppercase opacity-70 en-text">Rest & Yoke</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-green-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-green-200 mb-1">"我的轭是容易的，我的担子是轻省的"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"For my yoke is easy, and my burden is light."</p>
+            <p class="text-xs opacity-70">马太福音第十一章中英对照研经报告 | Rest & Revelation</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "困惑中的确据与终极安息",
+                title_en: "Assurance in Doubt & Ultimate Rest",
+                summary_zh: "马太福音第11章充满了强烈的对比：施洗约翰在监里的'困惑'与耶稣对他的'称赞'；这世代的'无动于衷'与审判的'严厉'；最后以那个著名的'安息呼召'作为高潮。耶稣首先处理了先锋的信心危机，接着谴责了麻木不仁的世代，最后向那些劳苦担重担的人发出了温柔的邀请。这一章揭示了天国是向聪明通达人隐藏，却向婴孩显明奥秘。",
+                summary_en: "Matthew 11 is a chapter of sharp contrasts: John the Baptist's 'doubt' in prison vs. Jesus' 'tribute' to him; the 'indifference' of this generation vs. the 'severity' of judgment; climaxing with the famous 'Call to Rest'. Jesus first addresses the forerunner's crisis of faith, then rebukes the numb generation, and finally issues a gentle invitation to the weary. It reveals that the Kingdom is hidden from the wise but revealed to infants.",
+                concepts: [
+                    { title: "那将要来的", title_en: "The Coming One", greek: "Ho Erchomenos", color: "text-indigo-600", desc_zh: "弥赛亚的专用称号。约翰的疑问在于：如果祢是，为何我不被释放？", desc_en: "Messianic title. John's query: If You are He, why am I still in prison?" },
+                    { title: "负轭", title_en: "Take Yoke", greek: "Zygan", color: "text-amber-700", desc_zh: "犹太拉比用语，指顺服律法或跟随拉比的教导。耶稣的轭是恩典。", desc_en: "Rabbinic term for submitting to Torah or a teacher. Jesus' yoke is Grace." },
+                    { title: "安息", title_en: "Rest", greek: "Anapausis", color: "text-green-600", desc_zh: "不仅是停止工作，更是灵魂的苏醒、更新和重新得力。", desc_en: "Not just cessation of labor, but spiritual refreshment and renewal." }
+                ]
+            },
+            sections: [
+                {
+                    id: "doubt",
+                    title: "壹 · 约翰的困惑：期待与现实的落差 (11:1-6)",
+                    title_en: "John's Doubt: Gap between Expectation & Reality",
+                    desc: "弥赛亚工作的记号 | Signs of the Messiah",
+                    verses: [
+                        {
+                            ref: "11:2-6",
+                            text_zh: "约翰在监里听见基督所做的事，就...问他说：'那将要来的是你吗？'...凡不因我跌倒的就有福了！",
+                            text_en: "Now when John heard in prison about the deeds of the Christ, he sent... 'Are you the one who is to come?'... And blessed is the one who is not offended by me.",
+                            academic: {
+                                title: "弥赛亚的记号 (Signs of the Messiah)",
+                                content_zh: "约翰曾预言那是位拿着'斧子'和'簸箕'的审判者（太3:10-12），但耶稣却只有医治和怜悯，没有推翻罗马政权或释放约翰。这引发了神学危机。耶稣回答时引用了以赛亚书35:5-6和61:1（瞎子看见、死人复活、穷人听福音），以此证明祂就是那位，但祂的工作方式与约翰预期的不同。'不跌倒'（Skandalisthe）意为不被这种反差绊倒。",
+                                content_en: "John prophesied a Judge with 'axe' and 'winnowing fork' (Matt 3:10-12), yet Jesus brought only healing, not judgment or jailbreak. This caused a theological crisis. Jesus replied by citing Isaiah 35:5-6 & 61:1 (blind see, dead raise, poor hear gospel), proving He IS the One, but operating differently than expected. 'Offended' means not stumbling over this discrepancy."
+                            },
+                            devotional: {
+                                title: "当神不如你愿时 (When God Disappoints)",
+                                content_zh: "哪怕是伟大的先知也会怀疑。当你尽心服事却身陷囹圄（困境）时，你会问神：'真的是你吗？' 耶稣没有责备约翰，而是让他看事实。信心不是相信神会按我的剧本行事，而是相信即便神的剧本与我不同，祂依然是美善的。不因神的'慢动作'或'不作为'而跌倒的人，是有福的。",
+                                content_en: "Even great prophets doubt. When you serve faithfully yet end up in prison (hardship), you ask: 'Is it really You?' Jesus didn't rebuke John but pointed to facts. Faith isn't believing God follows my script, but trusting His script is good even when different. Blessed are those not offended by God's timing or apparent inaction."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "generation",
+                    title: "贰 · 麻木的世代：吹笛与举哀 (11:16-19)",
+                    title_en: "The Numb Generation: Flute & Dirge",
+                    desc: "无法取悦的批评者 | Impossible to Please",
+                    verses: [
+                        {
+                            ref: "11:16-19",
+                            text_zh: "我们要向谁比这世代呢？好像孩童坐在街市上...我们向你们吹笛，你们不跳舞；我们向你们举哀，你们不捶胸。",
+                            text_en: "But to what shall I compare this generation? It is like children sitting in the marketplaces... 'We played the flute for you, and you did not dance; we sang a dirge, and you did not mourn.'",
+                            academic: {
+                                title: "婚礼与葬礼的游戏 (Wedding and Funeral Games)",
+                                content_zh: "犹太孩童常玩婚礼（吹笛）和葬礼（举哀）的游戏。但这世代如同顽梗的玩伴，无论玩什么都不配合。约翰来了如葬礼般严肃（禁食），被说是被鬼附；耶稣来了如婚礼般喜乐（吃喝），被说是贪食好酒。这表明人心顽梗，总是找借口拒绝神，无论是透过律法的严厉还是恩典的喜乐。",
+                                content_en: "Children played wedding (flute) and funeral (dirge) games. This generation is the stubborn playmate refusing both. John came solemn (fasting/funeral), called demonized; Jesus came joyful (feasting/wedding), called a glutton. It shows a hardened heart finding excuses to reject God, whether through Law's severity or Grace's joy."
+                            },
+                            devotional: {
+                                title: "不要随世界的音乐起舞 (Don't Dance to the World's Tune)",
+                                content_zh: "你是否为了取悦周围的人而疲于奔命？世界就像这群孩童，无论你多努力，总有人不满意。如果你严肃，他们说你古板；如果你喜乐，他们说你轻浮。耶稣教导我们：'智慧之子总以智慧为是'。只要你的良心向神交账，就不必在乎这世代的评价。做真实的自己，跟随神的节奏。",
+                                content_en: "Are you exhausted trying to please everyone? The world is like these children; someone is always unhappy. Be serious, you're rigid; be joyful, you're frivolous. Jesus teaches: 'Wisdom is justified by her deeds.' If your conscience is clear before God, ignore the generation's critique. Be authentic and dance to God's rhythm."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "woe",
+                    title: "叁 · 严厉的警告：恩典意味着责任 (11:20-24)",
+                    title_en: "Stern Warning: Grace Implies Responsibility",
+                    desc: "特权带来审判 | Privilege Brings Judgment",
+                    verses: [
+                        {
+                            ref: "11:21-23",
+                            text_zh: "哥拉汛哪，你有祸了！...迦百农啊，你已经升到天上，将来必坠落阴间...",
+                            text_en: "Woe to you, Chorazin!... And you, Capernaum, will you be exalted to heaven? You will be brought down to Hades...",
+                            academic: {
+                                title: "神迹与责任的正比 (Miracles & Accountability)",
+                                content_zh: "这些城市是耶稣行神迹最多的地方（加利利金三角）。耶稣将它们与旧约中恶名昭著的推罗、西顿和索多玛相比。结论令人震惊：审判的日子，索多玛所受的比迦百农还容易。原则是：启示越多，责任越大。对福音的'冷漠'比明显的'罪恶'招致更重的审判。",
+                                content_en: "These cities saw the most miracles (Galilean Triangle). Jesus compares them to notorious Tyre, Sidon, and Sodom. Shocking conclusion: Sodom will fare better in judgment than Capernaum. Principle: Greater revelation = Greater responsibility. Indifference to the Gospel incurs heavier judgment than gross sin."
+                            },
+                            devotional: {
+                                title: "属灵的VIP危机 (The Danger of Spiritual VIP)",
+                                content_zh: "我们常以为听到很多道、见过很多神迹是一种特权。耶稣说，这是一个危险的责任。如果你拥有一本完整的圣经、每周听道，却在生命中没有悔改的果子，你的处境比那些从未听过福音的人更危险。不要把恩典当作理所当然，恩典是用来催逼悔改的。",
+                                content_en: "We think hearing sermons and seeing miracles is a privilege. Jesus says it's a dangerous responsibility. If you have a Bible and hear truth weekly but show no repentance, you are in greater danger than the unreached. Don't take grace for granted; grace is meant to lead to repentance."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rest",
+                    title: "肆 · 伟大的邀请：负我的轭 (11:25-30)",
+                    title_en: "The Great Invitation: Take My Yoke",
+                    desc: "柔和谦卑的安息 | Gentle & Humble Rest",
+                    verses: [
+                        {
+                            ref: "11:25-27",
+                            text_zh: "...你将这些事向聪明通达人就藏起来，向婴孩就显出来...",
+                            text_en: "...you have hidden these things from the wise and understanding and revealed them to little children...",
+                            academic: {
+                                title: "神圣的隐藏 (Divine Hiding)",
+                                content_zh: "这是耶稣的感恩祷告。'聪明通达人'指自以为有智慧的文士和法利赛人，他们的骄傲阻挡了真理。'婴孩'指那些承认自己无知、依赖神的门徒。这颠覆了当时的价值观：认识神不需要高智商，只需要谦卑的心。",
+                                content_en: "Jesus' thanksgiving. 'Wise and understanding' refers to scribes/Pharisees whose pride blocked truth. 'Little children' are disciples who admit ignorance and depend on God. This inverts values: Knowing God requires humility, not high IQ."
+                            },
+                            devotional: {
+                                title: "回转成婴孩 (Become a Child)",
+                                content_zh: "我们在信仰上常常'想太多'，试图用理智完全参透神，结果陷入死胡同。神喜欢向单纯的人显现。当你读经读不懂、祷告没感觉时，试着放下你的分析，像婴孩一样单纯地信靠：'父啊，虽然我不懂，但我信你。'这是通往启示的捷径。",
+                                content_en: "We often 'overthink' faith, trying to intellectually master God, hitting dead ends. God loves revealing Himself to the simple. When stuck, drop the analysis and trust like a child: 'Father, I don't understand, but I trust You.' This is the shortcut to revelation."
+                            }
+                        },
+                        {
+                            ref: "11:28-30",
+                            text_zh: "凡劳苦担重担的人可以到我这里来，我就使你们得安息...因为我的轭是容易的，我的担子是轻省的。",
+                            text_en: "Come to me, all who labor and are heavy laden, and I will give you rest... For my yoke is easy, and my burden is light.",
+                            academic: {
+                                title: "拉比的轭 vs 耶稣的轭 (Rabbinic Yoke vs Jesus' Yoke)",
+                                content_zh: "当时文士把律法的解释加给百姓，称为'律法的轭'，极其沉重（徒15:10）。耶稣邀请人换一个轭。'轭'（Zygos）是给两头牛用的，意味着耶稣与我们'同负一轭'。'容易'（Chrestos）原意是'合身'、'仁慈'或'也不磨伤皮肤'。不是没有担子，而是因为有耶稣分担，且这担子是量身定做的，所以轻省。",
+                                content_en: "Scribes imposed the heavy 'Yoke of the Torah' (Acts 15:10). Jesus invites an exchange. A 'Yoke' is for two oxen, implying Jesus is yoked WITH us. 'Easy' (Chrestos) means 'well-fitting', 'kind', or 'non-chafing'. Not burden-free, but light because Jesus shares it and it's custom-fitted."
+                            },
+                            devotional: {
+                                title: "不要卸下，要交换 (Exchange, Don't Just Quit)",
+                                content_zh: "我们累了通常想'卸下一切'去度假。但耶稣给的安息不是停止工作，而是'换一个轭'。真正的安息来自与主同工。你现在的重担（焦虑、表现欲、罪疚）是因为你自己独自在扛，或者扛错了别人的轭。钻进耶稣的轭里吧，你会发现，虽然还要走路，但重量全在祂肩上。",
+                                content_en: "When tired, we want to 'quit everything'. But Jesus offers rest by 'exchanging yokes', not cessation. True rest comes from working with Him. Your current burden (anxiety, performance, guilt) is heavy because you carry it alone or carry the wrong yoke. Step into Jesus' yoke; you still walk, but He carries the weight."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            yokeState: 'alone' // 'alone' or 'yoked'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function toggleYoke() {
+            const visual = document.querySelector('.yoke-visual');
+            const btn = document.getElementById('yoke-btn');
+            
+            if (appState.yokeState === 'alone') {
+                appState.yokeState = 'yoked';
+                visual.classList.remove('state-alone');
+                visual.classList.add('state-yoked');
+                btn.innerHTML = '<i class="fas fa-user-minus mr-2"></i> 独自背负 (Carry Alone)';
+                btn.className = "w-full py-2 bg-slate-600 hover:bg-slate-700 rounded text-white font-bold transition";
+                
+                // Add particles
+                for(let i=0; i<5; i++) {
+                    let p = document.createElement('div');
+                    p.className = 'particle';
+                    p.style.width = Math.random() * 10 + 5 + 'px';
+                    p.style.height = p.style.width;
+                    p.style.left = Math.random() * 100 + '%';
+                    p.style.bottom = Math.random() * 50 + '%';
+                    p.style.animationDelay = Math.random() * 2 + 's';
+                    visual.appendChild(p);
+                }
+            } else {
+                appState.yokeState = 'alone';
+                visual.classList.remove('state-yoked');
+                visual.classList.add('state-alone');
+                btn.innerHTML = '<i class="fas fa-hands-helping mr-2"></i> 与主同负一轭 (Take His Yoke)';
+                btn.className = "w-full py-2 bg-green-700 hover:bg-green-800 rounded text-white font-bold transition";
+                
+                // Remove particles
+                document.querySelectorAll('.particle').forEach(p => p.remove());
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-green-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Invitation</span>
+                            <h2 class="text-3xl font-bold serif text-green-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-green-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-green-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Yoke Simulator -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-green-100">
+                         <h3 class="text-xl font-bold mb-1 text-center text-green-900">负轭模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Yoke Simulator</p>
+                         
+                         <div class="yoke-visual mb-4 state-alone">
+                            <div class="ox ox-me">ME</div>
+                            <div class="ox ox-jesus">JESUS</div>
+                            <div class="yoke-bar"></div>
+                            <div class="burden">Heavy</div>
+                         </div>
+                         
+                         <p class="text-center text-xs text-slate-500 mb-4 h-8 italic">
+                            ${appState.yokeState === 'alone' ? '"凡劳苦担重担的人..."<br>"Come to me, all who labor..."' : '"我的担子是轻省的"<br>"My burden is light"'}
+                         </p>
+
+                         <button id="yoke-btn" onclick="toggleYoke()" class="w-full py-2 bg-green-700 hover:bg-green-800 rounded text-white font-bold transition">
+                             <i class="fas fa-hands-helping mr-2"></i> 与主同负一轭 (Take His Yoke)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: The Unresponsive Generation Scale -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-green-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-balance-scale text-green-600 mr-2"></i> 无动于衷的世代
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">The Unresponsive Generation</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Matt 11:16-19</span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-0 border rounded-lg overflow-hidden">
+                        <!-- Flute -->
+                        <div class="p-6 bg-yellow-50 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-yellow-100 text-center">
+                            <div class="text-4xl text-yellow-600 mb-2"><i class="fas fa-music"></i></div>
+                            <h4 class="font-bold text-yellow-800">吹笛 (Flute/Wedding)</h4>
+                            <p class="text-xs text-slate-500 mt-1 mb-2">耶稣：带来恩典与喜乐</p>
+                            <div class="bg-white px-3 py-1 rounded text-xs text-slate-400 border border-slate-200">
+                                反应：不跳舞 (Did not dance)
+                            </div>
+                        </div>
+                        <!-- Dirge -->
+                        <div class="p-6 bg-slate-50 flex flex-col items-center justify-center text-center">
+                            <div class="text-4xl text-slate-600 mb-2"><i class="fas fa-skull-crossbones"></i></div>
+                            <h4 class="font-bold text-slate-800">举哀 (Dirge/Funeral)</h4>
+                            <p class="text-xs text-slate-500 mt-1 mb-2">约翰：带来悔改与审判</p>
+                            <div class="bg-white px-3 py-1 rounded text-xs text-slate-400 border border-slate-200">
+                                反应：不捶胸 (Did not mourn)
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-3 italic">结论：不是信息的问题，是心的问题 (Conclusion: It's a heart issue, not a message issue)</p>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f0fdf4]/95 backdrop-blur py-4 mb-6 border-b border-green-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-green-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-green-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-green-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-green-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-green-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-green-50 to-white p-5 border-b border-green-100">
+                        <span class="inline-block px-2 py-0.5 bg-green-100 text-green-800 text-xs font-bold rounded mb-2 font-mono border border-green-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-green-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-green-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-green-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Prophetic</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">以经解经（引用以赛亚书解释耶稣的工作）。文化比喻还原（孩童游戏、负轭的拉比背景）。地理神学（哥拉汛与所多玛的对比）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Scripture interpreting Scripture (Isaiah). Cultural metaphor reconstruction (children's games, rabbinic yoke). Geographical theology.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-green-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">理解"安息"不是闲懒，而是转换事奉的模式（换轭）。分辨"聪明人"（骄傲）与"婴孩"（谦卑）的属灵定义。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Understand 'Rest' not as idleness but changing service modes (yoke exchange). Distinguish spiritual definitions of 'Wise' vs 'Infant'.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Trust & Surrender</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">处理属灵的失望（当神不如你愿时）。在这个喧嚣的世代保持独立（不随波逐流）。通过"交托"而非"逃避"来获得安息。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Handling spiritual disappointment. Maintaining independence in a noisy generation. Finding rest through 'entrusting' rather than 'escaping'.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">当你感到重担时，检查你是否在"单干"。每天操练像婴孩一样单纯的信靠。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">When burdened, check if you are 'solo'. Practice childlike trust daily.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

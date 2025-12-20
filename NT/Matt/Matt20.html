@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew 20: Grace & Servanthood | 马太福音第二十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Vineyard Purple - Grace, Sovereignty, Wine */
+            --theme-primary: #7e22ce; 
+            /* Denarius Silver - Reward, Merit, Comparison */
+            --theme-accent: #64748b;
+            /* Servant Blue - Service, Ransom, Humility */
+            --theme-blue: #0ea5e9;
+            /* Background */
+            --theme-bg: #faf5ff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #3b0764;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #e9d5ff; /* Purple 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(126, 34, 206, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Grace Clock Animation */
+        .clock-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 4px solid #7e22ce;
+            background: white;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .clock-hand {
+            position: absolute;
+            width: 4px;
+            height: 80px;
+            background-color: #334155;
+            top: 20px;
+            left: 98px;
+            transform-origin: bottom center;
+            transition: transform 1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
+            border-radius: 2px;
+        }
+
+        .hour-marker {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 50%;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        /* Positions for clock markers */
+        .pos-6 { top: 10px; left: 95px; } /* 6am (Start) - roughly top for visual metaphor */
+        .pos-9 { top: 50%; right: 10px; transform: translateY(-50%); } /* 9am */
+        .pos-12 { bottom: 10px; left: 95px; } /* 12pm */
+        .pos-3 { top: 50%; left: 10px; transform: translateY(-50%); } /* 3pm */
+        .pos-5 { top: 30%; left: 20px; } /* 5pm (11th hour) */
+
+        .coin-reward {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: #fbbf24;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #b45309;
+            font-weight: bold;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+            z-index: 10;
+        }
+
+        .show-reward {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Inverted Pyramid */
+        .pyramid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: transform 1s ease;
+        }
+        
+        .block {
+            width: 100px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            transition: all 0.5s ease;
+        }
+        
+        .block-leader { background-color: #dc2626; width: 40px; } /* Red for worldly leader */
+        .block-officials { background-color: #ea580c; width: 80px; }
+        .block-people { background-color: #64748b; width: 140px; }
+
+        .kingdom-mode .pyramid-container {
+            transform: rotate(180deg);
+        }
+        .kingdom-mode .block-leader { background-color: #0ea5e9; } /* Blue for servant leader */
+        .kingdom-mode .block-leader span { transform: rotate(180deg); }
+        .kingdom-mode .block-officials span { transform: rotate(180deg); }
+        .kingdom-mode .block-people span { transform: rotate(180deg); }
+
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-purple-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-purple-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-wine-glass-alt mr-2 text-purple-600"></i> 马太福音 20章</span>
+                        <span class="text-xs text-purple-700 en-text font-normal ml-8">Matthew Chapter 20</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        颠倒的国度 <br><span class="text-[10px] uppercase opacity-70 en-text">Upside-Down Kingdom</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-purple-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-purple-200 mb-1">"正如人子来，不是要受人的服事，乃是要服事人"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Even as the Son of Man came not to be served but to serve."</p>
+            <p class="text-xs opacity-70">马太福音第二十章中英对照研经报告 | Grace & Ransom</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "恩典的数学与权力的倒置",
+                title_en: "The Mathematics of Grace & The Inversion of Power",
+                summary_zh: "马太福音第20章继续挑战人类的核心价值观。通过'葡萄园工人的比喻'，耶稣粉碎了我们在宗教中根深蒂固的'功德'观念，揭示了神的主权恩典——在后的将在前。随后，在这个背景下，耶稣第三次预言了自己的受难，但门徒（雅各和约翰）仍沉浸在属世的野心中求高位。耶稣以此教导了天国领袖的真正定义：不是辖制，而是舍命作赎价。",
+                summary_en: "Matthew 20 continues to challenge core human values. Through the 'Parable of the Vineyard Workers', Jesus shatters our ingrained concept of 'merit' in religion, revealing God's sovereign grace—the last will be first. Against this backdrop, Jesus predicts His passion for the third time, yet disciples (James and John) still seek worldly status. Jesus uses this to teach the true definition of Kingdom leadership: not dominating, but giving one's life as a ransom.",
+                concepts: [
+                    { title: "一钱银子", title_en: "Denarius", greek: "Dēnarion", color: "text-slate-600", desc_zh: "当时的一日工资。比喻中代表神在约中应许的基本恩典（救恩）。", desc_en: "A day's wage. Represents the basic covenanted grace (salvation) in the parable." },
+                    { title: "红眼", title_en: "Evil Eye", greek: "Ophthalmos Ponēros", color: "text-red-700", desc_zh: "指嫉妒的眼光。因为看到别人得好处而感到痛苦。", desc_en: "An envious eye. Feeling pain because of another's good fortune." },
+                    { title: "赎价", title_en: "Ransom", greek: "Lytron", color: "text-blue-600", desc_zh: "释放奴隶或战俘所付出的代价。这是马太福音中最高的高峰之一。", desc_en: "Price paid to release a slave. One of the theological peaks of Matthew." }
+                ]
+            },
+            sections: [
+                {
+                    id: "vineyard",
+                    title: "壹 · 葡萄园的工人：恩典是主权 (20:1-16)",
+                    title_en: "Workers in the Vineyard: Grace is Sovereign",
+                    desc: "功德的终结 | The End of Merit",
+                    verses: [
+                        {
+                            ref: "20:13-15",
+                            text_zh: "...朋友，我不亏负你...我要给那后来的和给你一样，这是我愿意的...因为我做好人，你就红了眼吗？",
+                            text_en: "...Friend, I am doing you no wrong... I choose to give to this last worker as I give to you... Or do you begrudge my generosity?",
+                            academic: {
+                                title: "神的主权与人的嫉妒 (Divine Sovereignty vs Human Envy)",
+                                content_zh: "这个比喻不仅是关于公平，更是关于神的主权。早来的工人代表那些拥有悠久信仰传统的犹太人（或自义的信徒），他们基于'契约'（Merit/Contract）思维，认为多劳应多得。晚来的代表外邦人或罪人，他们完全基于'恩典'（Grace）。家主的回答确立了两个原则：1. 神对他承诺的公义（没少给）；2. 神在他恩典上的自由（多给是他的权利）。'红眼'（Evil Eye）揭示了律法主义者的核心问题：无法忍受神对他人的慷慨。",
+                                content_en: "The parable is about Sovereignty, not just fairness. Early workers represent Jews (or self-righteous) operating on 'Contract/Merit', expecting more for more work. Latecomers represent Gentiles/Sinners operating on 'Grace'. The Owner establishes: 1. His Justice to the promised (paid in full); 2. His Freedom in Grace (right to give more). The 'Evil Eye' reveals the legalist's core issue: inability to tolerate God's generosity to others."
+                            },
+                            devotional: {
+                                title: "停止比较 (Stop Comparing)",
+                                content_zh: "恩典最美丽的地方在于它不公平——如果神是公平的，我们都该灭亡。当我们开始和别人比较（'我服事了这么久，为什么他刚信主就这么蒙福？'），我们就从恩典坠落到了律法中。在神的葡萄园里，没有'资历'这回事。我们要么为别人的恩典欢呼，要么就在自己的嫉妒中枯萎。神给你的不仅是工资，更是一份礼物。",
+                                content_en: "The beauty of grace is its unfairness—if God were fair, we'd all perish. When we compare ('I served longer, why is he blessed?'), we fall from grace into law. There is no 'seniority' in God's vineyard. We either rejoice in grace for others or wither in envy. God gives not just a wage, but a gift."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "passion",
+                    title: "贰 · 第三次预言受难：杯的苦涩 (20:17-19)",
+                    title_en: "Third Prediction of Passion: Bitterness of the Cup",
+                    desc: "通往荣耀的唯一道路 | The Only Way to Glory",
+                    verses: [
+                        {
+                            ref: "20:18-19",
+                            text_zh: "...人子要被交给祭司长...他们要定他死罪，又交给外邦人，将他戏弄，鞭打，钉在十字架上...",
+                            text_en: "...The Son of Man will be delivered to the chief priests... they will condemn him to death and deliver him to the Gentiles to be mocked and flogged and crucified...",
+                            academic: {
+                                title: "细节的递进 (Progression of Detail)",
+                                content_zh: "这是最详细的一次预言。耶稣明确提到了'交给外邦人'（罗马政权）、'戏弄'、'鞭打'和'钉十字架'（这是罗马的刑罚，犹太人通常是石头打死）。这表明耶稣对即将发生的恐怖有着清晰的预知（Foreknowledge）。尽管前路是羞辱和酷刑，祂却'上耶路撒冷去'（20:17），展现了弥赛亚自愿受苦的坚定决心。",
+                                content_en: "The most detailed prediction. Jesus specifies 'delivered to Gentiles' (Rome), 'mocking', 'flogging', and 'crucifixion' (Roman method, unlike Jewish stoning). This shows clear Foreknowledge. Despite the horror ahead, He was 'going up to Jerusalem', displaying the Messiah's resolute, voluntary submission to suffering."
+                            },
+                            devotional: {
+                                title: "面对苦难的定意 (Resolve in the Face of Suffering)",
+                                content_zh: "耶稣清楚知道前面等待他的是什么——戏弄、鞭打、十字架。但他没有逃避，而是“上”耶路撒冷去。我们常以为顺服神就意味着平安无事，但有时顺服意味着迎向风暴。当苦难不可避免时，你是否能像耶稣一样，因着那摆在前面的喜乐（救赎），就轻看羞辱，坚定前行？",
+                                content_en: "Jesus knew exactly what awaited Him—mocking, flogging, crucifixion. Yet He did not flee but 'went up' to Jerusalem. We often think obedience brings safety, but sometimes it means facing the storm. When suffering is inevitable, can you, like Jesus, for the joy set before you (redemption), despise the shame and move forward?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "servant",
+                    title: "叁 · 谁愿为首：权力的颠覆 (20:20-28)",
+                    title_en: "Whoever Would Be First: Inversion of Power",
+                    desc: "不仅是职位，更是生命 | Not Position, But Life",
+                    verses: [
+                        {
+                            ref: "20:22, 26-28",
+                            text_zh: "...我将要喝的杯，你们能喝吗？...你们中间谁愿为大，就必作你们的用人...正如人子来...要舍命，作多人的赎价。",
+                            text_en: "...Are you able to drink the cup that I am to drink?... whoever would be great among you must be your servant... even as the Son of Man came... to give his life as a ransom for many.",
+                            academic: {
+                                title: "赎价 (Lytron) 神学",
+                                content_zh: "这是对这章开头'恩典'主题的神学解释。为什么神可以慷慨地给后来的工人恩典？因为有人付了'赎价'。'Lytron'在古代指释放奴隶或战俘的赎金。耶稣将'为大'重新定义为'作奴仆'（Doulos）。外邦人（世人）的领袖是'操权管束'（Dominion），天国的领袖是'舍命服事'（Sacrifice）。这是十字架伦理的核心。",
+                                content_en: "The theological key to the 'Grace' in the vineyard. Why can God be generous? Because a 'Ransom' was paid. 'Lytron' was the price to free slaves. Jesus redefines 'Greatness' as being a 'Slave' (Doulos). Worldly leaders 'lord it over' (Dominion); Kingdom leaders 'give life' (Sacrifice). This is the core of Cross-Ethics."
+                            },
+                            devotional: {
+                                title: "你想喝那个杯吗？(Do You Want That Cup?)",
+                                content_zh: "雅各和约翰想要荣耀的座位，却不知道那是通过苦杯换来的。我们常常羡慕别人的属灵地位或恩赐，却不知道他们背后付出的代价（破碎、孤独、误解）。耶稣问：'我喝的杯，你能喝吗？' 真正的领袖不是那个发号施令的人，而是那个为了成全别人而愿意'死'（舍弃自我）的人。你准备好为了别人的益处而受苦了吗？",
+                                content_en: "James and John wanted the throne but didn't know it came via the Cup. We envy spiritual status but ignore the cost (brokenness, loneliness). Jesus asks: 'Can you drink my cup?' True leadership isn't giving orders, but 'dying' (self-denial) to empower others. Are you ready to suffer for others' gain?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "blind",
+                    title: "肆 · 耶利哥的瞎子：抓住机会 (20:29-34)",
+                    title_en: "Blind Men at Jericho: Seizing the Moment",
+                    desc: "怜悯的最后呼求 | Final Cry for Mercy",
+                    verses: [
+                        {
+                            ref: "20:30-31",
+                            text_zh: "...大声喊着说：'主啊，大卫的子孙，可怜我们吧！' 众人责备他们...他们却越发大声喊着...",
+                            text_en: "...cried out, 'Lord, have mercy on us, Son of David!' The crowd rebuked them... but they cried out all the more...",
+                            academic: {
+                                title: "大卫的子孙 (Son of David)",
+                                content_zh: "这是耶稣最后一次经过耶利哥去耶路撒冷。这两个瞎子使用了极具政治和神学意义的头衔'大卫的子孙'，这是对弥赛亚身份的公开认信。尽管群众（可能包括门徒）试图让他们闭嘴（正如之前拦阻小孩子），耶稣却停下了脚步。'动了慈心'（Splanchnizomai）再次成为行动的动因。这神迹是第21章凯旋进京的序曲。",
+                                content_en: "Jesus' last trip through Jericho. The blind men used the politically charged title 'Son of David', a public Messianic confession. Though crowds silenced them (like they did children), Jesus stopped. 'Moved with compassion' motivates Him. This miracle preludes the Triumphal Entry in Ch 21."
+                            },
+                            devotional: {
+                                title: "越发大声的信心 (Louder Faith)",
+                                content_zh: "当环境叫你'闭嘴'（现实的打击、众人的冷眼、内心的羞耻）时，你是放弃还是喊得更大声？这两个瞎子知道这是最后的机会。绝望加上信心，产生了一种'神圣的无赖'精神——我不顾面子，我只要耶稣。这种不顾一切的呼求总能让耶稣停下脚步。你的祷告是否够'大声'、够迫切？",
+                                content_en: "When the world says 'Shut up' (reality, rejection, shame), do you quit or scream louder? They knew this was their last chance. Desperation + Faith = 'Holy Shamelessness'. I don't care about dignity; I want Jesus. This desperate cry always stops Jesus. Is your prayer 'loud' and desperate enough?"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            clockHour: 6, // 6, 9, 12, 3, 5
+            isKingdomMode: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function setClock(hour) {
+            const hand = document.querySelector('.clock-hand');
+            const reward = document.querySelector('.coin-reward');
+            const text = document.getElementById('clock-text');
+            
+            // Map hours to degrees: 6am=0 (start), 9am=-90, 12pm=180, 3pm=90, 5pm=30 (approx visual)
+            // Let's make 6am = -90deg (left), 12pm = 0deg (top), 6pm = 90deg (right) for simplicity visually
+            // Actually let's just rotate based on standard clock:
+            // 6am = 180, 9am = 270, 12pm = 0, 3pm = 90, 5pm = 150
+            
+            let rotation = 0;
+            let label = "";
+            let wage = "1 钱银子 (1 Denarius)";
+            
+            if (hour === 6) { rotation = 180; label = "清早 (Early Morning)"; }
+            if (hour === 9) { rotation = 270; label = "巳初 (9 AM)"; }
+            if (hour === 12) { rotation = 0; label = "午正 (12 PM)"; }
+            if (hour === 3) { rotation = 90; label = "申初 (3 PM)"; }
+            if (hour === 5) { rotation = 150; label = "酉初 (5 PM - 11th Hour)"; }
+
+            hand.style.transform = `rotate(${rotation}deg)`;
+            
+            // Hide reward then show
+            reward.classList.remove('show-reward');
+            text.innerText = `${label} ... 工作中 ...`;
+            
+            setTimeout(() => {
+                reward.innerHTML = "<i class='fas fa-coins'></i>";
+                reward.classList.add('show-reward');
+                text.innerHTML = `${label} - 得到: <span class="font-bold text-yellow-600">${wage}</span>`;
+            }, 600);
+        }
+
+        function togglePyramid() {
+            appState.isKingdomMode = !appState.isKingdomMode;
+            const container = document.getElementById('pyramid-vis');
+            const btn = document.getElementById('pyramid-btn');
+            const label = document.getElementById('pyramid-label');
+            
+            if (appState.isKingdomMode) {
+                container.classList.add('kingdom-mode');
+                btn.innerHTML = '<i class="fas fa-undo mr-2"></i> 恢复属世模式 (Worldly View)';
+                btn.classList.replace('bg-purple-600', 'bg-slate-600');
+                label.innerHTML = "天国模式：领袖在下服事 (Kingdom: Leader Serves)";
+            } else {
+                container.classList.remove('kingdom-mode');
+                btn.innerHTML = '<i class="fas fa-sync-alt mr-2"></i> 翻转为天国模式 (Kingdom View)';
+                btn.classList.replace('bg-slate-600', 'bg-purple-600');
+                label.innerHTML = "属世模式：领袖在上掌权 (World: Leader Rules)";
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-purple-600">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Parable</span>
+                            <h2 class="text-3xl font-bold serif text-purple-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-purple-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-purple-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Grace Clock -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-purple-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-purple-900">恩典时钟</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Grace Clock</p>
+                         
+                         <div class="clock-container mb-4">
+                            <div class="clock-hand"></div>
+                            <div class="hour-marker pos-12">12</div>
+                            <div class="hour-marker pos-3">3</div>
+                            <div class="hour-marker pos-6">6</div>
+                            <div class="hour-marker pos-9">9</div>
+                            <div class="hour-marker pos-5 text-red-500 font-bold">11</div> <!-- The 11th hour -->
+                            <div class="coin-reward"><i class="fas fa-coins"></i></div>
+                         </div>
+                         
+                         <p id="clock-text" class="text-center text-xs text-slate-500 mb-4 h-6">点击时间查看工价 (Click hour to see wage)</p>
+
+                         <div class="flex justify-center gap-2 flex-wrap">
+                            <button onclick="setClock(6)" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 rounded text-xs">6am</button>
+                            <button onclick="setClock(9)" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 rounded text-xs">9am</button>
+                            <button onclick="setClock(12)" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 rounded text-xs">12pm</button>
+                            <button onclick="setClock(3)" class="px-2 py-1 bg-slate-200 hover:bg-slate-300 rounded text-xs">3pm</button>
+                            <button onclick="setClock(5)" class="px-2 py-1 bg-red-100 text-red-600 hover:bg-red-200 rounded text-xs font-bold">5pm</button>
+                         </div>
+                         <p class="text-[10px] text-center mt-2 text-slate-400 italic">"我在我自己的东西上作主..."</p>
+                    </div>
+                </div>
+
+                <!-- Feature: The Inverted Pyramid -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-purple-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-layer-group text-purple-600 mr-2"></i> 权力的结构
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">Structure of Power</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Matt 20:25-28</span>
+                    </div>
+                    
+                    <div class="flex flex-col items-center">
+                        <div id="pyramid-vis" class="pyramid-container mb-6 p-4">
+                            <div class="block block-leader"><span>Leader</span></div>
+                            <div class="block block-officials"><span>Officials</span></div>
+                            <div class="block block-people"><span>People</span></div>
+                        </div>
+                        
+                        <p id="pyramid-label" class="text-sm font-bold text-purple-800 mb-4">属世模式：领袖在上掌权 (World: Leader Rules)</p>
+
+                        <button id="pyramid-btn" onclick="togglePyramid()" class="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition shadow-lg text-sm font-bold">
+                            <i class="fas fa-sync-alt mr-2"></i> 翻转为天国模式 (Kingdom View)
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#faf5ff]/95 backdrop-blur py-4 mb-6 border-b border-purple-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-purple-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-purple-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-purple-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-purple-600">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-purple-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-purple-50 to-white p-5 border-b border-purple-100">
+                        <span class="inline-block px-2 py-0.5 bg-purple-100 text-purple-800 text-xs font-bold rounded mb-2 font-mono border border-purple-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-purple-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-purple-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-purple-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Theological</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-purple-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">文化比喻解析（葡萄园工价）。词源研究（赎价Lytron的法律含义）。神学主题关联（十字架与权柄的关系）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Cultural parable analysis (Denarius). Etymology (Lytron legal meaning). Thematic correlation (Cross & Authority).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-purple-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">区分"契约式宗教"与"恩典式关系"。准确理解耶稣受难的"替代性"（代赎）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Distinguish 'Contract Religion' vs 'Grace Relationship'. Understand the 'Substitutionary' nature of the Passion.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Heart & Service</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">处理嫉妒（红眼病）和比较。重新定义成功（服事者为大）。信心的迫切性（瞎子的呼求）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Dealing with envy and comparison. Redefining success (Servant leader). Urgency of faith (Blind men's cry).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">当你觉得不公平，赞美神的主权。当你想要高位时，去洗脚。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">When feeling unfair, praise Sovereignty. When wanting high position, wash feet.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

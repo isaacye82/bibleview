@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew 27: The Crucifixion | 马太福音第二十七章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Crimson Blood - Sacrifice, Atonement */
+            --theme-primary: #9f1239; 
+            /* Darkness Grey - The sky turning black, Death */
+            --theme-accent: #1f2937;
+            /* Veil Purple - Royalty, Temple Curtain */
+            --theme-veil: #581c87;
+            /* Background */
+            --theme-bg: #fff1f2;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #4a044e;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #fecdd3; /* Rose 200 */
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(159, 18, 57, 0.15);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 3px solid #64748b; /* Slate 500 */
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-left: 3px solid #d97706; /* Amber 600 */
+            color: #78350f;
+        }
+
+        /* Torn Veil Animation */
+        .veil-container {
+            position: relative;
+            height: 240px;
+            background-color: #fce7f3;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid #581c87; /* Temple pillars */
+        }
+
+        /* The Holy of Holies Light */
+        .holy-light {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #fef08a 0%, #fbbf24 50%, #d97706 100%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ark {
+            font-size: 3rem;
+            color: #78350f;
+            opacity: 0.8;
+            filter: drop-shadow(0 0 10px gold);
+        }
+
+        /* The Curtain */
+        .curtain {
+            position: absolute;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background-color: #581c87; /* Purple */
+            background-image: repeating-linear-gradient(45deg, #4c1d95 0, #4c1d95 10px, #581c87 10px, #581c87 20px);
+            z-index: 10;
+            transition: transform 2s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .curtain-left { left: 0; border-right: 2px solid #3b0764; }
+        .curtain-right { right: 0; border-left: 2px solid #3b0764; }
+
+        .curtain-pattern {
+            color: rgba(255,255,255,0.1);
+            font-size: 2rem;
+        }
+
+        /* Animation States */
+        .veil-torn .curtain-left { transform: rotate(-10deg) translateX(-90%); }
+        .veil-torn .curtain-right { transform: rotate(10deg) translateX(90%); }
+        .veil-torn .holy-light { opacity: 1; }
+
+        /* Barabbas Swap Visual */
+        .swap-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .person-card {
+            width: 80px;
+            height: 100px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transition: all 0.8s ease;
+            position: relative;
+            z-index: 10;
+        }
+
+        .card-jesus { background-color: white; border: 2px solid #9f1239; color: #9f1239; }
+        .card-barabbas { background-color: #374151; color: white; border: 2px solid #1f2937; }
+        
+        .chains { position: absolute; font-size: 1.5rem; color: #6b7280; transition: all 0.5s; opacity: 1;}
+        .cross-icon { position: absolute; font-size: 1.5rem; color: #9f1239; opacity: 0; transition: all 0.5s; }
+
+        /* Swap Animation */
+        .swapped .card-jesus { transform: translateX(100px); }
+        .swapped .card-barabbas { transform: translateX(-100px); }
+        .swapped .card-jesus .cross-icon { opacity: 1; } /* Jesus takes cross */
+        .swapped .card-barabbas .chains { opacity: 0; transform: scale(1.5); } /* Barabbas free */
+        
+        /* Scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-rose-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-24 sm:h-20 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-rose-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-cross mr-2 text-rose-600"></i> 马太福音 27章</span>
+                        <span class="text-xs text-rose-700 en-text font-normal ml-8">Matthew Chapter 27</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center overflow-x-auto no-scrollbar">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center shrink-0">
+                        受难与死亡 <br><span class="text-[10px] uppercase opacity-70 en-text">Passion & Death</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-rose-700 text-center shrink-0">
+                        方法论总结 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-rose-200 mb-1">"这真是神的儿子了！"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Truly this was the Son of God!"</p>
+            <p class="text-xs opacity-70">马太福音第二十七章中英对照研经报告 | Atonement & Access</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "至暗时刻与救赎的黎明",
+                title_en: "The Darkest Hour & The Dawn of Redemption",
+                summary_zh: "马太福音第27章记录了历史上最黑暗也是最荣耀的一天。从犹大的绝望自杀，到彼拉多不公的审判；从群众释放巴拉巴的呼声，到各各他山上的嘲笑。然而，正是在这极度的黑暗中——当耶稣呼喊'我的神，为什么离弃我'并断气时——圣殿的幔子裂开了。这一章展示了君王的受苦、死亡，以及这一切背后的神学意义：为了开启通往至圣所的道路。",
+                summary_en: "Matthew 27 records history's darkest yet most glorious day. From Judas' despairing suicide to Pilate's unjust trial; from the crowd choosing Barabbas to the mockery at Golgotha. Yet, precisely in this utter darkness—when Jesus cried 'My God, why have you forsaken me' and yielded His spirit—the temple curtain tore. This chapter displays the King's suffering, death, and the theological significance behind it: opening the way to the Holy of Holies.",
+                concepts: [
+                    { title: "血", title_en: "Blood", greek: "Haima", color: "text-rose-700", desc_zh: "本章多次提到血（无辜人的血、血田、众人的誓言）。象征生命的代价和赎罪。", desc_en: "Mentioned often (innocent blood, field of blood). Symbolizes life cost and atonement." },
+                    { title: "巴拉巴", title_en: "Barabbas", greek: "Barabbas", color: "text-slate-700", desc_zh: "名字意为'父亲的儿子'。一个强盗被释放，真正的'父的爱子'被钉死。", desc_en: "Means 'Son of the Father'. A robber goes free; the true 'Son of the Father' is crucified." },
+                    { title: "幔子", title_en: "Curtain", greek: "Katapetasma", color: "text-purple-700", desc_zh: "隔绝至圣所的厚帘。它的裂开象征神人之间的阻隔因基督的死被消除。", desc_en: "Barrier to Holy of Holies. Its tearing symbolizes the removal of separation between God and man." }
+                ]
+            },
+            sections: [
+                {
+                    id: "judas",
+                    title: "壹 · 犹大的结局：悔恨与死亡 (27:1-10)",
+                    title_en: "The End of Judas: Remorse & Death",
+                    desc: "无辜之血的重担 | Burden of Innocent Blood",
+                    verses: [
+                        {
+                            ref: "27:3-5",
+                            text_zh: "...犹大看见耶稣已经定了罪，就后悔...说：'我卖了无辜之人的血是有罪了。'...犹大就把银钱丢在殿里，出去吊死了。",
+                            text_en: "...Judas... changed his mind and brought back the thirty pieces of silver... saying, 'I have sinned by betraying innocent blood.'... And throwing down the pieces of silver... he went and hanged himself.",
+                            academic: {
+                                title: "后悔 (Metamelomai) vs 悔改 (Metanoeo)",
+                                content_zh: "犹大经历了'后悔'（Metamelomai，指情感上的懊恼），但他没有'悔改'（Metanoeo，指心思意念的转向神）。他转向了宗教领袖（却被冷漠拒绝），而不是转向神求赦免。'血田'的购买应验了撒迦利亚书11:12-13和耶利米书的预言（陶匠的田）。这显示即便在最黑暗的背叛中，神的预旨仍在运行。",
+                                content_en: "Judas felt 'remorse' (Metamelomai - emotional regret) but not 'repentance' (Metanoeo - turning to God). He turned to priests (who rejected him) instead of God. The 'Field of Blood' fulfills Zech 11:12-13/Jeremiah (Potter's Field). It shows that even in betrayal, God's providence and prophecy are active."
+                            },
+                            devotional: {
+                                title: "处理罪疚感 (Handling Guilt)",
+                                content_zh: "罪疚感可以导致两种结果：彼得的眼泪（通向恢复）或犹大的绳索（通向死亡）。当你知道自己搞砸了，你会跑向哪里？跑向'宗教'（把钱丢在殿里）无法解决良心的谴责，只有跑向'恩典'（耶稣的十字架）才能。魔鬼让你犯罪后，会试图让你相信你不可饶恕；但十字架说：赦免是可能的。",
+                                content_en: "Guilt leads to two ends: Peter's tears (restoration) or Judas' rope (death). When you mess up, where do you run? Running to 'religion' (temple) can't fix conscience; only 'grace' (Cross) can. Satan tempts you to sin, then convinces you you're unforgivable. The Cross says: Forgiveness is possible."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "pilate",
+                    title: "贰 · 审判与交换：巴拉巴与耶稣 (27:11-26)",
+                    title_en: "Trial & Exchange: Barabbas & Jesus",
+                    desc: "众人的选择 | The Crowd's Choice",
+                    verses: [
+                        {
+                            ref: "27:21-22",
+                            text_zh: "...你们要我释放哪一个给你们？他们说：'巴拉巴。'...彼拉多说：'这样，那称为基督的耶稣我怎么办他呢？' 他们都说：'把他钉十字架！'",
+                            text_en: "...'Which of the two do you want me to release for you?' And they said, 'Barabbas.'... 'Then what shall I do with Jesus who is called Christ?' They all said, 'Let him be crucified!'",
+                            academic: {
+                                title: "替代性救赎的预演 (Preview of Substitution)",
+                                content_zh: "这是福音书中最具讽刺意味的场景。'巴拉巴'（Bar-Abbas）意为'父亲的儿子'。群众选择释放了一个暴力的、属世的'父亲的儿子'，却钉死了真正的、慈爱的'父的爱子'。这也是'代赎'（Substitution）的生动画面：有罪的（巴拉巴）因着无罪的（耶稣）受死而得自由。彼拉多洗手试图推卸责任，但正如信经所言，他在历史上永远对此负责。",
+                                content_en: "Irony peaks here. 'Barabbas' means 'Son of the Father'. The crowd chose a violent, worldly 'son' and crucified the true, loving 'Son'. This is a vivid picture of 'Substitution': the guilty (Barabbas) goes free because the Innocent (Jesus) dies. Pilate washing hands couldn't wash away responsibility; history holds him accountable."
+                            },
+                            devotional: {
+                                title: "我就是巴拉巴 (I am Barabbas)",
+                                content_zh: "我们读这段经文时，很容易指责群众的愚昧。但从神学上讲，我们每个人都是巴拉巴——本该被定罪、被囚禁、甚至被处死。但因为耶稣代替我们站上了审判台，代替我们背起了十字架，我们才得以'无罪释放'。当你看到巴拉巴解开锁链走出监牢时，那就是你得救的写照。",
+                                content_en: "We blame the crowd, but theologically, we ARE Barabbas—deserving condemnation and death. Because Jesus took our place on the judgment seat and the cross, we walk free. Seeing Barabbas unchained is a picture of your salvation."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "cross",
+                    title: "叁 · 十字架上的呼喊：被离弃的神 (27:45-50)",
+                    title_en: "Cry from the Cross: The Forsaken God",
+                    desc: "至暗时刻与代赎 | Darkness & Atonement",
+                    verses: [
+                        {
+                            ref: "27:45-46",
+                            text_zh: "从午正到申初，遍地都黑暗了...耶稣大声喊着说：'我的神！我的神！为什么离弃我？'",
+                            text_en: "Now from the sixth hour there was darkness over all the land until the ninth hour... Jesus cried out... 'My God, my God, why have you forsaken me?'",
+                            academic: {
+                                title: "以利，以利 (Eli, Eli) - 诗篇22篇的应验",
+                                content_zh: "正午的黑暗象征着神的审判临到了这位替罪者身上（像埃及的黑暗之灾）。耶稣引用的诗篇22:1不是绝望的哀鸣，而是表达了祂作为背负世人罪孽的羔羊，实际上经历了与父神隔绝的属灵死亡。这是三位一体内部最痛苦的撕裂时刻，是为了让我们永远不被神离弃。",
+                                content_en: "Noon darkness symbolizes Divine Judgment on the Sin-Bearer (like Egypt's plague). Jesus quoting Psalm 22:1 isn't despair, but expressing the reality of spiritual death (separation from Father) as He bore sin. The most painful rupture in the Trinity, endured so we would never be forsaken."
+                            },
+                            devotional: {
+                                title: "他被离弃，使我不被离弃 (Forsaken So I Won't Be)",
+                                content_zh: "这是耶稣最痛苦的时刻，却是我们最大的安慰。因为他经历了彻底的孤单和被神掩面不看，所以我们永远拥有了'我总不撇下你'的应许。当你在黑暗中感到孤独、甚至觉得神离弃了你时，请看向十字架——他已经为你走过了那段最黑的路，只为了让你此刻能行在光中。",
+                                content_en: "His most painful moment is our greatest comfort. Because He experienced total isolation and God's face hidden, we possess the promise 'I will never leave you'. When you feel alone in darkness, look to the Cross—He has walked that darkest path for you, so that you may now walk in the light."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "veil",
+                    title: "肆 · 幔子裂开与复活的初熟 (27:51-56)",
+                    title_en: "Torn Veil & Firstfruits",
+                    desc: "通路已开 | The Way is Open",
+                    verses: [
+                        {
+                            ref: "27:51, 54",
+                            text_zh: "忽然，殿里的幔子从上到下裂为两半，地也震动，磐石也崩裂...百夫长...说：'这真是神的儿子了！'",
+                            text_en: "And behold, the curtain of the temple was torn in two, from top to bottom. And the earth shook, and the rocks were split... the centurion... said, 'Truly this was the Son of God!'",
+                            academic: {
+                                title: "从上到下 (Top to Bottom)",
+                                content_zh: "幔子（厚约10厘米）将至圣所（神的同在）与人隔绝。'从上到下'裂开表明这是神的作为，而非人为。这意味着：1. 旧约献祭体系的终结；2. 通往神面前的道路已通过基督的身体（希伯来书10:20）被打开。伴随的地震和圣徒复活，预示了耶稣死亡的宇宙性影响——祂战胜了死亡，是复活初熟的果子。",
+                                content_en: "The Veil (4 inches thick) separated God from man. 'Top to bottom' implies Divine action. It signifies: 1. End of OT sacrifices; 2. Access to God is open through Christ's body (Heb 10:20). Earthquakes and raised saints signal the cosmic impact of His death—conquering death as the firstfruits."
+                            },
+                            devotional: {
+                                title: "以此坦然无惧 (Bold Access)",
+                                content_zh: "幔子已经裂开了！这意味着我们在祷告时不再需要大祭司作为中介，也不再因为罪而恐惧战兢。我们可以'坦然无惧'地来到施恩宝座前。不要再在那个已经裂开的幔子外面徘徊，不要再试图缝补那个幔子（靠行为称义）。因着耶稣的血，进去吧，在那里有完全的接纳。",
+                                content_en: "The Veil is torn! No more intermediaries, no more fear. We have 'bold access' to the Throne. Don't linger outside a torn veil, and don't try to sew it back up (works-righteousness). By His blood, enter in. There is full acceptance."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all',
+            veilStatus: 'closed', // closed, torn
+            swapStatus: 'judged' // judged, swapped
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        // --- Interactive Functions ---
+        function tearVeil() {
+            const container = document.getElementById('veil-vis');
+            const btn = document.getElementById('veil-btn');
+            const status = document.getElementById('veil-status');
+            
+            if (appState.veilStatus === 'closed') {
+                container.classList.add('veil-torn');
+                appState.veilStatus = 'torn';
+                status.innerHTML = "<span class='text-purple-800 font-bold'>幔子裂开了！道路已开！(The Veil is Torn! Access Open!)</span>";
+                btn.innerText = "重置 (Reset)";
+                btn.classList.replace('bg-purple-700', 'bg-slate-600');
+            } else {
+                container.classList.remove('veil-torn');
+                appState.veilStatus = 'closed';
+                status.innerText = "神人隔绝 (Separation)";
+                btn.innerText = "观看神迹 (Witness Miracle)";
+                btn.classList.replace('bg-slate-600', 'bg-purple-700');
+            }
+        }
+
+        function swapPrisoners() {
+            const container = document.getElementById('swap-vis');
+            const btn = document.getElementById('swap-btn');
+            
+            if (appState.swapStatus === 'judged') {
+                container.classList.add('swapped');
+                appState.swapStatus = 'swapped';
+                document.getElementById('barabbas-status').innerText = "释放 (Released)";
+                document.getElementById('barabbas-status').className = "text-xs font-bold text-green-600 mt-2";
+                document.getElementById('jesus-status').innerText = "定罪 (Condemned)";
+                document.getElementById('jesus-status').className = "text-xs font-bold text-rose-700 mt-2";
+                btn.innerText = "重置 (Reset)";
+            } else {
+                container.classList.remove('swapped');
+                appState.swapStatus = 'judged';
+                document.getElementById('barabbas-status').innerText = "有罪 (Guilty)";
+                document.getElementById('barabbas-status').className = "text-xs text-slate-500 mt-2";
+                document.getElementById('jesus-status').innerText = "无罪 (Innocent)";
+                document.getElementById('jesus-status').className = "text-xs text-slate-500 mt-2";
+                btn.innerText = "执行交换 (Execute Exchange)";
+            }
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-rose-800">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Crucifixion</span>
+                            <h2 class="text-3xl font-bold serif text-rose-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-rose-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-rose-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Torn Veil -->
+                    <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-lg flex flex-col border border-purple-200">
+                         <h3 class="text-xl font-bold mb-1 text-center text-purple-900">幔子裂开模拟器</h3>
+                         <p class="text-xs text-slate-400 mb-4 text-center en-text uppercase tracking-widest">The Torn Veil</p>
+                         
+                         <div id="veil-vis" class="veil-container mb-4">
+                            <div class="holy-light"><i class="fas fa-box-open ark"></i></div>
+                            <div class="curtain curtain-left"><i class="fas fa-cross-pattern curtain-pattern"></i></div>
+                            <div class="curtain curtain-right"><i class="fas fa-cross-pattern curtain-pattern"></i></div>
+                         </div>
+                         
+                         <p id="veil-status" class="text-center text-sm text-slate-500 mb-4 h-6">神人隔绝 (Separation)</p>
+
+                         <button id="veil-btn" onclick="tearVeil()" class="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white rounded font-bold transition shadow-md">
+                             <i class="fas fa-bolt mr-2"></i> 观看神迹 (Witness Miracle)
+                         </button>
+                    </div>
+                </div>
+
+                <!-- Feature: The Great Exchange -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-rose-100">
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-slate-700">
+                            <i class="fas fa-exchange-alt text-rose-600 mr-2"></i> 伟大的交换
+                            <span class="text-sm font-normal text-slate-400 ml-2 en-text">The Great Exchange: Barabbas & Jesus</span>
+                        </h3>
+                        <span class="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">Matt 27:26</span>
+                    </div>
+                    
+                    <div id="swap-vis" class="swap-container">
+                        <div class="text-center">
+                            <div class="person-card card-barabbas">
+                                <div>Barabbas</div>
+                                <i class="fas fa-link chains"></i>
+                            </div>
+                            <p id="barabbas-status" class="text-xs text-slate-500 mt-2">有罪 (Guilty)</p>
+                        </div>
+                        
+                        <div class="text-2xl text-slate-400"><i class="fas fa-arrow-right"></i></div>
+                        
+                        <div class="text-center">
+                            <div class="person-card card-jesus">
+                                <div>JESUS</div>
+                                <i class="fas fa-cross cross-icon"></i>
+                            </div>
+                            <p id="jesus-status" class="text-xs text-slate-500 mt-2">无罪 (Innocent)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 flex justify-center">
+                        <button id="swap-btn" onclick="swapPrisoners()" class="px-6 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded text-sm transition">
+                            执行交换 (Execute Exchange)
+                        </button>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-3 italic">
+                        "无罪的代替有罪的受刑，有罪的因无罪的得释放。" <br> (The innocent punished for the guilty; the guilty freed by the innocent.)
+                    </p>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Filter Controls
+            const filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#fff1f2]/95 backdrop-blur py-4 mb-6 border-b border-rose-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-rose-900 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse by Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-rose-200">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-rose-800 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">经文含义 Exegesis</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-amber-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修应用 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-rose-800">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-rose-800 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Safety checks
+            const academicTitle = verse.academic ? verse.academic.title : "Title Missing";
+            const academicContentZh = verse.academic ? verse.academic.content_zh : "Content missing";
+            const academicContentEn = verse.academic ? verse.academic.content_en : "Content missing";
+            
+            const devotionalTitle = verse.devotional ? verse.devotional.title : "Title Missing";
+            const devotionalContentZh = verse.devotional ? verse.devotional.content_zh : "Content missing";
+            const devotionalContentEn = verse.devotional ? verse.devotional.content_en : "Content missing";
+
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Verse Text -->
+                    <div class="bg-gradient-to-r from-rose-50 to-white p-5 border-b border-rose-100">
+                        <span class="inline-block px-2 py-0.5 bg-rose-100 text-rose-800 text-xs font-bold rounded mb-2 font-mono border border-rose-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-rose-900 transition-colors mb-2">"${verse.text_zh}"</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-rose-200 pl-3">"${verse.text_en}"</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-rose-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-slate-500">
+                                <i class="fas fa-university mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Exegesis</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${academicTitle}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${academicContentZh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${academicContentEn}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-heart mr-2"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-800 mb-2">${devotionalTitle}</h5>
+                            <p class="text-sm text-amber-900/80 leading-relaxed text-justify mb-2">${devotionalContentZh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text border-t border-amber-200 pt-2 mt-2">${devotionalContentEn}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威/经文性解经 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Symbolic</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-rose-800 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">词义分析（后悔vs悔改）。预言应验（血田）。神学象征（幔子裂开、正午黑暗）。代赎类比（巴拉巴）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Word study (Regret vs Repent). Prophecy fulfillment (Field of Blood). Theological symbolism (Veil, Darkness). Substitution analogy (Barabbas).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-200 pt-3">
+                                    <div class="flex items-center font-bold text-rose-800 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">在历史事件中看到神学必然性。理解十字架是神愤怒与慈爱的交汇点。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">See theological necessity in history. Understand the Cross as intersection of Wrath and Love.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-amber-500 hover:shadow-xl transition hover:-translate-y-1">
+                            <div class="text-amber-500 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-amber-800 mb-2">灵修/应用性解经 (Devotional)</h3>
+                            <p class="text-xs text-amber-600/70 mb-6 uppercase tracking-wider">Access & Identity</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 原则 Principles</div>
+                                    <div class="mb-1">个人代入（我就是巴拉巴）。处理罪疚（跑向恩典）。坦然无惧的应用（进入至圣所）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Personal identification (I am Barabbas). Handling guilt (Run to Grace). Applying boldness (Enter Holy of Holies).</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-amber-100 pt-3">
+                                    <div class="flex items-center font-bold text-amber-600 mb-1"><i class="fas fa-check-circle mr-2"></i> 如何运用 How to Apply</div>
+                                    <div class="mb-1">不要停留在后悔中，要进入悔改。利用幔子裂开的特权，每天来到神面前。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Don't stop at regret; move to repentance. Use the privilege of the torn veil to approach God daily.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acts 28: The Unhindered Gospel | 使徒行传28章：福音无阻</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            --theme-primary: #991b1b; /* Red 800 - Roman Empire */
+            --theme-accent: #0f766e;  /* Teal 700 - Malta/Sea */
+            --theme-gold: #b45309;    /* Amber 700 - Gospel/Light */
+            --theme-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(153, 27, 27, 0.1);
+            border-left-color: var(--theme-primary);
+        }
+
+        .academic-box {
+            background-color: #f1f5f9;
+            border-left: 3px solid #64748b;
+            color: #334155;
+        }
+        
+        .devotional-box {
+            background-color: #f0fdfa;
+            border-left: 3px solid #0d9488;
+            color: #0f766e;
+        }
+
+        /* Animation: Floating Chains */
+        .unhindered-anim {
+            animation: float-unbound 4s infinite ease-in-out;
+        }
+        @keyframes float-unbound {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-10px) rotate(5deg); opacity: 1; }
+        }
+
+        .tag-academic { @apply px-2 py-0.5 bg-slate-200 text-slate-700 text-[10px] font-bold rounded uppercase tracking-wider; }
+        .tag-devotional { @apply px-2 py-0.5 bg-teal-100 text-teal-700 text-[10px] font-bold rounded uppercase tracking-wider; }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-50 border-b border-red-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-red-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-landmark mr-2 text-red-700"></i> 使徒行传 28章</span>
+                        <span class="text-xs text-red-600 en-text font-normal ml-9">Acts of the Apostles Chapter 28</span>
+                    </span>
+                </div>
+                <div class="flex space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-sm text-center">
+                        全景概览 <br><span class="text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800 text-center">
+                        逐节研读 <br><span class="text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-sm text-slate-500 hover:text-red-800 text-center">
+                        方法论 <br><span class="text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Content will be injected by JavaScript -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-red-200 mb-1">"放胆传讲神国的道... 并没有人禁止。"</p>
+            <p class="text-sm italic text-slate-500 mb-2 en-text">"Proclaiming the kingdom of God... with all boldness and without hindrance."</p>
+            <p class="text-xs opacity-70">使徒行传第28章中英对照研经报告 | Final Chapter Report</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "使命的凯旋：从孤岛到罗马",
+                title_en: "Triumph of Mission: From Island to Rome",
+                summary_zh: "使徒行传第28章是路加两部曲的宏伟结语。本章记录了保罗在马耳他岛（米利大）奇迹般地躲过蛇毒并医治众人，随后顺利抵达罗马。在罗马，保罗虽然身处软禁，却继续与犹太领袖辩论，并最终宣告拯救已转回外邦人。全书以保罗在‘自己所租的房子里’自由宣教作结，象征着没有任何权势能阻挡福音的传播。",
+                summary_en: "Acts 28 is the grand conclusion to Luke's two-volume work. It records Paul's miraculous survival of a viper bite on Malta (Melita) and his subsequent healing of the islanders before reaching Rome. In Rome, though under house arrest, Paul engages with Jewish leaders, ultimately declaring that salvation is sent to the Gentiles. The book ends with Paul preaching freely in his 'rented house', symbolizing the unhindered nature of the Gospel.",
+                concepts: [
+                    { title: "人文/友爱", title_en: "Humanity/Kindness", greek: "Philanthrōpia", color: "text-teal-700", desc_zh: "形容马耳他岛土人对保罗等人的慷慨接待。这也是神属性的体现。", desc_en: "Describes the kindness of the Malta islanders. Reflects a divine attribute." },
+                    { title: "寓所/客店", title_en: "Lodging/Guest room", greek: "Xenia", color: "text-red-700", desc_zh: "指保罗在罗马租用的私人住房。这成为福音在帝都的第一个据点。", desc_en: "Paul's rented accommodation in Rome, serving as the first Gospel outpost in the capital." },
+                    { title: "无阻", title_en: "Without Hindrance", greek: "Akōlytōs", color: "text-amber-700", desc_zh: "全书最后一个词。宣告了神道的本质：它是无法被囚禁和阻挡的。", desc_en: "The very last word of Acts. Proclaims the nature of the Word: it cannot be bound." }
+                ]
+            },
+            sections: [
+                {
+                    id: "malta",
+                    title: "壹 · 马耳他的火与毒蛇 (28:1-6)",
+                    title_en: "Fire and Viper at Malta",
+                    desc: "意外中的主权保护 | Sovereign Protection in Accidents",
+                    verses: [
+                        {
+                            ref: "28:1-6",
+                            text_zh: "土人...生了火接待我们... 保罗拾起一捆柴放在火上，有一条毒蛇出来... 咬住他的手。...保罗竟不觉得受伤。众人...转念说：‘他是个神。’",
+                            text_en: "The native people... kindled a fire and welcomed us... Paul had gathered a bundle of sticks and put them on the fire, a viper came out... and fastened on his hand. ...he suffered no harm. They... said that he was a god.",
+                            academic: {
+                                title: "历史背景：土人的善意与迷信",
+                                content_zh: "‘土人’（Barbaroi）指不讲希腊语的马耳他人。路加捕捉了古代一种典型的‘正义女神’（Dike）观：人们认为保罗虽逃脱海难却被蛇咬，必是天理不容。保罗‘拾柴’展现了其卑微的仆人姿态。这种超自然的免疫现象不仅应验了路加福音10:19的应许，也是路加用来对比‘人心的变幻’与‘神的信实’的重要叙事手段。",
+                                content_en: "'Barbaroi' refers to non-Greek speakers on Malta. Luke captures the ancient concept of 'Justice' (Dike): the crowd assumed Paul was a murderer pursued by fate. Paul's wood-gathering displays his servant heart. His supernatural immunity fulfills Luke 10:19 and serves to contrast human fickleness ('he is a god') with divine consistency."
+                            },
+                            devotional: {
+                                title: "火中的恩典与琐碎的忠心",
+                                content_zh: "保罗身为伟大的使徒，并没有在火边坐享其成，而是亲自‘拾柴’。很多时候，我们期待在神迹中遇见神，神却在琐碎的家务中保守我们。毒蛇咬住他的手，他‘轻轻抖在火里’。面对环境中的突发‘毒害’（攻击、意外），如果你知道自己在神的旨意中，你可以平静地‘抖掉’它，继续你的服事。你的平安比神迹更能见证神。",
+                                content_en: "Paul, the great apostle, was gathering wood, not just sitting by the fire. We often expect God in the spectacular, but He protects us in the mundane. When the viper bit, he simply 'shook it off into the fire'. When life strikes with 'venom' (accidents, attacks), if you are in God's will, you can calmly shake it off. Your peace is a greater witness than the miracle itself."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "healing-malta",
+                    title: "贰 · 医治与启程 (28:7-15)",
+                    title_en: "Healing & Departure",
+                    desc: "奉差遣的安慰 | Comfort of the Sent Ones",
+                    verses: [
+                        {
+                            ref: "28:8-9",
+                            text_zh: "部多留的父亲患热病和痢疾躺着。保罗进去为他祷告，按手在他身上，医好了他。从此，岛上其余的病人也来，也都医好了。",
+                            text_en: "The father of Publius lay sick with fever and dysentery. Paul visited him and prayed, and putting his hands on him, healed him. And when this had happened, the rest of the people on the island who had diseases also came and were cured.",
+                            academic: {
+                                title: "经文含义：路加的医学观察",
+                                content_zh: "路加作为医生，使用了非常专业的医学术语：‘热病’（Pyretois）和‘痢疾’（Dysenterio）。他在叙事中区分了保罗的‘医治’（Iaomai，通常指神迹性医治，8节）与随后可能包含医疗手段的‘治好’（Therapeuō，9节）。这标志着福音对马耳他的全方位降临，神借着自然的善待（土人的接待）回报以超自然的祝福。",
+                                content_en: "Dr. Luke uses precise medical terms: 'fever' (Pyretois) and 'dysentery' (Dysenterio). The text distinguishes between Paul's 'healing' (Iaomai - miraculous, v.8) and the subsequent 'curing' (Therapeuō - possibly involving Luke's medical skill, v.9). This shows the Gospel touching Malta holistically; God rewards natural hospitality with supernatural blessing."
+                            },
+                            devotional: {
+                                title: "做福音的债主",
+                                content_zh: "保罗等人在岛上是‘受惠者’（受接待），但通过祷告和医治，他们成为了‘施惠者’。基督徒的人生应当是：无论走到哪里，都要留下祝福。当你身处困境或‘意外的停留’中，不要只顾着自己的不便，要看看周围谁有‘热病’，谁有‘痛苦’。神让你停在那里，或许正是为了那个家庭的拯救。",
+                                content_en: "Paul was a recipient of kindness, but through prayer, he became a source of blessing. A Christian's life should leave a trail of blessing wherever they go. In your 'unplanned delays', don't just focus on your inconvenience; look for who is 'sick' or 'hurting' around you. God might have paused your journey for that specific household's salvation."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rome-arrival",
+                    title: "叁 · 抵达罗马：弟兄的鼓励 (28:16-22)",
+                    title_en: "Arrival in Rome: Encouragement of Brothers",
+                    desc: "终点的看见 | Sight of the Destination",
+                    verses: [
+                        {
+                            ref: "28:15-16",
+                            text_zh: "那里的弟兄们...跑来迎接我们。保罗见了他们，就放胆，感谢神。进了罗马城，保罗蒙准和一个看守他的兵另住在一处。",
+                            text_en: "The brothers there... came as far as the Forum of Appius... On seeing them, Paul thanked God and took courage. When we came into Rome, Paul was allowed to stay by himself, with the soldier who guarded him.",
+                            academic: {
+                                title: "属灵意义：使命的达成与‘自由’的囚徒",
+                                content_zh: "抵达罗马是使徒行传1:8的大结局。保罗虽然是囚犯，但‘蒙准另住’（Custodia Libera）是一种相对自由的软禁形式，允许他接待客人。弟兄们的远道迎接（约60公里外）对保罗是极大的心理支持。‘放胆’（Euthymeō）再次出现，表明保罗知道：虽然他带着链子，但福音已经攻入了帝国的首都。",
+                                content_en: "Arrival in Rome is the climax of Acts 1:8. Paul's 'staying by himself' (Custodia Libera) was a lenient house arrest allowing for ministry. The brothers traveling 40 miles to meet him provided vital support. Paul's 'courage' (v.15) stems from the realization that despite his chains, the Gospel had successfully breached the Imperial capital."
+                            },
+                            devotional: {
+                                title: "同路人的温暖",
+                                content_zh: "即便是伟大的保罗，看到弟兄们的迎接也会‘放胆’、‘感谢神’。没有人是属灵的孤岛。在漫长而艰辛的事奉道路上，我们需要同路人的握手和眼神。当你感到疲惫时，不要拒绝团契的安慰。同时，你也应当成为那个走远路去迎接‘疲惫使徒’的人。互为鼓励，是教会最美的风景。",
+                                content_en: "Even the great Paul took courage from seeing his brothers. No one is a spiritual island. On the long, hard road of service, we need the handshake and presence of fellow travelers. When weary, do not reject fellowship. Conversely, be the one who travels the extra mile to welcome the exhausted servant. Mutual encouragement is the church's greatest beauty."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rejection-gentiles",
+                    title: "肆 · 最后的宣告：转往外邦 (28:23-29)",
+                    title_en: "Final Proclamation: Turning to the Gentiles",
+                    desc: "这救恩已经传给外邦人 | Salvation Sent to the Gentiles",
+                    verses: [
+                        {
+                            ref: "28:26-28",
+                            text_zh: "‘...你们听是要听见，却不明白... 我要你们知道，神这救恩如今传给外邦人，他们也必听受。’",
+                            text_en: "‘...You will indeed hear but never understand... Therefore let it be known to you that this salvation of God has been sent to the Gentiles; they will listen.’",
+                            academic: {
+                                title: "经文含义：以赛亚书6章的判决",
+                                content_zh: "保罗引用以赛亚书6:9-10作为他对犹太拒绝福音的最后总结。这在路加叙事中具有极强的结构性：路加福音以赛亚书的盼望开始，使徒行传以赛亚书的审判（对硬心者）结束。‘外邦人必听受’（Autoi Kai Akousontai）确立了教会在后使徒时期的重点。这不仅是历史记录，更是对神救赎史（Heilsgeschichte）重心的法庭式宣判。",
+                                content_en: "Paul quotes Isaiah 6:9-10 as his final verdict on Jewish rejection. This provides a structural bookend to Luke-Acts: starting with Isaianic hope (Luke 4) and ending with Isaianic judgment on the hardened. 'They [Gentiles] will listen' establishes the trajectory of the post-apostolic church. It is a judicial pronouncement on the shift in Redemptive History."
+                            },
+                            devotional: {
+                                title: "不要错失恩典的班车",
+                                content_zh: "犹太人‘听是要听见，却不明白’。最可怕的惩罚不是听不见真理，而是听见了却因为心中的成见而没有反应。恩典是有时效性的，如果一个群体不断拒绝，这光就会转向那些‘必听受’的人。求神保守我们的心始终柔软。不要让熟悉变成麻木，不要让传统的骄傲挡住了救恩的入口。",
+                                content_en: "Hearing but not understanding is the most tragic judgment. The scariest punishment is not silence, but hearing the Truth and remaining unresponsive due to prejudice. Grace is dynamic; if rejected, the Light turns toward those who will listen. Pray for a soft heart. Don't let familiarity breed numbness or tradition block the door to salvation."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "unhindered-end",
+                    title: "伍 · 无阻的福音：永不落幕 (28:30-31)",
+                    title_en: "The Unhindered Gospel: Never-ending Story",
+                    desc: "在租的房子里 | In His Own Rented House",
+                    verses: [
+                        {
+                            ref: "28:30-31",
+                            text_zh: "保罗在自己所租的房子里住了足足两年... 放胆传讲神国的道，将主耶稣基督的事教导人，并没有人禁止。",
+                            text_en: "He lived there two whole years at his own expense... proclaiming the kingdom of God and teaching about the Lord Jesus Christ with all boldness and without hindrance.",
+                            academic: {
+                                title: "属灵意义：Akōlytōs 的神学凯旋",
+                                content_zh: "全书以希腊文副词 *Akōlytōs*（无阻地/没有人禁止）结尾。这在修辞上极其有力。尽管保罗在物理上被捆绑，但‘神的话不被捆绑’（提后2:9）。‘传讲神国’（Keryssōn ten basileian）与‘教导耶稣的事’（Didaskōn ta peri Iesou）完美总结了使徒的信息。路加故意不交代保罗的结局（殉道或获释），因为本书的主角不是保罗，而是那‘无阻前行’的道。",
+                                content_en: "The book ends with the Greek adverb *Akōlytōs* (unhinderedly). This is rhetorically masterful. Though Paul is physically bound, 'the word of God is not bound' (2 Tim 2:9). 'Proclaiming the kingdom' and 'teaching about Jesus' summarize the apostolic message. Luke omits Paul's personal end (execution or release) because the protagonist isn't Paul, but the Word that moves unhindered."
+                            },
+                            devotional: {
+                                title: "你的环境不能禁锢福音",
+                                content_zh: "全书停在了一个‘未完待续’的开放式结局。保罗在‘自己租的房子’里，把监狱变成了讲坛。你的限制（疾病、经济困难、局限的环境）可能是你最有效的教导室。福音的本质就是‘无阻’的。只要你还有一个可以说话的舌头，或者一个可以活出爱的生命，你就在书写使徒行传的第29章。道在，路就在。",
+                                content_en: "The book ends with an 'open' finale. Paul turned his rented prison into a pulpit. Your limitations (illness, financial strain, narrow circumstances) can be your most effective classroom. The Gospel is inherently 'unhindered'. As long as you have a tongue to speak or a life to love, you are writing Chapter 29 of Acts. Where the Word is, the Way is."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- Controller ---
+        let appState = {
+            view: 'dashboard',
+            studyFilter: 'all'
+        };
+
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            if (view === 'dashboard') renderDashboard();
+            if (view === 'study') renderStudy();
+            if (view === 'methodology') renderMethodology();
+            window.scrollTo(0,0);
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        // --- Views ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 animate-fade-in">
+                    <!-- Intro Card -->
+                    <div class="lg:col-span-8 bg-white p-8 rounded-xl shadow-lg border-t-4 border-red-700">
+                        <div class="flex items-center mb-4">
+                            <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">The Climax</span>
+                            <h2 class="text-3xl font-bold serif text-slate-800">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-lg text-slate-400 font-serif italic mb-4 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-600 leading-relaxed mb-4 text-lg border-l-4 border-red-200 pl-4">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-sm italic en-text border-l-4 border-slate-200 pl-4">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center text-center transition hover:bg-red-50 group">
+                                    <h4 class="font-bold ${c.color} text-lg mb-1 group-hover:scale-105 transition">${c.title}</h4>
+                                    <p class="text-xs text-slate-400 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-xs text-slate-500 font-mono mb-2">${c.greek}</p>
+                                    <p class="text-xs text-slate-600 mb-1">${c.desc_zh}</p>
+                                    <p class="text-[10px] text-slate-400 italic en-text">${c.desc_en}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Sidebar Visual: Unhindered -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-red-900 to-slate-900 text-white p-8 rounded-xl shadow-lg flex flex-col justify-center items-center relative overflow-hidden">
+                         <div class="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/roman-armor.png')]"></div>
+                         <h3 class="text-xl font-bold mb-1 z-10 text-center text-red-200">并没有人禁止</h3>
+                         <p class="text-xs text-slate-300 mb-6 z-10 en-text uppercase tracking-widest border-b border-red-500 pb-2">Without Hindrance</p>
+                         
+                         <div class="relative w-full h-48 z-10 flex flex-col items-center justify-center">
+                            <i class="fas fa-unlock-alt text-6xl text-amber-400 unhindered-anim mb-4 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]"></i>
+                            <div class="text-center space-y-1">
+                                <span class="text-xs text-slate-400 uppercase tracking-tighter block">Physical Chains</span>
+                                <i class="fas fa-long-arrow-alt-down text-red-500"></i>
+                                <span class="text-sm font-bold text-amber-200 block">SPIRITUAL FREEDOM</span>
+                            </div>
+                         </div>
+                         <p class="text-xs text-center italic mt-4 text-red-200 opacity-80">"道是不被捆绑的。"</p>
+                    </div>
+                </div>
+
+                <!-- Mission Map Simulation -->
+                <div class="bg-white p-6 rounded-xl shadow-lg mb-8 border border-red-100">
+                    <h3 class="text-lg font-bold text-slate-700 mb-6 text-center">
+                        <i class="fas fa-route text-red-600 mr-2"></i> 福音进军罗马之路线 
+                        <span class="text-sm font-normal text-slate-400 ml-2 en-text">The Final Leg to Rome</span>
+                    </h3>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <div class="px-4 py-2 bg-teal-50 border border-teal-200 rounded-full text-xs font-bold text-teal-800">马耳他 (Malta)</div>
+                        <div class="flex items-center text-slate-300"><i class="fas fa-chevron-right"></i></div>
+                        <div class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-600">叙拉古 (Syracuse)</div>
+                        <div class="flex items-center text-slate-300"><i class="fas fa-chevron-right"></i></div>
+                        <div class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-600">利基翁 (Rhegium)</div>
+                        <div class="flex items-center text-slate-300"><i class="fas fa-chevron-right"></i></div>
+                        <div class="px-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-xs text-slate-600">部丢利 (Puteoli)</div>
+                        <div class="flex items-center text-slate-300"><i class="fas fa-chevron-right"></i></div>
+                        <div class="px-4 py-2 bg-red-800 text-white rounded-full text-xs font-bold shadow-lg">罗马 (ROME)</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let filterHTML = `
+                <div class="sticky top-20 z-40 bg-[#f8fafc]/95 backdrop-blur py-4 mb-6 border-b border-slate-200">
+                    <div class="flex justify-between items-center max-w-5xl mx-auto">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读室 <span class="text-base font-normal text-slate-400 en-text ml-2">Verse-by-Verse Study</span></h2>
+                        <div class="flex bg-white rounded-lg shadow-sm p-1 border border-slate-300">
+                            <button onclick="updateFilter('all')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'all' ? 'bg-red-800 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">全部 All</button>
+                            <button onclick="updateFilter('academic')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'academic' ? 'bg-slate-600 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">学术 Academic</button>
+                            <button onclick="updateFilter('devotional')" class="px-4 py-1.5 rounded text-sm transition ${appState.studyFilter === 'devotional' ? 'bg-teal-700 text-white font-bold' : 'text-slate-500 hover:bg-slate-100'}">灵修 Devotional</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach(section => {
+                sectionsHTML += `
+                    <div class="max-w-5xl mx-auto mb-16">
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-red-700">
+                            <div class="pl-4">
+                                <h3 class="text-2xl font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-sm text-slate-600 font-serif italic mt-1 en-text">${section.title_en} | ${section.desc}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            ${section.verses.map(v => createVerseCard(v)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = filterHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card rounded-lg shadow-sm overflow-hidden mb-6 group">
+                    <!-- Scripture Text -->
+                    <div class="bg-gradient-to-r from-slate-50 to-white p-5 border-b border-slate-100">
+                        <span class="inline-block px-2 py-0.5 bg-slate-200 text-slate-700 text-xs font-bold rounded mb-2 font-mono border border-slate-300">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed group-hover:text-red-900 transition-colors mb-2">“${verse.text_zh}”</p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text border-l-2 border-slate-300 pl-3">“${verse.text_en}”</p>
+                    </div>
+
+                    <!-- Dual Tracks -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                        <!-- Academic -->
+                        <div class="p-6 academic-box ${appState.studyFilter === 'devotional' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3">
+                                <span class="tag-academic">Exegesis</span>
+                            </div>
+                            <h5 class="font-bold text-slate-700 mb-2">${verse.academic.title}</h5>
+                            <p class="text-sm text-slate-600 leading-relaxed text-justify mb-2">${verse.academic.content_zh}</p>
+                            <p class="text-xs text-slate-400 font-serif italic en-text border-t border-slate-300 pt-2 mt-2">${verse.academic.content_en}</p>
+                        </div>
+
+                        <!-- Devotional -->
+                        <div class="p-6 devotional-box ${appState.studyFilter === 'academic' ? 'hidden' : ''}">
+                            <div class="flex items-center mb-3">
+                                <span class="tag-devotional">Devotional</span>
+                            </div>
+                            <h5 class="font-bold text-teal-800 mb-2">${verse.devotional.title}</h5>
+                            <p class="text-sm text-teal-900/80 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-teal-700/70 font-serif italic en-text border-t border-teal-200 pt-2 mt-2">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto animate-fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-bold mb-2 serif text-slate-800">解经方法论总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Exegetical Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-slate-600">
+                            <div class="text-slate-500 text-4xl mb-4"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">权威解经法 (Exegesis)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Historical & Narrative</p>
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li><strong>原则：</strong> 侧重于还原第一世纪地中海的地理、医学术语、法律地位和叙事结构。分析旧约预言（如以赛亚书6章）在路加作品中的结构性功能。</li>
+                                <li><strong>运用：</strong> 通过理解保罗的罗马公民权利和犹太传统的张力，揭示神如何利用世俗的体制（罗马法、船只、租房）来达成救赎史的进程。</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-teal-600">
+                            <div class="text-teal-600 text-4xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-xl font-bold text-teal-800 mb-2">属灵灵修法 (Devotional)</h3>
+                            <p class="text-xs text-teal-600/70 mb-6 uppercase tracking-wider">Existential & Practical</p>
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li><strong>原则：</strong> 侧重于将保罗的极限经历转化为信徒日常的属灵功课。在琐碎的细节中寻找神主权的印记，将历史事件转化为个人生命的引导。</li>
+                                <li><strong>运用：</strong> 鼓励信徒在平凡的‘拾柴’中尽责，在‘意外的停留’中发现事奉，并建立一种基于神应许而非外在环境的超然平安与胆量。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Initialize
+        navigate('dashboard');
+    </script>
+
+    <style>
+        .animate-fade-in { animation: fadeIn 0.8s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</body>
+</html>
