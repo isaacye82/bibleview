@@ -2,19 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>圣经纵览 - BibleView</title>
     <style>
         :root {
             /* === 全局配色 (更加深邃，突出层次) === */
-            --bg-color: #dae0e7; /* 背景加深，让卡片更突出 */
+            --bg-color: #dae0e7; 
             --bg-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
             
             --text-main: #2d3748;
             --text-light: #718096;
             --text-white: #ffffff;
             
-            --header-bg: rgba(255, 255, 255, 0.85); /* 更加通透 */
+            --header-bg: rgba(255, 255, 255, 0.85); 
             --header-border: rgba(255, 255, 255, 0.3);
             
             --card-bg: #ffffff;
@@ -25,7 +25,7 @@
             --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --primary-light: rgba(79, 172, 254, 0.1);
             
-            /* 阴影系统 (更深，制造悬浮感) */
+            /* 阴影系统 */
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
@@ -85,6 +85,8 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 0 20px;
+            /* 适配刘海屏，增加顶部内边距 */
+            padding-top: env(safe-area-inset-top); 
             border-bottom: 1px solid var(--header-border);
             position: sticky;
             top: 0;
@@ -184,7 +186,8 @@
         .theme-toggle {
             position: absolute;
             right: 20px;
-            top: 50%;
+            /* 修正垂直居中计算，考虑 safe-area */
+            top: calc(50% + (env(safe-area-inset-top) / 2)); 
             transform: translateY(-50%);
             background: var(--card-bg);
             border: 1px solid var(--card-border);
@@ -211,7 +214,7 @@
             width: 100%;
             max-width: 1100px; 
             margin: 0 auto; 
-            padding: 60px 20px; 
+            padding: 40px 20px; /* PC端保持适当间距 */
             flex: 1; 
         }
 
@@ -231,8 +234,8 @@
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
-            height: 120px; /* 增加高度 */
-            color: #ffffff; /* 强制文字白色 */
+            height: 120px; 
+            color: #ffffff;
         }
 
         /* 背景图片设置 */
@@ -247,13 +250,13 @@
         
         .section-header:hover .section-header-bg { transform: scale(1.05); }
 
-        /* 旧约图片 */
+        /* 旧约图片 - 使用本地配置 */
         #ot-header .section-header-bg {
-            background-image: url('https://images.unsplash.com/photo-1535905557558-afc4877a26fc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); /* 书卷/古老感 */
+            background-image: url('config/oldbooks.jpg'); 
         }
-        /* 新约图片 */
+        /* 新约图片 - 使用本地配置 */
         #nt-header .section-header-bg {
-            background-image: url('https://images.unsplash.com/photo-1499578124509-1611b77778c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); /* 日出/希望感 */
+            background-image: url('config/sunrise.jpg'); 
         }
 
         /* 渐变遮罩，保证文字清晰 */
@@ -283,7 +286,7 @@
             height: 36px;
             margin-right: 20px;
             fill: none;
-            stroke: #ffffff; /* 白色图标 */
+            stroke: #ffffff; 
             stroke-width: 2;
             stroke-linecap: round;
             stroke-linejoin: round;
@@ -330,7 +333,7 @@
             max-height: 10000px;
             opacity: 1;
             overflow: visible;
-            padding: 0 5px; /* 防止阴影被切 */
+            padding: 0 5px; 
         }
 
         .testament-section.collapsed .books-grid { 
@@ -367,7 +370,7 @@
         .book-card.active {
             border-color: var(--primary-color);
             box-shadow: var(--shadow-active);
-            background: var(--card-bg); /* 保持卡片背景 */
+            background: var(--card-bg); 
             z-index: 10;
         }
 
@@ -469,29 +472,52 @@
         /* === 页脚 === */
         footer {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: var(--text-light);
             font-size: 0.85rem;
             border-top: 1px solid var(--card-border);
             background: var(--card-bg);
-            margin-top: 40px;
+            margin-top: 20px;
         }
         footer a { color: var(--primary-color); text-decoration: none; border-bottom: 1px dotted transparent; transition: all 0.2s; }
         footer a:hover { opacity: 0.8; border-bottom-color: var(--primary-color); }
 
-        /* ====== 移动端适配 ====== */
+        /* ====== 移动端适配 (布局核心调整) ====== */
         @media (max-width: 600px) {
-            header { padding: 0 15px; height: 60px; }
-            .theme-toggle { width: 32px; height: 32px; font-size: 1rem; right: 15px; }
+            header { 
+                padding: 0 15px; 
+                padding-top: env(safe-area-inset-top); /* 保持刘海屏间距 */
+                height: calc(60px + env(safe-area-inset-top)); /* 稍微紧凑的高度 */
+            }
+            .theme-toggle { 
+                width: 32px; height: 32px; font-size: 1rem; right: 15px; 
+                /* 调整按钮位置 */
+                top: calc(50% + (env(safe-area-inset-top) / 2));
+            }
+            
             .header-title { font-size: 1.3rem; }
             .header-subtitle { font-size: 0.65rem; }
             
-            .hero-card { height: 160px; border-radius: 12px; }
-            .hero-verse { font-size: 1.1rem; }
+            /* 1. Hero区域更紧凑，高度减少 */
+            .hero-section { margin: 10px auto 0; padding: 0 15px; }
+            .hero-card { height: 130px; border-radius: 12px; } /* 原160px减小至130px */
+            .hero-verse { font-size: 1.05rem; margin-bottom: 6px; }
+            .hero-ref { font-size: 0.8rem; }
 
-            .container { padding: 20px 15px; }
+            /* 2. 内容区域间距大幅压缩 */
+            .container { padding: 15px 15px; }
+            .testament-section { margin-bottom: 12px; } /* 板块间距减小 */
             
-            .section-header { padding: 15px; height: 90px; border-radius: 12px; }
+            /* 3. 旧约/新约 标题卡片变矮 */
+            .section-header { 
+                padding: 15px; 
+                height: 85px; /* 原90px微调 */
+                border-radius: 12px; 
+                margin-bottom: 0; /* 移除底部间距，让书卷列表紧贴 */
+            }
+            /* 如果书卷展开了，给标题加点底部间距 */
+            .testament-section:not(.collapsed) .section-header { margin-bottom: 15px; }
+
             .section-icon { width: 28px; height: 28px; margin-right: 12px; }
             .section-title { font-size: 1.2rem; }
             .section-title span { font-size: 0.75rem; }
@@ -506,6 +532,12 @@
             .book-abbr { font-size: 0.65rem; padding: 2px 6px; }
             .chapters-container { gap: 6px; }
             .chapter-link { height: 34px; font-size: 0.8rem; border-radius: 6px; }
+
+            /* 4. 页脚紧凑化，确保能挤进第一屏 */
+            footer {
+                padding: 20px 10px;
+                margin-top: 10px;
+            }
         }
         
         @media (max-width: 380px) {
@@ -514,7 +546,6 @@
         }
     </style>
 </head>
-<!-- 修改点 1：给 body 添加默认类名 dark-mode -->
 <body class="dark-mode">
 
     <header>
@@ -523,12 +554,10 @@
             <p class="header-subtitle">横屏观看效果更佳</p>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">
-            <!-- 修改点 2：默认图标改为月亮 -->
             <span id="theme-icon">🌙</span>
         </button>
     </header>
 
-    <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-card">
             <div class="hero-overlay"></div>
@@ -541,7 +570,6 @@
     </div>
 
     <div class="container">
-        <!-- 旧约部分 (Background Image) -->
         <div class="testament-section collapsed" id="ot-section">
             <div class="section-header" id="ot-header" onclick="toggleSection('ot-section')">
                 <div class="section-header-bg"></div>
@@ -560,7 +588,6 @@
             <div class="books-grid" id="ot-books"></div>
         </div>
 
-        <!-- 新约部分 (Background Image) -->
         <div class="testament-section collapsed" id="nt-section">
             <div class="section-header" id="nt-header" onclick="toggleSection('nt-section')">
                 <div class="section-header-bg"></div>
