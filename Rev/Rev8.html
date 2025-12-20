@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 8: Silence & Trumpets | 启示录第八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Burnt Orange - Fire, Altar, Judgment */
+            --theme-primary: #c2410c; 
+            /* Brass/Gold - Trumpets, Censer */
+            --theme-accent: #d97706;
+            /* Stone/Smoke - Smoke, Darkness, Abyss */
+            --theme-dark: #1c1917;
+            /* Warm Light - Background */
+            --theme-bg: #fff7ed;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1c1917;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(67, 20, 7, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for Censer */
+        .censer-badge {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border: 2px solid #c2410c;
+            position: relative;
+        }
+        .censer-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #c2410c;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes smoke-rise {
+            0% { transform: translateY(0) scale(1); opacity: 0.8; }
+            50% { transform: translateY(-5px) scale(1.1); opacity: 0.4; }
+            100% { transform: translateY(-10px) scale(1.2); opacity: 0; }
+        }
+        .icon-smoke {
+            animation: smoke-rise 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-orange-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-orange-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">8</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-stone-800">启示录第八章</h1>
+                        <p class="text-xs text-orange-700 uppercase tracking-widest en-text">Revelation 8: Silence & The Trumpets</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-orange-600 bg-gradient-to-br from-white to-orange-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-stone-900 mb-2 serif-font">天上的寂静与号筒的吹响</h2>
+                        <h3 class="text-lg text-orange-700 italic font-serif mb-4 en-text">Silence in Heaven and the Sounding of Trumpets</h3>
+                        <p class="text-stone-700 text-lg leading-relaxed mb-4 font-medium">
+                            第八章标志着从“印”到“号”的重大转折。当第七印揭开时，天上出奇地寂静了半小时——这是风暴前的宁静，是神在倾听圣徒的祷告。随后，金香炉的火被倒在地上，引发了前四号的审判。这些审判击打自然界的“三分之一”，是对不悔改世人的严厉警告。
+                        </p>
+                        <p class="text-stone-500 text-sm leading-relaxed en-text">
+                            Chapter 8 marks the shift from "Seals" to "Trumpets". As the seventh seal is broken, there is a dramatic silence in heaven for half an hour—a pause to listen to the prayers of the saints. Then, fire from the golden altar is thrown to earth, triggering the first four trumpet judgments. These strike "one-third" of nature, serving as severe warnings to an unrepentant world.
+                        </p>
+                    </div>
+
+                    <!-- Right: Golden Censer Visual -->
+                    <div class="bg-stone-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d97706 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="censer-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative">
+                                <i class="fas fa-burn text-orange-600 text-5xl mb-2"></i>
+                                <i class="fas fa-smog text-gray-400 text-2xl absolute -top-4 -right-2 icon-smoke"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 serif-font">金香炉</h3>
+                            <p class="text-[10px] font-bold text-orange-600 uppercase tracking-widest en-text mt-1">The Golden Censer</p>
+                            <div class="w-12 h-0.5 bg-orange-300 my-2"></div>
+                            <p class="text-xs text-gray-500">Prayers & Fire<br>祷告与烈火</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-stone-100 border border-stone-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-volume-mute text-stone-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-stone-800 text-xl block">寂静 (二刻)</span>
+                            <span class="text-xs text-stone-600 italic en-text">Silence (Half an Hour)</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        神圣的暂停。全宇宙屏住呼吸，为了让圣徒的祈祷（香）毫无阻碍地升到神面前。这表明祷告在神行动前的优先性。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        A divine pause. The universe holds its breath so the prayers of saints (incense) can rise unhindered. Shows the priority of prayer before divine action.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-orange-50 border border-orange-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-bullhorn text-orange-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">号角 (警告)</span>
+                            <span class="text-xs text-orange-700 italic en-text">Trumpets (Warning)</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        与“印”不同，“号”不仅是审判，更是警告。它们唤醒沉睡的世界，呼吁悔改。击打“三分之一”意味着仍有怜悯存留。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Unlike seals, trumpets are warnings calling for repentance. Striking "one-third" implies mercy remains; total destruction is withheld.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-yellow-50 border border-yellow-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-star text-yellow-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-yellow-900 text-xl block">苦茵陈</span>
+                            <span class="text-xs text-yellow-700 italic en-text">Wormwood</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        第三号中坠落的星。象征苦毒和属灵的败坏。当人拒绝活水泉源（神），他们得到的只有致死的苦水。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        The falling star in the 3rd Trumpet. Symbolizes bitterness and spiritual corruption. Rejecting the Living Water results in deadly bitter water.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-stone-800 mb-1">七印与七号：审判性质的对比</h3>
+                    <p class="text-sm text-stone-500 mb-6 italic en-text">Comparison of Judgments: The 7 Seals vs The 7 Trumpets</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="judgmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-orange-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-orange-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-orange-100 text-orange-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-orange-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-orange-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1: Silence & Prayers -->
+            <div class="border-l-4 border-stone-500 pl-6">
+                <h2 class="text-2xl font-bold text-stone-800 mb-2">第一部分：天上的寂静与圣徒的祷告 (8:1-5)</h2>
+                <h3 class="text-sm text-stone-500 italic mb-6 en-text">Silence in Heaven & The Prayers of the Saints</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2: Trumpets 1-4 -->
+            <div class="border-l-4 border-orange-500 pl-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-2">第二部分：前四号——击打自然界 (8:6-12)</h2>
+                <h3 class="text-sm text-orange-600 italic mb-6 en-text">The First Four Trumpets: Striking Nature</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3: The Eagle's Warning -->
+             <div class="border-l-4 border-red-700 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第三部分：飞鹰的警告——祸哉！ (8:13)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">The Eagle's Warning: Woe! Woe! Woe!</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-stone-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-stone-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-stone-200 p-4 border-b border-stone-300">
+                            <h3 class="text-xl font-bold text-stone-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-stone-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于旧约背景（出埃及记的灾难、圣殿礼仪）和启示录的象征语言（号角、三分之一、苦茵陈）。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on OT background (Exodus plagues, Temple liturgy) and apocalyptic symbolism (Trumpets, 1/3, Wormwood).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">理解“号角”作为警告和召唤悔改的象征（参照约珥书）。区分自然灾难的字面性与象征性（如“山”可能指帝国）。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Understand "Trumpets" as warnings calling for repentance. Distinguish literal vs symbolic nature disasters (e.g., "Mountain" as Empire).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-orange-100 p-4 border-b border-orange-200">
+                            <h3 class="text-xl font-bold text-orange-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-orange-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于祷告的力量、神对受造界的主权，以及我们在警告声中应有的回应。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on the power of prayer, God's sovereignty over creation, and our response to His warnings.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-orange-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">祷告不是徒然的；它们正在天上积蓄力量。当世界动荡时，我们要看到这是神唤醒人心的号角。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Prayer is not in vain; it accumulates power in heaven. See worldly turmoil as God's trumpet waking hearts.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"那香的烟和众圣徒的祈祷，从天使的手中一同升到神面前。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"The smoke of the incense, together with the prayers of God’s people, went up before God from the angel’s hand."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第八章中英对照研经报告 | SILENCE & TRUMPETS</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "8:1",
+                    text_cn: "羔羊揭开第七印的时候，天上寂静约有二刻。",
+                    text_en: "When he opened the seventh seal, there was silence in heaven for about half an hour.",
+                    exegesis: {
+                        title: "天上的寂静：暴风雨前的宁静",
+                        title_en: "Silence in Heaven: The Calm Before the Storm",
+                        content_cn: "这寂静是戏剧性的暂停。在经历了前六印的动荡和第七章的大合唱后，全宇宙突然屏住呼吸。这表明神极其重视即将发生的事。在犹太传统中，天使在圣徒祷告时保持沉默，以便祷告能直达神面前。",
+                        content_en: "A dramatic pause. After the turmoil of 6 seals and the chorus of Ch 7, the universe holds its breath. God is attentive. In Jewish tradition, angels keep silent during saints' prayers so they can reach God unhindered."
+                    },
+                    devotional: {
+                        title: "静默的力量",
+                        title_en: "The Power of Silence",
+                        content_cn: "在这个充满噪音的世界里，我们害怕寂静。但只有在寂静中，我们才能听见神的声音，神也能“听见”我们。天上的寂静提醒我们：在重大的属灵行动前，先要学会安静等候。神正在倾听，你准备好祷告了吗？",
+                        content_en: "We fear silence in a noisy world. But only in silence do we hear God, and does He 'hear' us clearly. Heaven's silence reminds us: before major spiritual action, wait in silence. God is listening; are you ready to pray?"
+                    }
+                },
+                {
+                    ref: "8:3-5",
+                    text_cn: "另有一位天使... 拿着金香炉... 要作为香... 献在宝座前的金坛上... 天使拿着香炉，盛满了坛上的火，倒在地上...",
+                    text_en: "Another angel... had a golden censer... given much incense to offer... on the golden altar... Then the angel took the censer, filled it with fire from the altar, and hurled it on the earth...",
+                    exegesis: {
+                        title: "金香炉与祷告的回应",
+                        title_en: "The Golden Censer and the Answer to Prayer",
+                        content_cn: "金香炉的意象来自圣殿的崇拜。香代表“众圣徒的祈祷”（Rev 5:8）。这些祷告没有消失，而是升到神面前。更有趣的是，同样的香炉盛满了祭坛的火倒在地上，引发雷轰地震。这意味着地上的审判是对圣徒受苦祷告的直接回应。",
+                        content_en: "Imagery from Temple worship. Incense = prayers of saints. These prayers ascend to God. The same censer is filled with altar fire and thrown to earth, causing judgment. Earthly judgment is a direct response to saints' prayers."
+                    },
+                    devotional: {
+                        title: "你的祷告震撼世界",
+                        title_en: "Your Prayers Shake the World",
+                        content_cn: "我们常觉得祷告软弱无力，像烟一样消散。但这经文告诉我们：祷告是这一宇宙戏剧的引擎。当你祷告“愿你的国降临”时，你正在参与神对历史的推动。我们的祷告积累在金坛上，最终将化为改变世界的神圣之火。",
+                        content_en: "We feel prayers are weak, vanishing like smoke. But this verse says: Prayer is the engine of this cosmic drama. When you pray 'Thy Kingdom Come', you participate in history. Accumulated prayers eventually become divine fire that changes the world."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "8:6-7",
+                    text_cn: "第一位天使吹号，就有雹子与火搀着血丢在地上... 地的三分之一和树的三分之一被烧了...",
+                    text_en: "The first angel sounded his trumpet, and there came hail and fire mixed with blood... A third of the earth was burned up, along with a third of the trees...",
+                    exegesis: {
+                        title: "第一号：击打地与植物",
+                        title_en: "1st Trumpet: Striking Earth & Vegetation",
+                        content_cn: "这呼应了埃及的第七灾（雹子与火，出埃及记9:23）。“三分之一”是号角审判的特征，表明这是局部的、警告性的审判，而非最后“碗”的全面毁灭。这种对自然界的破坏不仅是生态灾难，更是对人类赖以生存资源的打击。",
+                        content_en: "Echoes Egypt's 7th plague (Ex 9:23). 'One-third' characterizes Trumpets as partial, warning judgments, unlike the total destruction of the Bowls. It strikes life support systems, not just ecology."
+                    },
+                    devotional: {
+                        title: "当安稳被剥夺",
+                        title_en: "When Security is Stripped",
+                        content_cn: "树木和青草象征着繁荣与安稳。当神允许环境动荡、资源短缺时，祂是在摇动我们对物质世界的依赖。这是恩典的警告：不要把根扎在这个将要过去的世界上。",
+                        content_en: "Trees/grass symbolize prosperity/security. When God allows environmental shaking, He shakes our reliance on the material world. A warning of grace: Do not root yourself in a passing world."
+                    }
+                },
+                {
+                    ref: "8:8-9",
+                    text_cn: "第二位天使吹号，就有仿佛火烧的大山扔在海中；海的三分之一变成血...",
+                    text_en: "The second angel sounded... something like a huge mountain, all ablaze, was thrown into the sea. A third of the sea turned into blood...",
+                    exegesis: {
+                        title: "第二号：击打海洋与贸易",
+                        title_en: "2nd Trumpet: Striking Sea & Commerce",
+                        content_cn: "“火烧的大山”可能隐喻一个强大的国度（如巴比伦，耶利米书51:25）的坠落，或字面的自然灾难（火山/陨石）。海变成血呼应埃及第一灾。海是古代商业贸易的高速公路，这预示着经济系统的崩溃。",
+                        content_en: "'Burning mountain' may metaphorically be a fallen empire (Babylon, Jer 51:25) or literal disaster. Sea to blood echoes Egypt's 1st plague. The sea was the highway of commerce; implies economic collapse."
+                    },
+                    devotional: {
+                        title: "经济安全的幻影",
+                        title_en: "The Illusion of Economic Safety",
+                        content_cn: "大海代表着资源和贸易。当“船只损坏”，经济链条断裂时，我们会恐慌吗？这一号角提醒我们，全球经济体系在神的手中极其脆弱。我们真正的财富必须储存在那不能被震动的国度里。",
+                        content_en: "The sea represents resources/trade. Do we panic when economic chains break? This trumpet reminds us the global economy is fragile in God's hands. Store true treasure in the unshakable Kingdom."
+                    }
+                },
+                {
+                    ref: "8:10-11",
+                    text_cn: "第三位天使吹号，就有烧着的大星... 落在江河的三分之一... 这星名叫苦茵陈... 水变苦了，就死了许多人。",
+                    text_en: "The third angel sounded... and a great star, blazing like a torch, fell... on a third of the rivers... the name of the star is Wormwood... the waters turned bitter...",
+                    exegesis: {
+                        title: "第三号：苦茵陈与水源污染",
+                        title_en: "3rd Trumpet: Wormwood & Water Pollution",
+                        content_cn: "“茵陈”（Wormwood）是一种极苦的植物，象征苦难和审判（耶利米书9:15）。淡水是生命的源头。当源头变苦，生命就无法维持。这可能象征属灵的毒害——错误的教导或偶像崇拜导致人心的苦毒和死亡。",
+                        content_en: "'Wormwood' is a bitter plant, symbolizing judgment (Jer 9:15). Fresh water is life's source. When sources turn bitter, life fails. May symbolize spiritual poisoning—false teaching/idolatry leading to bitterness and death."
+                    },
+                    devotional: {
+                        title: "罪的苦果",
+                        title_en: "The Bitter Fruit of Sin",
+                        content_cn: "罪不仅是违规，它更像毒药，会污染生命的源头。当我们容让苦毒、嫉妒或谎言进入内心（水源），我们的生命就会变得像茵陈一样苦，甚至毒害周围的人。求神保守我们的心，让活水的江河涌流。",
+                        content_en: "Sin is poison, polluting life's source. Letting bitterness/lies into our heart (water source) turns our life bitter like Wormwood, poisoning others. Ask God to guard your heart, that living water may flow."
+                    }
+                },
+                {
+                    ref: "8:12",
+                    text_cn: "第四位天使吹号，日头的三分之一、月亮的三分之一、星辰的三分之一都被击打... 三分之一没有光。",
+                    text_en: "The fourth angel sounded... a third of the sun was struck, a third of the moon, and a third of the stars, so that a third of them turned dark...",
+                    exegesis: {
+                        title: "第四号：天体的黑暗",
+                        title_en: "4th Trumpet: Celestial Darkness",
+                        content_cn: "呼应埃及第九灾（黑暗）。光体的变暗象征着秩序的混乱和神引导的撤去。在古代，天体代表神明的指引；这里的黑暗预示着属灵的蒙蔽和末世的迷失。",
+                        content_en: "Echoes Egypt's 9th plague (Darkness). Dimming lights symbolize chaos and withdrawal of divine guidance. Celestial bodies represented deities/guidance; darkness implies spiritual blindness and end-time confusion."
+                    },
+                    devotional: {
+                        title: "属灵的黑夜",
+                        title_en: "Spiritual Night",
+                        content_cn: "当光减少时，人会在黑暗中跌倒。这不仅是物理的黑暗，更是真理之光的暗淡。在这个弯曲悖谬的世代，我们作为“世上的光”，责任是何等重大。当世界变暗时，你的灯是否还亮着？",
+                        content_en: "When light diminishes, people stumble. This is truth dimming. In this perverse generation, our duty as 'light of the world' is immense. As the world darkens, is your lamp still burning?"
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "8:13",
+                    text_cn: "我又看见一个鹰飞在空中，并听见它大声说：三位天使要吹那其余的号，你们住在地上的民，祸哉！祸哉！祸哉！",
+                    text_en: "As I watched, I heard an eagle that was flying in midair call out in a loud voice: 'Woe! Woe! Woe to the inhabitants of the earth, because of the trumpet blasts about to be sounded...'",
+                    exegesis: {
+                        title: "飞鹰的警告：祸哉！",
+                        title_en: "The Eagle's Warning: Woe! Woe! Woe!",
+                        content_cn: "“鹰”（或兀鹰）象征着即将到来的厄运和死亡。它飞在“空中”（midheaven，日头正午的位置），确保全地都能听见。三个“祸哉”（Woe）对应最后三号（5, 6, 7号），预示着接下来的审判将不再局限于自然界，而是直接攻击“住在地上的人”（指不信者）。",
+                        content_en: "Eagle/Vulture symbolizes impending doom. Flying in 'midheaven' ensures all hear. Three 'Woes' correspond to the final 3 trumpets (5,6,7), signaling judgments will shift from nature to directly attacking 'inhabitants of the earth' (unbelievers)."
+                    },
+                    devotional: {
+                        title: "最后的恩慈警告",
+                        title_en: "The Final Merciful Warning",
+                        content_cn: "在最可怕的审判临到之前，神发出最后的警告。这看似严厉的“祸哉”，实则是神不愿一人沉沦的恩慈。神总是提前预警。对于那些听见警告的人来说，现在就是悔改的时候，不要等到最后的一号吹响。",
+                        content_en: "Before the worst judgment, God sends a final warning. This harsh 'Woe' is mercy—God willing that none perish. He always warns. For those hearing, now is the time to repent, before the final trumpet sounds."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-stone-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-orange-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-stone-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-stone-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-orange-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-orange-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-orange-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-orange-100 text-orange-800 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-orange-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('judgmentChart').getContext('2d');
+            
+            // Comparison: Seals (Man-made) vs Trumpets (Supernatural)
+            const data = {
+                labels: [
+                    ['Source: Human', '来源：人为'], 
+                    ['Source: Divine', '来源：神圣'], 
+                    ['Target: Society', '对象：社会'], 
+                    ['Target: Nature', '对象：自然'], 
+                    ['Scope: 1/4', '范围：1/4'], 
+                    ['Scope: 1/3', '范围：1/3']
+                ],
+                datasets: [
+                    {
+                        label: 'Seven Seals (Suffering) / 七印 (苦难)',
+                        data: [90, 20, 90, 10, 80, 0],
+                        backgroundColor: 'rgba(168, 162, 158, 0.5)', // Stone Grey
+                        borderColor: 'rgba(168, 162, 158, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Seven Trumpets (Judgment) / 七号 (审判)',
+                        data: [10, 95, 20, 95, 0, 90], 
+                        backgroundColor: 'rgba(194, 65, 12, 0.6)', // Burnt Orange
+                        borderColor: 'rgba(194, 65, 12, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4b5563'
+                            },
+                            ticks: { display: false, max: 100 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

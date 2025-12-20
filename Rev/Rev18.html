@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 18: The Fall of Babylon | 启示录第十八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js (Kept for potential future use, though not used in Overview now) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Midnight Blue - Mourning, Judgment, Abyss */
+            --theme-primary: #1e3a8a; 
+            /* Burning Orange - Fire, Destruction, Warning */
+            --theme-accent: #c2410c;
+            /* Ash Gray - Smoke, Ruin */
+            --theme-dark: #1f2937;
+            /* Pale Ash - Background */
+            --theme-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1f2937;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(30, 58, 138, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for Millstone */
+        .millstone-badge {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #1e3a8a;
+            position: relative;
+        }
+        .millstone-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #1e3a8a;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes sink {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+        .icon-sink {
+            animation: sink 2s infinite ease-in;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-blue-900 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">18</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-blue-950">启示录第十八章</h1>
+                        <p class="text-xs text-blue-700 uppercase tracking-widest en-text">Revelation 18: The Fall of Babylon</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-orange-700 bg-gradient-to-br from-white to-slate-100 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-blue-950 mb-2 serif-font">巴比伦的倾倒与哀哭</h2>
+                        <h3 class="text-lg text-orange-700 italic font-serif mb-4 en-text">The Fall of Babylon and the Lament of the World</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十八章是一首宏大的挽歌，也是胜利的凯歌。它详细描绘了世界经济与宗教体系（巴比伦）的突然崩溃。地上的君王、客商和船长为这“大城”的毁灭而哀哭，因为他们的财富瞬间化为乌有。然而，天上的声音呼召神的子民“从那城出来”，并为神的公义审判欢喜。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 18 is both a grand dirge and a victory song. It details the sudden collapse of the world's economic and religious system (Babylon). Earth's kings, merchants, and mariners mourn the destruction of the "Great City" as their wealth vanishes in an hour. Yet, a voice from heaven calls God's people to "come out of her" and rejoice in His righteous judgment.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-blue-950 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#c2410c 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="millstone-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-water text-blue-700 text-5xl absolute bottom-0 left-1/2 -translate-x-1/2 opacity-60"></i>
+                                <i class="fas fa-cookie text-stone-500 text-4xl relative z-10 icon-sink"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-blue-900 serif-font">沉没的磨石</h3>
+                            <p class="text-[10px] font-bold text-orange-700 uppercase tracking-widest en-text mt-1">The Sinking Millstone</p>
+                            <div class="w-12 h-0.5 bg-blue-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Found No More<br>决不再见</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-slate-50 border border-slate-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-city text-slate-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-900 text-xl block">倾倒的巴比伦</span>
+                            <span class="text-xs text-slate-600 italic en-text">Fallen Babylon</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        象征抵挡神的世界体系（政治/经济/文化）。它的倾倒被描述为“成了鬼魔的住处”，表明其属灵本质的败坏和彻底的荒凉。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Symbolizes the anti-God world system. Its fall renders it a "dwelling place for demons," indicating spiritual corruption and total desolation.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-orange-50 border border-orange-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-door-open text-orange-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">从那城出来</span>
+                            <span class="text-xs text-orange-700 italic en-text">Come Out of Her</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        这是给神子民的紧急呼召。不是物理上的迁徙，而是属灵上的分别（Separation）。为了不与她的罪有份，也不受她所受的灾殃。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        An urgent call to God's people. Not physical migration, but spiritual separation. To avoid sharing in her sins and receiving her plagues.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-blue-50 border border-blue-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-clock text-blue-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-blue-900 text-xl block">一时之间</span>
+                            <span class="text-xs text-blue-700 italic en-text">In One Hour</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        重复出现的短语，强调审判的突然性和迅速性。世人认为坚不可摧的经济体系，在神的手中瞬间瓦解。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Recurring phrase emphasizing the suddenness and speed of judgment. The world's "invincible" economic system collapses in an instant.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual: Collapse of Babylon (Balance Sheet) -->
+            <div class="card p-8 bg-gradient-to-b from-white to-slate-50">
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-bold text-blue-900 mb-1">巴比伦的崩溃：得失清单</h3>
+                    <p class="text-sm text-slate-500 italic en-text">The Collapse of Babylon: Loss & Gain</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                    <!-- Vertical Divider (Desktop) -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 -translate-x-1/2"></div>
+
+                    <!-- Left: World's Loss -->
+                    <div>
+                        <h4 class="text-center text-red-700 font-bold mb-4 flex items-center justify-center">
+                            <span class="bg-red-100 p-1 rounded mr-2 text-xs">📉</span> 世界的损失 World's Loss
+                        </h4>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between items-center text-sm p-3 bg-red-50 rounded-lg border border-red-100">
+                                <span class="font-medium text-slate-700">Political Power 政治权力</span>
+                                <span class="text-red-500 text-xs font-bold uppercase">Gone</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-red-50 rounded-lg border border-red-100">
+                                <span class="font-medium text-slate-700">Economic Wealth 经济财富</span>
+                                <span class="text-red-500 text-xs font-bold uppercase">Ruined</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-red-50 rounded-lg border border-red-100">
+                                <span class="font-medium text-slate-700">Global Trade 全球贸易</span>
+                                <span class="text-red-500 text-xs font-bold uppercase">Halted</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-red-50 rounded-lg border border-red-100">
+                                <span class="font-medium text-slate-700">Luxury & Music 奢华与音乐</span>
+                                <span class="text-red-500 text-xs font-bold uppercase">Silenced</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Right: Heaven's Gain -->
+                    <div>
+                        <h4 class="text-center text-blue-700 font-bold mb-4 flex items-center justify-center">
+                            <span class="bg-blue-100 p-1 rounded mr-2 text-xs">📈</span> 天上的得着 Heaven's Gain
+                        </h4>
+                        <ul class="space-y-3">
+                            <li class="flex justify-between items-center text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                <span class="font-medium text-slate-700">Justice Served 公义伸张</span>
+                                <span class="text-blue-600 text-xs font-bold uppercase">Fulfilled</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                <span class="font-medium text-slate-700">Avengers 伸冤</span>
+                                <span class="text-blue-600 text-xs font-bold uppercase">Vindicated</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                <span class="font-medium text-slate-700">God's Glory 神的荣耀</span>
+                                <span class="text-blue-600 text-xs font-bold uppercase">Revealed</span>
+                            </li>
+                            <li class="flex justify-between items-center text-sm p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                <span class="font-medium text-slate-700">True Worship 真实敬拜</span>
+                                <span class="text-blue-600 text-xs font-bold uppercase">Restored</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-slate-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-slate-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-blue-900 text-white shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-orange-600 pl-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-2">第一部分：宣告倾倒与呼召分别 (18:1-8)</h2>
+                <h3 class="text-sm text-orange-600 italic mb-6 en-text">The Proclamation of Fall & The Call to Separate</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-slate-600 pl-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">第二部分：地上的哀歌 (18:9-19)</h2>
+                <h3 class="text-sm text-slate-500 italic mb-6 en-text">The Lament of the Earth</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-blue-800 pl-6">
+                <h2 class="text-2xl font-bold text-blue-900 mb-2">第三部分：终极的沉沦 (18:20-24)</h2>
+                <h3 class="text-sm text-blue-700 italic mb-6 en-text">The Ultimate Destruction</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-blue-100 p-4 border-b border-blue-200">
+                            <h3 class="text-xl font-bold text-blue-900 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-blue-700 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于与旧约先知书（以赛亚书、耶利米书、以西结书）对古代巴比伦和推罗审判预言的平行对比。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on parallels with OT prophetic judgments on Babylon and Tyre (Isaiah, Jeremiah, Ezekiel).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-blue-800 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">理解“巴比伦”为经济与文化的集合体，而非单一城市。哀歌反映了世界体系对物质的依赖和神审判的公义。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Understand "Babylon" as an economic/cultural complex. Laments reflect reliance on materialism and God's just judgment.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-orange-100 p-4 border-b border-orange-200">
+                            <h3 class="text-xl font-bold text-orange-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-orange-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于从世界分别出来的呼召，以及对财富和享乐主义的警惕。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the call to separate from the world, and vigilance against wealth and hedonism.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-orange-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">“从那城出来”是心灵的迁徙。要在世界繁华时看到其必然的倾倒，从而积攒财宝在天上。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">"Come out of her" is a migration of the heart. See the inevitable fall amidst worldly prosperity; store treasures in heaven.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-emerald-900 text-emerald-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"我的民哪，你们要从那城出来，免得与她一同有罪，受她所受的灾殃。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"'Come out of her, my people,' so that you will not share in her sins, so that you will not receive any of her plagues."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十八章中英对照研经报告 | THE FALL OF BABYLON</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "18:1-3",
+                    text_cn: "我看见另一位有大权柄的天使从天降下... 大声喊着说：巴比伦大城倾倒了！倾倒了！成了鬼魔的住处... 因为列国都喝了她淫乱大怒的酒...",
+                    text_en: "I saw another angel coming down from heaven... With a mighty voice he shouted: 'Fallen! Fallen is Babylon the Great! She has become a dwelling for demons... For all the nations have drunk the maddening wine of her adulteries...'",
+                    exegesis: {
+                        title: "宣告倾倒：属灵的荒场",
+                        title_en: "Proclamation of Fall: A Spiritual Wasteland",
+                        content_cn: "天使的光辉照亮了地，象征真理的显明。巴比伦的倾倒不仅是政治经济的崩溃，更是属灵真相的暴露：她外表繁华，实则是“鬼魔的住处”和“各样污秽之灵的巢穴”。“喝了淫乱大怒的酒”指列国因贪恋她的奢华而失去了理智，与她一同抵挡神。",
+                        content_en: "The angel's splendor illumines the earth, revealing truth. Babylon's fall is political/economic but also spiritual exposure: a 'dwelling for demons'. 'Maddening wine' refers to nations losing reason through greed and luxury, joining her opposition to God."
+                    },
+                    devotional: {
+                        title: "繁华背后的废墟",
+                        title_en: "Ruins Behind the Glamour",
+                        content_cn: "我们常被大城市的灯红酒绿所迷惑，以为那里是天堂。但神揭示了其本质：如果没有神，那只是鬼魔的巢穴。不要羡慕世界的荣华，在神眼中，它已经倾倒了。求神开我们的眼睛，看到物质繁荣背后的属灵荒凉。",
+                        content_en: "We are dazzled by city lights, thinking it paradise. God reveals the truth: without Him, it's a demon's den. Don't envy worldly glory; in God's eyes, it has already fallen. Pray for eyes to see the spiritual desolation behind material prosperity."
+                    }
+                },
+                {
+                    ref: "18:4-8",
+                    text_cn: "我又听见从天上有声音说：我的民哪，你们要从那城出来，免得与她一同有罪... 因她心里说：我坐了皇后的位... 所以在一天之内，她的灾殃要一齐来到。",
+                    text_en: "Then I heard another voice from heaven say: 'Come out of her, my people,' so that you will not share in her sins... In her heart she boasts, 'I sit enthroned as queen...' Therefore in one day her plagues will overtake her...",
+                    exegesis: {
+                        title: "呼召分别与报应原则",
+                        title_en: "Call to Separation & Principle of Retribution",
+                        content_cn: "“从那城出来”呼应了以赛亚书48:20和耶利米书50:8。这是对信徒的命令：在价值观、生活方式和效忠对象上与巴比伦分别。巴比伦的骄傲（自称皇后，不见寡居）是她灭亡的原因。神将按她所行的“加倍”报应她，这体现了神公义的审判原则。",
+                        content_en: "'Come out' echoes Isa 48:20/Jer 50:8. A command for believers to separate in values, lifestyle, and allegiance. Babylon's pride (Queen, not widow) causes her doom. God pays her back 'double', reflecting divine justice."
+                    },
+                    devotional: {
+                        title: "从世界分别出来",
+                        title_en: "Separate from the World",
+                        content_cn: "这不仅是身体的离开，更是心的割舍。我们是否虽然身在教会，心却还在巴比伦？我们是否在追求世界的认可（皇后的位）而忘记了谦卑？“出来”意味着不再认同世界的价值观，不再参与罪恶的娱乐，过圣洁的生活。这不仅是命令，更是保护。",
+                        content_en: "Not just physical departure, but detachment of heart. Are we in church but our hearts in Babylon? Do we seek worldly approval (Queen's throne) over humility? 'Come out' means rejecting worldly values and sinful entertainment. It's a command for our protection."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "18:9-10",
+                    text_cn: "地上的君王... 看见烧她的烟，就为她哭泣哀号... 说：哀哉！哀哉！巴比伦大城... 一时之间你的刑罚就来到了。",
+                    text_en: "When the kings of the earth... see the smoke of her burning, they will weep and mourn over her... 'Woe! Woe to you, great city... In one hour your doom has come!'",
+                    exegesis: {
+                        title: "君王的哀歌：权力的失落",
+                        title_en: "Lament of Kings: Loss of Power",
+                        content_cn: "君王代表政治势力。他们曾与巴比伦行淫（利益勾结），现在却只能“远远地站着”哭泣，因惧怕受同样的苦。他们的哀哭不是因为悔改，而是因为失去了权力和享乐的源头。“一时之间”强调了审判的迅速和不可逆转。",
+                        content_en: "Kings represent political power. Former partners in 'adultery', they now stand 'far off' in fear. Their weeping is not repentance, but loss of power/pleasure source. 'In one hour' emphasizes sudden, irreversible judgment."
+                    },
+                    devotional: {
+                        title: "权力的脆弱",
+                        title_en: "Fragility of Power",
+                        content_cn: "世上的政治联盟和权势看似坚不可摧，但在神的手中，只需“一时之间”就会化为乌有。不要依靠地上的君王或体制，他们连自己都救不了，只能无助地哀号。将你的安全感建立在永恒的磐石——基督之上。",
+                        content_en: "Worldly alliances seem invincible, but crumble in 'one hour' before God. Don't rely on kings or systems; they can't save themselves, only mourn. Build your security on the Eternal Rock, Christ."
+                    }
+                },
+                {
+                    ref: "18:11-16",
+                    text_cn: "地上的客商也都为她哭泣悲哀，因为没有人再买他们的货物了... 说：哀哉！哀哉！... 一时之间，这么大的富厚就归于无有了。",
+                    text_en: "The merchants of the earth will weep and mourn over her because no one buys their cargoes anymore... 'Woe! Woe to you, great city... In one hour such great wealth has been brought to ruin!'",
+                    exegesis: {
+                        title: "客商的哀歌：经济的崩溃",
+                        title_en: "Lament of Merchants: Economic Collapse",
+                        content_cn: "这段经文列出了奢华的货物清单（金银、宝石、布匹、甚至“人的灵魂”）。这是对物质主义和通过剥削（贩卖人口）获利的严厉审判。客商的悲哀纯粹是出于利益（没人买货物了），揭示了资本主义体系中唯利是图的冷酷本质。",
+                        content_en: "Lists luxury cargo (gold, gems, cloth, even 'human souls'). A judgment on materialism and exploitation. Merchants' sorrow is purely profit-based ('no one buys'), revealing the cold, profit-driven nature of the worldly economy."
+                    },
+                    devotional: {
+                        title: "财富必长翅膀",
+                        title_en: "Wealth Will Fly Away",
+                        content_cn: "金子、银子、宝石……这一切在审判的日子都将毫无价值。如果我们的喜乐建立在拥有这些“货物”上，那么我们的哀哭也将是巨大的。更可怕的是将“人的灵魂”当作商品。我们要审视自己的理财观：是积攒财宝在地上，还是在天上？",
+                        content_en: "Gold, silver, gems... worthless in judgment. If our joy rests on 'cargo', our grief will be great. Treating souls as commodities is horrifying. Examine your finances: Are you storing treasure on earth or in heaven?"
+                    }
+                },
+                {
+                    ref: "18:17-19",
+                    text_cn: "凡船长和坐船往各处去的... 哭泣说：哀哉！哀哉！巴比伦大城... 一时之间就成了荒场！",
+                    text_en: "Every sea captain, and all who travel by ship... wept and mourned, crying out: 'Woe! Woe to you, great city... In one hour she has been brought to ruin!'",
+                    exegesis: {
+                        title: "船长的哀歌：贸易的断绝",
+                        title_en: "Lament of Mariners: Cessation of Trade",
+                        content_cn: "船长代表物流与贸易网络。他们靠巴比伦的“珍宝”发财。看着这伟大的贸易中心变成荒场，他们把尘土撒在头上痛哭。这标志着全球化经济体系的彻底瘫痪。神通过摧毁经济中心来审判人类的贪婪。",
+                        content_en: "Mariners represent logistics/trade networks. They got rich from her. Seeing the trade hub ruined, they mourn with dust on heads. Signals total paralysis of the global economy. God judges greed by destroying the economic center."
+                    },
+                    devotional: {
+                        title: "建立在利益上的关系之脆弱",
+                        title_en: "The Fragility of Relationships Built on Profit",
+                        content_cn: "船长和客商的哭泣是因为利益的丧失。这提醒我们，建立在物质交换上的关系是脆弱的。当利益链条断裂时，剩下的只有哀号。我们应当投资于那天上的国度，那里的财富不会朽坏，那里的关系建立在爱而非利益之上。",
+                        content_en: "Captains and merchants weep for lost profits. This reminds us that relationships based on material exchange are fragile. When the profit chain breaks, only wailing remains. Invest in the heavenly Kingdom, where wealth does not rot and relationships are built on love, not profit."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "18:20",
+                    text_cn: "天哪，众圣徒、众使徒、众先知啊，你们都要因她欢喜，因为神已经在她身上伸了你们的冤。",
+                    text_en: "Rejoice over her, you heavens! Rejoice, you people of God! Rejoice, apostles and prophets! For God has judged her with the judgment she imposed on you.",
+                    exegesis: {
+                        title: "天上的欢庆：公义的伸张",
+                        title_en: "Heavenly Rejoicing: Justice Served",
+                        content_cn: "与地上的三重哀哭形成鲜明对比的是天上的欢喜。这并非幸灾乐祸，而是对公义得到伸张的庆祝。巴比伦曾杀害先知和圣徒，现在神按公义报应了她。这是祷告（“主啊，要等到几时”）的最终回应。",
+                        content_en: "Contrasts earthly mourning with heavenly joy. Not schadenfreude, but celebration of justice. Babylon killed saints; now God vindicates them. The final answer to the prayer 'How long, O Lord?'."
+                    },
+                    devotional: {
+                        title: "以神的眼光看世界",
+                        title_en: "Seeing Through God's Eyes",
+                        content_cn: "当世界为股市崩盘或经济衰退哀哭时，也许正是神公义彰显的时刻。我们是与世界一同哀哭，还是因神的作为而欢喜？这取决于我们的价值观。让我们学习以神的公义为乐，而不是以世界的繁华为乐。",
+                        content_en: "When the world mourns economic crash, it may be God's justice. Do we mourn with the world or rejoice in God's work? It depends on our values. Learn to delight in God's justice, not worldly prosperity."
+                    }
+                },
+                {
+                    ref: "18:21-24",
+                    text_cn: "有一位大力的天使举起一块石头，好像大磨石，扔在海里，说：巴比伦大城也必这样... 决不能再见了... 先知和圣徒... 的血，都在这城里看见了。",
+                    text_en: "Then a mighty angel picked up a boulder the size of a large millstone and threw it into the sea... 'With such violence the great city of Babylon will be thrown down, never to be found again...'",
+                    exegesis: {
+                        title: "沉没的磨石：最终的结局",
+                        title_en: "The Sunken Millstone: The Final End",
+                        content_cn: "这动作象征性地预演了巴比伦的结局：1. **猛烈**（Violence）——如石头被用力扔下；2. **彻底**（No more）——如石头沉入深海不见踪影。随之而来的是各种声音（音乐、工作、灯光、新郎新妇）的彻底静默。原因是她迷惑万国并流了圣徒的血。",
+                        content_en: "Symbolic act of Babylon's end: 1. **Violent** (thrown down). 2. **Final** (disappears in sea). Followed by total silence of life (music, work, light, weddings). The cause: deceiving nations and shedding saints' blood."
+                    },
+                    devotional: {
+                        title: "罪恶的终结是寂静",
+                        title_en: "The End of Sin is Silence",
+                        content_cn: "巴比伦曾充满了喧嚣——交易声、宴乐声、音乐声。但最终只剩下死一般的寂静。这警示我们：没有神的繁华终必归于无有。不要被世界的喧嚷吸引，要追求那存到永远的声音——就是神的道和敬拜的声音。",
+                        content_en: "Babylon was full of noise—trade, parties, music. The end is deadly silence. Warning: Prosperity without God comes to nothing. Don't be drawn by worldly noise; seek the eternal sound—God's Word and worship."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-blue-900 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-slate-200 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-blue-800 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-blue-500 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                     const devData = verse.devotional; // Data is now guaranteed to be present or merged
+                     if (devData) {
+                        contentHTML += `
+                            <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-slate-200 md:pl-8' : ''}">
+                                <h4 class="flex items-center text-orange-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                    <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-orange-500 font-normal en-text">Devotional</span>
+                                </h4>
+                                <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                                    <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                    <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                    <div class="text-sm text-slate-700 leading-relaxed">
+                                        <p class="mb-2">${devData.content_cn}</p>
+                                        <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-blue-900 text-white shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

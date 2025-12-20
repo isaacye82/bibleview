@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 10: The Mighty Angel & The Little Scroll | 启示录第十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Celestial Blue - Cloud, Rainbow, Sea */
+            --theme-primary: #0ea5e9; 
+            /* Solar Orange - Sun Face, Fire Legs, Sweet Honey */
+            --theme-accent: #f97316;
+            /* Deep Space Blue - Mystery, Depth */
+            --theme-dark: #0c4a6e;
+            /* Pale Blue - Ethereal Background */
+            --theme-bg: #f0f9ff;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #0f172a;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(12, 74, 110, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for The Scroll */
+        .scroll-badge {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0ea5e9;
+            position: relative;
+        }
+        .scroll-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #0ea5e9;
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes radiate {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(249, 115, 22, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+        .icon-radiate {
+            animation: radiate 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-sky-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-sky-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-sky-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">10</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-sky-900">启示录第十章</h1>
+                        <p class="text-xs text-sky-600 uppercase tracking-widest en-text">Revelation 10: The Mighty Angel & The Scroll</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-sky-600 bg-gradient-to-br from-white to-sky-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-sky-900 mb-2 serif-font">不再耽延：先知的使命与神的奥秘</h2>
+                        <h3 class="text-lg text-sky-600 italic font-serif mb-4 en-text">No More Delay: The Prophetic Mission and the Mystery of God</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十章是第六号与第七号之间的插曲。一位大力的天使从天降下，宣告“不再耽延了”。这一章将焦点从对世界的审判转向了先知本身：约翰被命令吃下展开的小书卷。这象征着重新接受先知的使命——品尝神话语的甜蜜，也承担其审判的苦涩。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 10 serves as an interlude between the 6th and 7th Trumpets. A mighty angel descends, declaring "There will be no more delay." The focus shifts from judgment on the world to the prophet himself: John is commanded to eat the open little scroll. This symbolizes a recommissioning—tasting the sweetness of God's Word while bearing the bitterness of its judgment.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-sky-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#f97316 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="scroll-badge rounded-xl w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-scroll text-sky-700 text-5xl"></i>
+                                <i class="fas fa-sun text-orange-500 text-2xl absolute -top-4 -right-4 icon-radiate"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-sky-900 serif-font">展开的小书卷</h3>
+                            <p class="text-[10px] font-bold text-sky-600 uppercase tracking-widest en-text mt-1">The Little Scroll Open</p>
+                            <div class="w-12 h-0.5 bg-orange-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Sweet & Bitter<br>甜如蜜，苦如胆</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-sky-50 border border-sky-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-user-astronaut text-sky-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-sky-900 text-xl block">大力的天使</span>
+                            <span class="text-xs text-sky-700 italic en-text">The Mighty Angel</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        身披云彩，头上有虹，脸面像日头。这极可能是荣耀基督的显现（Christophany）或祂的特使。踏海踏地象征对全地的主权。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Clothed in a cloud, rainbow over head, face like the sun. Likely a Christophany or His special envoy. Standing on sea and land implies total dominion.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-orange-50 border border-orange-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-bolt text-orange-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">七雷 (封印)</span>
+                            <span class="text-xs text-orange-700 italic en-text">Seven Thunders (Sealed)</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        唯一被明确禁止记录的启示。这表明神有隐秘的事（申29:29），我们也应接受神主权的保留，不需知道所有细节。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The only revelation explicitly forbidden to be written. Shows God has secret things (Deut 29:29); we must accept His sovereign reservation.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-slate-100 border border-slate-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-book-open text-slate-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-800 text-xl block">吃书卷</span>
+                            <span class="text-xs text-slate-600 italic en-text">Eating the Scroll</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        先知必须将神的话“消化”成为生命的一部分。口中甜（因是神的话），腹中苦（因是审判的信息）。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The prophet must "digest" God's Word into his being. Sweet in mouth (God's truth), bitter in stomach (message of judgment).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-slate-800 mb-1">先知的体验：甜蜜与苦涩</h3>
+                    <p class="text-sm text-slate-500 mb-6 italic en-text">The Prophetic Experience: Sweetness vs Bitterness</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="scrollChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-sky-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-sky-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-sky-100 text-sky-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-sky-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-sky-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1: The Angel's Glory -->
+            <div class="border-l-4 border-sky-500 pl-6">
+                <h2 class="text-2xl font-bold text-sky-900 mb-2">第一部分：大力的天使显现 (10:1-4)</h2>
+                <h3 class="text-sm text-sky-600 italic mb-6 en-text">The Appearance of the Mighty Angel</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2: The Oath -->
+            <div class="border-l-4 border-orange-500 pl-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-2">第二部分：不再耽延的起誓 (10:5-7)</h2>
+                <h3 class="text-sm text-orange-600 italic mb-6 en-text">The Oath of No More Delay</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3: Eating the Scroll -->
+             <div class="border-l-4 border-slate-600 pl-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">第三部分：吃下小书卷 (10:8-11)</h2>
+                <h3 class="text-sm text-slate-500 italic mb-6 en-text">Consuming the Little Scroll</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-sky-100 p-4 border-b border-sky-200">
+                            <h3 class="text-xl font-bold text-sky-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-sky-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于旧约背景的呼应（以西结书的吃书卷、但以理书的封印）以及天使身份的辨析。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on OT parallels (Ezekiel's scroll, Daniel's sealing) and identifying the Angel.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-sky-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将“大力的天使”的特征与基督（启1章）对比。理解“不再耽延”为神奥秘成就的时刻已到，而非字面时间的停止。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Compare "Mighty Angel" features with Christ (Rev 1). Understand "No more delay" as the fulfillment of mystery, not end of literal time.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-orange-100 p-4 border-b border-orange-200">
+                            <h3 class="text-xl font-bold text-orange-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-orange-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于信徒与神话语的关系：不仅是理性的阅读，更是生命的消化与承担。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the believer's relationship with God's Word: not just intellectual reading, but digestion and bearing.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-orange-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">接受真理的双重性：救恩的甘甜与审判的沉重。鼓励在不明白（七雷）时信靠神的主权。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Accepting the duality of truth: sweetness of salvation & weight of judgment. Encouraging trust in God's sovereignty when things are hidden (7 thunders).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-sky-900 text-sky-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"你必指着多民、多国、多方、多王再说预言。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"You must prophesy again about many peoples, nations, languages and kings."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十章中英对照研经报告 | THE MIGHTY ANGEL & THE SCROLL</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "10:1-3",
+                    text_cn: "我又看见另一位大力的天使从天降下，披着云彩，头上有虹，脸面像日头，两脚像火柱... 右脚踏海，左脚踏地。",
+                    text_en: "Then I saw another mighty angel coming down from heaven. He was robed in a cloud, with a rainbow above his head; his face was like the sun, and his legs were like fiery pillars... He planted his right foot on the sea and his left foot on the land.",
+                    exegesis: {
+                        title: "大力的天使：荣耀的显现",
+                        title_en: "The Mighty Angel: A Glorious Appearance",
+                        content_cn: "这天使的描述（云彩、彩虹、日头、火柱）与启示录1章中复活基督的形象惊人相似。许多学者认为这是基督的显现（Christophany），或是拥有基督权柄的特使。一脚踏海，一脚踏地，象征着他对全地（包括陆地和海洋）拥有绝对的所有权和审判权。",
+                        content_en: "The description (cloud, rainbow, sun, fire) closely mirrors the risen Christ in Rev 1. Many scholars view this as a Christophany or an envoy with Christ's authority. Standing on sea and land symbolizes absolute dominion and claim over the entire earth."
+                    },
+                    devotional: {
+                        title: "主的掌权",
+                        title_en: "The Lord's Dominion",
+                        content_cn: "当世界看似混乱失控时，这幅图画给我们极大的安慰：主“踏”在全地上。无论是陆地（稳定的）还是海洋（动荡的），都在祂脚下。没有任何领域是祂无法触及或管理的。我们可以安息在祂这至高的主权中。",
+                        content_en: "When the world seems chaotic, this image comforts us: The Lord 'stands' on the whole earth. Whether land (stable) or sea (turbulent), all is under His feet. No realm is beyond His touch. We can rest in His supreme sovereignty."
+                    }
+                },
+                {
+                    ref: "10:4",
+                    text_cn: "七雷发声之后，我正要写出来，就听见从天上有声音说：七雷所说的，你要封上，不可写出来。",
+                    text_en: "And when the seven thunders spoke, I was about to write; but I heard a voice from heaven say, 'Seal up what the seven thunders have said and do not write it down.'",
+                    exegesis: {
+                        title: "七雷：隐藏的奥秘",
+                        title_en: "The Seven Thunders: Hidden Mysteries",
+                        content_cn: "这是整本启示录中唯一被“封上”的信息。这表明并非所有的神圣计划都必须向人类揭示。正如申命记29:29所说，“隐秘的事是属耶和华我们神的”。神保留了一部分关于审判或未来的细节，不让人知晓。",
+                        content_en: "This is the only message in Revelation explicitly 'sealed'. It shows not all divine plans must be revealed. As Deut 29:29 says, 'The secret things belong to the Lord'. God reserves some details of judgment or the future from human knowledge."
+                    },
+                    devotional: {
+                        title: "接受未知的信心",
+                        title_en: "Faith to Accept the Unknown",
+                        content_cn: "我们常渴望知道未来的每一个细节，但神有时会说“不可写出来”。真正的信心不仅在于相信神所启示的，也在于对神未启示之事保持敬畏和信任。即使在“七雷”的轰鸣中我们一无所知，也要相信神是良善和公义的。",
+                        content_en: "We crave to know every detail of the future, but sometimes God says 'do not write'. True faith trusts what is revealed and reverently accepts what is hidden. Even when we are clueless amidst the 'seven thunders', we trust God is good and just."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "10:5-7",
+                    text_cn: "那天使... 指着... 创造万物之神起誓说：不再耽延了。但在第七位天使吹号... 的时候，神的奥秘就成全了...",
+                    text_en: "The angel... swore by him who lives for ever and ever... 'There will be no more delay! But in the days when the seventh angel is about to sound his trumpet, the mystery of God will be accomplished...'",
+                    exegesis: {
+                        title: "不再耽延",
+                        title_en: "No More Delay",
+                        content_cn: "“不再耽延”（Chronos）意味着时间的终结或等待的结束。这回应了第六章殉道者“还要等多久”的呼求。第七号将标志着神救赎与审判计划（神的奥秘）的最终完成。这是一个决定性的转折点，历史即将落幕。",
+                        content_en: "'No more delay' (Chronos) means the end of waiting. It answers the martyrs' cry 'How long?' in Ch 6. The 7th Trumpet will mark the consummation of God's plan (Mystery). A decisive turning point; history is wrapping up."
+                    },
+                    devotional: {
+                        title: "神的时间表",
+                        title_en: "God's Timetable",
+                        content_cn: "神是耐心的，但祂的耐心也是有限度的。终有一天，神会说“时间到了”。这对在苦难中等候的人是好消息，对在罪中拖延悔改的人却是噩耗。让我们活得像没有明天一样，时刻准备迎见神。",
+                        content_en: "God is patient, but His patience has a limit. One day He will say 'Time is up'. This is good news for those waiting in suffering, but bad news for those delaying repentance. Let us live ready to meet God."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "10:8-11",
+                    text_cn: "我对天使说：请你把小书卷给我。他对我说：你拿着吃尽了，便叫你肚子发苦，然而在你口中要甜如蜜... 你必指着多民... 再说预言。",
+                    text_en: "I asked him to give me the little scroll. He said, 'Take it and eat it. It will turn your stomach sour, but in your mouth it will be as sweet as honey.'... 'You must prophesy again about many peoples...'",
+                    exegesis: {
+                        title: "吃书卷：先知的内化",
+                        title_en: "Eating the Scroll: Prophetic Internalization",
+                        content_cn: "这呼应了以西结书3:1-3。吃书卷象征着彻底消化和领受神的话语。口中“甜如蜜”是因为神的话语本身是美善和真理；肚子“发苦”是因为书卷的内容包含了对世界的严厉审判。先知必须先内化这双重现实，才能有力地传讲（再说预言）。",
+                        content_en: "Echoes Ezekiel 3:1-3. Eating symbolizes fully digesting God's Word. 'Sweet as honey' because God's truth is good; 'Bitter in stomach' because it contains harsh judgments. The prophet must internalize this dual reality before proclaiming it."
+                    },
+                    devotional: {
+                        title: "真理的甜蜜与代价",
+                        title_en: "The Sweetness and Cost of Truth",
+                        content_cn: "读经不应只是理智的活动，而应是生命的“吞吃”。神的话既给我们带来救恩的甜蜜，也让我们因看见罪的结局而感到沉痛（苦）。一个真正的真理传递者，必定体会过神心意中的爱与痛。你是否愿意承担这份“苦”，去对世界说真话？",
+                        content_en: "Reading Bible isn't just intellectual; it's 'eating'. God's Word brings the sweetness of salvation but also the heaviness (bitterness) of sin's consequence. A true messenger feels both God's love and pain. Are you willing to bear this 'bitterness' to speak truth?"
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-sky-100 text-sky-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-sky-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-sky-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-sky-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-sky-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-orange-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-orange-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-orange-50 p-4 rounded-lg border border-orange-100">
+                                <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-sky-100 text-sky-800 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-sky-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('scrollChart').getContext('2d');
+            
+            // Contrast: Sweetness vs Bitterness
+            const data = {
+                labels: [
+                    ['In the Mouth (Revelation)', '口中 (启示)'], 
+                    ['In the Stomach (Reality)', '腹中 (现实)'], 
+                    ['God\'s Promises', '神的应许'], 
+                    ['God\'s Judgment', '神的审判'], 
+                    ['Joy of Truth', '真理的喜乐'], 
+                    ['Burden of Prophecy', '预言的重担']
+                ],
+                datasets: [
+                    {
+                        label: 'Sweetness / 甜蜜',
+                        data: [90, 10, 95, 20, 90, 30],
+                        backgroundColor: 'rgba(14, 165, 233, 0.5)', // Sky Blue
+                        borderColor: 'rgba(14, 165, 233, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Bitterness / 苦涩',
+                        data: [10, 90, 5, 80, 10, 95], 
+                        backgroundColor: 'rgba(249, 115, 22, 0.5)', // Orange
+                        borderColor: 'rgba(249, 115, 22, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false } 
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: "'Noto Sans SC', sans-serif", size: 10 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

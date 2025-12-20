@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 9: The Abyss & The Horsemen | 启示录第九章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Abyss Slate - Darkness, Smoke, Iron */
+            --theme-primary: #334155; 
+            /* Sulfur Yellow - Warning, Poison, Sting */
+            --theme-accent: #eab308;
+            /* Deep Black - The Pit */
+            --theme-dark: #020617;
+            /* Pale Yellow - Sickly Atmosphere */
+            --theme-bg: #fefce8;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #0f172a;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(71, 85, 105, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for The Abyss Key */
+        .abyss-badge {
+            background: linear-gradient(135deg, #fefce8 0%, #fef08a 100%);
+            border: 2px solid #334155;
+            position: relative;
+        }
+        .abyss-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #334155;
+            border-radius: 12px;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(10px) rotate(45deg); opacity: 0; }
+        }
+        .icon-fall {
+            animation: fall 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-yellow-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-yellow-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-slate-700 text-yellow-400 w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">9</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-slate-800">启示录第九章</h1>
+                        <p class="text-xs text-slate-500 uppercase tracking-widest en-text">Revelation 9: The Abyss & The Horsemen</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-slate-700 bg-gradient-to-br from-white to-slate-100 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-2 serif-font">无底坑的开启与人类的顽梗</h2>
+                        <h3 class="text-lg text-slate-600 italic font-serif mb-4 en-text">The Opening of the Abyss and Human Stubbornness</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第九章描绘了第五号和第六号的吹响，审判从自然界转向了人类本身。随着“无底坑”的开启，魔鬼的势力被释放，带来极大的痛苦和死亡。然而，这章最令人震惊的不是灾难的恐怖，而是幸存者面对如此审判，依然“不肯悔改”。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 9 depicts the sounding of the fifth and sixth trumpets, shifting judgment from nature to humanity itself. As the "Abyss" opens, demonic forces are unleashed, bringing immense torment and death. Yet, the most shocking aspect is not the terror of the plagues, but that the survivors, facing such judgment, still "did not repent".
+                        </p>
+                    </div>
+
+                    <!-- Right: Abyss Visual -->
+                    <div class="bg-slate-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#eab308 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="abyss-badge rounded-xl w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-key text-slate-700 text-5xl"></i>
+                                <i class="fas fa-star text-yellow-500 text-2xl absolute -top-4 -right-4 icon-fall"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 serif-font">无底坑之钥</h3>
+                            <p class="text-[10px] font-bold text-slate-600 uppercase tracking-widest en-text mt-1">Key to the Abyss</p>
+                            <div class="w-12 h-0.5 bg-yellow-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Released for Judgment<br>释放以审判</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-slate-100 border border-slate-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-dungeon text-slate-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-800 text-xl block">无底坑 (Abyss)</span>
+                            <span class="text-xs text-slate-600 italic en-text">Prison of Demons</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        关押堕落天使和恶魔的监狱。它的开启释放了从前被神限制的邪恶力量，表明这不仅仅是战争，而是属灵的攻击。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The prison of fallen angels. Its opening releases evil forces previously restrained by God, indicating spiritual attack, not just war.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-yellow-50 border border-yellow-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-locust text-yellow-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-yellow-900 text-xl block">蝗虫大军</span>
+                            <span class="text-xs text-yellow-700 italic en-text">Demonic Locusts</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        不是普通的昆虫，而是具有智慧和恶意的魔鬼势力。它们不吃草，只伤人，带来精神和肉体上的极度折磨。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Not ordinary insects, but intelligent, malicious demonic forces. They don't eat grass but torment humans mentally and physically.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-heart-broken text-red-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">不悔改的心</span>
+                            <span class="text-xs text-red-700 italic en-text">Unrepentant Hearts</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        尽管经历了地狱般的折磨，幸存者仍紧抱偶像不放。这揭示了罪的可怕力量：痛苦本身并不一定能带来悔改。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Despite hellish torment, survivors cling to idols. This reveals the power of sin: pain alone does not guarantee repentance.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-slate-800 mb-1">无底坑的蝗虫：超自然的特征</h3>
+                    <p class="text-sm text-slate-500 mb-6 italic en-text">Locusts from the Abyss: Supernatural Characteristics</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="locustChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-yellow-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-yellow-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-slate-200 text-slate-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1: 5th Trumpet -->
+            <div class="border-l-4 border-slate-500 pl-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">第一部分：第五号——蝗虫之灾 (9:1-12)</h2>
+                <h3 class="text-sm text-slate-500 italic mb-6 en-text">The Fifth Trumpet: The Plague of Locusts</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2: 6th Trumpet -->
+            <div class="border-l-4 border-yellow-600 pl-6">
+                <h2 class="text-2xl font-bold text-yellow-800 mb-2">第二部分：第六号——马军之灾 (9:13-19)</h2>
+                <h3 class="text-sm text-yellow-600 italic mb-6 en-text">The Sixth Trumpet: The Plague of Cavalry</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3: The Result -->
+             <div class="border-l-4 border-red-800 pl-6">
+                <h2 class="text-2xl font-bold text-red-900 mb-2">第三部分：人心的顽梗 (9:20-21)</h2>
+                <h3 class="text-sm text-red-700 italic mb-6 en-text">The Stubbornness of the Human Heart</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-slate-200 p-4 border-b border-slate-300">
+                            <h3 class="text-xl font-bold text-slate-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-slate-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于解析复杂的象征意象（星、钥匙、蝗虫的特征），并结合旧约（约珥书）背景。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on decoding complex symbols (star, key, locust features) and integrating OT (Joel) background.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">区分“堕落之星”与基督。理解“五个月”为受限的时间。将蝗虫解读为恶魔势力而非现代武器（如直升机）。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Distinguish "Fallen Star" from Christ. Understand "5 months" as limited time. Interpret locusts as demonic forces, not modern weapons.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-yellow-100 p-4 border-b border-yellow-200">
+                            <h3 class="text-xl font-bold text-yellow-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-yellow-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于属灵争战的现实、神的保护印记，以及对罪的警醒。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the reality of spiritual warfare, God's protective seal, and vigilance against sin.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-yellow-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">罪不仅带来痛苦，还会迷惑人心。即便在最黑暗的时刻，拥有“神印记”的人也是安全的。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Sin brings pain and deception. Even in the darkest hour, those with "God's Seal" are secure.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"唯独要伤害额上没有神印记的人。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"They were told... only those people who did not have the seal of God on their foreheads."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第九章中英对照研经报告 | THE ABYSS & THE HORSEMEN</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "9:1-2",
+                    text_cn: "第五位天使吹号，我就看见一个星从天落到地上，有无底坑的钥匙赐给他。他开了无底坑，便有烟从坑里往上冒...",
+                    text_en: "The fifth angel sounded his trumpet, and I saw a star that had fallen from the sky to the earth. The star was given the key to the shaft of the Abyss. When he opened the Abyss, smoke rose from it...",
+                    exegesis: {
+                        title: "坠落之星与无底坑",
+                        title_en: "The Fallen Star and the Abyss",
+                        content_cn: "这颗“星”并非自然天体，而是指一位天使（可能是堕落天使，甚至是撒但本身，参路10:18）。“无底坑”（Abyss）是关押邪灵的监狱（路8:31）。钥匙象征权柄，但这是“赐给”他的，表明即使是魔鬼的释放也在神的主权许可之下。",
+                        content_en: "The 'star' is an angel (likely fallen, possibly Satan, cf. Luke 10:18). The 'Abyss' is the prison of demons. The key implies authority, but it is 'given', showing even demonic release is under God's sovereign permission."
+                    },
+                    devotional: {
+                        title: "黑暗并非失控",
+                        title_en: "Darkness is Not Out of Control",
+                        content_cn: "当我们看到邪恶势力似乎在世上肆虐时，不要惊慌。那把钥匙是在神的手中控制的。魔鬼只能做神许可它做的事。这无底坑的烟雾虽然能遮蔽日头，却不能遮蔽神的宝座。",
+                        content_en: "When evil seems rampant, do not panic. The key is under God's control. The devil can only do what is permitted. The smoke may hide the sun, but it cannot hide God's throne."
+                    }
+                },
+                {
+                    ref: "9:3-6",
+                    text_cn: "有蝗虫从烟中出来... 唯独要伤害额上没有神印记的人... 不许害死他们，叫他们受痛苦五个月...",
+                    text_en: "And out of the smoke locusts came down... told to harm only those people who did not have the seal of God on their foreheads... not to kill them, but only to torture them for five months...",
+                    exegesis: {
+                        title: "受限的折磨",
+                        title_en: "Limited Torment",
+                        content_cn: "这些蝗虫反自然而行：不吃草，只伤人。它们的目标是有选择性的（避开有神印记的人）。“五个月”是蝗虫的自然生命周期，象征这段灾难是有限期的，尚未到最终的毁灭。这是一种旨在引发悔改的严厉管教。",
+                        content_en: "These locusts are unnatural: they harm humans, not grass. Their target is selective (avoiding God's sealed). '5 months' (locust lifespan) symbolizes a limited period. It is severe discipline aimed at repentance, not final destruction."
+                    },
+                    devotional: {
+                        title: "神印记的保护",
+                        title_en: "Protection of God's Seal",
+                        content_cn: "这是对信徒极大的安慰。在属灵的攻击和精神的折磨（如抑郁、恐惧）横行时，属神的人拥有特殊的免疫力。这不是说我们不会肉身受苦，而是我们的灵魂在基督里是安全的，免受魔鬼致命的毒害。",
+                        content_en: "A great comfort. Amidst spiritual attacks and mental torment (fear/depression), God's people have immunity. Not exemption from physical pain, but our souls are safe in Christ from the devil's fatal poison."
+                    }
+                },
+                {
+                    ref: "9:7-11",
+                    text_cn: "蝗虫的形状，好像预备出战的马一样... 面貌像人... 牙齿像狮子的牙齿... 有无底坑的使者作它们的王... 名叫亚玻伦。",
+                    text_en: "The locusts looked like horses prepared for battle... faces resembled human faces... teeth like lions' teeth... They had as king over them the angel of the Abyss... his name is Apollyon.",
+                    exegesis: {
+                        title: "恶魔的伪装与本质",
+                        title_en: "The Disguise and Nature of Demons",
+                        content_cn: "这些描述（像马、像人、像狮子）揭示了邪恶力量的恐怖本质：它们有力量（马）、有智慧（人脸）、有诱惑力（女发）、却极其残忍（狮牙）。它们有组织，受“亚玻伦”（意为毁灭者）指挥。这绝非自然灾害，而是有组织的属灵黑暗势力。",
+                        content_en: "Descriptions (horses, men, lions) reveal the terror of evil: powerful, intelligent, seductive (women's hair), yet cruel (lion's teeth). They are organized under 'Apollyon' (Destroyer). This is organized spiritual darkness, not natural disaster."
+                    },
+                    devotional: {
+                        title: "识破罪的伪装",
+                        title_en: "Seeing Through Sin's Disguise",
+                        content_cn: "罪恶和魔鬼常以诱人的面貌出现（像女人的头发），却隐藏着毁灭的本质（狮子的牙齿）。我们需要属灵的洞察力，看透世俗诱惑背后的“亚玻伦”（毁灭者）。不要被表面的美丽欺骗，要看清其尾部的毒钩。",
+                        content_en: "Sin often appears seductive (women's hair) but hides destruction (lion's teeth). We need spiritual discernment to see the 'Destroyer' behind worldly temptations. Don't be fooled by beauty; look for the sting."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "9:13-16",
+                    text_cn: "第六位天使吹号... 把那捆绑在伯拉大河的四个使者释放了... 马军有二万万...",
+                    text_en: "The sixth angel sounded... 'Release the four angels who are bound at the great river Euphrates.'... The number of the mounted troops was two hundred million...",
+                    exegesis: {
+                        title: "来自东方的审判大军",
+                        title_en: "The Judgment Army from the East",
+                        content_cn: "“伯拉大河”（幼发拉底河）是神应许之地的边界，也是以色列外敌（如巴比伦）入侵的方向。四个被捆绑的使者是堕落的高阶恶魔，一旦释放，便引发数以亿计（二万万）的恶魔骑兵。这象征着一种势不可挡的、毁灭性的入侵力量。",
+                        content_en: "The Euphrates was the boundary of the Promised Land and the source of invaders (Babylon). The 4 bound angels are high-ranking demons. Their release triggers a 200 million-strong demonic cavalry, symbolizing unstoppable, destructive invasion."
+                    },
+                    devotional: {
+                        title: "不可见的战争",
+                        title_en: "The Invisible War",
+                        content_cn: "有时候，战争和各种社会动荡不仅仅是地缘政治的结果，背后可能有属灵权势的释放（以弗所书6:12）。这提醒我们，真正的战场在灵界。我们要为国家祷告，求神捆绑那些通过战争带来杀戮的黑暗权势。",
+                        content_en: "War and turmoil are often more than geopolitics; they can involve spiritual powers (Eph 6:12). The real battle is spiritual. We must pray for nations, asking God to bind the dark forces that bring slaughter."
+                    }
+                },
+                {
+                    ref: "9:17-19",
+                    text_cn: "骑马的胸前有甲如火... 马的头好像狮子头，有火、有烟、有硫磺从口中出来... 杀了人的三分之一。",
+                    text_en: "The riders had breastplates the color of fire... The heads of the horses resembled the heads of lions, and out of their mouths came fire, smoke and sulfur... A third of mankind was killed...",
+                    exegesis: {
+                        title: "地狱般的毁灭",
+                        title_en: "Hellish Destruction",
+                        content_cn: "火、烟、硫磺是地狱审判的标志（参创19:24）。这里三分之一的人被杀，这是比第五号（只受痛苦）更进一步的审判。这种杀戮力量来自“口”（谎言/邪说）和“尾”（以赛亚书9:15指假先知），暗示这不仅是肉体的消灭，更是通过谎言进行的毁灭。",
+                        content_en: "Fire, smoke, sulfur mark hellish judgment. 1/3 killed is an escalation from the 5th Trumpet. The power is in 'mouths' (lies) and 'tails' (false prophets, Isa 9:15), implying destruction via deception as well as physical death."
+                    },
+                    devotional: {
+                        title: "谎言的致命性",
+                        title_en: "The Lethality of Lies",
+                        content_cn: "这些马的尾巴像蛇，且有头，能伤人。这象征着虚假的教导和破坏性的意识形态。在这个信息泛滥的时代，错误的思想比病毒杀人更多。我们要穿戴神的全副军装，特别是真理的带子，来抵挡这些致命的谎言。",
+                        content_en: "Snake-headed tails symbolize damaging false teachings/ideologies. In our age, wrong ideas kill more than viruses. We must wear the full armor of God, especially the belt of truth, to withstand these lethal lies."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "9:20-21",
+                    text_cn: "其余未曾被这些灾难所杀的人仍旧不悔改... 去拜鬼魔和... 偶像，又不悔改他们那些凶杀、邪术、奸淫、偷窃的事。",
+                    text_en: "The rest of mankind who were not killed by these plagues still did not repent... they did not stop worshiping demons... nor did they repent of their murders, their magic arts, their sexual immorality or their thefts.",
+                    exegesis: {
+                        title: "人心的刚硬",
+                        title_en: "The Hardness of Heart",
+                        content_cn: "这是全章最悲哀的经文。尽管经历了如地狱般的灾难，幸存者并未转向神，反而更深地陷入罪中。这回应了出埃及记中法老的硬心。罪不仅是行为，更是一种奴役。当人心中没有神时，即便面对死亡，他们也宁愿拜鬼魔而不愿悔改。",
+                        content_en: "The saddest verses. Despite hellish plagues, survivors don't turn to God but sink deeper into sin. Echoes Pharaoh's hardened heart. Sin is slavery. Without God, people prefer worshipping demons over repentance, even facing death."
+                    },
+                    devotional: {
+                        title: "苦难不一定带来悔改",
+                        title_en: "Suffering Doesn't Guarantee Repentance",
+                        content_cn: "我们常以为“如果神显个神迹或给点教训，人就会信”，但事实并非如此。如果没有圣灵的光照，苦难只会让人更苦毒、更刚硬。不要等到灾难临头才悔改，现在就是恩典的时候。如果你听见神的声音，不可硬着心。",
+                        content_en: "We think miracles or discipline guarantee faith, but they don't. Without the Spirit, suffering only hardens. Don't wait for disaster to repent; now is the time of grace. If you hear His voice, do not harden your heart."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-slate-700 text-yellow-400 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-slate-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-slate-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-slate-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-slate-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-yellow-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-yellow-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                                <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-slate-700 text-yellow-400 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('locustChart').getContext('2d');
+            
+            // Characteristics of the Demonic Locusts
+            const data = {
+                labels: [
+                    ['Power (Scorpions)', '能力 (蝎子)'], 
+                    ['Appearance (War Horses)', '外貌 (战马)'], 
+                    ['Intelligence (Human Face)', '智慧 (人脸)'], 
+                    ['Seduction (Women Hair)', '诱惑 (女发)'], 
+                    ['Cruelty (Lion Teeth)', '残忍 (狮牙)'], 
+                    ['Defense (Iron Breastplate)', '防御 (铁甲)']
+                ],
+                datasets: [
+                    {
+                        label: 'Demonic Attributes / 恶魔属性',
+                        data: [90, 85, 80, 70, 95, 85],
+                        backgroundColor: 'rgba(234, 179, 8, 0.4)', // Sulfur Yellow
+                        borderColor: 'rgba(234, 179, 8, 1)',
+                        pointBackgroundColor: '#334155',
+                        borderWidth: 2
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4b5563'
+                            },
+                            ticks: { display: false, max: 100 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

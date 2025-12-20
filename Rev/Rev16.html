@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 16: The Seven Bowls of Wrath | 启示录第十六章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Judgment Red - Blood, Wrath, Warning */
+            --theme-primary: #991b1b; 
+            /* Scorching Orange - Sun, Fire, Heat */
+            --theme-accent: #ea580c;
+            /* Darkness/Charcoal - Beast's Kingdom, Armageddon */
+            --theme-dark: #1c1917;
+            /* Pale Red - Background */
+            --theme-bg: #fef2f2;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1c1917;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(28, 25, 23, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for The Bowl */
+        .bowl-badge {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 2px solid #991b1b;
+            position: relative;
+        }
+        .bowl-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #991b1b;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes pour {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(45deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .icon-pour {
+            animation: pour 3s infinite ease-in-out;
+            transform-origin: center;
+        }
+        
+        @keyframes drop {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(20px); opacity: 0; }
+        }
+        .icon-drop {
+            animation: drop 1.5s infinite linear;
+        }
+    </style>
+</head>
+<body class="bg-red-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-red-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-red-800 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">16</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-red-900">启示录第十六章</h1>
+                        <p class="text-xs text-red-600 uppercase tracking-widest en-text">Revelation 16: The Seven Bowls of Wrath</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-red-700 bg-gradient-to-br from-white to-red-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-red-900 mb-2 serif-font">神大怒的金碗与“成了”</h2>
+                        <h3 class="text-lg text-red-700 italic font-serif mb-4 en-text">The Bowls of God's Wrath and "It is Done"</h3>
+                        <p class="text-stone-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十六章不仅是审判的高潮，也是历史的终局。不同于号角的“三分之一”警告，七碗的审判是全面且彻底的。从恶疮到血海，从日头灼人到黑暗笼罩，神对顽梗世人的审判层层递进，直至第七碗倒在空中，宣告“成了”。这是公义的最后彰显。
+                        </p>
+                        <p class="text-stone-500 text-sm leading-relaxed en-text">
+                            Chapter 16 is not just the climax of judgment, but the end of history. Unlike the partial "one-third" warnings of the Trumpets, the Seven Bowls are comprehensive and total. From sores to seas of blood, from scorching sun to darkness, God's judgment on the unrepentant escalates until the seventh bowl is poured into the air, declaring "It is done." This is the final manifestation of justice.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-stone-900 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="bowl-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-wine-glass-alt text-red-700 text-5xl mb-1 block icon-pour"></i>
+                                <i class="fas fa-tint text-red-500 text-2xl absolute bottom-0 left-1/2 -translate-x-1/2 icon-drop"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-red-900 serif-font">倾倒的金碗</h3>
+                            <p class="text-[10px] font-bold text-stone-600 uppercase tracking-widest en-text mt-1">The Poured Out Bowl</p>
+                            <div class="w-12 h-0.5 bg-red-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Fullness of Wrath<br>忿怒发尽</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-tint text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">报应 (Retribution)</span>
+                            <span class="text-xs text-red-700 italic en-text">Blood for Blood</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        天使宣告神的审判是公义的：“他们曾流圣徒...的血，现在你给他们血喝。”这体现了“同态复仇法”（Lex Talionis）的神圣原则，罪有应得。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Angel declares God's judgment righteous: "They shed blood... You gave them blood to drink." Divine Lex Talionis (eye for an eye); the punishment fits the crime.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-stone-100 border border-stone-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-skull-crossbones text-stone-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-stone-900 text-xl block">哈米吉多顿</span>
+                            <span class="text-xs text-stone-600 italic en-text">Armageddon</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        希伯来话，意为“米吉多山”。象征末世善恶势力的最终集结。污秽的灵（像青蛙）用谎言聚集列国，名为与神争战，实则步入神的酒醡。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Hebrew for "Mount Megiddo". Symbolizes the final gathering of good vs evil. Unclean spirits gather nations with lies for war, but walk into God's winepress.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-orange-50 border border-orange-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-check-circle text-orange-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">成了 (It is done)</span>
+                            <span class="text-xs text-orange-700 italic en-text">Gegonen</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        这是来自宝座的宣告，与十架上的“成了”（Tetelestai）呼应。这标志着大患难的结束，神忿怒的止息，以及巴比伦大城的彻底倾覆。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Voice from the throne, echoing "It is finished" on the Cross. Marks the end of Tribulation, the completion of Wrath, and the total collapse of Babylon.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-red-900 mb-1">审判的升级：从号角到金碗</h3>
+                    <p class="text-sm text-stone-500 mb-6 italic en-text">Escalation of Judgment: Trumpets vs Bowls</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="judgmentChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-red-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-red-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-red-100 text-red-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-red-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-red-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-red-500 pl-6">
+                <h2 class="text-2xl font-bold text-red-900 mb-2">第一部分：前四碗——自然的毁灭 (16:1-9)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">Bowls 1-4: Destruction of Nature</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-stone-600 pl-6">
+                <h2 class="text-2xl font-bold text-stone-800 mb-2">第二部分：第五、六碗——兽国与哈米吉多顿 (16:10-16)</h2>
+                <h3 class="text-sm text-stone-500 italic mb-6 en-text">Bowls 5-6: The Beast's Kingdom & Armageddon</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-orange-600 pl-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-2">第三部分：第七碗——成了 (16:17-21)</h2>
+                <h3 class="text-sm text-orange-600 italic mb-6 en-text">Bowl 7: It is Done</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-stone-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-stone-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-100 p-4 border-b border-red-200">
+                            <h3 class="text-xl font-bold text-red-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于与出埃及记灾难的平行对比、审判的公义性原则（报应神学），以及哈米吉多顿的末世意义。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on parallels with Exodus plagues, principles of retributive justice, and the eschatological meaning of Armageddon.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">理解金碗审判是对号角审判的升级（从1/3到全部）。确认神审判的道德基础：对杀害圣徒者的公义报应。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Understand Bowls as escalation of Trumpets (1/3 to All). Affirm the moral basis of judgment: righteous retribution for martyred saints.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-stone-200 p-4 border-b border-stone-300">
+                            <h3 class="text-xl font-bold text-stone-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-stone-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于人心的顽梗（受罚却不悔改），以及在末世混乱中保持属灵警醒（看守衣服）的重要性。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on hardness of heart (suffering without repenting) and the importance of spiritual vigilance (keeping garments).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">痛苦并不自动带来悔改，若没有恩典，人只会亵渎神。信徒需在“像贼一样”的日子里保持圣洁。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Pain doesn't guarantee repentance; without grace, man only blasphemes. Believers must remain holy in days that come "like a thief".</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-emerald-900 text-emerald-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"第七位天使把碗倒在空中，就有大声音从殿中的宝座上出来，说：成了！"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"The seventh angel poured out his bowl into the air, and out of the temple came a loud voice from the throne, saying, 'It is done!'"</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十六章中英对照研经报告 | THE SEVEN BOWLS OF WRATH</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "16:1-2",
+                    text_cn: "第一位天使便去，把碗倒在地上，就有恶而且毒的疮生在那些有兽印记... 的人身上。",
+                    text_en: "The first angel went and poured out his bowl on the land, and ugly, festering sores broke out on the people who had the mark of the beast...",
+                    exegesis: {
+                        title: "第一碗：恶毒的疮",
+                        title_en: "1st Bowl: Loathsome Sores",
+                        content_cn: "这呼应了埃及的第六灾（疮灾）。这是一种报应性的审判：那些接受了“印记”（Mark）的人，现在身上长出了“记号”（Sores）。这表明罪不仅是法律问题，更会带来肉体和生命的败坏。这是对拜兽者身体的直接攻击。",
+                        content_en: "Echoes Egypt's 6th plague (Boils). Retributive justice: those who took the 'Mark' now bear a physical 'mark' (sores). Shows sin is not just legal but corrupting. Direct attack on the bodies of beast-worshippers."
+                    },
+                    devotional: {
+                        title: "罪的印记",
+                        title_en: "The Mark of Sin",
+                        content_cn: "世界应许给拜兽者荣耀和安全，但神揭示其真相是“恶而且毒的疮”。罪恶起初可能甜美，但最终必定在我们的生命中流脓发臭。不要羡慕恶人的亨通，因为他们的印记终将成为羞耻的记号。",
+                        content_en: "The world promised glory to beast-worshippers, but God reveals it as 'loathsome sores'. Sin tastes sweet but festers later. Do not envy the wicked; their mark will become a badge of shame."
+                    }
+                },
+                {
+                    ref: "16:3-7",
+                    text_cn: "第二位... 倒在海里，海就变成血... 第三位... 倒在江河... 也变成血... 天使说：你这样判断是公义的... 他们曾流圣徒... 的血，现在你给他们血喝。",
+                    text_en: "The second angel poured out his bowl on the sea, and it turned into blood... The third angel poured out his bowl on the rivers... and they became blood... 'You are just in these judgments... for they have shed the blood of your holy people...'",
+                    exegesis: {
+                        title: "第二、三碗：血债血偿",
+                        title_en: "2nd & 3rd Bowls: Blood for Blood",
+                        content_cn: "不同于号角审判（1/3受损），这里是完全的破坏。水源（海与河）全部变质。天使的宣告揭示了审判的道德理由：流人血者必喝血。这不是残忍，而是绝对的公平（公义）。神记得每一滴殉道者的血。",
+                        content_en: "Unlike Trumpets (1/3), this is total destruction. Water sources fully corrupted. Angel declares moral reason: Blood shedders must drink blood. Not cruelty, but absolute justice. God remembers every drop of martyrs' blood."
+                    },
+                    devotional: {
+                        title: "公义的必然性",
+                        title_en: "The Inevitability of Justice",
+                        content_cn: "在这个充满冤屈的世界，我们常问“公义何在？”这几节经文告诉我们，神的记性极好。没有任何罪恶会被遗忘，也没有任何义行（或受苦）会被忽略。当看到恶人似乎得逞时，请记住：神必按公义审判，血债终必血偿。",
+                        content_en: "In an unjust world, we ask 'Where is justice?'. These verses say God has a long memory. No sin is forgotten, no suffering ignored. When evil seems to win, remember: God judges righteously; blood debt will be paid."
+                    }
+                },
+                {
+                    ref: "16:8-9",
+                    text_cn: "第四位... 倒在日头上... 人被大热所烤，就亵渎... 神的名，并不悔改将荣耀归给神。",
+                    text_en: "The fourth angel poured out his bowl on the sun... They were seared by the intense heat and they cursed the name of God... but they refused to repent and glorify him.",
+                    exegesis: {
+                        title: "第四碗：日头烤人",
+                        title_en: "4th Bowl: Scorching Sun",
+                        content_cn: "日头本是恩典的象征（照好人也照歹人），现在却变成了刑罚的工具。但这并未带来悔改，反而引发了亵渎。这揭示了人心的全然败坏（Total Depravity）：如果没有恩典的介入，单纯的苦难只会让人更加恨神，而不会使人爱神。",
+                        content_en: "Sun, usually a symbol of grace, becomes a tool of punishment. Yet, it triggers blasphemy, not repentance. Reveals Total Depravity: without grace, suffering only makes men hate God more, not love Him."
+                    },
+                    devotional: {
+                        title: "苦难中的反应",
+                        title_en: "Response to Suffering",
+                        content_cn: "当我们遭遇“灼热”的试炼时，我们的第一反应是什么？是谦卑悔改，还是抱怨亵渎？同样的太阳（苦难），能融化蜡（软化人心），也能使泥土变硬（刚硬人心）。求神保守我们的心，在管教中选择悔改而非悖逆。",
+                        content_en: "When we face 'scorching' trials, do we repent or complain? The same sun (suffering) melts wax (softens hearts) but hardens clay. Pray that in discipline, we choose repentance over rebellion."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "16:10-11",
+                    text_cn: "第五位... 倒在兽的座位上；兽的国就黑暗了。人因疼痛就咬自己的舌头... 并不悔改所行的。",
+                    text_en: "The fifth angel poured out his bowl on the throne of the beast, and his kingdom was plunged into darkness. People gnawed their tongues in agony... and refused to repent.",
+                    exegesis: {
+                        title: "第五碗：兽国的黑暗",
+                        title_en: "5th Bowl: Darkness on the Beast's Kingdom",
+                        content_cn: "这直接攻击兽的权柄中心（座位）。黑暗呼应埃及第九灾，象征属灵的盲目、混乱和绝望。即便在极度的痛苦（咬舌头）和超自然的黑暗中，人依然选择硬心。这证明了审判的必要性：这些人已无可救药。",
+                        content_en: "Direct attack on the Beast's throne. Darkness echoes Egypt's 9th plague, symbolizing spiritual blindness/despair. Even in agony (gnawing tongues), they harden their hearts. Proves judgment is necessary: they are irredeemable."
+                    },
+                    devotional: {
+                        title: "无神的黑暗",
+                        title_en: "Godless Darkness",
+                        content_cn: "地狱的预尝就是“黑暗”加“疼痛”且“不悔改”。当人彻底拒绝神的光，剩下的只有黑暗。我们应当感恩，因为神已叫我们出黑暗入奇妙光明。不要等到心肠刚硬到无法回转的地步，今日就是悔改的日子。",
+                        content_en: "Hell is 'darkness' + 'pain' + 'no repentance'. When men reject God's light, only darkness remains. Be thankful He called us into light. Don't wait until the heart is too hard to turn; today is the day."
+                    }
+                },
+                {
+                    ref: "16:12-16",
+                    text_cn: "第六位... 倒在伯拉大河上... 三个污秽的灵，好像青蛙... 是鬼魔的灵，施行奇事，出去到普天下... 叫他们... 聚集争战... 那地方名叫哈米吉多顿。",
+                    text_en: "The sixth angel poured out his bowl on the great river Euphrates... Then I saw three impure spirits that looked like frogs... They are demonic spirits that perform signs... to gather them for the battle... to the place that in Hebrew is called Armageddon.",
+                    exegesis: {
+                        title: "第六碗：哈米吉多顿的集结",
+                        title_en: "6th Bowl: Gathering at Armageddon",
+                        content_cn: "伯拉大河干涸是为了让东方的王（敌挡神的势力）通过。三个像青蛙的灵（象征不洁和聒噪的宣传）从龙、兽、假先知口中出来，用虚假的神迹迷惑列国走向毁灭。哈米吉多顿（米吉多山）是古战场的象征，预表末后善恶的终极对决。",
+                        content_en: "Euphrates dries for Kings of the East. Three frog-like spirits (unclean propaganda) from the Unholy Trinity deceive nations into self-destruction via false miracles. Armageddon (Megiddo) symbolizes the final cosmic showdown."
+                    },
+                    devotional: {
+                        title: "看守你的衣服",
+                        title_en: "Keep Your Garments",
+                        content_cn: "在这一触即发的战争前夕，主耶稣突然插入一句警告（v15）：“看哪，我来像贼一样。那警醒、看守衣服...的有福了！”在末世的混乱和谎言中，信徒最重要的任务不是猜测战争细节，而是保持属灵的洁净（衣服）和警醒。不要赤身露体（在罪中）被主遇见。",
+                        content_en: "Amidst war preparations, Jesus interjects: 'I come like a thief! Blessed is he who keeps his garments.' In end-time chaos, our task isn't guessing war details, but keeping spiritual purity (garments) and vigilance. Don't be found naked (in sin)."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "16:17-21",
+                    text_cn: "第七位... 倒在空中... 说：成了！... 巴比伦大城裂为三段... 各海岛都逃避了... 又有大雹子从天落在人身上...",
+                    text_en: "The seventh angel poured out his bowl into the air... saying, 'It is done!'... The great city split into three parts... Every island fled away... From the sky huge hailstones... fell on people...",
+                    exegesis: {
+                        title: "第七碗：成了",
+                        title_en: "7th Bowl: It is Done",
+                        content_cn: "倒在“空中”可能指撒但掌权的领域（空中掌权者的首领）。“成了”宣告神忿怒的完结和救赎计划的完成。大地震造成地形的重塑（海岛山岭消失）和世界体系（巴比伦）的崩溃。大雹子（重约90斤）是极重的刑罚，但人仍旧亵渎神。",
+                        content_en: "Poured into 'air' (Satan's domain). 'It is done' marks completion of wrath and redemption. Earthquake reshapes topography (islands fled) and collapses the world system (Babylon). 100lb hail is crushing judgment, yet men still blaspheme."
+                    },
+                    devotional: {
+                        title: "神的话必然成就",
+                        title_en: "God's Word Will Be Fulfilled",
+                        content_cn: "当神说“成了”，一切就都定局了。世界看似坚固的巴比伦体系（经济、政治、文化）在一瞬间就会崩塌。我们所信靠的是那不能震动的国，还是这即将裂为三段的大城？把你的盼望寄托在永恒的“成了”之上。",
+                        content_en: "When God says 'It is done', it's final. The world's solid Babylon (economy/politics) will collapse in a moment. Do we trust the Unshakable Kingdom or the crumbling City? Anchor your hope in the eternal 'It is done'."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-stone-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-red-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-red-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-red-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-red-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-orange-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-orange-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-red-100 text-red-800 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-red-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('judgmentChart').getContext('2d');
+            
+            // Comparison: Trumpets (Partial) vs Bowls (Total)
+            const data = {
+                labels: [
+                    ['Sores (Earth)', '恶疮 (地)'], 
+                    ['Blood (Sea)', '血 (海)'], 
+                    ['Blood (Rivers)', '血 (河)'], 
+                    ['Fire (Sun)', '火 (日)'], 
+                    ['Darkness (Throne)', '黑暗 (座)'], 
+                    ['War (Euphrates)', '战争 (河)']
+                ],
+                datasets: [
+                    {
+                        label: 'Seven Trumpets (1/3 Warning) / 七号 (1/3 警告)',
+                        data: [33, 33, 33, 33, 33, 33], 
+                        backgroundColor: 'rgba(234, 88, 12, 0.5)', // Orange
+                        borderColor: 'rgba(234, 88, 12, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Seven Bowls (100% Wrath) / 七碗 (完全忿怒)',
+                        data: [100, 100, 100, 100, 100, 100], 
+                        backgroundColor: 'rgba(153, 27, 27, 0.6)', // Deep Red
+                        borderColor: 'rgba(153, 27, 27, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { display: false } 
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: "'Noto Sans SC', sans-serif", size: 10 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

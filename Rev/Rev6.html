@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 6: The Seven Seals | 启示录第六章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Judgment Red - Wrath & Blood */
+            --theme-primary: #991b1b; 
+            /* Warning Orange - Fire & Urgency */
+            --theme-accent: #ea580c;
+            /* Charcoal - Famine & Darkness */
+            --theme-dark: #1c1917;
+            /* Stone/Bone - Earthy Background */
+            --theme-bg: #f5f5f4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #292524;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(68, 64, 60, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for Horsemen */
+        .horseman-badge {
+            background: linear-gradient(135deg, #f5f5f4 0%, #e7e5e4 100%);
+            border: 2px solid #78350f;
+            position: relative;
+        }
+        .horseman-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #78350f;
+            border-radius: 8px;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+        .icon-shake:hover {
+            animation: shake 0.5s;
+            animation-iteration-count: infinite;
+        }
+    </style>
+</head>
+<body class="bg-stone-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-red-800 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">6</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-stone-800">启示录第六章</h1>
+                        <p class="text-xs text-red-700 uppercase tracking-widest en-text">Revelation 6: The Seals of Judgment</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-red-800 bg-gradient-to-br from-white to-stone-100 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-red-900 mb-2 serif-font">羔羊的忿怒与印的开启</h2>
+                        <h3 class="text-lg text-red-600 italic font-serif mb-4 en-text">The Wrath of the Lamb and the Opening of Seals</h3>
+                        <p class="text-gray-800 text-lg leading-relaxed mb-4 font-medium">
+                            当第五章的赞美声渐弱，第六章通过羔羊揭开七印中的前六印，将场景转向了审判。这章展示了历史上战争、饥荒、死亡的残酷现实，以及受造界的最终动摇。这是神公义的彰显，也是对罪恶世界的拆毁。
+                        </p>
+                        <p class="text-gray-500 text-sm leading-relaxed en-text">
+                            As the praises of Chapter 5 fade, Chapter 6 shifts to judgment as the Lamb opens the first six seals. This chapter reveals the brutal realities of war, famine, and death in history, culminating in the cosmic shaking of creation. It is the manifestation of God's justice and the dismantling of a sinful world.
+                        </p>
+                    </div>
+
+                    <!-- Right: 4 Horsemen Visual -->
+                    <div class="bg-stone-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ea580c 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="horseman-badge rounded-xl p-6 text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 max-w-xs w-full z-10">
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <!-- White Horse: Text White with shadow for visibility -->
+                                <div class="text-center">
+                                    <i class="fas fa-chess-knight text-white text-2xl drop-shadow-md"></i>
+                                    <div class="text-[10px] text-gray-500 font-bold mt-1">WHITE</div>
+                                </div>
+                                <!-- Red Horse -->
+                                <div class="text-center">
+                                    <i class="fas fa-chess-knight text-red-600 text-2xl"></i>
+                                    <div class="text-[10px] text-red-600 font-bold mt-1">RED</div>
+                                </div>
+                                <!-- Black Horse -->
+                                <div class="text-center">
+                                    <i class="fas fa-chess-knight text-black text-2xl"></i>
+                                    <div class="text-[10px] text-black font-bold mt-1">BLACK</div>
+                                </div>
+                                <!-- Pale (Gray) Horse: Text Gray-500 -->
+                                <div class="text-center">
+                                    <i class="fas fa-chess-knight text-gray-500 text-2xl opacity-80"></i>
+                                    <div class="text-[10px] text-gray-600 font-bold mt-1">PALE</div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="text-xl font-bold text-stone-800 serif-font mb-1">天启四骑士</h3>
+                            <p class="text-xs font-bold text-stone-600 uppercase tracking-widest en-text">The Four Horsemen</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-scroll text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">揭开封印</span>
+                            <span class="text-xs text-red-700 italic en-text">Unsealing Judgment</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        每一次揭印不仅仅是阅读内容，而是释放事件。羔羊拥有主权来启动神对历史的审判计划。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        Unsealing is not just reading, but releasing events. The Lamb possesses the sovereignty to initiate God's judgment plan for history.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-stone-100 border border-stone-300">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-pray text-stone-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-stone-900 text-xl block">祭坛下的呼声</span>
+                            <span class="text-xs text-stone-600 italic en-text">Cry of the Martyrs</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        第五印展示了受苦教会的视角。“要等到几时呢？”是对公义的呼求，而非复仇的渴望。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        The 5th seal shows the perspective of the suffering church. "How long?" is a cry for justice, not mere revenge.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-orange-50 border border-orange-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-mountain text-orange-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">宇宙性震动</span>
+                            <span class="text-xs text-orange-700 italic en-text">Cosmic Shaking</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        第六印预示了“主的大日”。它解构了受造界的秩序，使得无论是君王还是奴隶都无处可藏。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        The 6th seal anticipates the "Great Day of the Lord," deconstructing creation's order so that neither king nor slave can hide.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">七印：审判强度的升级</h3>
+                    <p class="text-sm text-gray-500 mb-6 italic en-text">The Seven Seals: Escalation of Intensity</p>
+                    <div class="w-full md:w-2/3 relative" style="height: 300px;">
+                        <canvas id="sealsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-stone-100/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-stone-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-red-100 text-red-700 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-stone-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-stone-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1: The Four Horsemen -->
+            <div class="border-l-4 border-stone-500 pl-6">
+                <h2 class="text-2xl font-bold text-stone-800 mb-2">第一部分：四骑士的驰骋 (6:1-8)</h2>
+                <h3 class="text-sm text-stone-500 italic mb-6 en-text">The Ride of the Four Horsemen</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2: The Martyrs -->
+            <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第二部分：祭坛下的呼声 (6:9-11)</h2>
+                <h3 class="text-sm text-red-400 italic mb-6 en-text">The Cry from Under the Altar</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3: Cosmic Collapse -->
+             <div class="border-l-4 border-orange-500 pl-6">
+                <h2 class="text-2xl font-bold text-orange-800 mb-2">第三部分：羔羊的忿怒 (6:12-17)</h2>
+                <h3 class="text-sm text-orange-500 italic mb-6 en-text">The Wrath of the Lamb</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-gray-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-stone-200 p-4 border-b border-stone-300">
+                            <h3 class="text-xl font-bold text-stone-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-stone-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-600 mb-4 italic">
+                                侧重于解析启示文学的象征语言、旧约背景及原文含义，避免过度臆测。
+                                <br><span class="text-xs text-gray-400 en-text">Focusing on decoding apocalyptic symbolism, OT background, and original meaning, avoiding speculation.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-gray-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1 text-gray-800">关注颜色的象征（白、红、黑、灰）和旧约（如撒迦利亚书）的对应。区分“羔羊的忿怒”与世俗的灾难。</div>
+                                    <div class="text-xs italic text-gray-400 en-text">Focus on color symbolism and OT parallels (e.g., Zechariah). Distinguish "Wrath of the Lamb" from secular disasters.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-50 p-4 border-b border-red-200">
+                            <h3 class="text-xl font-bold text-red-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-600 mb-4 italic">
+                                侧重于在审判的异象中反思个人的信仰状态，以及如何在动荡中站立得稳。
+                                <br><span class="text-xs text-gray-400 en-text">Reflecting on personal faith amidst visions of judgment, and how to stand firm in turmoil.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-gray-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1 text-gray-800">不要只看灾难的可怕，要看到神对罪恶的不妥协。问自己：“在那日我能站立得住吗？”</div>
+                                    <div class="text-xs italic text-gray-400 en-text">Don't just see the horror of disaster; see God's uncompromising stance on sin. Ask: "Can I stand on that day?"</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-stone-900 text-stone-100 mt-auto border-t-4 border-red-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"因为他们忿怒的大日到了，谁能站得住呢？"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"For the great day of their wrath has come, and who can stand?"</p>
+            <p class="text-xs opacity-70 uppercase">启示录第六章中英对照研经报告 | THE WRATH OF THE LAMB</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "6:1-2",
+                    text_cn: "我看见羔羊揭开七印中第一印... 见有一匹白马；骑在马上的拿着弓，并有冠冕赐给他。他便出来，胜了又要胜。",
+                    text_en: "I watched as the Lamb opened the first of the seven seals... and there before me was a white horse! Its rider held a bow, and he was given a crown, and he rode out as a conqueror bent on conquest.",
+                    exegesis: {
+                        title: "白马：征服与迷惑",
+                        title_en: "The White Horse: Conquest and Deception",
+                        content_cn: "这里的白马骑士并非基督（基督在19章出现时有不同的描述）。在审判的语境下，他象征着一种虚假的和平、军事上的征服或极权的扩张。“有弓无箭”可能暗示通过外交或恐吓进行的不流血的征服。",
+                        content_en: "This rider is likely not Christ (who appears differently in Rev 19). In the context of judgment, he symbolizes false peace, military expansion, or totalitarian conquest. The 'bow without arrows' may imply bloodless conquest via diplomacy or intimidation."
+                    },
+                    devotional: {
+                        title: "世俗成功的假象",
+                        title_en: "The Illusion of Worldly Success",
+                        content_cn: "我们常被外表的“得胜”和“冠冕”迷惑。这骑士看似光荣，带来的却是后续的灾难。属灵的功课是：不要盲目崇拜强权和地上的成功，因为那往往是审判的序幕，而非救赎的开始。",
+                        content_en: "We are often misled by outward 'victory' and 'crowns'. This rider looks glorious but brings disaster. The lesson: Do not blindly worship power and earthly success, for they are often the prelude to judgment, not the start of redemption."
+                    }
+                },
+                {
+                    ref: "6:3-4",
+                    text_cn: "揭开第二印... 就另有一匹马出来，是红的，有权柄... 从地上夺去太平，使人彼此相杀...",
+                    text_en: "When the Lamb opened the second seal... another horse came out, a fiery red one. Its rider was given power to take peace from the earth and to make people kill each other...",
+                    exegesis: {
+                        title: "红马：战争与内乱",
+                        title_en: "The Red Horse: War and Civil Conflict",
+                        content_cn: "红色象征流血。这匹马并未带来外敌，而是“夺去太平”，导致内部的动乱和彼此相杀（civil war）。这是对人类虚假和平的移除，暴露了人心中潜藏的暴力。",
+                        content_en: "Red symbolizes blood. This horse removes peace, leading to internal strife and people killing each other (civil war). It exposes the fragility of human peace and the latent violence in the human heart."
+                    },
+                    devotional: {
+                        title: "和平的脆弱",
+                        title_en: "The Fragility of Peace",
+                        content_cn: "当神稍微收回祂的恩典（夺去太平），人类就会陷入混乱。我们今日享有的和平并非理所当然。这应激起我们为和平祷告的心，并更加依赖那位赐真正平安的主。",
+                        content_en: "When God withdraws His grace slightly (taking peace), humanity descends into chaos. The peace we enjoy is not guaranteed. This should stir us to pray for peace and rely on the Lord who gives true Shalom."
+                    }
+                },
+                {
+                    ref: "6:5-6",
+                    text_cn: "揭开第三印... 见有一匹黑马；骑在马上的手里拿着天平... 一钱银子买一升麦子... 油和酒不可糟蹋。",
+                    text_en: "When the Lamb opened the third seal... there before me was a black horse! Its rider was holding a pair of scales in his hand... 'A quart of wheat for a day's wages... do not damage the oil and the wine!'",
+                    exegesis: {
+                        title: "黑马：饥荒与经济不公",
+                        title_en: "The Black Horse: Famine and Economic Injustice",
+                        content_cn: "黑色象征死亡和哀痛。“天平”表明食物短缺需要配给。“一钱银子”（一天的工资）只能买一人份的口粮，意味着极度的通货膨胀。然而奢侈品（油和酒）却未受影响，暗示了贫富差距的悬殊和富人的麻木。",
+                        content_en: "Black symbolizes mourning/death. Scales indicate rationing. A day's wage buying only enough food for one person implies hyperinflation. Yet luxuries (oil/wine) are untouched, hinting at gross inequality and the insulation of the rich."
+                    },
+                    devotional: {
+                        title: "物质的偶像",
+                        title_en: "The Idol of Materialism",
+                        content_cn: "当经济体系崩溃时，我们依靠的是什么？黑马提醒我们，物质的保障是何等脆弱。同时，它也挑战我们对他人的苦难是否麻木——我们是否在享受“油和酒”时，无视他人连“麦子”都买不起？",
+                        content_en: "When the economy crashes, what do we trust? The black horse reminds us how fragile material security is. It also challenges our numbness: Do we enjoy our 'oil and wine' while ignoring those who cannot afford even 'wheat'?"
+                    }
+                },
+                {
+                    ref: "6:7-8",
+                    text_cn: "揭开第四印... 见有一匹灰色马；骑在马上的，名字叫作死，阴府也随着他... 有权柄赐给他们，可以用刀剑、饥荒、瘟疫... 杀害地上四分之一的人。",
+                    text_en: "When the Lamb opened the fourth seal... I looked, and there before me was a pale horse! Its rider was named Death, and Hades was following close behind him... They were given power... to kill a fourth of the earth...",
+                    exegesis: {
+                        title: "灰马：死亡与阴间",
+                        title_en: "The Pale Horse: Death and Hades",
+                        content_cn: "“灰色”（chloros）原文指尸体腐烂的惨绿色。死亡（肉体的终结）和阴间（灵魂的拘留所）是形影不离的伙伴。四分之一的人被杀，显示了审判的严厉性，但仍是有限度的（尚未到全地的毁灭）。",
+                        content_en: "'Pale' (chloros) refers to the sickly green of a corpse. Death (physical) and Hades (abode of the dead) are inseparable partners. That 1/4 of the earth is killed shows severity, yet it is still limited (not yet total destruction)."
+                    },
+                    devotional: {
+                        title: "面对死亡的盼望",
+                        title_en: "Hope in the Face of Death",
+                        content_cn: "死亡是人类最后的敌人，也是这个堕落世界不可避免的结局。但对于在基督里的人来说，死亡不再是终点。虽然灰马带来了阴间的阴影，但掌握死亡和阴间钥匙的是耶稣基督（启1:18）。我们可以坦然面对生命的脆弱，因为我们的生命已与基督一同藏在神里面。",
+                        content_en: "Death is the final enemy, but for those in Christ, it is not the end. Though the Pale Horse brings the shadow of Hades, Jesus Christ holds the keys to Death and Hades (Rev 1:18). We can face mortality with confidence, for our lives are hidden with Christ in God."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "6:9-11",
+                    text_cn: "揭开第五印... 看见在祭坛底下，有为神之道... 被杀之人的灵魂... 大声喊着说：圣洁真实的主啊，你不审判... 要等到几时呢？",
+                    text_en: "When he opened the fifth seal, I saw under the altar the souls of those who had been slain because of the word of God... They called out... 'How long, Sovereign Lord, holy and true, until you judge...?'",
+                    exegesis: {
+                        title: "殉道者的呼声",
+                        title_en: "The Cry of the Martyrs",
+                        content_cn: "祭坛暗示 sacrificial offering（牺牲）。殉道者的血并未白流。他们的呼求“要等到几时”是旧约中常见的对神公义的渴求（如诗篇）。这不是个人的复仇，而是渴望神的公义在地上彰显。",
+                        content_en: "The altar implies sacrifice. The martyrs' blood is not wasted. Their cry 'How long?' echoes OT laments (Psalms) for justice. It is not personal revenge, but a longing for God's righteousness to be vindicated on earth."
+                    },
+                    devotional: {
+                        title: "受苦中的忍耐",
+                        title_en: "Patience in Suffering",
+                        content_cn: "在不公义的世界中，我们常问“神在哪里？”。第五印告诉我们，神听得见。祂给他们白衣（得胜与安息），并让他们“安息片时”。神的延宕并非不管，而是为了让救赎的数目满足。你的眼泪，神都记在册子上。",
+                        content_en: "In an unjust world, we ask 'Where is God?'. The 5th seal tells us He hears. He gives them white robes (victory/rest) and asks them to wait. God's delay is not indifference, but fulfillment. Your tears are recorded."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "6:12-17",
+                    text_cn: "揭开第六印的时候，地大震动... 天就挪移... 地上的君王... 都藏在山洞和岩石穴里... 躲避坐宝座者的面目和羔羊的忿怒。",
+                    text_en: "I watched as he opened the sixth seal. There was a great earthquake... The heavens receded... Then the kings of the earth... hid in caves... from the face of him who sits on the throne and from the wrath of the Lamb!",
+                    exegesis: {
+                        title: "羔羊的忿怒",
+                        title_en: "The Wrath of the Lamb",
+                        content_cn: "这是一个极具张力的短语：“羔羊的忿怒”。羔羊通常象征温柔与牺牲，但在这里，拒绝救恩的人将面对祂的公义。宇宙的解体（De-creation）象征着旧秩序的终结。没有人能凭地位（君王或壮士）逃避。",
+                        content_en: "A phrase of immense tension: 'Wrath of the Lamb'. The Lamb symbolizes gentleness/sacrifice, but here, those who reject salvation face His justice. The de-creation symbolizes the end of the old order. No status (king or slave) offers refuge."
+                    },
+                    devotional: {
+                        title: "谁能站得住？",
+                        title_en: "Who Can Stand?",
+                        content_cn: "这章结束于一个问题：“谁能站得住呢？”答案不在第六章，而在第七章（那些被印的人）。如果你在基督里，你无需害怕这忿怒，因为祂已为你承担。这震动是为了震去那些不能长存的，让那长存的显露出来。",
+                        content_en: "The chapter ends with a question: 'Who can stand?' The answer is in Ch 7 (the sealed ones). If you are in Christ, you need not fear this wrath, for He bore it for you. The shaking removes what cannot last, so that what is unshakable remains."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-stone-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-stone-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-stone-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-stone-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional (Ensuring this block renders correctly)
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-stone-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-400 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-red-100 text-red-700 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-stone-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('sealsChart').getContext('2d');
+            
+            // Chart depicting the escalation of judgment
+            const data = {
+                labels: [
+                    ['White', '白马 (迷惑)'], 
+                    ['Red', '红马 (战争)'], 
+                    ['Black', '黑马 (饥荒)'], 
+                    ['Pale', '灰马 (死亡)'], 
+                    ['Martyrs', '殉道者 (呼声)'], 
+                    ['Cosmic', '宇宙 (震动)']
+                ],
+                datasets: [{
+                    label: 'Intensity / Scope',
+                    data: [20, 40, 60, 80, 50, 95], // Conceptual intensity
+                    backgroundColor: [
+                        'rgba(229, 231, 235, 0.7)', // White
+                        'rgba(220, 38, 38, 0.7)',   // Red
+                        'rgba(31, 41, 55, 0.7)',    // Black
+                        'rgba(16, 185, 129, 0.4)',  // Pale Green
+                        'rgba(251, 191, 36, 0.7)',  // Gold (Martyrs)
+                        'rgba(153, 27, 27, 0.9)'    // Deep Red (Cosmic)
+                    ],
+                    borderColor: 'rgba(120, 53, 15, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            display: false
+                        },
+                        x: {
+                            ticks: {
+                                font: { family: "'Noto Sans SC', sans-serif", size: 10 }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

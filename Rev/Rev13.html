@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 13: The Two Beasts & The Mark | 启示录第十三章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Beast Iron - Political Power, Iron Strength */
+            --theme-primary: #374151; 
+            /* Blasphemy Red - Blood, Dragon's Power */
+            --theme-accent: #ef4444;
+            /* False Gold - Crowns, Economic Power */
+            --theme-gold: #d97706;
+            /* Concrete/Ash - Worldly Background */
+            --theme-bg: #f3f4f6;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1f2937;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(55, 65, 81, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for The Beast */
+        .beast-badge {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px solid #374151;
+            position: relative;
+        }
+        .beast-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #374151;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes rise-up {
+            0% { transform: translateY(10px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        .icon-rise {
+            animation: rise-up 2s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-300 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-gray-800 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">13</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-gray-900">启示录第十三章</h1>
+                        <p class="text-xs text-gray-500 uppercase tracking-widest en-text">Revelation 13: The Two Beasts & The Mark</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-gray-700 bg-gradient-to-br from-white to-gray-200 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-gray-900 mb-2 serif-font">邪恶的模仿：两兽的崛起与印记</h2>
+                        <h3 class="text-lg text-red-600 italic font-serif mb-4 en-text">The Evil Imitation: Rise of the Beasts and the Mark</h3>
+                        <p class="text-gray-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十二章的龙被摔在地上后，第十三章揭示了它在地上建立权势的手段。它召唤了两个代理人：从海中上来的兽（政治/军事强权）和从地中上来的兽（宗教/宣传迷惑）。这形成了“邪恶的三位一体”，试图通过强迫（杀害）和欺骗（假神迹）来夺取全人类的敬拜，并给他们打上666的印记。
+                        </p>
+                        <p class="text-gray-500 text-sm leading-relaxed en-text">
+                            After the Dragon is cast down in Chapter 12, Chapter 13 reveals his method of establishing power on earth. He summons two agents: the Beast from the Sea (Political/Military Power) and the Beast from the Earth (Religious/Deceptive Propaganda). This forms an "Unholy Trinity" attempting to usurp worship through coercion (killing) and deception (false miracles), marking humanity with 666.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-gray-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#ef4444 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="beast-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-water text-blue-700 text-3xl absolute bottom-0 left-0 opacity-50"></i>
+                                <i class="fas fa-crown text-yellow-600 text-5xl relative z-10 icon-rise"></i>
+                                <i class="fas fa-dragon text-red-600 text-2xl absolute -top-2 -right-4"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-gray-900 serif-font">海中上来的兽</h3>
+                            <p class="text-[10px] font-bold text-gray-600 uppercase tracking-widest en-text mt-1">The Beast from the Sea</p>
+                            <div class="w-12 h-0.5 bg-red-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Power & Blasphemy<br>权柄与亵渎</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-gray-50 border border-gray-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-landmark text-gray-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-gray-900 text-xl block">海兽 (The Sea Beast)</span>
+                            <span class="text-xs text-gray-600 italic en-text">Antichrist / Political Power</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        拥有十角七头，综合了但以理书四兽的特征。它是敌基督，通过武力、亵渎神和政治权威来统治世界。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        Has 10 horns/7 heads, combining Daniel's 4 beasts. The Antichrist, ruling via force, blasphemy, and political authority.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-yellow-50 border border-yellow-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-magic text-yellow-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-yellow-900 text-xl block">地兽 (The Earth Beast)</span>
+                            <span class="text-xs text-yellow-700 italic en-text">False Prophet / Religion</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        外表像羊羔（模仿基督），说话像龙（源于撒但）。它是假先知，通过假神迹迷惑人拜第一只兽。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        Looks like a lamb (mimics Christ), speaks like a dragon (Satanic). The False Prophet, deceiving people to worship the first beast.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-fingerprint text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">666 印记 (The Mark)</span>
+                            <span class="text-xs text-red-700 italic en-text">Allegiance / Economy</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 text-sm mb-2">
+                        人的数目，象征极度的不完美（缺一成七）。这是一种经济控制手段，也是对归属权的最终确认。
+                    </p>
+                    <p class="text-xs text-gray-500 italic en-text">
+                        Number of man, symbolizing ultimate imperfection (falling short of 7). A tool of economic control and final mark of ownership.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-gray-800 mb-1">邪恶的三位一体 vs 神圣三位一体</h3>
+                    <p class="text-sm text-gray-500 mb-6 italic en-text">The Unholy Trinity vs The Holy Trinity</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="trinityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-gray-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-gray-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-gray-200 text-gray-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-gray-600 pl-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">第一部分：海中上来的兽——政治强权 (13:1-10)</h2>
+                <h3 class="text-sm text-gray-500 italic mb-6 en-text">The Beast from the Sea: Political Power</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-yellow-600 pl-6">
+                <h2 class="text-2xl font-bold text-yellow-800 mb-2">第二部分：地中上来的兽——宗教迷惑 (13:11-15)</h2>
+                <h3 class="text-sm text-yellow-600 italic mb-6 en-text">The Beast from the Earth: Religious Deception</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第三部分：兽的印记与数目 (13:16-18)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">The Mark and Number of the Beast</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-gray-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-gray-200 p-4 border-b border-gray-300">
+                            <h3 class="text-xl font-bold text-gray-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-gray-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-600 mb-4 italic">
+                                侧重于识别兽的旧约原型（但以理书7章）、罗马帝国的历史背景（尼禄传说）以及末世论的终极应验。
+                                <br><span class="text-xs text-gray-400 en-text">Focusing on OT prototypes (Daniel 7), Roman historical context (Nero redivivus), and eschatological fulfillment.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-gray-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-gray-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将“海兽”视为敌基督的政治体系，“地兽”视为辅助的虚假宗教体系。理解“666”为象征性的不完美，而非单纯的条形码或芯片。</div>
+                                    <div class="text-xs italic text-gray-500 en-text">Viewing "Sea Beast" as Antichrist's political system, "Earth Beast" as false religion. Interpreting 666 as symbolic imperfection, not just a chip.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-50 p-4 border-b border-red-200">
+                            <h3 class="text-xl font-bold text-red-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-gray-600 mb-4 italic">
+                                侧重于在极权和迷惑中保持“圣徒的忍耐和信心”，以及对真神的排他性敬拜。
+                                <br><span class="text-xs text-gray-400 en-text">Focusing on maintaining "patience and faith" amidst tyranny and deception, and exclusive worship of the true God.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-gray-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">警惕“像羊羔说话像龙”的欺骗。在经济压力（不能买卖）面前，坚持信仰的纯正，拒绝向世界的偶像妥协。</div>
+                                    <div class="text-xs italic text-gray-500 en-text">Beware of deception that "looks like a lamb but speaks like a dragon". Maintain faith purity against economic pressure and worldly idols.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"圣徒的忍耐和信心就是在此。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"Here is the patience and the faith of the saints."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十三章中英对照研经报告 | THE TWO BEASTS & THE MARK</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "13:1-3",
+                    text_cn: "我又看见一个兽从海中上来，有十角七头... 那兽的形状像豹，脚像熊的脚，口像狮子的口... 全地的人都希奇跟从那兽。",
+                    text_en: "The dragon stood on the shore of the sea. And I saw a beast coming out of the sea... The beast I saw resembled a leopard, but had feet like those of a bear and a mouth like that of a lion... The whole world was filled with wonder and followed the beast.",
+                    exegesis: {
+                        title: "海中上来的兽：集大成的暴政",
+                        title_en: "The Beast from the Sea: Totalitarianism Embodied",
+                        content_cn: "这兽是但以理书第7章四个兽的综合体（豹、熊、狮），表明它拥有历史上所有帝国的残暴特征。海象征动荡的列国。它的“受了死伤又医好”是对基督复活的拙劣模仿，以此骗取世人的崇拜。这指向末世的一个极权政治体系或领袖（敌基督）。",
+                        content_en: "A composite of Daniel 7's beasts (leopard, bear, lion), embodying the cruelty of all past empires. The sea represents turbulent nations. Its 'fatal wound healed' mimics Christ's resurrection to gain worship. Points to an end-time totalitarian system/leader (Antichrist)."
+                    },
+                    devotional: {
+                        title: "不要崇拜权力",
+                        title_en: "Do Not Worship Power",
+                        content_cn: "世人常因看到强权、军事力量或政治上的“奇迹复兴”而感到希奇并盲目跟随。但作为信徒，我们要看穿这些表象。真正的权柄不属于那些展示肌肉的政权，而属于那位被杀的羔羊。不要让对权力的崇拜取代了对神的敬畏。",
+                        content_en: "The world marvels at power, military might, or political 'miracles'. But believers must see through this. True authority belongs not to flexing regimes, but to the Slain Lamb. Do not let worship of power replace fear of God."
+                    }
+                },
+                {
+                    ref: "13:4-10",
+                    text_cn: "又拜那龙... 也拜那兽... 兽就开口向神说亵渎的话... 任凭它与圣徒争战，并且得胜... 凡住在地上... 名字没记在生命册上的，都要拜它。",
+                    text_en: "People worshiped the dragon... and they also worshiped the beast... The beast was given a mouth to utter proud words and blasphemies... It was given power to wage war against God’s holy people and to conquer them... All inhabitants of the earth will worship the beast...",
+                    exegesis: {
+                        title: "亵渎与逼迫",
+                        title_en: "Blasphemy and Persecution",
+                        content_cn: "兽的本质是亵渎（高抬自己超过神）和逼迫（攻击圣徒）。“任凭”表明这权力是神暂时许可的。兽在肉体上“得胜”圣徒（杀害他们），但在属灵上却失败了。第10节引用耶利米书，呼吁圣徒要有忍耐：即便面临被掳或被杀，也要顺服神的主权，不靠血气反抗。",
+                        content_en: "The Beast's nature is blasphemy (self-exaltation) and persecution. 'Given power' implies God's temporary permission. It 'conquers' saints physically but fails spiritually. Verse 10 calls for patience: even facing captivity or death, submit to God's sovereignty, not fleshly rebellion."
+                    },
+                    devotional: {
+                        title: "圣徒的忍耐",
+                        title_en: "The Patience of the Saints",
+                        content_cn: "当看到邪恶看似得胜，义人遭受逼迫时，我们的信心会受考验。但这正是“圣徒的忍耐和信心”所在。我们不需要在现世看到正义完全伸张，因为我们知道名字已记在生命册上。哪怕面对死亡，我们也不向兽屈膝，这就是得胜。",
+                        content_en: "When evil seems to win and the righteous suffer, faith is tested. This is the core of 'patience and faith'. We don't need immediate earthly justice, knowing our names are in the Book of Life. Refusing to bow, even unto death, is victory."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "13:11-15",
+                    text_cn: "我又看见另有一个兽从地中上来，有两角如同羊羔，说话好像龙... 它行大奇事，甚至... 降火... 迷惑住在地上的人... 叫有生气给那兽像...",
+                    text_en: "Then I saw a second beast, coming out of the earth. It had two horns like a lamb, but it spoke like a dragon... It performed great signs, even causing fire to come down... healing the image of the first beast...",
+                    exegesis: {
+                        title: "地中上来的兽：宗教迷惑",
+                        title_en: "The Beast from the Earth: Religious Deception",
+                        content_cn: "这第二兽被称为“假先知”（启19:20）。它外表温和像羊（伪装成基督/真理），本质却像龙（撒但的谎言）。它的任务不是以此为王，而是引导人拜第一只兽。它通过虚假的神迹（如降火，模仿以利亚）来迷惑人，建立一种强制性的偶像崇拜体系。",
+                        content_en: "The 2nd Beast is the 'False Prophet'. Mild as a lamb (mimicking Christ), but speaks like a dragon (Satanic lies). Its role is to direct worship to the 1st Beast. It uses false miracles (fire, mocking Elijah) to deceive and establish mandatory idolatry."
+                    },
+                    devotional: {
+                        title: "分辨真假",
+                        title_en: "Discerning the False",
+                        content_cn: "不要只看神迹奇事，要看其背后的源头和目的。即使有人能叫火从天降下，如果他引导你离开真神、去崇拜人或制度，那就是出于那恶者。末世最大的危险不是无神论，而是虚假的宗教和被扭曲的真理。求神赐我们分辨的灵。",
+                        content_en: "Look beyond miracles to their source and aim. Even calling down fire proves nothing if it leads you away from God to worship men/systems. The greatest end-time danger isn't atheism, but false religion. Pray for discernment."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "13:16-18",
+                    text_cn: "它又叫众人... 在右手上或是在额上受一个印记。除了那受印记、有了兽名或有兽名数目的，都不得作买卖... 数目是六百六十六。",
+                    text_en: "It also forced all people... to receive a mark on their right hands or on their foreheads, so that they could not buy or sell unless they had the mark... That number is 666.",
+                    exegesis: {
+                        title: "兽的印记与数目",
+                        title_en: "The Mark and Number of the Beast",
+                        content_cn: "这印记是对神印记（启7章）的恶魔式模仿。右手代表行为，额头代表思想/效忠。不能买卖意味着经济上的制裁和生存的威胁。666是“人的数目”，代表受造物最高却永远达不到神圣的“7”，象征人类在没有神的情况下的终极失败和不完美。",
+                        content_en: "A demonic parody of God's seal. Right hand = action; Forehead = allegiance/mind. No buying/selling = economic boycott/survival threat. 666 is 'man's number', the peak of creation falling short of divine '7'. Symbolizes human failure without God."
+                    },
+                    devotional: {
+                        title: "你的归属在哪里？",
+                        title_en: "Where is Your Allegiance?",
+                        content_cn: "印记的核心问题是：你属于谁？兽用经济利益（买卖）来换取我们的灵魂。在生活中，我们是否为了保住工作、地位或财富，而在信仰上妥协，无形中接受了世界的“印记”？宁可贫穷而有基督，也不要富足却失去灵魂。",
+                        content_en: "The core issue is ownership: Who do you belong to? The Beast trades economic safety for souls. Do we compromise faith for jobs/status, accepting the world's 'mark'? Better to be poor with Christ than rich and soulless."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-gray-700 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-gray-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-gray-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-gray-200 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-gray-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-gray-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-gray-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-gray-500 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-gray-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-gray-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-gray-200 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-400 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-gray-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-gray-500 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-gray-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-gray-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-gray-800 text-white shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('trinityChart').getContext('2d');
+            
+            // Comparison: Holy Trinity vs Unholy Trinity
+            const data = {
+                labels: [
+                    ['Source/Father', '源头/父'], 
+                    ['Incarnate/Son', '道成肉身/子'], 
+                    ['Power/Spirit', '能力/灵'], 
+                    ['Message', '信息'], 
+                    ['Seal/Mark', '印记'], 
+                    ['Destiny', '结局']
+                ],
+                datasets: [
+                    {
+                        label: 'Unholy Trinity / 邪恶三位一体',
+                        data: [100, 100, 100, 80, 100, 0], // High activity, zero eternal destiny
+                        backgroundColor: 'rgba(239, 68, 68, 0.5)', // Red
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#1f2937'
+                    },
+                    {
+                        label: 'Holy Trinity / 神圣三位一体',
+                        data: [100, 100, 100, 100, 100, 100], // Perfect
+                        backgroundColor: 'rgba(217, 119, 6, 0.4)', // Gold
+                        borderColor: 'rgba(217, 119, 6, 1)',
+                        borderWidth: 1,
+                        pointBackgroundColor: '#fff'
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#4b5563'
+                            },
+                            ticks: { display: false, max: 100 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) { // Unholy
+                                        const labels = [
+                                            "Dragon (Satan)", "Beast (Antichrist)", "False Prophet", "Deception", "666", "Lake of Fire"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    } else { // Holy
+                                        const labels = [
+                                            "God the Father", "Jesus Christ", "Holy Spirit", "Truth", "Seal of Spirit", "Eternal Life"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

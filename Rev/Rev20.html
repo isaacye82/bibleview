@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 20: The Millennium & The Great White Throne | 启示录第二十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Judgment White - Holiness, Purity, Throne */
+            --theme-primary: #f8fafc; 
+            /* Abyss Indigo - Binding, Deep Spiritual Reality */
+            --theme-accent: #312e81;
+            /* Eternal Gold - Reign, Crown */
+            --theme-gold: #f59e0b;
+            /* Fire Red - Lake of Fire */
+            --theme-red: #dc2626;
+            /* Dark Background */
+            --theme-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #e2e8f0;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: #1e293b; /* Dark Slate */
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #334155;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            border-color: var(--theme-gold);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-gold);
+            color: var(--theme-gold);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(148, 163, 184, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: #f1f5f9;
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-gold);
+        }
+
+        /* Badge Style for Key & Chain */
+        .key-badge {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #312e81;
+            position: relative;
+        }
+        .key-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #312e81;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes lock-turn {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-45deg); }
+            100% { transform: rotate(-45deg); }
+        }
+        .icon-lock {
+            animation: lock-turn 3s infinite alternate ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen flex flex-col text-slate-200">
+
+    <!-- Header -->
+    <header class="bg-slate-950 border-b border-slate-800 sticky top-0 z-50 shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-indigo-900 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md border border-indigo-700">
+                        <span class="font-serif font-bold text-lg">20</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-slate-100">启示录第二十章</h1>
+                        <p class="text-xs text-indigo-400 uppercase tracking-widest en-text">Revelation 20: The Millennium & The Great White Throne</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-indigo-500 bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-white mb-2 serif-font">一千年与白色大宝座</h2>
+                        <h3 class="text-lg text-indigo-300 italic font-serif mb-4 en-text">The Thousand Years and The Great White Throne</h3>
+                        <p class="text-slate-300 text-lg leading-relaxed mb-4 font-medium">
+                            第二十章揭示了历史终局的三个关键阶段：撒但的捆绑与圣徒的千禧年掌权、撒但的最终释放与毁灭（火湖）、以及白色大宝座前的最终审判。这是正义得到最终伸张、罪恶被彻底清除的时刻。死亡和阴间也被扔进火湖，唯有名字记在生命册上的人得享永生。
+                        </p>
+                        <p class="text-slate-400 text-sm leading-relaxed en-text">
+                            Chapter 20 reveals three key stages of the end: the binding of Satan and the Millennial Reign of saints, Satan's final release and destruction (Lake of Fire), and the Final Judgment at the Great White Throne. It is the moment when justice is finally served, evil is utterly purged, and even Death and Hades are cast into the fire. Only those written in the Book of Life inherit eternal life.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-slate-950 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#312e81 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="key-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-slate-900">
+                            <div class="relative mb-2">
+                                <i class="fas fa-link text-slate-500 text-5xl mb-1 block"></i>
+                                <i class="fas fa-key text-indigo-400 text-3xl absolute -bottom-1 -right-2 icon-lock"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-indigo-100 serif-font">无底坑的封印</h3>
+                            <p class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest en-text mt-1">Seal of the Abyss</p>
+                            <div class="w-12 h-0.5 bg-indigo-600 my-2"></div>
+                            <p class="text-xs text-slate-400">Bound for 1000 Years<br>捆绑一千年</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 border-l-4 border-indigo-500">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-hourglass-half text-indigo-400 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-white text-xl block">千禧年 (Millennium)</span>
+                            <span class="text-xs text-indigo-300 italic en-text">The 1000 Year Reign</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-2">
+                        象征基督作王、和平与公义的时期。撒但被捆绑，无法迷惑列国。圣徒复活与基督一同作王，这是“头一次的复活”。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Symbolizes Christ's reign of peace and justice. Satan is bound. Saints resurrect and reign; this is the "First Resurrection".
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 border-l-4 border-red-600">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-fire text-red-500 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-white text-xl block">火湖 (Lake of Fire)</span>
+                            <span class="text-xs text-red-400 italic en-text">The Final Destination</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-2">
+                        也就是“第二次的死”。这是撒但、兽、假先知以及所有名字未记在生命册上之人的最终结局。它是永恒的隔离与刑罚。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The "Second Death". The final destiny of Satan, the Beast, the False Prophet, and all not in the Book of Life. Eternal separation.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 border-l-4 border-slate-100">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-chair text-white text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-white text-xl block">白色大宝座</span>
+                            <span class="text-xs text-slate-400 italic en-text">Great White Throne</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-300 text-sm mb-2">
+                        宇宙终极的法庭。天地都逃避了。所有死人（无论大小）都要站在神面前，根据案卷（行为）和生命册受审判。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The ultimate cosmic court. Earth and sky flee. All dead stand before God, judged by the Books (deeds) and the Book of Life.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual: The Great White Throne Courtroom (Balance Sheet Style) -->
+            <div class="card p-8 bg-slate-900 border border-slate-700">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-white mb-2">白色大宝座的审判庭</h3>
+                    <p class="text-sm text-slate-400 italic en-text">The Courtroom of The Great White Throne (v11-15)</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative">
+                    <!-- Vertical Divider (Desktop) -->
+                    <div class="hidden md:block absolute left-1/2 top-0 bottom-0 w-px bg-slate-700 -translate-x-1/2"></div>
+
+                    <!-- Left: The Books (Evidence) -->
+                    <div>
+                        <h4 class="text-center text-slate-300 font-bold mb-6 flex items-center justify-center">
+                            <span class="bg-slate-800 p-2 rounded mr-3 text-sm border border-slate-600">📚</span> 案卷 The Books (Works)
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-red-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">记录内容 Content</span>
+                                    <span class="text-red-400 text-xs uppercase">Deeds</span>
+                                </div>
+                                <p class="text-xs text-slate-400">人的行为、言语、心思意念。<br>Every deed, word, and thought.</p>
+                            </div>
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-red-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">审判依据 Basis</span>
+                                    <span class="text-red-400 text-xs uppercase">Justice</span>
+                                </div>
+                                <p class="text-xs text-slate-400">凭着这些案卷所记载的，照他们所行的受审判。<br>Judged according to what they had done.</p>
+                            </div>
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-red-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">结局 Outcome</span>
+                                    <span class="text-red-400 text-xs uppercase">Guilty</span>
+                                </div>
+                                <p class="text-xs text-slate-400">因世人都犯了罪，亏缺了神的荣耀。<br>For all have sinned and fall short.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: The Book of Life (Grace) -->
+                    <div>
+                        <h4 class="text-center text-amber-400 font-bold mb-6 flex items-center justify-center">
+                            <span class="bg-amber-900/30 p-2 rounded mr-3 text-sm border border-amber-600">📖</span> 生命册 The Book of Life
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-amber-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">记录内容 Content</span>
+                                    <span class="text-amber-400 text-xs uppercase">Names</span>
+                                </div>
+                                <p class="text-xs text-slate-400">蒙羔羊宝血救赎之人的名字。<br>Names of those redeemed by the Lamb.</p>
+                            </div>
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-amber-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">审判依据 Basis</span>
+                                    <span class="text-amber-400 text-xs uppercase">Grace</span>
+                                </div>
+                                <p class="text-xs text-slate-400">名字被记在册上，不是因行为，乃是因恩典。<br>Written not by works, but by grace.</p>
+                            </div>
+                            <div class="p-4 bg-slate-800 rounded-lg border-l-4 border-amber-500 shadow-sm">
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="font-bold text-slate-200">结局 Outcome</span>
+                                    <span class="text-amber-400 text-xs uppercase">Life</span>
+                                </div>
+                                <p class="text-xs text-slate-400">免受第二次的死，进入新耶路撒冷。<br>Escaping the Second Death.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8 text-center">
+                    <p class="text-xs text-slate-500 uppercase tracking-widest border-t border-slate-800 pt-4 inline-block px-4">
+                        "若有人名字没记在生命册上，他就被扔在火湖里。" (v15)
+                    </p>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-slate-900/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-slate-700 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-900/50">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:bg-slate-800 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:bg-slate-800 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-indigo-500 pl-6">
+                <h2 class="text-2xl font-bold text-indigo-300 mb-2">第一部分：撒但被捆绑与千禧年 (20:1-6)</h2>
+                <h3 class="text-sm text-indigo-500 italic mb-6 en-text">Satan Bound & The Millennial Reign</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-400 mb-2">第二部分：撒但释放与最终毁灭 (20:7-10)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">Satan Released & The Final Destruction</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-slate-100 pl-6">
+                <h2 class="text-2xl font-bold text-slate-100 mb-2">第三部分：白色大宝座的审判 (20:11-15)</h2>
+                <h3 class="text-sm text-slate-500 italic mb-6 en-text">The Great White Throne Judgment</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-100 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-indigo-900/30 p-4 border-b border-indigo-800">
+                            <h3 class="text-xl font-bold text-indigo-300 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-indigo-500 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-400 mb-4 italic">
+                                侧重于解析末世论的象征符号：一千年（字面vs象征）、第一次复活（身体vs灵性）、歌革和玛各（以西结书38章的应验）。
+                                <br><span class="text-xs text-slate-500 en-text">Focusing on eschatological symbols: Millennium, First Resurrection, Gog & Magog.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-300">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-indigo-400 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">理解“撒但被捆绑”为对其迷惑列国能力的限制。区分“第一次复活”（信徒）与“死人复活”（最终审判）。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Understand "Binding" as limiting deception. Distinguish "First Resurrection" (believers) from general resurrection.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-900/20 p-4 border-b border-red-900/50">
+                            <h3 class="text-xl font-bold text-red-400 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-400 mb-4 italic">
+                                侧重于对神最终得胜的信心、对罪恶结局的警醒，以及对救恩确据的感恩。
+                                <br><span class="text-xs text-slate-500 en-text">Focusing on faith in victory, vigilance against sin, and gratitude for assurance.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-300">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-500 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">不要被罪恶暂时的释放（迷惑）所动摇。最重要的是确保名字在生命册上，而非仅仅关注末世的时间表。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Don't be shaken by temporary evil. Prioritize having your name in the Book of Life over knowing timelines.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"若有人名字没记在生命册上，他就被扔在火湖里。"</p>
+            <p class="text-sm italic text-slate-400 mb-2 en-text">"Anyone whose name was not found written in the book of life was thrown into the lake of fire."</p>
+            <p class="text-xs opacity-50 uppercase tracking-widest font-sans">启示录第二十章中英对照研经报告 | THE MILLENNIUM & THE JUDGMENT</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "20:1-3",
+                    text_cn: "我看见一位天使从天降下，手里拿着无底坑的钥匙和一条大链子。他捉住那龙... 捆绑一千年... 使它不得再迷惑列国。",
+                    text_en: "And I saw an angel coming down out of heaven, having the key to the Abyss and holding a great chain... He seized the dragon... and bound him for a thousand years... to keep him from deceiving the nations...",
+                    exegesis: {
+                        title: "撒但被捆绑",
+                        title_en: "Satan Bound",
+                        content_cn: "天使（受造物）能捆绑撒但，显示神绝对的主权。捆绑不是指撒但完全失去活动能力，而是特指它无法再“迷惑列国”（即无法阻止福音传向万民，或无法集结全球性的反神力量）。一千年象征一段漫长而完整的时期（教会时代或字面千禧年）。",
+                        content_en: "An angel binds Satan, showing God's sovereignty. Binding restricts 'deceiving nations' (preventing global anti-God unity or stopping gospel), not total inactivity. 1000 years symbolizes a complete, long era."
+                    },
+                    devotional: {
+                        title: "基督的权柄胜过魔鬼",
+                        title_en: "Christ's Authority Over the Devil",
+                        content_cn: "我们常觉得魔鬼太强大，但这里只需一位天使、一条链子就能制服它。这提醒我们，撒但是一个被击败的敌人。在基督里，我们拥有胜过黑暗权势的权柄。不要惧怕那被捆绑的狮子，要依靠那位犹大狮子。",
+                        content_en: "We fear the devil's power, yet one angel with a chain subdues him. Satan is a defeated foe. In Christ, we have authority. Don't fear the bound lion; trust the Lion of Judah."
+                    }
+                },
+                {
+                    ref: "20:4-6",
+                    text_cn: "我又看见几个宝座... 那些给耶稣作见证... 之人的灵魂... 他们都复活了，与基督一同作王一千年... 这是头一次的复活。",
+                    text_en: "I saw thrones... And I saw the souls of those who had been beheaded... They came to life and reigned with Christ a thousand years... This is the first resurrection.",
+                    exegesis: {
+                        title: "头一次的复活与作王",
+                        title_en: "First Resurrection & Reign",
+                        content_cn: "“头一次的复活”指信徒的重生（灵性复活）或身体复活（前千禧年观）。无论如何，这群人是“有福的、圣洁的”，第二次的死（火湖）对他们没有权柄。他们现在就与基督一同作王（属灵掌权），并在将来完全掌权。",
+                        content_en: "'First Resurrection' can mean regeneration (spiritual) or physical resurrection (pre-millennial). Either way, these are 'blessed and holy'. Second death has no power over them. They reign with Christ now and in the future."
+                    },
+                    devotional: {
+                        title: "现在就与主作王",
+                        title_en: "Reigning with Him Now",
+                        content_cn: "作王不仅仅是将来的事，也是现在的生命状态。如果你已经经历了“头一次复活”（重生），你就已经脱离了第二次死的权势。我们应当以“祭司”的身份侍奉，以“君王”的身份管理自己的罪和环境，而不是做罪的奴仆。",
+                        content_en: "Reigning is a present reality, not just future. If you've experienced the 'First Resurrection' (born again), you are free from Second Death. Serve as priests and rule as kings over sin today; don't be slaves."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "20:7-10",
+                    text_cn: "那一千年完了，撒但必从监牢里被释放... 迷惑地上四方的列国，就是歌革和玛各... 围住圣徒的营... 有火从天降下... 魔鬼被扔在硫磺的火湖里。",
+                    text_en: "When the thousand years are over, Satan will be released... to deceive the nations... Gog and Magog... They marched across the breadth of the earth and surrounded the camp of God’s people... But fire came down... And the devil... was thrown into the lake of burning sulfur.",
+                    exegesis: {
+                        title: "最后的叛逆与撒但的结局",
+                        title_en: "Final Rebellion & Satan's End",
+                        content_cn: "撒但的释放揭示了人心的顽梗：即便在基督掌权一千年后，人若无恩典仍会跟随魔鬼。歌革和玛各（结38）象征末后集结的反神势力。这场战争没有描述过程，神直接用火审判。魔鬼最终被扔进火湖，受痛苦直到永永远远，这是罪恶的终结。",
+                        content_en: "Satan's release exposes human hardness: even after 1000 years of Christ's reign, man rebels without grace. Gog/Magog symbolize final anti-God forces. No battle fought; God consumes them. Satan is cast into the Lake of Fire forever. Evil ends."
+                    },
+                    devotional: {
+                        title: "罪恶无法根除，除非...",
+                        title_en: "Sin Cannot Be Rooted Out, Unless...",
+                        content_cn: "哪怕环境再完美（千禧年），如果没有新的心，人依然会选择背叛。这打破了“环境决定论”的幻想。唯有神的恩典能改变人心。同时，看到撒但最终的结局，我们应当确信：正义终将战胜邪恶，神的得胜是彻底的。",
+                        content_en: "Even in a perfect environment (Millennium), man rebels without a new heart. Environment doesn't save; grace does. Seeing Satan's end assures us: Justice prevails, and God's victory is absolute."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "20:11",
+                    text_cn: "我又看见一个白色的大宝座与坐在上面的，从他面前天地都逃避，再无可见之处了。",
+                    text_en: "Then I saw a great white throne and him who was seated on it. The earth and the heavens fled from his presence, and there was no place for them.",
+                    exegesis: {
+                        title: "白色大宝座",
+                        title_en: "The Great White Throne",
+                        content_cn: "“大”象征权柄，“白”象征圣洁与公义。在神的绝对圣洁面前，受造的旧天地无法站立而“逃避”。这标志着旧秩序的终结，为新天新地铺路。此时没有任何掩体，所有受造物都必须赤露敞开在神面前。",
+                        content_en: "'Great' = Authority; 'White' = Holiness. Old creation 'flees' before absolute holiness, marking the end of the old order. No hiding place remains; all creation is laid bare before God."
+                    },
+                    devotional: {
+                        title: "面对圣洁的神",
+                        title_en: "Facing the Holy God",
+                        content_cn: "有一天，我们将独自面对那位至圣者。没有山洞可以藏身，没有借口可以遮掩。如果连天地都要逃避，我们怎能站立得住呢？唯有藏身在基督的义袍里，我们才能在那大而可畏的日子坦然无惧。",
+                        content_en: "One day we face the Holy One alone. No place to hide. If earth flees, how can we stand? Only by hiding in Christ's righteousness can we stand bold on that awesome day."
+                    }
+                },
+                {
+                    ref: "20:12-15",
+                    text_cn: "我又看见死了的人... 都站在宝座前。案卷展开了... 生命册也展开了... 若有人名字没记在生命册上，他就被扔在火湖里。",
+                    text_en: "And I saw the dead... standing before the throne, and books were opened. Another book was opened, which is the book of life... Anyone whose name was not found written in the book of life was thrown into the lake of fire.",
+                    exegesis: {
+                        title: "最终的审判",
+                        title_en: "The Final Judgment",
+                        content_cn: "审判基于两类书卷：“案卷”（记录行为，作为定罪的证据）和“生命册”（记录恩典，作为得救的依据）。死人复活受审，海、死亡和阴间都交出死人。最终的决定性因素不是行为的优劣（因为无人能靠行为称义），而是名字是否在生命册上。第二次的死即火湖，是彻底的隔绝。",
+                        content_en: "Judgment based on 'Books' (Deeds/Evidence) and 'Book of Life' (Grace). All dead resurrect. The deciding factor isn't deeds (none justify), but the Book of Life. Second Death (Lake of Fire) is total separation."
+                    },
+                    devotional: {
+                        title: "名字记在天上",
+                        title_en: "Names Written in Heaven",
+                        content_cn: "这是宇宙中最重要的一份名单。耶稣曾告诉门徒：“不要因鬼服了你们就欢喜，要因你们的名字记录在天上欢喜。”（路10:20）在这个审判台前，世上的头衔、财富、成就都毫无意义，唯有“被羔羊认识”是生死的关键。你的名字在哪里？",
+                        content_en: "The most important list in the universe. Jesus said, 'Rejoice that your names are written in heaven.' Titles and wealth mean nothing here. Only being known by the Lamb matters. Is your name there?"
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-slate-800';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-indigo-900 text-indigo-200 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-200 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-slate-700 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-indigo-400 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-indigo-600 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-200 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-300 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-slate-700 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-400 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-600 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-indigo-900/30 p-4 rounded-lg border border-indigo-700">
+                                <h5 class="font-bold text-slate-200 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-300 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-indigo-600 text-white shadow-lg shadow-indigo-900/50";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-400 hover:bg-slate-800 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

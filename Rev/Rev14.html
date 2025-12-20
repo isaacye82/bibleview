@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 14: The Lamb & The Harvest | 启示录第十四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Zion Gold - Glory, 144000, Crown */
+            --theme-primary: #ca8a04; 
+            /* Wine Red - Wrath, Grapes, Blood */
+            --theme-accent: #be123c;
+            /* Harvest Wheat - Grain, Righteousness */
+            --theme-light: #fef08a;
+            /* Parchment/Light - Background */
+            --theme-bg: #fffbeb;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #451a03;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(120, 53, 15, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for Harvest */
+        .harvest-badge {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #ca8a04;
+            position: relative;
+        }
+        .harvest-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #ca8a04;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(15deg); }
+            40% { transform: rotate(-10deg); }
+            60% { transform: rotate(5deg); }
+            80% { transform: rotate(-5deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .icon-swing {
+            animation: swing 2s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+    </style>
+</head>
+<body class="bg-yellow-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-yellow-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-yellow-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">14</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-yellow-900">启示录第十四章</h1>
+                        <p class="text-xs text-yellow-600 uppercase tracking-widest en-text">Revelation 14: The Lamb & The Harvest</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-yellow-600 bg-gradient-to-br from-white to-yellow-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-yellow-900 mb-2 serif-font">锡安的羔羊与地上的收割</h2>
+                        <h3 class="text-lg text-yellow-700 italic font-serif mb-4 en-text">The Lamb on Zion and the Harvest of the Earth</h3>
+                        <p class="text-stone-700 text-lg leading-relaxed mb-4 font-medium">
+                            在第十三章令人压抑的兽的统治之后，第十四章展现了得胜的景象：羔羊与144,000人站在锡安山上。随后，三位天使发出最后的警告，宣告巴比伦的倾倒和对拜兽者的审判。这一章以两个收割异象结束：庄稼的收割（得救者）和葡萄的收割（受审者），预示着历史的终局。
+                        </p>
+                        <p class="text-stone-500 text-sm leading-relaxed en-text">
+                            After the oppressive reign of the beasts in Chapter 13, Chapter 14 presents a vision of victory: the Lamb standing on Mount Zion with the 144,000. Three angels then issue final warnings, proclaiming the fall of Babylon and judgment on beast-worshippers. The chapter concludes with two harvests: the grain (saved) and the grapes (judged), signaling the end of history.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-yellow-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fbbf24 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="harvest-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-crown text-yellow-600 text-4xl mb-1 block"></i>
+                                <i class="fas fa-sickle text-stone-500 text-5xl icon-swing"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-yellow-900 serif-font">镰刀与冠冕</h3>
+                            <p class="text-[10px] font-bold text-stone-600 uppercase tracking-widest en-text mt-1">The Sickle & The Crown</p>
+                            <div class="w-12 h-0.5 bg-yellow-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Reaping the Earth<br>收割全地</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-yellow-50 border border-yellow-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-mountain text-yellow-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-yellow-900 text-xl block">锡安山 (Mount Zion)</span>
+                            <span class="text-xs text-yellow-700 italic en-text">Place of Security</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        与13章兽的权势形成鲜明对比。锡安山代表神永不动摇的国度。144,000人在这里不仅是受保护的，更是得胜、纯洁并跟随羔羊的军队。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Contrasts with the Beast's power. Zion represents God's unshakable kingdom. The 144,000 here are protected, victorious, pure, and following the Lamb.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-blue-50 border border-blue-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-bullhorn text-blue-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-blue-900 text-xl block">三天使信息</span>
+                            <span class="text-xs text-blue-700 italic en-text">The 3 Angels' Messages</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        末世最后的福音宣告与警告：1. 永远的福音（敬畏神）；2. 巴比伦的倾倒（拒绝世界体系）；3. 拜兽者的结局（喝神忿怒的酒）。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Final end-time warnings: 1. Everlasting Gospel (Fear God); 2. Fall of Babylon (Reject world system); 3. Doom of Beast worshippers (Wrath of God).
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-wine-glass text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">酒醡 (Winepress)</span>
+                            <span class="text-xs text-red-700 italic en-text">Wrath of God</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        葡萄熟透了（罪恶满盈），被丢入神忿怒的大酒醡中。这象征着末日对恶人彻底、剧烈且不可逆转的审判。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Grapes are fully ripe (sin is full), thrown into the winepress of wrath. Symbolizes the thorough, violent, and irreversible judgment of the wicked.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-stone-800 mb-1">两种收割：庄稼与葡萄</h3>
+                    <p class="text-sm text-stone-500 mb-6 italic en-text">Two Harvests: The Grain and The Grapes</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="harvestChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-yellow-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-yellow-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-yellow-100 text-yellow-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-yellow-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-yellow-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-yellow-500 pl-6">
+                <h2 class="text-2xl font-bold text-yellow-900 mb-2">第一部分：锡安山上的羔羊与144,000 (14:1-5)</h2>
+                <h3 class="text-sm text-yellow-600 italic mb-6 en-text">The Lamb and the 144,000 on Mount Zion</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-blue-600 pl-6">
+                <h2 class="text-2xl font-bold text-blue-800 mb-2">第二部分：三位天使的信息 (14:6-13)</h2>
+                <h3 class="text-sm text-blue-500 italic mb-6 en-text">The Messages of the Three Angels</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-red-700 pl-6">
+                <h2 class="text-2xl font-bold text-red-900 mb-2">第三部分：地上的收割 (14:14-20)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">The Harvest of the Earth</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-stone-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-stone-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-yellow-100 p-4 border-b border-yellow-200">
+                            <h3 class="text-xl font-bold text-yellow-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-yellow-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于象征语言（童身、锡安山、酒醡）的旧约背景（约珥书、以赛亚书）及启示录内部的对比（兽的印记 vs 神的名）。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on symbolic language (virgins, Zion, winepress), OT background (Joel, Isaiah), and internal contrasts (Mark of Beast vs Name of God).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-yellow-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将144,000理解为神子民的完整象征（而非字面数字）。“童身”指属灵的贞洁（未沾染偶像），而非对婚姻的否定。收割异象预示末世的双重结局。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Interpret 144,000 as symbolic completeness. "Virgins" means spiritual purity (no idolatry), not celibacy. Harvest visions signal the dual end-time destiny.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-50 p-4 border-b border-red-200">
+                            <h3 class="text-xl font-bold text-red-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-stone-600 mb-4 italic">
+                                侧重于在诱惑中保持纯洁、在逼迫中持守忍耐，以及对死亡的正确态度（息了劳苦）。
+                                <br><span class="text-xs text-stone-400 en-text">Focusing on purity amidst temptation, endurance in persecution, and the correct attitude toward death (rest from labor).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-stone-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">跟随羔羊不仅是在天堂，更是地上的生活方式。在“巴比伦”的文化中保持“童身”的纯洁。</div>
+                                    <div class="text-xs italic text-stone-500 en-text">Following the Lamb is a lifestyle on earth, not just in heaven. Keeping "virgin" purity amidst "Babylonian" culture.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-yellow-900 text-yellow-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"圣灵说：是的，他们息了自己的劳苦，做工的果效也随着他们。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"'Yes,' says the Spirit, 'they will rest from their labor, for their deeds will follow them.'"</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十四章中英对照研经报告 | THE LAMB & THE HARVEST</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "14:1-3",
+                    text_cn: "我又观看，见羔羊站在锡安山，同他又有十四万四千人，都有他的名和他父的名写在额上... 他们在宝座前... 仿佛是唱新歌。",
+                    text_en: "Then I looked, and there before me was the Lamb, standing on Mount Zion, and with him 144,000 who had his name and his Father’s name written on their foreheads... And they sang a new song...",
+                    exegesis: {
+                        title: "锡安山的得胜者",
+                        title_en: "The Victors on Mount Zion",
+                        content_cn: "与13章兽的印记（666）形成对比，这群人有神的名。锡安山在旧约中是神同在和得胜的地方（诗篇2:6）。这144,000人代表全体得赎的教会，他们安全地站在神面前。他们唱的“新歌”是救赎之歌，只有经历过救恩的人才能学会。",
+                        content_en: "Contrasts with the Beast's mark (666); these have God's name. Zion is the place of God's presence/victory (Ps 2:6). 144,000 represent the entire redeemed Church, standing secure. The 'new song' is of redemption, learned only by the redeemed."
+                    },
+                    devotional: {
+                        title: "你属于谁？",
+                        title_en: "To Whom Do You Belong?",
+                        content_cn: "额上的名代表归属权。在这个世界上，我们要么带着兽的印记（随从世界），要么带着羔羊的名（归属基督）。站在锡安山意味着我们不仅是幸存者，更是得胜者。今天，你的生活在唱这首别人学不会的“救赎新歌”吗？",
+                        content_en: "The name on the forehead signifies ownership. We either bear the Beast's mark (worldliness) or the Lamb's name (Christ's). Standing on Zion means we are victors, not just survivors. Is your life singing the 'new song' of redemption today?"
+                    }
+                },
+                {
+                    ref: "14:4-5",
+                    text_cn: "这些人未曾沾染妇女，他们原是童身。羔羊无论往哪里去，他们都跟随他... 在他们口中察不出谎言来，他们是没有瑕疵的。",
+                    text_en: "These are those who did not defile themselves with women, for they are virgins. They follow the Lamb wherever he goes... No lie was found in their mouths; they are blameless.",
+                    exegesis: {
+                        title: "属灵的贞洁",
+                        title_en: "Spiritual Chastity",
+                        content_cn: "“童身”是隐喻，指未沾染偶像崇拜（属灵淫乱）。在旧约中，拜偶像常被称为行淫。这群人对神专一，没有向“巴比伦”的诱惑妥协。“跟随羔羊”是他们的特征，意味着绝对的顺服。他们是“初熟的果子”，特别献给神。",
+                        content_en: "'Virgins' is metaphorical for not committing idolatry (spiritual adultery). They are devoted to God, uncompromised by 'Babylon'. 'Following the Lamb' implies absolute obedience. They are 'firstfruits', specially dedicated to God."
+                    },
+                    devotional: {
+                        title: "专一跟随",
+                        title_en: "Following with Single-Heartedness",
+                        content_cn: "“羔羊无论往哪里去，他们都跟随他”，这是作门徒的真谛。无论是在青草地，还是在死荫幽谷，我们都紧紧跟随。这种“童身”般的纯洁，是对世界诱惑的拒绝，是对基督唯一的爱慕。你的心是否对主纯一不杂？",
+                        content_en: "'They follow the Lamb wherever he goes' is the essence of discipleship. Whether in green pastures or the valley of shadow, we follow close. This 'virgin' purity rejects worldly seduction for exclusive love of Christ. Is your heart undivided for Him?"
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "14:6-7",
+                    text_cn: "我又看见另一位天使... 有永远的福音... 大声说：应当敬畏神，将荣耀归给他... 应当敬拜那创造天地海... 的。",
+                    text_en: "Then I saw another angel... he had the eternal gospel... He said in a loud voice, 'Fear God and give him glory... Worship him who made the heavens, the earth, the sea...'",
+                    exegesis: {
+                        title: "第一位天使：永远的福音",
+                        title_en: "1st Angel: The Eternal Gospel",
+                        content_cn: "这是对全世界的最后呼唤。这“福音”的核心是呼吁人敬拜创造主，而非受造物（兽）。在审判临近时，呼吁“敬畏神”是唯一的出路。这也表明即便在末期，神仍给世人悔改的机会。",
+                        content_en: "A final call to the world. The core of this 'gospel' is worshipping the Creator, not the creature (Beast). Amidst judgment, 'Fearing God' is the only way out. Shows God still offers repentance even in the end times."
+                    },
+                    devotional: {
+                        title: "敬拜创造主",
+                        title_en: "Worship the Creator",
+                        content_cn: "在这个高举科学、自我或权力的时代，天使的信息如雷贯耳：敬拜那位创造者！真正的福音总是把人带回到对神的敬畏中。如果你的“福音”没有让你更敬畏神、归荣耀给祂，那可能不是“永远的福音”。",
+                        content_en: "In an age exalting science, self, or power, the angel's message thunders: Worship the Creator! The true gospel brings us back to fearing God. If your 'gospel' doesn't lead to awe and glory for God, it might not be the 'eternal gospel'."
+                    }
+                },
+                {
+                    ref: "14:8-11",
+                    text_cn: "第二位天使说：巴比伦大城倾倒了... 第三位天使说：若有人拜兽... 这人也必喝神大怒的酒... 受痛苦，直到永永远远。",
+                    text_en: "A second angel followed and said, 'Fallen! Fallen is Babylon the Great...' A third angel followed them and said, 'If anyone worships the beast... they, too, will drink the wine of God’s fury... torment for ever and ever.'",
+                    exegesis: {
+                        title: "巴比伦的倾倒与神忿怒的酒",
+                        title_en: "Fall of Babylon & Wine of Wrath",
+                        content_cn: "“巴比伦”象征抵挡神的世界体系（诱惑人行淫）。它的倾倒虽在未来（18章），但神已宣告其定局。对于那些选择拜兽的人，神将给他们喝“大怒的酒”（纯一不杂，full strength）。这警告了偶像崇拜的可怕永恒后果。",
+                        content_en: "'Babylon' symbolizes the anti-God world system. Its fall is declared certain. For beast-worshippers, God serves the 'wine of wrath' (undiluted). A warning of the terrifying, eternal consequences of idolatry."
+                    },
+                    devotional: {
+                        title: "不要喝错酒",
+                        title_en: "Don't Drink the Wrong Wine",
+                        content_cn: "世界给你喝“邪淫的酒”（罪中之乐），结局却是喝神“忿怒的酒”。这是一个严肃的选择。不要被巴比伦的繁华迷惑，它注定要倾倒。选择今天的节制和圣洁，是为了避免永恒的痛苦。",
+                        content_en: "The world offers 'wine of adultery' (pleasure of sin), but it leads to the 'wine of wrath'. A serious choice. Don't be fooled by Babylon's glamour; it's doomed. Choose temperance and holiness today to avoid eternal torment."
+                    }
+                },
+                {
+                    ref: "14:12-13",
+                    text_cn: "圣徒的忍耐就在此... 我听见从天上有声音说... 在主里面而死的人有福了！圣灵说：是的，他们息了自己的劳苦，做工的果效也随着他们。",
+                    text_en: "This calls for patient endurance... Then I heard a voice from heaven say... 'Blessed are the dead who die in the Lord from now on.' 'Yes,' says the Spirit, 'they will rest from their labor...'",
+                    exegesis: {
+                        title: "有福的安息",
+                        title_en: "Blessed Rest",
+                        content_cn: "面对逼迫，圣徒需要“忍耐”（Hupomone，坚忍）。这里给出了极大的安慰：死亡不是灾难，而是“安息”的开始。与拜兽者“昼夜不得安宁”（v11）形成鲜明对比。他们的工作（Labor）停止了，但果效（Works）却随着他们进入永恒。",
+                        content_en: "Saints need 'endurance' (Hupomone). Great comfort: death is not disaster, but the start of 'rest'. Contrasts with the wicked who have 'no rest' (v11). Their painful 'labor' ceases, but their 'works' follow them into eternity."
+                    },
+                    devotional: {
+                        title: "劳苦中的盼望",
+                        title_en: "Hope in Labor",
+                        content_cn: "基督徒的死，被神看为“有福的”。这世界给我们的劳苦常常是徒然的，但在主里的劳苦绝不徒然。每一次的忍耐、每一滴泪水、每一个善行，都会“随着”我们进入永恒。安息不是终结，而是奖赏的开始。",
+                        content_en: "Christian death is seen by God as 'blessed'. Worldly labor is often vain, but labor in the Lord is never in vain. Every endurance, tear, and good deed 'follows' us into eternity. Rest is not the end, but the beginning of reward."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "14:14-16",
+                    text_cn: "我又观看，见有一片白云，云上坐着一位好像人子... 拿着快镰刀... 伸出镰刀向地上收割，地上的庄稼就被收割了。",
+                    text_en: "I looked, and there before me was a white cloud, and seated on the cloud was one like a son of man... with a sharp sickle... he swung his sickle over the earth, and the earth was harvested.",
+                    exegesis: {
+                        title: "庄稼的收割：得救者",
+                        title_en: "The Grain Harvest: The Redeemed",
+                        content_cn: "“人子”即耶稣基督（但7:13）。庄稼熟了（枯干了），意味着得救的人数满足了，或者信徒的忍耐已到尽头。这通常被解释为对义人的收聚（被提），正如耶稣在比喻中将麦子收进仓里（太13:30）。",
+                        content_en: "'Son of Man' is Christ (Dan 7:13). Grain is 'ripe' (withered), implying the number of saved is full or endurance is maxed. Usually interpreted as gathering the righteous (Rapture), like wheat into the barn (Matt 13:30)."
+                    },
+                    devotional: {
+                        title: "你熟了吗？",
+                        title_en: "Are You Ripe?",
+                        content_cn: "庄稼成熟是需要时间的——经历阳光（恩典）和雨水（试炼）。当镰刀临到时，只有成熟的麦子才会被收进仓里。我们的人生目标就是“成熟”——长成基督的身量，预备好迎接主的收割。",
+                        content_en: "Ripening takes time—sun (grace) and rain (trials). When the sickle comes, only ripe wheat enters the barn. Our life goal is 'maturity'—growing into Christ, ready for the Lord's harvest."
+                    }
+                },
+                {
+                    ref: "14:17-20",
+                    text_cn: "又有一位天使... 拿着快镰刀... 收取地上的葡萄... 丢在神忿怒的大酒醡中。那酒醡在城外踹... 血从酒醡里流出来...",
+                    text_en: "Another angel... had a sharp sickle... 'Gather the clusters of grapes from the earth's vine'... They were trampled in the winepress outside the city, and blood flowed out...",
+                    exegesis: {
+                        title: "葡萄的收割：受审者",
+                        title_en: "The Grape Harvest: The Judged",
+                        content_cn: "这是对恶人的审判。葡萄被丢入“神忿怒的大酒醡”中被踹（trampled），象征激烈的流血和报应（赛63:3）。血流六百里（1600司德滴），象征审判的全面性和惨烈性。这是对那些拒绝“永远福音”之人的最终结局。",
+                        content_en: "Judgment of the wicked. Grapes thrown into the 'winepress of wrath' and trampled, symbolizing violent retribution (Isa 63:3). Blood flowing 1600 stadia indicates total, horrific judgment. The final end for those rejecting the 'Eternal Gospel'."
+                    },
+                    devotional: {
+                        title: "公义终将临到",
+                        title_en: "Justice Will Come",
+                        content_cn: "虽然神宽容忍耐，但祂绝不以有罪为无罪。罪恶的葡萄终有一天会“熟透”。这可怕的景象提醒我们：不要羡慕作恶的人，他们的结局是酒醡。同时也激励我们去传福音，抢救那些即将在忿怒中沉沦的灵魂。",
+                        content_en: "God is patient but will not clear the guilty. Sin's grapes will eventually be 'fully ripe'. This terrifying scene warns: Don't envy the wicked; their end is the winepress. It motivates us to evangelize and save souls from coming wrath."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-stone-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-yellow-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-yellow-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-yellow-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-yellow-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-yellow-100 text-yellow-800 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-600 hover:bg-yellow-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('harvestChart').getContext('2d');
+            
+            // Comparison: Grain vs Grapes
+            const data = {
+                labels: [
+                    ['Harvester', '收割者'], 
+                    ['Action', '动作'], 
+                    ['Destination', '去向'], 
+                    ['Nature', '性质'], 
+                    ['Timing', '时机']
+                ],
+                datasets: [
+                    {
+                        label: 'Grain Harvest (Righteous) / 庄稼 (义人)',
+                        data: [100, 80, 100, 100, 90], 
+                        backgroundColor: 'rgba(254, 240, 138, 0.6)', // Harvest Wheat
+                        borderColor: 'rgba(202, 138, 4, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Grape Harvest (Wicked) / 葡萄 (恶人)',
+                        data: [80, 100, 0, 0, 100], 
+                        backgroundColor: 'rgba(190, 18, 60, 0.6)', // Wine Red
+                        borderColor: 'rgba(190, 18, 60, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#451a03'
+                            },
+                            ticks: { display: false, max: 100 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) { // Grain
+                                        const labels = [
+                                            "Son of Man (Jesus)", "Reaping/Gathering", "Heavenly Barn", "Salvation/Rapture", "Ripe (Dry)"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    } else { // Grapes
+                                        const labels = [
+                                            "Angel from Altar", "Cutting/Trampling", "Winepress of Wrath", "Judgment/Death", "Ripe (Full)"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

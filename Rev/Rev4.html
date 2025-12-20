@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 4: The Throne Room | 启示录第四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Cinzel:wght@400;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Emerald - The Rainbow around the Throne */
+            --theme-primary: #059669; 
+            /* Gold - Crowns and Glory */
+            --theme-accent: #d97706;
+            /* Royal Deep Blue - The Heavenly Depth */
+            --theme-dark: #1e3a8a;
+            /* Light Background */
+            --theme-bg: #f0fdf4;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .en-font {
+            font-family: 'Cinzel', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .verse-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .verse-card:hover {
+            transform: translateY(-2px);
+            border-left-color: var(--theme-accent);
+        }
+
+        /* Navigation Tabs Styling */
+        .nav-link {
+            cursor: pointer;
+            padding-bottom: 4px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-link.active {
+            color: var(--theme-accent);
+            border-bottom-color: var(--theme-accent);
+            font-weight: 700;
+        }
+
+        .nav-link:hover:not(.active) {
+            color: var(--theme-accent);
+        }
+
+        /* View Switching */
+        .view-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .view-section.active-view {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Section Header Styling for Verse List */
+        .section-header {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+        }
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 2px;
+        }
+        .section-throne::before { background-color: var(--theme-accent); }
+        .section-elders::before { background-color: var(--theme-primary); }
+        .section-worship::before { background-color: var(--theme-dark); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #9ca3af; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        
+        /* Trisagion Card Glow */
+        .trisagion-glow {
+            box-shadow: 0 0 30px rgba(217, 119, 6, 0.15);
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-50 border-b-4 border-emerald-600">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('dashboard')">
+                <i class="fas fa-crown text-3xl text-emerald-500"></i>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold tracking-wide">启示录第四章</h1>
+                    <p class="text-xs text-emerald-400 font-light tracking-widest en-font">REVELATION CHAPTER 4</p>
+                </div>
+            </div>
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex space-x-8 text-sm uppercase tracking-wider font-medium">
+                <a onclick="switchView('dashboard')" id="nav-dashboard" class="nav-link active">概览 Dashboard</a>
+                <a onclick="switchView('study')" id="nav-study" class="nav-link">经文研读 Study</a>
+                <a onclick="switchView('methodology')" id="nav-methodology" class="nav-link">方法论 Methodology</a>
+            </nav>
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-emerald-500 text-xl" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden bg-slate-800 px-4 py-4 md:hidden border-t border-slate-700">
+            <a onclick="switchView('dashboard'); toggleMobileMenu()" class="block py-3 text-sm text-gray-300 hover:text-white border-b border-slate-700">概览 Dashboard</a>
+            <a onclick="switchView('study'); toggleMobileMenu()" class="block py-3 text-sm text-gray-300 hover:text-white border-b border-slate-700">经文研读 Study</a>
+            <a onclick="switchView('methodology'); toggleMobileMenu()" class="block py-3 text-sm text-gray-300 hover:text-white">方法论 Methodology</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
+
+        <!-- VIEW 1: Dashboard -->
+        <section id="view-dashboard" class="view-section active-view space-y-8">
+            
+            <!-- Hero Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Intro Text -->
+                <div class="bg-white rounded-xl p-8 card-shadow border-t-4 border-emerald-500 flex flex-col justify-center">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-1 flex items-center">
+                        <i class="fas fa-door-open text-emerald-600 mr-3"></i> 
+                        天上的门与宝座
+                    </h2>
+                    <h3 class="text-sm font-normal text-slate-400 en-font uppercase tracking-widest mb-6">The Door in Heaven & The Throne</h3>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <p class="text-slate-700 leading-relaxed text-lg font-medium">
+                                如果说第二、三章是基督在“灯台中间”（教会中）行走，第四章则是视角的彻底转换。约翰被呼召“上到这里来”。
+                            </p>
+                            <p class="text-slate-500 en-text text-sm italic mt-1 leading-relaxed">
+                                If Chapters 2 and 3 depict Christ walking among the lampstands (the churches), Chapter 4 marks a radical shift in perspective. John is called to "Come up here."
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-slate-700 leading-relaxed">
+                                这是全书的核心转折点：从地上的混乱转向天上的掌权。在这里，宇宙的中心不是政治、灾难或罗马皇帝，而是<b>坐宝座的那一位</b>。
+                            </p>
+                            <p class="text-slate-500 en-text text-sm italic mt-1 leading-relaxed">
+                                This is the central turning point: from earthly chaos to heavenly sovereignty. Here, the center of the universe is not politics, disaster, or the Roman Emperor, but <b>the One seated on the Throne</b>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-4 text-sm text-slate-500 mt-8 pt-6 border-t border-slate-100">
+                        <div class="flex flex-col">
+                            <span><i class="fas fa-globe mr-1 text-blue-500"></i> 地上 Earth (Ch 2-3)</span>
+                            <span class="text-xs text-slate-400 en-text">Church Age</span>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-300"></i>
+                        <div class="flex flex-col">
+                            <span><i class="fas fa-cloud mr-1 text-emerald-500"></i> 天上 Heaven (Ch 4)</span>
+                            <span class="text-xs text-slate-400 en-text">Throne Room</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redesigned Trisagion Card -->
+                <div class="bg-slate-900 rounded-xl p-1 trisagion-glow relative overflow-hidden group">
+                    <!-- Background Pattern -->
+                    <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d97706 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    
+                    <div class="h-full bg-slate-900/90 rounded-lg border border-amber-500/50 p-8 flex flex-col justify-center items-center text-center relative z-10 backdrop-blur-sm">
+                        
+                        <!-- Top Icon -->
+                        <div class="mb-6 text-amber-500 opacity-80">
+                            <i class="fas fa-wing-dragon text-2xl"></i>
+                        </div>
+
+                        <!-- The Trisagion Text -->
+                        <div class="mb-8 space-y-2">
+                            <h2 class="text-4xl md:text-5xl font-serif font-bold text-white tracking-widest uppercase drop-shadow-lg">
+                                <span class="block text-emerald-400">Holy</span>
+                                <span class="block text-emerald-300">Holy</span>
+                                <span class="block text-emerald-200">Holy</span>
+                            </h2>
+                            <div class="w-16 h-1 bg-amber-500 mx-auto my-4 rounded-full"></div>
+                            <h3 class="text-xl md:text-2xl font-serif text-white font-bold">圣哉！圣哉！圣哉！</h3>
+                        </div>
+
+                        <!-- The Description -->
+                        <div class="space-y-3 max-w-md">
+                            <p class="text-amber-100 text-lg font-serif leading-relaxed">
+                                主神是昔在、今在、以后永在的全能者。
+                            </p>
+                            <p class="text-amber-200/60 en-font text-sm italic tracking-wide">
+                                "Lord God Almighty, who was, and is, and is to come."
+                            </p>
+                        </div>
+
+                        <!-- Action Button -->
+                        <button onclick="switchView('study')" class="mt-8 px-8 py-2 border border-emerald-500 text-emerald-400 rounded-full hover:bg-emerald-600 hover:text-white hover:border-emerald-600 transition-all duration-300 text-sm tracking-widest uppercase group-hover:scale-105">
+                            <span class="mr-2">进入敬拜</span> Enter Worship
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Widgets -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Key Symbols -->
+                <div class="col-span-2 bg-white p-6 rounded-xl card-shadow border-t-4 border-amber-500">
+                    <h3 class="text-lg font-bold text-slate-700 mb-1 flex items-center">
+                        <i class="fas fa-icons mr-2 text-amber-500"></i> 关键意象 
+                    </h3>
+                    <p class="text-xs text-slate-400 en-font uppercase tracking-widest mb-4 ml-7">Key Imagery & Symbols</p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center p-4 bg-emerald-50 rounded-lg hover:bg-emerald-100 transition">
+                            <i class="fas fa-gem text-emerald-500 text-2xl mb-2"></i>
+                            <div class="font-bold text-slate-700 text-sm">碧玉/红宝石</div>
+                            <div class="text-xs text-slate-500 en-text mt-1">Jasper & Sardius</div>
+                        </div>
+                        <div class="text-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                            <i class="fas fa-water text-blue-500 text-2xl mb-2"></i>
+                            <div class="font-bold text-slate-700 text-sm">玻璃海</div>
+                            <div class="text-xs text-slate-500 en-text mt-1">Sea of Glass</div>
+                        </div>
+                        <div class="text-center p-4 bg-amber-50 rounded-lg hover:bg-amber-100 transition">
+                            <i class="fas fa-users text-amber-500 text-2xl mb-2"></i>
+                            <div class="font-bold text-slate-700 text-sm">24长老</div>
+                            <div class="text-xs text-slate-500 en-text mt-1">24 Elders</div>
+                        </div>
+                        <div class="text-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+                            <i class="fas fa-bolt text-purple-500 text-2xl mb-2"></i>
+                            <div class="font-bold text-slate-700 text-sm">闪电雷轰</div>
+                            <div class="text-xs text-slate-500 en-text mt-1">Lightning & Thunder</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart: Worship Circles -->
+                <div class="bg-white p-6 rounded-xl card-shadow border-t-4 border-blue-600 flex flex-col">
+                    <h3 class="text-lg font-bold text-slate-700 mb-1 text-center">敬拜的同心圆</h3>
+                    <p class="text-xs text-slate-400 text-center en-font mb-4">CONCENTRIC CIRCLES OF WORSHIP</p>
+                    <div class="relative h-40 w-full flex-grow">
+                        <canvas id="worshipChart"></canvas>
+                    </div>
+                    <p class="text-center text-xs text-slate-400 mt-2 en-text italic">
+                        All creation centered on the Throne
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: Study -->
+        <section id="view-study" class="view-section space-y-6">
+            <!-- Sticky Header -->
+            <div class="bg-white rounded-xl p-4 card-shadow mb-6 flex flex-col md:flex-row justify-between items-center sticky top-20 z-40 border-l-4 border-emerald-600 shadow-md">
+                <div class="mb-3 md:mb-0">
+                    <h2 class="text-xl font-bold text-slate-800">经文逐节研读</h2>
+                    <p class="text-xs text-slate-500 en-text">Verse-by-Verse Exegesis & Application</p>
+                </div>
+                
+                <!-- Filter Buttons -->
+                <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-lg">
+                    <button onclick="updateFilter('all')" id="btn-all" class="px-4 py-1.5 text-sm rounded-md bg-white shadow-sm font-bold text-emerald-700 transition">
+                        全部 All
+                    </button>
+                    <button onclick="updateFilter('academic')" id="btn-academic" class="px-4 py-1.5 text-sm rounded-md text-slate-500 hover:text-emerald-700 transition">
+                        仅学术 Academic
+                    </button>
+                    <button onclick="updateFilter('devotional')" id="btn-devotional" class="px-4 py-1.5 text-sm rounded-md text-slate-500 hover:text-amber-600 transition">
+                        仅灵修 Devotional
+                    </button>
+                </div>
+            </div>
+
+            <!-- Verse Container (Populated by JS) -->
+            <div id="verse-container" class="space-y-8 pb-12">
+                <!-- Content injected here -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: Methodology -->
+        <section id="view-methodology" class="view-section">
+            <div class="bg-emerald-50/50 rounded-2xl p-8 md:p-12 border border-emerald-100">
+                <h2 class="text-3xl font-bold text-slate-800 mb-2 text-center">
+                    解经方法论总结
+                </h2>
+                <p class="text-base font-normal text-slate-500 en-font text-center mb-8 uppercase tracking-widest">
+                    Summary of Hermeneutical Approaches
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                    <!-- Academic Column -->
+                    <div class="relative bg-white p-8 rounded-xl shadow-sm border-t-4 border-emerald-600">
+                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg ring-4 ring-emerald-50">
+                            <i class="fas fa-university text-lg"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-emerald-800 mb-1 text-center mt-4">权威与学术性解经</h3>
+                        <h4 class="text-xs font-bold tracking-widest text-emerald-400 mb-6 text-center en-font uppercase">Authoritative/Academic Exegesis</h4>
+                        
+                        <div class="space-y-8 text-slate-600">
+                            <div>
+                                <h5 class="font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fas fa-search mr-2 text-emerald-400"></i> 原则 Principle
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-2">
+                                    <strong>启示文学解读法 (Apocalyptic Interpretation)：</strong> 承认《启示录》属于启示文学，大量使用旧约（特别是以西结书、以赛亚书、但以理书）的象征符号。不按字面死扣（如真的有四个脸的生物），而是探究符号背后的神学意义。
+                                </p>
+                                <p class="text-xs text-slate-400 en-text italic border-l-2 border-emerald-100 pl-2">
+                                    <strong>Apocalyptic Interpretation:</strong> Recognizing Revelation as apocalyptic literature, heavily utilizing OT symbolism (Ezekiel, Isaiah, Daniel). It seeks theological meaning behind symbols rather than literalism.
+                                </p>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fas fa-crosshairs mr-2 text-emerald-400"></i> 适用范围 Scope
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-2">
+                                    用于理解约翰所见的异象与旧约先知传统的连续性，确立神的主权、圣洁和审判的客观真理。这是避免陷入主观臆想的基础。
+                                </p>
+                                <p class="text-xs text-slate-400 en-text italic border-l-2 border-emerald-100 pl-2">
+                                    Used to understand the continuity with OT traditions and establish objective truths of God's sovereignty, holiness, and judgment. Essential for avoiding subjective speculation.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Devotional Column -->
+                    <div class="relative bg-white p-8 rounded-xl shadow-sm border-t-4 border-amber-500">
+                        <div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white w-12 h-12 rounded-full flex items-center justify-center shadow-lg ring-4 ring-amber-50">
+                            <i class="fas fa-heart text-lg"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-amber-700 mb-1 text-center mt-4">个人灵修属灵含义</h3>
+                        <h4 class="text-xs font-bold tracking-widest text-amber-400 mb-6 text-center en-font uppercase">Devotional/Spiritual Application</h4>
+                        
+                        <div class="space-y-8 text-slate-600">
+                            <div>
+                                <h5 class="font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fas fa-seedling mr-2 text-amber-400"></i> 原则 Principle
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-2">
+                                    <strong>宝座视角的内化 (Internalizing the Throne Perspective)：</strong> 将天上客观的“神掌权”转化为个人生命中主观的“安全感”和“敬拜”。经文不仅描述了天上的景象，更呼唤我们在地上的回应。
+                                </p>
+                                <p class="text-xs text-slate-400 en-text italic border-l-2 border-amber-100 pl-2">
+                                    <strong>Internalizing the Throne Perspective:</strong> Transforming the objective truth of "God's Reign" into subjective security and worship. It calls for an earthly response to the heavenly reality.
+                                </p>
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-slate-800 mb-1 flex items-center">
+                                    <i class="fas fa-user-check mr-2 text-amber-400"></i> 适用范围 Scope
+                                </h5>
+                                <p class="text-sm leading-relaxed mb-2">
+                                    适用于重新调整生命的优先次序，在混乱的世界中找到内在的平安，以及学习如何进行以神为中心的真实敬拜（如“投下冠冕”）。
+                                </p>
+                                <p class="text-xs text-slate-400 en-text italic border-l-2 border-amber-100 pl-2">
+                                    Applicable for reordering life priorities, finding inner peace amidst chaos, and learning true God-centered worship (e.g., "casting crowns").
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <!-- <footer class="bg-slate-900 text-white py-12 mt-auto border-t-4 border-emerald-600"> -->
+    <footer class="bg-slate-900 text-slate-400 mt-auto">
+        <!-- <div class="container mx-auto px-4 text-center"> -->
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic mb-1 tracking-wide text-emerald-50">"有一宝座安置在天上"</p>
+            <p class="text-sm font-light italic text-emerald-200/80 mb-2 en-font">"At once I was in the Spirit, and there before me was a throne in heaven."</p>
+            <p class="text-xs text-slate-400 uppercase tracking-widest en-font">
+                启示录第四章中英对照研经报告 | Sovereignty & Worship
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Source ---
+        const revelationData = {
+            verses: [
+                // --- SECTION 1: THE INVITATION ---
+                {
+                    ref: "4:1",
+                    section: { 
+                        zh: "第一部分：天上开启的门", 
+                        en: "Part I: The Door Opened in Heaven", 
+                        style: "section-throne",
+                        icon: "fa-door-open",
+                        colorClass: "text-amber-600"
+                    },
+                    title: "视角的转换：上到这里来",
+                    titleEn: "The Invitation: Come Up Here",
+                    text: "此后，我观看，见天上有门开了。我初次听见好像吹号的声音，对我说：‘你上到这里来，我要将以后必成的事指示你。’",
+                    textEn: "After this I looked, and there before me was a door standing open in heaven. And the voice I had first heard speaking to me like a trumpet said, 'Come up here, and I will show you what must take place after this.'",
+                    theme: "majesty",
+                    academic: {
+                        title: "启示文学结构 Structure",
+                        points: [
+                            { zh: "<strong>'此后' (Meta tauta)：</strong> 这是一个关键的转折点。若按时代论解经，有人认为这象征教会的被提（因为第4章后不再提及'教会'一词）。但在文学结构上，这标志着异象从“地上的教会”（2-3章）转移到了“天上的视角”。", en: "<strong>'After this' (Meta tauta):</strong> Marks a pivotal shift. While Dispensationalists view this as the Rapture (church absent after Ch 3), literarily it marks a shift from 'earthly church' perspective to 'heavenly perspective'." },
+                            { zh: "<strong>'号角的声音'：</strong> 回应了1:10的声音。在旧约（出埃及记19章）中，号角声通常伴随着神的显现（Theophany）。", en: "<strong>'Voice like a trumpet':</strong> Echoes 1:10. In OT (Exodus 19), trumpet sounds accompany Theophany (God's manifestation)." }
+                        ]
+                    },
+                    devotional: {
+                        title: "超越困境的视角 Transcendent Perspective",
+                        content: [
+                            { zh: "<strong>视角的提升：</strong> 当我们在地上的生活中感到混乱、受压时，神邀请我们“上到这里来”。不是为了逃避现实，而是为了从神宝座的视角看清现实。有了天上的眼光，地上的苦难就有了不同的意义。", en: "<strong>Elevation of Perspective:</strong> When overwhelmed by earthly chaos, God invites us to 'Come up here'. Not to escape reality, but to view it from His Throne. Heaven's perspective transforms earthly suffering." }
+                        ]
+                    }
+                },
+                {
+                    ref: "4:2-3",
+                    title: "宝座上的荣光",
+                    titleEn: "The Glory on the Throne",
+                    text: "我立刻被圣灵感动，见有一个宝座安置在天上，又有一位坐在宝座上。看那坐着的，好像碧玉和红宝石；又有虹围着宝座，好像绿宝石。",
+                    textEn: "At once I was in the Spirit, and there before me was a throne in heaven with someone sitting on it. And the one who sat there had the appearance of jasper and ruby. A rainbow that shone like an emerald encircled the throne.",
+                    theme: "majesty",
+                    academic: {
+                        title: "宝石的象征 Symbolism of Stones",
+                        points: [
+                            { zh: "<strong>'宝座' (Throne)：</strong> 本章出现了13次。这是全书的核心——无论地上罗马皇帝如何肆虐，宇宙的控制权在天上。约翰没有描述神的形象（犹太人避免描绘神），只描述了祂发出的光辉。", en: "<strong>'Throne':</strong> Occurs 13 times. The central theme—despite Rome's power, cosmic control resides in Heaven. John describes not God's form (Jewish aniconism), but His radiance." },
+                            { zh: "<strong>'碧玉与红宝石'：</strong> 碧玉（Jasper）可能是指晶莹剔透的钻石，象征神的圣洁与纯全；红宝石（Sardius）象征神的审判或救赎的血。这也对应大祭司胸牌上的第一块和最后一块宝石（代表全体子民）。", en: "<strong>'Jasper & Ruby':</strong> Jasper (likely diamond-like) symbolizes holiness/purity; Ruby (Sardius) symbolizes judgment/blood. Also the first and last stones on the High Priest's breastplate." },
+                            { zh: "<strong>'绿宝石的虹'：</strong> 虹是挪亚之约的记号（创9）。绿宝石（Emerald）色调柔和。即使在即将展开的雷轰审判前，神仍被怜悯和守约的光辉环绕。", en: "<strong>'Emerald Rainbow':</strong> Rainbow is the sign of Noah's covenant (Gen 9). Emerald implies soothing mercy. Even amidst impending judgment, God is encircled by covenant mercy." }
+                        ]
+                    },
+                    devotional: {
+                        title: "中心的稳定 Stability at the Center",
+                        content: [
+                            { zh: "<strong>生命的核心：</strong> 宇宙不是真空，也不是失控的，中心有一个宝座，宝座上坐着一位良善（虹）又圣洁（碧玉）的神。你的生命中心是谁在坐宝座？", en: "<strong>Center of Life:</strong> The cosmos isn't a vacuum or chaos; there is a Throne, occupied by a Good (Rainbow) and Holy (Jasper) God. Who sits on the throne of your life?" }
+                        ]
+                    }
+                },
+                // --- SECTION 2: THE ENTOURAGE ---
+                {
+                    ref: "4:4-5",
+                    section: { 
+                        zh: "第二部分：天庭的侍立者", 
+                        en: "Part II: The Heavenly Council", 
+                        style: "section-elders",
+                        icon: "fa-users",
+                        colorClass: "text-emerald-600"
+                    },
+                    title: "二十四位长老与七灵",
+                    titleEn: "The 24 Elders & Seven Spirits",
+                    text: "宝座的周围又有二十四个座位，其上坐着二十四位长老，身穿白衣，头上戴着金冠冕... 宝座前有点着的七盏火灯，就是神的七灵。",
+                    textEn: "Surrounding the throne were twenty-four other thrones, and seated on them were twenty-four elders. They were dressed in white and had crowns of gold on their heads... Before the throne, seven lamps were blazing. These are the seven spirits of God.",
+                    theme: "mystery",
+                    academic: {
+                        title: "身份鉴定 Identity Identification",
+                        points: [
+                            { zh: "<strong>'二十四位长老'：</strong> 学术界主要有两种观点：1. <strong>天使阶层：</strong> 可能是掌管敬拜的高级天使（参照赛24:23）。2. <strong>教会/圣徒代表：</strong> 12（旧约支派）+ 12（新约使徒），代表新旧约全体被救赎的子民。他们身穿白衣（得胜者）戴金冠冕（Stephanos，得胜者的冠冕），更支持其代表圣徒的观点。", en: "<strong>'24 Elders':</strong> Two main views: 1. <strong>Angelic Order:</strong> High angels of worship. 2. <strong>Representative of Saints:</strong> 12 (Tribes) + 12 (Apostles). White robes and 'stephanos' crowns (victor's crowns) strongly suggest they represent redeemed humanity." },
+                            { zh: "<strong>'七盏火灯/七灵'：</strong> 象征圣灵的完美与全备（Fullness）。'火灯'与'闪电雷轰'构成了西奈山神显现的背景，强调神的威严。", en: "<strong>'Seven Lamps/Spirits':</strong> Symbolizes the perfection/fullness of the Holy Spirit. Coupled with 'lightning/thunder', it evokes the Sinai Theophany, emphasizing majesty." }
+                        ]
+                    },
+                    devotional: {
+                        title: "被赋予的尊荣 Bestowed Honor",
+                        content: [
+                            { zh: "<strong>与主同坐：</strong> 这是一个惊人的画面。被救赎的人不仅是被赦免的罪人，更被提升到君王（冠冕）和祭司（白衣）的地位，在神周围侍立。我们应当活出这份尊荣。", en: "<strong>Seated with Him:</strong> A stunning image. Redeemed ones are not just forgiven sinners, but elevated to kings (crowns) and priests (white robes). We should live out this honor." }
+                        ]
+                    }
+                },
+                {
+                    ref: "4:6-8a",
+                    title: "玻璃海与四活物",
+                    titleEn: "Sea of Glass & Four Living Creatures",
+                    text: "宝座前好像一个玻璃海，如同水晶。宝座中和宝座周围有四个活物，前后遍体都满了眼睛... 第一个像狮子，第二个像牛犊，第三个脸面像人，第四个像飞鹰。",
+                    textEn: "Also in front of the throne there was what looked like a sea of glass, clear as crystal. In the center, around the throne, were four living creatures... like a lion... like an ox... like a man... like a flying eagle.",
+                    theme: "mystery",
+                    academic: {
+                        title: "旧约意象 Echoes of Ezekiel",
+                        points: [
+                            { zh: "<strong>'玻璃海'：</strong> 在所罗门的圣殿中有铜海（洗濯盆）。这里变成了玻璃海，象征：1. 彻底的洁净；2. 与神的超越性距离（神圣的隔离）；3. 邪恶与混乱（海常象征混乱）已被平定，变得平静如镜。", en: "<strong>'Sea of Glass':</strong> Corresponds to the Bronze Sea in Solomon's Temple. Symbolizes: 1. Absolute purity; 2. Transcendent separation; 3. Chaos (sea) pacified into stillness." },
+                            { zh: "<strong>'四活物'：</strong> 结合了以赛亚书的撒拉弗（六翼）和以西结书的基路伯（四个脸）。它们代表受造界的最高形态：狮子（野兽之王）、牛（牲畜之王）、人（万物之灵）、鹰（飞禽之王）。甚至受造界最强大的力量也都在敬拜神。", en: "<strong>'Four Living Creatures':</strong> Combines Seraphim (6 wings, Isaiah) and Cherubim (4 faces, Ezekiel). Represent the pinnacle of creation: Lion (wild), Ox (domestic), Man (rational), Eagle (flying). All creation worships." }
+                        ]
+                    },
+                    devotional: {
+                        title: "受造界的合唱 Chorus of Creation",
+                        content: [
+                            { zh: "<strong>全方位的敬拜：</strong> 无论是狮子的力量、牛的勤恳、人的智慧还是鹰的敏锐，一切恩赐和特质存在的终极目的，都是为了环绕宝座，归荣耀给神。", en: "<strong>Holistic Worship:</strong> Whether strength (lion), service (ox), wisdom (man), or swiftness (eagle), the ultimate purpose of all existence is to encircle the Throne and glorify God." }
+                        ]
+                    }
+                },
+                // --- SECTION 3: THE WORSHIP ---
+                {
+                    ref: "4:8b-11",
+                    section: { 
+                        zh: "第三部分：永恒的敬拜", 
+                        en: "Part III: Eternal Worship", 
+                        style: "section-worship",
+                        icon: "fa-music",
+                        colorClass: "text-blue-900"
+                    },
+                    title: "圣哉颂与投下冠冕",
+                    titleEn: "The Trisagion & Casting Crowns",
+                    text: "他们昼夜不住地说：圣哉！圣哉！圣哉！... 那二十四位长老就俯伏... 把冠冕投在宝座前，说：我们的主，我们的神，你是配得荣耀、尊贵、权柄的...",
+                    textEn: "Day and night they never stop saying: 'Holy, holy, holy...' the twenty-four elders fall down... and lay their crowns before the throne and say: 'You are worthy, our Lord and God...'",
+                    theme: "worship",
+                    academic: {
+                        title: "敬拜的神学 Theology of Worship",
+                        points: [
+                            { zh: "<strong>'圣哉，圣哉，圣哉' (Trisagion)：</strong> 希伯来语通过重复来表达最高级。三次重复代表神圣洁的极致（Infinite Holiness）。", en: "<strong>'Holy, Holy, Holy':</strong> Hebrew superlative through repetition. Threefold repetition signifies infinite, absolute holiness." },
+                            { zh: "<strong>'你是配得的' (Worthy)：</strong> 这是一个政治术语。当时罗马皇帝图密善（Domitian）要求臣民称他为“主和神”并宣称他是“配得的”。约翰颠覆了这一政治宣称：只有创造主才配得这一头衔，因为万物是因祂的旨意被造的。", en: "<strong>'You are Worthy':</strong> A political term. Emperor Domitian demanded to be called 'Lord and God' and 'Worthy'. John subverts this: Only the Creator is worthy, for all exists by His will." }
+                        ]
+                    },
+                    devotional: {
+                        title: "归还原主 Returning the Glory",
+                        content: [
+                            { zh: "<strong>投下冠冕：</strong> 这是敬拜的最高潮。长老们虽然有冠冕（荣耀和奖赏），但他们知道这一切都源于神。敬拜就是把神赐给我们的荣耀、成就和恩赐，摘下来，恭敬地放回神脚前，承认“这不是我的，是你的”。", en: "<strong>Casting Crowns:</strong> The climax of worship. Though crowned (honored), they know the source. Worship is taking our glory, achievements, and gifts, and laying them back at His feet, acknowledging 'This is not mine, but Yours'." }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // --- View Switching Logic ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => {
+                el.classList.remove('active-view');
+                setTimeout(() => {
+                    if(!el.classList.contains('active-view')) el.style.display = 'none';
+                }, 300); 
+            });
+
+            const target = document.getElementById(`view-${viewId}`);
+            target.style.display = 'block';
+            setTimeout(() => {
+                target.classList.add('active-view');
+            }, 10);
+
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            const navBtn = document.getElementById(`nav-${viewId}`);
+            if(navBtn) navBtn.classList.add('active');
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // --- Chart Rendering (Worship Circles) ---
+        function renderChart() {
+            const ctx = document.getElementById('worshipChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['宝座 Throne (God)', '四活物 Living Creatures', '24长老 Elders', '天使与万物 Angels/Creation'],
+                    datasets: [{
+                        data: [15, 25, 35, 25], // Visual proportions
+                        backgroundColor: [
+                            '#d97706', // Gold (Center)
+                            '#059669', // Emerald
+                            '#1e3a8a', // Blue
+                            '#94a3b8'  // Slate
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff',
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: { font: { family: "'Noto Sans SC', sans-serif", size: 10 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '40%' // Makes it a doughnut
+                }
+            });
+        }
+
+        // --- Study Section Rendering ---
+        let appState = { studyFilter: 'all' };
+
+        function renderStudy() {
+            const container = document.getElementById('verse-container');
+            container.innerHTML = '';
+
+            // Update filter buttons
+            ['all', 'academic', 'devotional'].forEach(f => {
+                const btn = document.getElementById(`btn-${f}`);
+                if (f === appState.studyFilter) {
+                    btn.classList.add('bg-white', 'shadow-sm', 'font-bold', 'text-emerald-700');
+                    btn.classList.remove('text-slate-500');
+                } else {
+                    btn.classList.remove('bg-white', 'shadow-sm', 'font-bold', 'text-emerald-700');
+                    btn.classList.add('text-slate-500');
+                }
+            });
+
+            revelationData.verses.forEach((verse) => {
+                // Section Headers
+                if (verse.section) {
+                    const sectionHtml = `
+                        <div class="section-header ${verse.section.style}">
+                            <div class="flex items-center">
+                                <span class="bg-slate-100 p-2 rounded-lg mr-3 shadow-sm">
+                                    <i class="fas ${verse.section.icon} ${verse.section.colorClass} text-xl"></i>
+                                </span>
+                                <div>
+                                    <h3 class="text-2xl font-bold text-slate-800 tracking-wide">${verse.section.zh}</h3>
+                                    <p class="text-sm text-slate-500 en-font uppercase tracking-wider">${verse.section.en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', sectionHtml);
+                }
+
+                // Cards
+                const card = document.createElement('div');
+                card.className = `bg-white rounded-xl p-6 card-shadow verse-card border-l-4 border-l-slate-200`; // Default border
+
+                let html = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded mb-2 uppercase tracking-wide">${verse.ref}</span>
+                            <h3 class="text-xl font-bold text-slate-800">${verse.title}</h3>
+                            <p class="text-xs md:text-sm text-slate-400 en-font mt-1">${verse.titleEn}</p>
+                        </div>
+                        <div class="text-slate-300 opacity-50">
+                             <i class="fas fa-crown text-2xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6 bg-slate-50 p-4 rounded-lg italic text-slate-700 border-l-2 border-emerald-200 text-sm md:text-base leading-relaxed">
+                        <p class="mb-2">"${verse.text}"</p>
+                        <p class="text-xs text-slate-400 en-text">"${verse.textEn}"</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                `;
+
+                const showAcademic = appState.studyFilter === 'all' || appState.studyFilter === 'academic';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+                const colClass = (appState.studyFilter !== 'all') ? 'md:col-span-2' : '';
+
+                if (showAcademic) {
+                    html += `
+                        <div class="${colClass}">
+                            <div class="flex items-center mb-4 pb-2 border-b border-emerald-100">
+                                <span class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-university text-emerald-600 text-sm"></i>
+                                </span>
+                                <div>
+                                    <span class="font-bold text-emerald-800 text-sm block">${verse.academic.title}</span>
+                                    <span class="text-xs text-emerald-400 uppercase tracking-wider en-font">Academic Insight</span>
+                                </div>
+                            </div>
+                            <ul class="space-y-4">
+                                ${verse.academic.points.map(pt => `
+                                    <li class="text-sm text-slate-700 leading-relaxed group">
+                                        <div class="mb-1">${pt.zh}</div>
+                                        <div class="text-xs text-slate-400 en-text group-hover:text-slate-500 transition-colors pl-2 border-l border-slate-200">${pt.en}</div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                if (showDevotional) {
+                    html += `
+                        <div class="${colClass}">
+                            <div class="flex items-center mb-4 pb-2 border-b border-amber-100">
+                                <span class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mr-3">
+                                    <i class="fas fa-heart text-amber-600 text-sm"></i>
+                                </span>
+                                <div>
+                                    <span class="font-bold text-amber-800 text-sm block">${verse.devotional.title}</span>
+                                    <span class="text-xs text-amber-400 uppercase tracking-wider en-font">Spiritual Application</span>
+                                </div>
+                            </div>
+                            <ul class="space-y-4">
+                                ${verse.devotional.content.map(pt => `
+                                    <li class="text-sm text-slate-700 leading-relaxed group">
+                                        <div class="mb-1"><i class="fas fa-caret-right text-amber-400 mr-2"></i>${pt.zh}</div>
+                                        <div class="text-xs text-slate-400 en-text group-hover:text-slate-500 transition-colors pl-6">${pt.en}</div>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        }
+
+        function updateFilter(filter) {
+            appState.studyFilter = filter;
+            renderStudy();
+        }
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderChart();
+            renderStudy();
+        });
+    </script>
+</body>
+</html>

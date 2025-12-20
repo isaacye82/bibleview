@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 15: The Sea of Glass & Seven Bowls | 启示录第十五章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Glass Sea Teal - Holiness, Victory, Clarity */
+            --theme-primary: #0d9488; 
+            /* Fire Red - Judgment, Purification, Wrath */
+            --theme-accent: #e11d48;
+            /* Deep Blue - Depth, Majesty */
+            --theme-dark: #0f172a;
+            /* Ice/Crystal - Background */
+            --theme-bg: #f0fdfa;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #0f172a;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(15, 23, 42, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for Sea of Glass */
+        .glass-badge {
+            background: linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%);
+            border: 2px solid #0d9488;
+            position: relative;
+        }
+        .glass-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #0d9488;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes glow-pulse {
+            0% { box-shadow: 0 0 5px #e11d48; }
+            50% { box-shadow: 0 0 20px #e11d48, 0 0 10px #0d9488; }
+            100% { box-shadow: 0 0 5px #e11d48; }
+        }
+        .icon-glow {
+            animation: glow-pulse 3s infinite;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-teal-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-teal-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-teal-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">15</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-teal-900">启示录第十五章</h1>
+                        <p class="text-xs text-teal-600 uppercase tracking-widest en-text">Revelation 15: The Sea of Glass & Seven Bowls</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-teal-600 bg-gradient-to-br from-white to-teal-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-teal-900 mb-2 serif-font">末后大灾前的敬拜与预备</h2>
+                        <h3 class="text-lg text-teal-700 italic font-serif mb-4 en-text">Worship and Preparation Before the Final Plagues</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十五章是启示录中最短的一章，但它充满了庄严的氛围。作为“碗”审判的序幕，它展示了天上圣殿的开启。我们看到得胜者站在玻璃海上唱“摩西之歌和羔羊之歌”，庆祝最终的救赎。随后，七位天使掌管七样末后的灾，神的荣耀（烟雾）充满圣殿，标志着审判的不可逆转。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 15 is the shortest in Revelation but filled with solemnity. As a prelude to the "Bowl" judgments, it shows the opening of the heavenly temple. Victors stand on the sea of glass singing the "Song of Moses and the Lamb," celebrating ultimate redemption. Then, seven angels receive the seven last plagues, and God's glory (smoke) fills the temple, signaling irreversible judgment.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-teal-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#e11d48 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="glass-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-water text-teal-500 text-5xl mb-1 block"></i>
+                                <i class="fas fa-fire text-red-500 text-2xl absolute bottom-0 right-2 icon-glow"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-teal-900 serif-font">玻璃海</h3>
+                            <p class="text-[10px] font-bold text-red-600 uppercase tracking-widest en-text mt-1">Sea of Glass & Fire</p>
+                            <div class="w-12 h-0.5 bg-teal-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Victory & Holiness<br>得胜与圣洁</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-teal-50 border border-teal-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-music text-teal-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-teal-900 text-xl block">两首凯歌</span>
+                            <span class="text-xs text-teal-700 italic en-text">Two Songs of Victory</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        “摩西之歌”庆祝从法老手中得释放（出埃及），“羔羊之歌”庆祝从兽的权势下得救赎。两者结合，象征神在历史中救赎计划的完美终结。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        "Song of Moses" celebrates Exodus; "Song of the Lamb" celebrates redemption from the Beast. Together, they symbolize the perfect consummation of God's redemptive plan.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-vial text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">七个金碗</span>
+                            <span class="text-xs text-red-700 italic en-text">Seven Golden Bowls</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        这七碗盛满了神“大怒”（Wrath）。与“号”的局部审判不同，碗的审判是全面的、没有怜悯的，为要结束地上的罪恶统治。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Filled with God's "wrath". Unlike the partial "Trumpets", the Bowls are comprehensive and without mercy, aimed at ending the reign of sin on earth.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-slate-100 border border-slate-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-smog text-slate-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-900 text-xl block">烟雾充满</span>
+                            <span class="text-xs text-slate-600 italic en-text">Smoke Filled the Temple</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        象征神荣耀和权能的临在（Shekinah）。“没有人能进殿”意味着代求的时间已过，现在是执行审判的时刻。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Symbolizes God's glory/presence (Shekinah). "No one could enter" implies the time for intercession is over; now is the time for judgment execution.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Chart Section -->
+            <div class="card p-6">
+                <div class="flex flex-col items-center">
+                    <h3 class="text-xl font-bold text-teal-900 mb-1">摩西之歌 vs 羔羊之歌</h3>
+                    <p class="text-sm text-slate-500 mb-6 italic en-text">The Song of Moses vs The Song of the Lamb</p>
+                    <div class="w-full md:w-3/4 relative" style="height: 300px;">
+                        <canvas id="songChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-teal-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-teal-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-teal-100 text-teal-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-teal-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-teal-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-teal-500 pl-6">
+                <h2 class="text-2xl font-bold text-teal-900 mb-2">第一部分：得胜者的敬拜 (15:1-4)</h2>
+                <h3 class="text-sm text-teal-600 italic mb-6 en-text">Worship of the Victors</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第二部分：七灾的预备 (15:5-8)</h2>
+                <h3 class="text-sm text-red-500 italic mb-6 en-text">Preparation for the Seven Plagues</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-teal-100 p-4 border-b border-teal-200">
+                            <h3 class="text-xl font-bold text-teal-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-teal-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于类型学（Typology）解读：玻璃海（红海/洗濯盆）、摩西之歌（出埃及）、烟雾（所罗门献殿/西奈山）。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on Typology: Sea of Glass (Red Sea/Laver), Song of Moses (Exodus), Smoke (Solomon's Temple/Sinai).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-teal-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将此异象视为“新出埃及”。理解“火”的双重含义：对信徒是试炼后的精金，对世界是审判的烈焰。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">View vision as "New Exodus". Dual meaning of "Fire": refined gold for believers, judgment flame for the world.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-red-50 p-4 border-b border-red-200">
+                            <h3 class="text-xl font-bold text-red-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-red-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于在苦难中歌唱的能力，以及对神圣洁公义的敬畏。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the ability to sing amidst suffering, and reverence for God's holiness and justice.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-red-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">真正的得胜不是逃避兽的攻击，而是至死忠心。在审判临到世界时，我们的回应应当是敬拜，而非恐惧。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">True victory is not escaping the Beast, but faithfulness unto death. Our response to judgment should be worship, not fear.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-teal-900 text-teal-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"主啊，谁敢不敬畏你，不将荣耀归与你的名呢？因为独有你是圣的。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"Who will not fear you, Lord, and bring glory to your name? For you alone are holy."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十五章中英对照研经报告 | THE SEA OF GLASS & SEVEN BOWLS</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "15:1",
+                    text_cn: "我又看见在天上有异象，大而且奇，就是七位天使掌管末了的七灾，因为神的大怒在这七灾中发尽了。",
+                    text_en: "I saw in heaven another great and marvelous sign: seven angels with the seven last plagues—last, because with them God’s wrath is completed.",
+                    exegesis: {
+                        title: "末了的七灾",
+                        title_en: "The Seven Last Plagues",
+                        content_cn: "“末了”（Last）表明这是神对罪恶审判的最后阶段。“发尽了”（Completed/Finished）意味着在此之后不再有延缓。这与第10章“不再耽延”相呼应。这“大而且奇”的异象不仅令人恐惧，更显示了神公义计划的完美终结。",
+                        content_en: "'Last' indicates the final stage of judgment. 'Completed' (Teleo) means no more delay, echoing Rev 10. This 'great and marvelous' sign is not just terrifying but shows the perfect consummation of God's justice."
+                    },
+                    devotional: {
+                        title: "神忿怒的终结",
+                        title_en: "The Completion of Wrath",
+                        content_cn: "对于信徒来说，“神的大怒发尽了”是一个安慰。这意味着罪恶不会永远猖獗，痛苦不会无止尽。神是公义的，祂必给世界一个最终的交代。我们应当敬畏这位掌管历史终局的神，确信祂的计划是完美的。",
+                        content_en: "For believers, 'God's wrath is completed' is comfort. Evil won't reign forever; pain isn't endless. God is just and will bring a final reckoning. We should fear the God who holds history's end, trusting His plan is perfect."
+                    }
+                },
+                {
+                    ref: "15:2-4",
+                    text_cn: "我看见仿佛有玻璃海，其中有火搀杂... 那些胜了兽... 的人，都站在玻璃海上... 唱神仆人摩西的歌和羔羊的歌...",
+                    text_en: "I saw what looked like a sea of glass glowing with fire... Those who had been victorious over the beast... held harps... and sang the song of God’s servant Moses and of the Lamb...",
+                    exegesis: {
+                        title: "玻璃海上的凯歌",
+                        title_en: "Victory Song on the Sea of Glass",
+                        content_cn: "玻璃海对应出埃及记中的红海（得救的过道）和所罗门圣殿的铜海（洁净）。“搀杂着火”象征审判的烈焰或试炼的纯净。唱“摩西的歌”是将这些得胜者比作新一代的以色列人，他们经过了比法老更可怕的兽的逼迫，现在站在彼岸庆祝。歌词聚焦于神的公义和万国的敬拜。",
+                        content_en: "Sea of Glass parallels the Red Sea (passage) and Bronze Sea (cleansing). 'Mixed with fire' symbolizes judgment/trial. Singing 'Song of Moses' likens victors to new Israel, having crossed a persecution worse than Pharaoh's. Lyrics focus on God's justice and universal worship."
+                    },
+                    devotional: {
+                        title: "火中的敬拜",
+                        title_en: "Worship in the Fire",
+                        content_cn: "得胜者并非没有受苦，他们经过了“火”（大患难），但此刻他们站在火之上。真正的得胜不是避免试炼，而是经过试炼后仍能弹琴歌颂神。你的生命中是否有“火”？那是神让你将来站在玻璃海上唱新歌的预备。",
+                        content_en: "Victors weren't spared suffering; they passed through 'fire' but now stand *on* it. Victory isn't avoiding trials, but singing to God *after* them. Is there 'fire' in your life? It's preparation for your song on the Sea of Glass."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "15:5-7",
+                    text_cn: "此后... 存法柜的殿开了。那掌管七灾的七位天使从殿中出来... 有一个四活物把盛满了... 大怒的七个金碗给了那七位天使。",
+                    text_en: "After this... the temple... was opened. Out of the temple came the seven angels... Then one of the four living creatures gave to the seven angels seven golden bowls filled with the wrath of God...",
+                    exegesis: {
+                        title: "法柜的殿与金碗",
+                        title_en: "Temple of the Tabernacle & Golden Bowls",
+                        content_cn: "“存法柜的殿”强调神是守约的神。审判是基于祂的圣约（法版）——对罪的追讨。七位天使穿着洁白细麻衣（祭司的圣洁），胸间束金带（君尊的权柄）。金碗（Vials/Bowls）通常用于盛香（祷告，参5:8），这里却盛满忿怒，暗示审判是对圣徒受苦祷告的回应。",
+                        content_en: "'Temple of Testimony' emphasizes God as Covenant-Keeper. Judgment is based on His Covenant (Law). Angels wear priestly linen/golden sashes. Golden bowls usually hold incense (prayers, 5:8); here wrath, implying judgment answers saints' prayers."
+                    },
+                    devotional: {
+                        title: "祷告的回应是审判",
+                        title_en: "Judgment as Answer to Prayer",
+                        content_cn: "曾盛满圣徒眼泪和祈祷的金碗，现在盛满了神的忿怒倒向世界。这提醒我们：神没有忽略我们的呼求。当世界欺压义人时，他们正在为自己积蓄神忿怒的“碗”。神的公义可能迟到，但绝不缺席。",
+                        content_en: "Bowls once full of prayers/tears now pour wrath. God hasn't ignored our cries. When the world oppresses the righteous, they fill bowls of wrath for themselves. God's justice may delay, but never fails."
+                    }
+                },
+                {
+                    ref: "15:8",
+                    text_cn: "因神的荣耀和能力，殿中充满了烟。于是没有人能进殿，直等到七位天使所降的七灾完毕了。",
+                    text_en: "And the temple was filled with smoke from the glory of God and from his power, and no one could enter the temple until the seven plagues of the seven angels were completed.",
+                    exegesis: {
+                        title: "荣耀的烟云与圣殿的关闭",
+                        title_en: "Glory Smoke & The Closing of the Temple",
+                        content_cn: "烟云象征神特别的临在（Shekinah），如在西奈山（出19:18）和所罗门圣殿（王上8:10）。“没有人能进殿”是一个可怕的信号：代求的职事暂时停止了。神已定意要行审判，此时不再有怜悯，不再有中保可以拦阻神的手。这是恩典时代的结束，审判时刻的开始。",
+                        content_en: "Smoke symbolizes Shekinah presence (Sinai, Solomon's Temple). 'No one could enter' is terrifying: Intercession ceases. God has purposed judgment; no mercy, no mediator can stop Him now. End of Grace, start of Judgment."
+                    },
+                    devotional: {
+                        title: "当恩典之门关闭时",
+                        title_en: "When the Door of Grace Closes",
+                        content_cn: "现在是“恩典的日子”，殿门是开的，我们可以随时坦无惧地来到施恩宝座前。但终有一天，殿门会关闭，烟云会充满，那时再求怜悯就太迟了。要抓住现在还能“进殿”的机会，与神和好，并为失丧的灵魂代求。",
+                        content_en: "Now is the 'Day of Grace'; the door is open. We approach the Throne boldly. But one day, the door closes, smoke fills all. Too late for mercy then. Seize the chance to 'enter' now, reconcile with God, and intercede for the lost."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-teal-100 text-teal-800 text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-teal-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-teal-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-teal-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-teal-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-600 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-teal-100 text-teal-800 shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-teal-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('songChart').getContext('2d');
+            
+            // Comparison: Song of Moses vs Song of the Lamb
+            const data = {
+                labels: [
+                    ['Enemy (Pharaoh/Beast)', '仇敌 (法老/兽)'], 
+                    ['Deliverance Mode', '拯救方式'], 
+                    ['Setting (Red Sea/Glass Sea)', '场景 (红海/玻璃海)'], 
+                    ['Outcome', '结局'], 
+                    ['Focus of Praise', '赞美焦点']
+                ],
+                datasets: [
+                    {
+                        label: 'Song of Moses (Exodus) / 摩西之歌',
+                        data: [80, 70, 90, 80, 90], 
+                        backgroundColor: 'rgba(13, 148, 136, 0.5)', // Teal
+                        borderColor: 'rgba(13, 148, 136, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Song of the Lamb (Revelation) / 羔羊之歌',
+                        data: [100, 100, 100, 100, 100], // Greater fulfillment
+                        backgroundColor: 'rgba(225, 29, 72, 0.5)', // Red
+                        borderColor: 'rgba(225, 29, 72, 1)',
+                        borderWidth: 2
+                    }
+                ]
+            };
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.1)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { size: 11, family: "'Noto Sans SC', sans-serif" },
+                                color: '#0f172a'
+                            },
+                            ticks: { display: false, max: 100 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'top' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 0) { // Moses
+                                        const labels = [
+                                            "Pharaoh & Chariots", "Parting of Waters", "Red Sea Shore", "Temporal Freedom", "God's Power/War"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    } else { // Lamb
+                                        const labels = [
+                                            "Beast & Image", "Blood of Lamb", "Sea of Glass & Fire", "Eternal Redemption", "God's Justice/Ways"
+                                        ];
+                                        return labels[context.dataIndex];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            renderChart();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

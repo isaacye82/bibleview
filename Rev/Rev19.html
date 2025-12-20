@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revelation 19: The King & The Marriage | 启示录第十九章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Glory White - Holiness, Victory, Linen */
+            --theme-primary: #f8fafc; 
+            /* Imperial Gold - Kingship, Crowns, Divine */
+            --theme-accent: #d97706;
+            /* Blood Red - Judgment, Robe dipped in blood */
+            --theme-red: #991b1b;
+            /* Royal Navy - Deep majesty */
+            --theme-dark: #1e3a8a;
+            /* Light Gold - Background */
+            --theme-bg: #fffbeb;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1e293b;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-dark);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(30, 58, 138, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-dark);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-accent);
+        }
+
+        /* Badge Style for The King */
+        .king-badge {
+            background: linear-gradient(135deg, #fff 0%, #fff7ed 100%);
+            border: 2px solid #d97706;
+            position: relative;
+        }
+        .king-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #d97706;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes crown-shine {
+            0% { filter: brightness(1); transform: scale(1); }
+            50% { filter: brightness(1.3); transform: scale(1.05); }
+            100% { filter: brightness(1); transform: scale(1); }
+        }
+        .icon-shine {
+            animation: crown-shine 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-amber-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-amber-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md">
+                        <span class="font-serif font-bold text-lg">19</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-amber-900">启示录第十九章</h1>
+                        <p class="text-xs text-amber-600 uppercase tracking-widest en-text">Revelation 19: The King & The Marriage</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-amber-600 bg-gradient-to-br from-white to-amber-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-amber-900 mb-2 serif-font">羔羊的婚娶与万王之王的降临</h2>
+                        <h3 class="text-lg text-amber-700 italic font-serif mb-4 en-text">The Marriage of the Lamb & The Coming of the King of Kings</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第十九章将启示录带向了最高潮。随着巴比伦的倾倒，天上的群众发出了四次“哈利路亚”的赞美。羔羊的婚娶时候到了，新妇已经预备好了。随后天开了，基督作为万王之王，骑着白马降临，击败了兽与假先知。这是历史的终结，也是永恒的开始。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 19 brings Revelation to its crescendo. With Babylon fallen, heaven erupts in four "Hallelujahs". The time for the Marriage of the Lamb has come; the Bride is ready. Then heaven opens, and Christ descends as King of Kings on a white horse, defeating the Beast and False Prophet. This is the end of history and the beginning of eternity.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-slate-900 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#d97706 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="king-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-crown text-amber-500 text-5xl mb-1 block icon-shine"></i>
+                                <i class="fas fa-horse-head text-slate-400 text-3xl absolute -bottom-2 -left-2 opacity-50"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 serif-font">万王之王</h3>
+                            <p class="text-[10px] font-bold text-amber-700 uppercase tracking-widest en-text mt-1">King of Kings</p>
+                            <div class="w-12 h-0.5 bg-amber-500 my-2"></div>
+                            <p class="text-xs text-gray-500">Faithful & True<br>诚信真实</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 bg-slate-50 border border-slate-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-music text-slate-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-900 text-xl block">哈利路亚</span>
+                            <span class="text-xs text-slate-600 italic en-text">Hallelujah (x4)</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        这是新约圣经中唯一出现“哈利路亚”的一章。它是对神公义审判（巴比伦倾倒）和全能掌权的最高赞美。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The only chapter in the NT with "Hallelujah". The highest praise for God's righteous judgment (Babylon's fall) and omnipotent reign.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 bg-amber-50 border border-amber-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-ring text-amber-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-amber-900 text-xl block">羔羊婚娶</span>
+                            <span class="text-xs text-amber-700 italic en-text">Marriage of the Lamb</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        神救赎计划的终极目的。新妇（教会）穿戴洁白的细麻衣（圣徒的义行），预备好与基督永远联合。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        The ultimate goal of redemption. The Bride (Church) is clothed in fine linen (righteous acts), ready for eternal union with Christ.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 bg-red-50 border border-red-200">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-horse text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">白马骑士</span>
+                            <span class="text-xs text-red-700 italic en-text">Rider on White Horse</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        基督不再是受苦的羔羊，而是作为审判者和战士降临。祂穿着溅了血的衣服，用口中的利剑（道）击杀列国。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Christ returns not as the suffering Lamb, but as Judge and Warrior. Clothed in blood-dipped robe, striking nations with the sword of His mouth.
+                    </p>
+                </div>
+            </div>
+
+            <!-- "Two Suppers" Visual Comparison Section -->
+            <div class="card p-8 bg-gradient-to-b from-white to-amber-50">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-amber-900 mb-2">终局的双重邀约：两个筵席</h3>
+                    <p class="text-sm text-slate-500 italic en-text">The Final Dual Invitation: The Tale of Two Suppers</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Left: Marriage Supper -->
+                    <div class="border-4 border-amber-200 bg-white p-6 rounded-lg shadow-lg relative overflow-hidden text-center transform transition hover:scale-[1.02]">
+                        <!-- Decor -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200"></div>
+                        <i class="fas fa-glass-cheers text-4xl text-amber-500 mb-3"></i>
+                        <h4 class="text-xl font-bold text-amber-800 serif-font">羔羊的婚筵</h4>
+                        <p class="text-xs text-gray-500 mb-4 italic en-text">The Marriage Supper of the Lamb (v9)</p>
+                        
+                        <div class="space-y-4 text-left text-sm text-slate-700">
+                            <div class="flex justify-between border-b border-amber-100 pb-2">
+                                <span class="font-bold text-amber-700"><i class="fas fa-user-check mr-2"></i>主人 Host</span>
+                                <span>The Lamb (羔羊)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-amber-100 pb-2">
+                                <span class="font-bold text-amber-700"><i class="fas fa-users mr-2"></i>宾客 Guests</span>
+                                <span>The Bride/Saints (新妇/圣徒)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-amber-100 pb-2">
+                                <span class="font-bold text-amber-700"><i class="fas fa-tshirt mr-2"></i>礼服 Attire</span>
+                                <span>Fine Linen (洁白细麻衣)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-amber-100 pb-2">
+                                <span class="font-bold text-amber-700"><i class="fas fa-smile-beam mr-2"></i>氛围 Mood</span>
+                                <span>Joy & Glory (喜乐与荣耀)</span>
+                            </div>
+                             <div class="mt-4 p-3 bg-amber-50 text-amber-800 italic text-center rounded border border-amber-200 shadow-sm">
+                                "Blessed are those who are invited..."<br>
+                                “凡被请赴...之筵席的有福了！”
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Supper of God -->
+                    <div class="border-4 border-red-900 bg-slate-900 p-6 rounded-lg shadow-lg relative overflow-hidden text-center text-slate-300 transform transition hover:scale-[1.02]">
+                        <!-- Decor -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-900 via-red-600 to-red-900"></div>
+                        <i class="fas fa-skull-crossbones text-4xl text-red-600 mb-3"></i>
+                        <h4 class="text-xl font-bold text-red-500 serif-font">大神的筵席</h4>
+                        <p class="text-xs text-slate-500 mb-4 italic en-text">The Great Supper of God (v17)</p>
+                        
+                        <div class="space-y-4 text-left text-sm">
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="font-bold text-red-500"><i class="fas fa-bullhorn mr-2"></i>召集者 Caller</span>
+                                <span>Angel in the Sun (日头中的天使)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="font-bold text-red-500"><i class="fas fa-crow mr-2"></i>食客 Eaters</span>
+                                <span>Birds/Vultures (飞鸟)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="font-bold text-red-500"><i class="fas fa-drumstick-bite mr-2"></i>主菜 Menu</span>
+                                <span>Flesh of Kings (君王与将军的肉)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-700 pb-2">
+                                <span class="font-bold text-red-500"><i class="fas fa-cloud-showers-heavy mr-2"></i>氛围 Mood</span>
+                                <span>Slaughter & Doom (杀戮与毁灭)</span>
+                            </div>
+                            <div class="mt-4 p-3 bg-red-950 text-red-400 italic text-center rounded border border-red-900 shadow-sm">
+                                "Come, gather together for the supper..."<br>
+                                “你们聚集来赴神的大筵席...”
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-amber-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-amber-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-amber-100 text-amber-800 shadow-inner">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-amber-200 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-amber-200 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-amber-500 pl-6">
+                <h2 class="text-2xl font-bold text-amber-900 mb-2">第一部分：天上的哈利路亚与婚娶 (19:1-10)</h2>
+                <h3 class="text-sm text-amber-600 italic mb-6 en-text">Hallelujahs in Heaven & The Marriage</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第二部分：万王之王的降临 (19:11-16)</h2>
+                <h3 class="text-sm text-red-500 italic mb-6 en-text">The Coming of the King of Kings</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-slate-700 pl-6">
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">第三部分：哈米吉多顿与大神的筵席 (19:17-21)</h2>
+                <h3 class="text-sm text-slate-600 italic mb-6 en-text">Armageddon & The Supper of the Great God</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-amber-100 p-4 border-b border-amber-200">
+                            <h3 class="text-xl font-bold text-amber-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-amber-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于旧约背景的应验（如以赛亚书63章的“踹酒醡”、诗篇2篇的“铁杖”），以及象征性语言的解读（细麻衣、白马、剑）。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on OT fulfillment (Isa 63 winepress, Ps 2 iron scepter) and interpreting symbols (linen, white horse, sword).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-amber-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将“细麻衣”理解为圣徒的义行（信心产生的果子）。将“剑”理解为神的话语（审判的标准）。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Interpret "Fine Linen" as righteous acts (fruit of faith). "Sword" as God's Word (standard of judgment).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-slate-100 p-4 border-b border-slate-200">
+                            <h3 class="text-xl font-bold text-slate-800 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-slate-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于预备自己成为新妇的紧迫性，以及对最终审判的敬畏。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the urgency of preparing as the Bride, and reverence for the final judgment.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">不仅要期待婚娶的喜乐，更要“预备自己”（成圣）。在两个筵席中选择：是赴羔羊的婚宴，还是成为飞鸟的晚餐？</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Expect the joy of marriage but also "prepare yourself" (sanctification). Choose between two suppers: The Lamb's feast or the birds' prey?</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-amber-900 text-amber-100 mt-auto">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"在他衣服和大腿上有名写着说：万王之王，万主之主。"</p>
+            <p class="text-sm italic text-white mb-2 en-text">"On his robe and on his thigh he has this name written: KING OF KINGS AND LORD OF LORDS."</p>
+            <p class="text-xs opacity-70 uppercase">启示录第十九章中英对照研经报告 | THE KING & THE MARRIAGE</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "19:1-6",
+                    text_cn: "我听见好像群众... 的声音说：哈利路亚！救恩、荣耀、权能都属乎我们的神... 我们的神，全能者作王了！",
+                    text_en: "I heard what sounded like the roar of a great multitude... shouting: 'Hallelujah! Salvation and glory and power belong to our God... For our Lord God Almighty reigns.'",
+                    exegesis: {
+                        title: "天上的哈利路亚",
+                        title_en: "The Heavenly Hallelujah",
+                        content_cn: "“哈利路亚”意为“赞美耶和华”。这是它在新约中唯一出现的地方（4次）。这赞美是对神公义审判巴比伦的回应。巴比伦的烟往上冒，圣徒的赞美也往上冒。赞美的最高潮是宣告“神作王了”，这是否定了地上一切篡位的政权。",
+                        content_en: "'Hallelujah' means 'Praise Yahweh'. Its only NT appearance (4 times). A response to God's just judgment on Babylon. As Babylon's smoke rises, saints' praise rises. The climax is 'God reigns', negating all usurping earthly powers."
+                    },
+                    devotional: {
+                        title: "在审判中赞美",
+                        title_en: "Praise in Judgment",
+                        content_cn: "我们常在得福时赞美，但天上的群众在看到审判（烟雾）时赞美。为什么？因为他们看重神的公义胜过一切。真正的敬拜是承认神的主权，即使这主权意味着对罪恶的严厉审判。让“哈利路亚”成为我们生命的主旋律。",
+                        content_en: "We praise for blessings; heaven praises for judgment. Why? They value God's justice above all. True worship acknowledges God's sovereignty, even in severe judgment. Let 'Hallelujah' be the theme of our lives."
+                    }
+                },
+                {
+                    ref: "19:7-10",
+                    text_cn: "我们要欢喜快乐... 因为羔羊婚娶的时候到了，新妇也自己预备好了... 就蒙恩得穿光明洁白的细麻衣。",
+                    text_en: "Let us rejoice and be glad... For the wedding of the Lamb has come, and his bride has made herself ready. Fine linen... was given her to wear.",
+                    exegesis: {
+                        title: "羔羊的婚娶",
+                        title_en: "The Marriage of the Lamb",
+                        content_cn: "这是历史的终极目的：基督（新郎）与教会（新妇）的联合。犹太婚礼分三个阶段：定亲、迎娶、婚筵。现在是迎娶和婚筵的时刻。“细麻衣”被解释为“圣徒所行的义”，表明得救虽靠恩典，但真实的信心必然结出圣洁行为的果子。",
+                        content_en: "History's goal: Union of Christ (Groom) & Church (Bride). Jewish wedding stages: Betrothal, Procession, Feast. Now is the Feast. 'Fine linen' is 'righteous acts', showing that while saved by grace, true faith produces holy fruit."
+                    },
+                    devotional: {
+                        title: "预备自己",
+                        title_en: "Make Yourself Ready",
+                        content_cn: "新妇是“自己预备”的。这不仅是地位上的称义，更是生活中的成圣。如果明天就是婚礼，你今天的衣服（行为）是否洁白？不要在恩典中懒惰，要努力追求圣洁，“因为非圣洁没有人能见主”。",
+                        content_en: "The Bride 'made herself ready'. Not just positional justification, but practical sanctification. If the wedding were tomorrow, is your dress (deeds) clean? Don't be lazy in grace; pursue holiness, for 'without holiness no one will see the Lord'."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "19:11-13",
+                    text_cn: "我观看，见天开了。有一匹白马，骑在马上的称为诚信真实... 穿着溅了血的衣服；他的名称为神之道。",
+                    text_en: "I saw heaven standing open and there before me was a white horse, whose rider is called Faithful and True... He is dressed in a robe dipped in blood, and his name is the Word of God.",
+                    exegesis: {
+                        title: "诚信真实的白马骑士",
+                        title_en: "The Faithful and True Rider",
+                        content_cn: "这是基督的第二次降临，不是作为受苦的仆人，而是作为审判的君王。白马象征胜利。祂的性质是“诚信真实”。衣服上的血可能指祂自己的血（救赎），也可能指敌人的血（以赛亚书63章的审判）。“神之道”表明祂是神旨意的执行者。",
+                        content_en: "Christ's Second Coming, not as Servant, but as Judge-King. White horse = Victory. Nature = Faithful & True. Blood on robe: either His own (redemption) or enemies' (judgment, Isa 63). 'Word of God' means He executes God's will."
+                    },
+                    devotional: {
+                        title: "终极的公义者",
+                        title_en: "The Ultimate Just One",
+                        content_cn: "在这个充满谎言和背叛的世界上，有一位是完全“诚信真实”的。祂的每一个应许（无论是救赎还是审判）都必兑现。我们不用自己伸冤，因为那位骑白马的即将来到，祂会按公义审判争战。",
+                        content_en: "In a world of lies, One is 'Faithful and True'. Every promise (salvation or judgment) will be kept. We need not avenge ourselves; the Rider on the White Horse is coming to judge and make war in righteousness."
+                    }
+                },
+                {
+                    ref: "19:14-16",
+                    text_cn: "在天上的众军... 穿着细麻衣... 跟随他... 有利剑从他口中出来，可以击杀列国... 在衣服和大腿上有名写着：万王之王，万主之主。",
+                    text_en: "The armies of heaven were following him... dressed in fine linen... Coming out of his mouth is a sharp sword with which to strike down the nations... On his robe and on his thigh he has this name written: KING OF KINGS AND LORD OF LORDS.",
+                    exegesis: {
+                        title: "万王之王与天军",
+                        title_en: "King of Kings & The Heavenly Armies",
+                        content_cn: "天上的众军（包括天使和圣徒）虽然跟随，但不需要作战。基督独自用“口中的剑”（话语的能力）击杀列国。铁杖辖管象征绝对的权柄。写在大腿上的名号宣告了祂无可争议的至高主权——祂是统治一切统治者的王。",
+                        content_en: "Heavenly armies follow but don't fight. Christ fights alone with the 'sword of His mouth' (Word's power). Iron scepter = absolute authority. Name on thigh declares undisputed sovereignty: He is the Ruler of all rulers."
+                    },
+                    devotional: {
+                        title: "话语的权能",
+                        title_en: "The Power of the Word",
+                        content_cn: "基督击败仇敌不需要核武器，只需要祂的话。这让我们看到神话语的威力。今天，这同样的话语（圣经）在我们手中。我们是轻忽它，还是敬畏它？当主再来时，那曾创造世界的话语，也将审判世界。",
+                        content_en: "Christ needs no nukes, just His Word. This reveals the Word's power. Today, this Word (Bible) is in our hands. Do we neglect or revere it? When He returns, the Word that created the world will also judge it."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "19:17-18",
+                    text_cn: "一位天使... 向天空飞鸟大声喊着说：你们聚集来赴神的大筵席！可以吃君王与将军的肉...",
+                    text_en: "An angel... called in a loud voice to all the birds... 'Come, gather together for the great supper of God, so that you may eat the flesh of kings, generals...'",
+                    exegesis: {
+                        title: "大神的筵席：最后的羞辱",
+                        title_en: "Supper of the Great God: Final Shame",
+                        content_cn: "这是一个恐怖的反讽。第9节有“羔羊的婚筵”，这里有“大神的筵席”。前者是得救者与主同席，后者是尸体成为飞鸟的食物。在古代，尸体不得埋葬被视为最大的咒诅和羞辱。这预示了哈米吉多顿战役的惨烈结局。",
+                        content_en: "A horrific irony. Vs 9 has 'Marriage Supper'; here 'Supper of the Great God'. One is dining with the Lord; the other is being eaten by birds. Unburied bodies were the ultimate curse/shame. Foretells the grisly end of Armageddon."
+                    },
+                    devotional: {
+                        title: "两个筵席的选择",
+                        title_en: "Choice of Two Suppers",
+                        content_cn: "人类的历史终结于两个筵席。你若不赴羔羊的婚筵（接受救恩），就必成为大神的筵席（接受审判）。没有中间地带。今天就是发请帖的日子，你会如何回应？",
+                        content_en: "History ends with two suppers. If you don't attend the Lamb's Wedding (Salvation), you will be the menu at the Great God's Supper (Judgment). No middle ground. Today the invitation is out; how will you respond?"
+                    }
+                },
+                {
+                    ref: "19:19-21",
+                    text_cn: "那兽被擒拿... 假先知也同被擒拿... 两个就活活地被扔在烧着硫磺的火湖里... 其余的被... 口中出来地剑杀了。",
+                    text_en: "But the beast was captured, and with it the false prophet... The two of them were thrown alive into the fiery lake of burning sulfur. The rest were killed with the sword...",
+                    exegesis: {
+                        title: "兽与假先知的结局",
+                        title_en: "The End of the Beast & False Prophet",
+                        content_cn: "这场“战争”甚至没有描述过程，因为胜负在瞬间决定。兽（敌基督）和假先知被“活活”扔进火湖，意味着他们不经过白色大宝座的审判直接灭亡。这是火湖（Gehenna）在启示录中首次出现，是最终的刑罚之地。",
+                        content_en: "The 'war' has no description; victory is instant. Beast/False Prophet thrown 'alive' into the Lake of Fire, bypassing the Great White Throne. First mention of Lake of Fire (Gehenna), the place of final punishment."
+                    },
+                    devotional: {
+                        title: "恶势力的瞬间瓦解",
+                        title_en: "Instant Collapse of Evil",
+                        content_cn: "看似不可一世的兽和假先知，在万王之王面前瞬间被擒。这提醒我们：罪恶的权势极其脆弱。不要因为现在的黑暗猖獗而灰心。神的审判一旦临到，没有任何势力能站立得住。我们要站在必胜的一方。",
+                        content_en: "The arrogant Beast and Prophet are captured instantly before the King. Evil's power is fragile. Don't despair at current darkness. When judgment comes, nothing stands. Stand on the winning side."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-amber-700 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-amber-200 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-amber-800 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-amber-500 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-amber-200 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-500 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-amber-50 p-4 rounded-lg border border-amber-100">
+                                <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-amber-700 text-white shadow-inner";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-amber-200 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>
