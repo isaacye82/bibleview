@@ -85,7 +85,6 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             padding: 0 20px;
-            /* 适配刘海屏，增加顶部内边距 */
             padding-top: env(safe-area-inset-top); 
             border-bottom: 1px solid var(--header-border);
             position: sticky;
@@ -94,7 +93,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 120px;
+            height: 150px;
             transition: all 0.3s ease;
         }
 
@@ -135,7 +134,7 @@
             width: 100%;
             height: 180px;
             border-radius: var(--radius-box);
-            background-image: url('https://images.unsplash.com/photo-1502481851512-e9e2529bfbf9?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-image: url('Config/starrysky.jpg');
             background-size: cover;
             background-position: center 30%;
             position: relative;
@@ -186,7 +185,6 @@
         .theme-toggle {
             position: absolute;
             right: 20px;
-            /* 修正垂直居中计算，考虑 safe-area */
             top: calc(50% + (env(safe-area-inset-top) / 2)); 
             transform: translateY(-50%);
             background: var(--card-bg);
@@ -214,7 +212,7 @@
             width: 100%;
             max-width: 1100px; 
             margin: 0 auto; 
-            padding: 40px 20px; /* PC端保持适当间距 */
+            padding: 40px 20px; 
             flex: 1; 
         }
 
@@ -238,7 +236,6 @@
             color: #ffffff;
         }
 
-        /* 背景图片设置 */
         .section-header-bg {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -250,16 +247,19 @@
         
         .section-header:hover .section-header-bg { transform: scale(1.05); }
 
-        /* 旧约图片 - 使用本地配置 */
+        /* 旧约图片 */
         #ot-header .section-header-bg {
             background-image: url('Config/oldbooks.jpg'); 
         }
-        /* 新约图片 - 使用本地配置 */
+        /* 新约图片 */
         #nt-header .section-header-bg {
             background-image: url('Config/sunrise.jpg'); 
         }
+        /* === 新增：各类主题图片 (使用网络图作为默认，可改为 Config/topics.jpg) === */
+        #topics-header .section-header-bg {
+            background-image: url('Config/topics.jpg');
+        }
 
-        /* 渐变遮罩，保证文字清晰 */
         .section-overlay {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -430,6 +430,18 @@
             animation: slideDown 0.3s cubic-bezier(0.2, 0, 0.2, 1);
         }
 
+        /* === 新增：自定义主题卡片的特殊样式 === */
+        /* 强制主题卡片中的链接列表为单列，且文字左对齐，适应长标题 */
+        .topic-card .chapters-container {
+            grid-template-columns: 1fr; /* 改为单列 */
+            gap: 10px;
+        }
+        .topic-card .chapter-link {
+            justify-content: flex-start; /* 左对齐 */
+            padding-left: 15px;
+            width: 100%;
+        }
+
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -486,36 +498,31 @@
         @media (max-width: 600px) {
             header { 
                 padding: 0 15px; 
-                padding-top: env(safe-area-inset-top); /* 保持刘海屏间距 */
-                height: calc(60px + env(safe-area-inset-top)); /* 稍微紧凑的高度 */
+                padding-top: env(safe-area-inset-top); 
+                height: calc(60px + env(safe-area-inset-top)); 
             }
             .theme-toggle { 
                 width: 32px; height: 32px; font-size: 1rem; right: 15px; 
-                /* 调整按钮位置 */
                 top: calc(50% + (env(safe-area-inset-top) / 2));
             }
             
             .header-title { font-size: 1.3rem; }
             .header-subtitle { font-size: 0.65rem; }
             
-            /* 1. Hero区域更紧凑，高度减少 */
             .hero-section { margin: 10px auto 0; padding: 0 15px; }
-            .hero-card { height: 130px; border-radius: 12px; } /* 原160px减小至130px */
+            .hero-card { height: 130px; border-radius: 12px; } 
             .hero-verse { font-size: 1.05rem; margin-bottom: 6px; }
             .hero-ref { font-size: 0.8rem; }
 
-            /* 2. 内容区域间距大幅压缩 */
             .container { padding: 15px 15px; }
-            .testament-section { margin-bottom: 12px; } /* 板块间距减小 */
+            .testament-section { margin-bottom: 12px; } 
             
-            /* 3. 旧约/新约 标题卡片变矮 */
             .section-header { 
                 padding: 15px; 
-                height: 85px; /* 原90px微调 */
+                height: 85px; 
                 border-radius: 12px; 
-                margin-bottom: 0; /* 移除底部间距，让书卷列表紧贴 */
+                margin-bottom: 0; 
             }
-            /* 如果书卷展开了，给标题加点底部间距 */
             .testament-section:not(.collapsed) .section-header { margin-bottom: 15px; }
 
             .section-icon { width: 28px; height: 28px; margin-right: 12px; }
@@ -533,7 +540,10 @@
             .chapters-container { gap: 6px; }
             .chapter-link { height: 34px; font-size: 0.8rem; border-radius: 6px; }
 
-            /* 4. 页脚紧凑化，确保能挤进第一屏 */
+            /* 移动端 Topic Card 适配 */
+            .topic-card .book-name { font-size: 1rem; }
+            .topic-card .chapter-link { font-size: 0.8rem; padding-left: 10px; height: auto; padding-top: 8px; padding-bottom: 8px;}
+
             footer {
                 padding: 20px 10px;
                 margin-top: 10px;
@@ -543,6 +553,8 @@
         @media (max-width: 380px) {
             .books-grid { grid-template-columns: repeat(2, 1fr); }
             .chapters-container { grid-template-columns: repeat(4, 1fr); }
+            /* 窄屏下 Topic Card 仍保持单列 */
+            .topic-card .chapters-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -550,8 +562,8 @@
 
     <header>
         <div class="header-content">
-            <h1 class="header-title">圣经纵览｜BibleView</h1>
-            <p class="header-subtitle">横屏观看效果更佳</p>
+            </br><h1 class="header-title">圣经纵览｜BibleView</h1>
+            </br><p class="header-subtitle">横屏观看效果更佳</p>
         </div>
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">
             <span id="theme-icon">🌙</span>
@@ -606,6 +618,24 @@
             </div>
             <div class="books-grid" id="nt-books"></div>
         </div>
+
+        <div class="testament-section collapsed" id="topics-section">
+            <div class="section-header" id="topics-header" onclick="toggleSection('topics-section')">
+                <div class="section-header-bg"></div>
+                <div class="section-overlay"></div>
+                <div class="section-content-wrapper">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    <div class="section-title">各类主题 <span>Various Topics</span></div>
+                    <svg class="toggle-arrow" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
+            <div class="books-grid" id="topics-books"></div>
+        </div>
+
     </div>
 
     <footer>
@@ -618,7 +648,7 @@
     </footer>
 
     <script>
-        // ========== 配置数据 (保持不变) ==========
+        // ========== 配置数据 (圣经章节) ==========
         const availableChapters = {
              // 历史书
             "Josh":  Array.from({ length: 24 }, (_, i) => i + 1), 
@@ -733,6 +763,44 @@
             ]
         };
 
+        // ========== 新增：自定义主题配置 (在此处手动添加) ==========
+        const topicCategories = [
+            {
+                title: "提前背景",       // 卡片标题
+                abbr: "1Tim",         // 装饰性英文缩写
+                desc: "Background",     // 下方英文描述
+                links: [
+                    { name: "背景介绍", url: "Topics/1Tim/1TimIntro.html" },
+                    { name: "保罗行踪", url: "Topics/1Tim/PualRoute/PualRoute.html" },
+                    { name: "提前后教会光景对比", url: "Topics/1Tim/CompareChurchInTimothy.pdf" },
+                ]
+            },
+             // 复制上面的块来添加新主题，例如：
+            {
+                title: "使徒行传拾穗",
+                abbr: "Acts",
+                desc: "Special Topics",
+                links: [
+                    { name: "保罗生平年表", url: "Topics/Acts/Paul_Timeline.pdf" },
+                    { name: "保罗三次布道旅行时间线", url: "Topics/Acts/PaulMinstryTimeline.html" },
+                    { name: "保罗与主耶稣受审的对比", url: "Topics/Acts/Paul_vs_Jesus.html" },
+                ]
+            },
+            
+            // 复制上面的块来添加新主题，例如：
+            /*
+            {
+                title: "专题研究",
+                abbr: "Study",
+                desc: "Special Topics",
+                links: [
+                    { name: "示例文章", url: "Topics/Sample.html" }
+                ]
+            },
+            */
+        ];
+
+
         // ========== 逻辑功能 ==========
 
         function toggleTheme() {
@@ -745,6 +813,7 @@
             document.getElementById(id).classList.toggle('collapsed');
         }
 
+        // 创建圣经书卷卡片 (旧逻辑)
         function createBookCard(book, type) {
             const existingChapters = availableChapters[book.abbr] || [];
             const hasChapters = existingChapters.length > 0;
@@ -761,7 +830,6 @@
                 return `<a href="${url}" class="chapter-link ${exists ? 'exists' : ''}" data-exists="${exists}">${chNum}</a>`;
             }).join('');
 
-            // 下拉箭头 SVG
             const chevronSvg = `
                 <svg class="card-expand-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -781,13 +849,11 @@
 
             if (hasChapters) {
                 card.addEventListener('click', (e) => {
-                    // 如果点击的是链接，不阻止默认行为，但阻止冒泡防止触发折叠
                     if(e.target.tagName === 'A' || e.target.closest('a')) return;
                     card.classList.toggle('active');
                 });
             }
 
-            // 禁用无效链接
             card.querySelectorAll('.chapter-link').forEach(link => {
                 if (link.getAttribute('data-exists') === 'false') {
                     link.addEventListener('click', (e) => {
@@ -800,12 +866,53 @@
             return card;
         }
 
+        // 新增：创建主题卡片 (逻辑类似，但适配自定义链接)
+        function createTopicCard(topic) {
+            const hasLinks = topic.links && topic.links.length > 0;
+            
+            const card = document.createElement('div');
+            // 增加 topic-card 类以应用特殊样式(单列布局)
+            card.className = `book-card topic-card ${hasLinks ? '' : 'no-chapters'}`;
+            
+            const linksHtml = topic.links.map(link => {
+                return `<a href="${link.url}" class="chapter-link exists">${link.name}</a>`;
+            }).join('');
+
+            const chevronSvg = `
+                <svg class="card-expand-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            `;
+
+            card.innerHTML = `
+                <div class="book-header-content">
+                    <div class="book-name">${topic.title}</div>
+                    <div class="book-abbr">${topic.abbr} <span style="font-weight:300; opacity:0.7">| ${topic.desc}</span></div>
+                    ${hasLinks ? chevronSvg : ''}
+                </div>
+                <div class="chapters-container">
+                    ${linksHtml}
+                </div>
+            `;
+
+            if (hasLinks) {
+                card.addEventListener('click', (e) => {
+                    if(e.target.tagName === 'A' || e.target.closest('a')) return;
+                    card.classList.toggle('active');
+                });
+            }
+
+            return card;
+        }
+
         function renderAll() {
             const otContainer = document.getElementById('ot-books');
             const ntContainer = document.getElementById('nt-books');
+            const topicsContainer = document.getElementById('topics-books');
             
             otContainer.innerHTML = '';
             ntContainer.innerHTML = '';
+            topicsContainer.innerHTML = '';
             
             bibleBooks.oldTestament.forEach(book => {
                 otContainer.appendChild(createBookCard(book, 'OT'));
@@ -813,6 +920,11 @@
             
             bibleBooks.newTestament.forEach(book => {
                 ntContainer.appendChild(createBookCard(book, 'NT'));
+            });
+
+            // 渲染新增的主题部分
+            topicCategories.forEach(topic => {
+                topicsContainer.appendChild(createTopicCard(topic));
             });
         }
 

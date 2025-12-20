@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>以弗所真理的管家</title>
+    <!-- Chosen Palette: Academic Serenity (Slate, White, with Deep Indigo and Alert Red accents) -->
+    <!-- Application Structure Plan:
+        基于PDF报告的逻辑结构，将单页应用分为五个主要功能区：
+        1. 历史背景 (Context): 介绍以弗所危机、成书背景（第四次布道旅行）。
+        2. 异端解剖 (Anatomy): 互动式展板，详细分析以弗所的错误教导（神话、律法、禁欲）。
+        3. 教会秩序 (Order): 展示保罗的行政管理方案（崇拜、领袖、真理柱石）。
+        4. 末世轨迹 (Eschatology): 核心可视化区域。对比《提前》4章（禁欲主义）与《提后》3章（享乐主义）的演变。
+        5. 深度衰退 (Decline): 综合对比两卷书的教会光景、保罗策略转变及人物个案（许米乃/亚力山大）。
+    -->
+    <!-- Visualization & Content Choices:
+        1. 报告信息: 《提前》4章 vs 《提后》3章的末世特征。
+           目标: 展示从“宗教性谬误”向“道德性崩溃”的演变。
+           呈现: 分组条形图。对比“禁欲程度”、“享乐程度”、“宗教伪装”、“道德败坏”在两个时期的强度。
+           交互: 悬停查看经文依据。
+        2. 报告信息: 许米乃与亚力山大的演变阶段。
+           目标: 追踪异端分子的硬化过程。
+           呈现: 垂直时间轴/流程图 (HTML/CSS)。
+        3. 报告信息: 保罗策略转变（行政改革 vs 忠心忍耐）。
+           目标: 对比不同时期的应对重心。
+           呈现: 对比卡片/表格。
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            margin: auto;
+        }
+
+        .tab-btn.active {
+            background-color: #e0e7ff;
+            /* Indigo-100 */
+            color: #3730a3;
+            /* Indigo-800 */
+            border-bottom: 2px solid #3730a3;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans leading-relaxed">
+
+    <!-- 顶部导航与标题 -->
+    <header class="bg-slate-900 text-white p-6 shadow-lg">
+        <div class="container mx-auto max-w-6xl">
+            <h1 class="text-2xl md:text-3xl font-bold tracking-tight">以弗所真理的管家-《提摩太前书》背景介绍</h1>
+            <p class="text-slate-400 mt-2">保罗嘱托、末世警示与教会光景</p>
+        </div>
+    </header>
+
+    <!-- 主导航 -->
+    <div class="sticky top-0 z-20 bg-white shadow-sm border-b border-slate-200">
+        <div class="container mx-auto max-w-6xl overflow-x-auto">
+            <nav class="flex whitespace-nowrap">
+                <button onclick="switchTab('intro')" class="tab-btn active px-6 py-4 font-medium text-slate-600 hover:text-indigo-600 transition-colors">历史背景</button>
+                <button onclick="switchTab('heresy')" class="tab-btn px-6 py-4 font-medium text-slate-600 hover:text-indigo-600 transition-colors">异端解剖</button>
+                <button onclick="switchTab('order')" class="tab-btn px-6 py-4 font-medium text-slate-600 hover:text-indigo-600 transition-colors">教会建造</button>
+                <button onclick="switchTab('eschatology')" class="tab-btn px-6 py-4 font-medium text-slate-600 hover:text-indigo-600 transition-colors">末世警示</button>
+                <button onclick="switchTab('decline')" class="tab-btn px-6 py-4 font-medium text-slate-600 hover:text-indigo-600 transition-colors">提前后对比</button>
+            </nav>
+        </div>
+    </div>
+
+    <main class="container mx-auto max-w-6xl p-6 min-h-screen">
+
+        <!-- 1. 历史背景 (Introduction) -->
+        <section id="intro" class="tab-content block animate-fade-in">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100 mb-6">
+                <h2 class="text-2xl font-bold text-indigo-900 mb-4">引言：以弗所的危机与使徒的授权</h2>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div>
+                        <p class="mb-4">《提摩太前书》不仅仅是教会治理的指导手册，它是从保罗旅行布道建立教会向系统性建造教会转变的关键时期，写给“真儿子”提摩太的紧急指令。当时的提摩太面临一项艰巨任务：在充满异教崇拜、财富诱惑和神学谬误的以弗所，牧养 神的教会。</p>
+                        <div class="bg-indigo-50 p-4 rounded-lg border-l-4 border-indigo-500">
+                            <h3 class="font-bold text-indigo-800 mb-2">历史回顾与背景</h3>
+                            <ul class="list-disc list-inside space-y-1 text-sm text-indigo-900">
+                                <li><strong>时间：</strong> 使徒行传28章之后，保罗第一次罗马囚禁获释期间（约公元62-67年）。</li>
+                                <li><strong>地点：</strong> 保罗从马其顿写信，提摩太在以弗所。</li>
+                                <li><strong>特征：</strong> 以弗所教会已成熟（有长老），但也滋生了内部腐败。危机不是来自外部刀剑，而是内部真理的侵蚀。</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="bg-slate-100 p-6 rounded-lg flex flex-col justify-center items-center text-center">
+                        <div class="text-4xl mb-2">🏛️</div>
+                        <h3 class="text-lg font-bold text-slate-700 mb-2">以弗所的处境</h3>
+                        <p class="text-sm text-slate-600">亚细亚省首府，阿耳忒弥斯神庙所在地。强烈的异教背景渗透教会，混合了犹太律法主义与原始诺斯底思辨。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. 异端解剖 (Heresy Anatomy) -->
+        <section id="heresy" class="tab-content hidden">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-indigo-900 mb-2">以弗所错误的解剖学</h2>
+                <p class="text-slate-600">保罗通过尖锐的对比，勾勒出威胁教会的异端轮廓。这是一种混合病毒。</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover transition-all">
+                    <div class="text-indigo-500 text-xl font-bold mb-3">01. 神话与家谱</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">思辨的迷宫</h3>
+                    <p class="text-sm text-slate-600 mb-4">痴迷于犹太伪经传奇或诺斯底式的灵体流溢谱系。</p>
+                    <div class="bg-red-50 text-red-800 text-xs p-3 rounded">
+                        <strong>后果：</strong> 产生辩论而非“神在信上所立的章程”。将信仰变成智力游戏。
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover transition-all">
+                    <div class="text-indigo-500 text-xl font-bold mb-3">02. 律法的误用</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">真理错位</h3>
+                    <p class="text-sm text-slate-600 mb-4">想要作教法师，试图通过律法获得道德优越感或更高知识。</p>
+                    <div class="bg-red-50 text-red-800 text-xs p-3 rounded">
+                        <strong>保罗回应：</strong> 律法是为不法之人设立的。福音的核心是恩典（罪人中的罪魁），而非繁琐规条。
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 card-hover transition-all">
+                    <div class="text-indigo-500 text-xl font-bold mb-3">03. 禁欲主义</div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">二元论阴影</h3>
+                    <p class="text-sm text-slate-600 mb-4">禁止嫁娶，禁戒食物（4:3）。认为物质世界是邪恶的。</p>
+                    <div class="bg-red-50 text-red-800 text-xs p-3 rounded">
+                        <strong>神学反击：</strong> “凡神所造的物都是好的”。这是“鬼魔的道理”，因为它否定了造物主的恩慈。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 教会秩序 (Order) -->
+        <section id="order" class="tab-content hidden">
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-100">
+                <h2 class="text-2xl font-bold text-indigo-900 mb-6">在神的家中当怎样行（提前3:15）</h2>
+
+                <div class="space-y-6">
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">1</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">强调真理根基，真道建造，荣耀福音</h3>
+                            <p class="text-slate-600 mt-1">如：神在信仰上所立的章程（提前2：4－6），律法的功用（提前1：8－10），教虔的奥秘（提后3：16），纯正的道理（多2：1），称义之道（多3：1－8）等。在真道上的建造使神的儿女们明白信仰的中心，抵斥异端，操练敬虔。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">2</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">有形教会的组织和治理</h3>
+                            <p class="text-slate-600 mt-1">当教会在主恩下日渐长大，人数增加，事务随之繁杂，问题也跟着多起来，加上异端四起，因而促使教会需有更完整的有机组织方能胜任，使教会一面宣扬真理，一面守住真道，防备异端，使一切事工均有秩序的逐步发展。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">3</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">着重人才栽培</h3>
+                            <p class="text-slate-600 mt-1">选立长老和执事。长老是监督，照管教会属灵方面的需要。教会光景好起来，人多事繁就需选立执事帮助。这两等人并不着重谁大谁小，乃在职务不一，属灵资格无别。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">4</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">着重品格</h3>
+                            <p class="text-slate-600 mt-1">重才时又必注重资格，而在资格中特别注意品格（如作监督的，必须无可指摘），因他们的榜样对信徒的影响大于教训，教会败坏多从生活开始。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">5</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">着重秩序</h3>
+                            <p class="text-slate-600 mt-1">教会有了组织，在各方面便得有秩序，如老少之间的问题，男女之间，家庭之间（婆媳、主仆、夫妇）以及社交之间的相都有个别的说明。</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="bg-indigo-100 text-indigo-700 rounded-full w-8 h-8 flex items-center justify-center font-bold mr-4 flex-shrink-0">6</div>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800">着重工人</h3>
+                            <p class="text-slate-600 mt-1">工人为教会之负责人，他们在真理上必须竭力，坚守真道，分解真理，坚守自己的生活，又要忠心的把真理教导别人。</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 末世轨迹 (Eschatology) -->
+        <section id="eschatology" class="tab-content hidden">
+            <div class="grid lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h2 class="text-xl font-bold text-indigo-900 mb-4">从“后来”到“末后”：罪恶的演变轨迹</h2>
+                    <p class="text-sm text-slate-500 mb-6">《提前》4章的“后来的时候” vs 《提后》3章的“末后的日子”。这不是简单的重复，而是从<strong>宗教性谬误</strong>向<strong>道德性崩溃</strong>的退化。</p>
+
+                    <!-- 图表容器 -->
+                    <div class="chart-container">
+                        <canvas id="eschatologyChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-500">
+                        <h3 class="font-bold text-emerald-800 text-sm uppercase tracking-wide mb-2">提前 4:1 - 后来的时候</h3>
+                        <p class="text-sm text-emerald-900 font-medium">"圣灵明说，在后来的时候，必有人离弃真道..."</p>
+                        <ul class="mt-2 text-xs text-emerald-800 space-y-1">
+                            <li>• <strong>特征：</strong> 禁欲主义 (禁止嫁娶/禁戒食物)</li>
+                            <li>• <strong>本质：</strong> "加法"异端 (福音+规条)</li>
+                            <li>• <strong>根源：</strong> 鬼魔的道理 (否定创造良善)</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-rose-50 p-4 rounded-lg border-l-4 border-rose-500">
+                        <h3 class="font-bold text-rose-800 text-sm uppercase tracking-wide mb-2">提后 3:1 - 末后的日子</h3>
+                        <p class="text-sm text-rose-900 font-medium">"你该知道，末后的日子必有危险的日子来到..."</p>
+                        <ul class="mt-2 text-xs text-rose-800 space-y-1">
+                            <li>• <strong>特征：</strong> 享乐主义 (专顾自己/爱宴乐)</li>
+                            <li>• <strong>本质：</strong> "减法"异端 (有敬虔外貌却背了实意)</li>
+                            <li>• <strong>根源：</strong> 私欲与心地坏了</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-100 p-4 rounded-lg text-xs text-slate-600">
+                        <strong>深度洞察：</strong> 魔鬼的策略从“让人过于宗教化”（苦待己身）转变为“让人彻底放纵私欲”。错误的教义最终必然导致道德的虚无主义。
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 深度衰退 (Decline) -->
+        <section id="decline" class="tab-content hidden">
+            <div class="space-y-8">
+                <!-- 概览 -->
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-2xl font-bold text-indigo-900">教会景况的急剧恶化</h2>
+                    <p class="text-slate-600 mt-2">从《提前》到《提后》，教会从与病菌斗争演变为必须截肢。</p>
+                </div>
+
+                <!-- 核心对比表格 -->
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
+                    <table class="w-full text-sm text-left">
+                        <thead class="bg-slate-50 text-slate-700 font-bold uppercase text-xs">
+                            <tr>
+                                <th class="p-4 w-1/3">维度</th>
+                                <th class="p-4 w-1/3 text-emerald-700">提摩太前书 (建造期)</th>
+                                <th class="p-4 w-1/3 text-rose-700">提摩太后书 (背道期)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-700">教会的光景</td>
+                                <td class="p-4 text-slate-600"><strong>真理的柱石和根基</strong><br>荣耀福音的彰显</td>
+                                <td class="p-4 text-slate-600"><strong>大户人家</strong><br>混杂(金银器皿 vs 木瓦器皿)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-700">保罗的处境</td>
+                                <td class="p-4 text-slate-600">自由，计划访问<br>使徒保罗</td>
+                                <td class="p-4 text-slate-600">囚犯，即将殉道<br>被浇奠</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-700">如何应对</td>
+                                <td class="p-4 text-slate-600">全面治理，堵住破口</td>
+                                <td class="p-4 text-slate-600">持守纯正话语的规模</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-700">内外逼迫</td>
+                                <td class="p-4 text-slate-600">传异教，神话，律法主义</td>
+                                <td class="p-4 text-slate-600">毒疮，敌挡真理，公开迫害</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 人物个案追踪 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-bold text-indigo-900 mb-4">个案追踪：异端的硬化</h3>
+                    <div class="flex flex-col md:flex-row justify-between items-center gap-4 relative">
+                        <!-- 线条 (Desktop only) -->
+                        <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-slate-100 -z-10"></div>
+
+                        <!-- Stage 1 -->
+                        <div class="bg-emerald-50 p-4 rounded-lg border border-emerald-200 w-full md:w-1/3 text-center">
+                            <div class="font-bold text-emerald-800 mb-1">阶段一：补救性管教</div>
+                            <div class="text-xs text-emerald-600 mb-2">1 Tim 1:20</div>
+                            <p class="text-sm text-slate-700">"交给撒旦，使他们受责罚"</p>
+                            <p class="text-xs text-slate-500 mt-1">目的：希望他们悔改</p>
+                        </div>
+
+                        <div class="text-2xl text-slate-300">➔</div>
+
+                        <!-- Stage 2 -->
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200 w-full md:w-1/3 text-center">
+                            <div class="font-bold text-yellow-800 mb-1">阶段二：防御性分离</div>
+                            <div class="text-xs text-yellow-600 mb-2">2 Tim 2:17</div>
+                            <p class="text-sm text-slate-700">"像毒疮越烂越大"</p>
+                            <p class="text-xs text-slate-500 mt-1">策略：躲开，防止感染</p>
+                        </div>
+
+                        <div class="text-2xl text-slate-300">➔</div>
+
+                        <!-- Stage 3 -->
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-200 w-full md:w-1/3 text-center">
+                            <div class="font-bold text-red-800 mb-1">阶段三：公开的敌人</div>
+                            <div class="text-xs text-red-600 mb-2">2 Tim 4:14</div>
+                            <p class="text-sm text-slate-700">"多多地害我，极力敌挡"</p>
+                            <p class="text-xs text-slate-500 mt-1">结局：主必报应他</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 text-slate-200 p-6 rounded-lg text-center mt-8">
+                    <h3 class="font-bold text-lg mb-2">作无愧的工人，按着正意分解真理的道</h3>
+                    <p class="max-w-3xl mx-auto">《提摩太前后书》是一份关于重建真理的宣言。当教会从“真理的柱石”变为混杂的“大户人家”时，保罗的劝勉不是绝望，而是呼召忠心——无论顺境逆境，竭力“保守所托”。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // 标签页切换逻辑
+        function switchTab(tabId) {
+            // 隐藏所有内容
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.add('hidden');
+            });
+            // 移除所有按钮激活状态
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'bg-slate-50', 'text-indigo-600', 'border-b-2', 'border-indigo-600');
+                el.classList.add('text-slate-600');
+            });
+
+            // 显示选中的内容
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // 激活按钮状态
+            const activeBtn = document.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-slate-600');
+        }
+
+        // 图表初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('eschatologyChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['宗教伪装 (禁欲)', '道德败坏 (享乐)', '异端性质'],
+                    datasets: [{
+                            label: '提摩太前书 (后来的时候)',
+                            data: [5, 2, 3], // 高度宗教化/禁欲，较低道德崩溃，加法异端
+                            backgroundColor: 'rgba(16, 185, 129, 0.6)', // Emerald
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: '提摩太后书 (末后的日子)',
+                            data: [2, 5, 5], // 较低宗教伪装(背了实意)，极高道德崩溃，减法异端
+                            backgroundColor: 'rgba(244, 63, 94, 0.6)', // Rose
+                            borderColor: 'rgba(244, 63, 94, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                callback: function(value) {
+                                    if (value === 5) return '极高';
+                                    if (value === 1) return '低';
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    const explanations = {
+                                        '提摩太前书 (后来的时候)': ['高度禁欲(禁止嫁娶)', '初期道德滑坡', '加法异端(福音+规条)'],
+                                        '提摩太后书 (末后的日子)': ['有敬虔外貌背了实意', '专顾自己/爱宴乐', '减法异端(抛弃道德)']
+                                    };
+                                    label += explanations[context.dataset.label][context.dataIndex];
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
