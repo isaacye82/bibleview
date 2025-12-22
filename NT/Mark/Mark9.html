@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark 9: Glory, Faith & Discipleship | 马可福音第九章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Transfiguration White - Glory, Light, Divine Presence */
+            --theme-primary: #f1f5f9; 
+            /* Humility Gray - Service, Cross, Reality */
+            --theme-accent: #475569;
+            /* Fire Red - Warning, Hell */
+            --theme-red: #b91c1c;
+            /* Mountain Blue - Heights, Revelation */
+            --theme-blue: #0ea5e9;
+            /* Valley Green - Earthly Ministry */
+            --theme-green: #15803d;
+            /* Light Background */
+            --theme-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #0f172a;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: var(--theme-blue);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-blue);
+            color: var(--theme-blue);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(71, 85, 105, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-blue);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-blue);
+        }
+
+        /* Badge Style for Mountain */
+        .mountain-badge {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #0ea5e9;
+            position: relative;
+        }
+        .mountain-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #0ea5e9;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes shine {
+            0% { box-shadow: 0 0 5px #fff, 0 0 10px #0ea5e9; }
+            50% { box-shadow: 0 0 20px #fff, 0 0 30px #0ea5e9; }
+            100% { box-shadow: 0 0 5px #fff, 0 0 10px #0ea5e9; }
+        }
+        .icon-shine {
+            animation: shine 3s infinite;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-blue-600 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md border border-blue-400">
+                        <span class="font-serif font-bold text-lg">Mk9</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-slate-900">马可福音第九章</h1>
+                        <p class="text-xs text-blue-600 uppercase tracking-widest en-text">Mark 9: Glory, Faith & Discipleship</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-blue-600 bg-gradient-to-br from-white to-slate-100 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-slate-900 mb-2 serif-font">山上的荣耀与山下的现实</h2>
+                        <h3 class="text-lg text-blue-700 italic font-serif mb-4 en-text">Glory on the Mountain and Reality in the Valley</h3>
+                        <p class="text-slate-700 text-lg leading-relaxed mb-4 font-medium">
+                            第九章呈现了强烈的对比：在变像山上，耶稣显出神性的荣耀，摩西和以利亚显现，父神亲自见证；而在山下，门徒却因信心不足无法赶鬼，陷入争论。本章的核心在于如何在看见荣耀后，回到现实生活中跟随受苦的基督，学习“为首的要作仆人”的真理。
+                        </p>
+                        <p class="text-slate-500 text-sm leading-relaxed en-text">
+                            Chapter 9 presents a stark contrast: on the Mount of Transfiguration, Jesus reveals divine glory, Moses and Elijah appear, and the Father testifies; while in the valley, disciples fail to cast out a demon due to lack of faith and fall into dispute. The core theme is how to follow the suffering Christ in daily reality after seeing the glory, learning that "the first must be servant of all."
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-slate-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="mountain-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-mountain text-blue-600 text-5xl mb-1 block"></i>
+                                <i class="fas fa-cloud text-slate-200 text-3xl absolute -top-4 -right-2 icon-shine"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 serif-font">荣耀与争战</h3>
+                            <p class="text-[10px] font-bold text-blue-600 uppercase tracking-widest en-text mt-1">Glory & Warfare</p>
+                            <div class="w-12 h-0.5 bg-blue-400 my-2"></div>
+                            <p class="text-xs text-gray-500">Listen to Him<br>听从他</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 border-l-4 border-blue-500 bg-blue-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-eye text-blue-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-blue-900 text-xl block">登山变像</span>
+                            <span class="text-xs text-blue-700 italic en-text">The Transfiguration</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        预尝天国的权能。摩西（律法）和以利亚（先知）的出现，证明耶稣是启示的终极成全。父神命令：“你们要听他！”
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        A foretaste of Kingdom power. Moses (Law) & Elijah (Prophets) attest Jesus as the ultimate fulfillment. The Father commands: "Listen to Him!"
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 border-l-4 border-slate-500 bg-slate-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-praying-hands text-slate-600 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-900 text-xl block">祷告的信心</span>
+                            <span class="text-xs text-slate-700 italic en-text">Faith through Prayer</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        “非用祷告，这一类的鬼总不能出来。”门徒的失败源于依靠过去的经验而非当下的倚靠。信心是接通神能力的管道。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        "This kind can come out only by prayer." Disciples failed by relying on past experience, not present dependence. Faith channels God's power.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 border-l-4 border-red-600 bg-red-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-cross text-red-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-red-900 text-xl block">十字架的道路</span>
+                            <span class="text-xs text-red-700 italic en-text">Way of the Cross</span>
+                        </div>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-2">
+                        耶稣第二次预言受难。门徒却在争论谁为大。真正的伟大在于做众人的仆人，甚至接待一个小孩子。
+                    </p>
+                    <p class="text-xs text-slate-500 italic en-text">
+                        Jesus predicts His death a 2nd time. Disciples argue who is greatest. True greatness lies in being a servant of all, even welcoming a child.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual: Spiritual Peaks & Valleys Map (Responsive SVG) -->
+            <div class="card p-8 bg-white border border-slate-200">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-slate-900 mb-2">属灵的高峰与低谷</h3>
+                    <p class="text-sm text-slate-500 italic en-text">Spiritual Peaks & Valleys: The Narrative Flow of Mark 9</p>
+                </div>
+                
+                <div class="relative h-64 w-full bg-gradient-to-b from-blue-50 to-slate-100 rounded-xl overflow-hidden border border-slate-200">
+                    
+                    <!-- SVG Path for Responsive Line -->
+                    <svg class="absolute top-0 left-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+                        <!-- Path from Peak (15, 25) to Valley (50, 75) to Home (85, 75) -->
+                        <path d="M 15 25 Q 32 75 50 75 T 85 75" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="2,2" vector-effect="non-scaling-stroke" />
+                    </svg>
+
+                    <!-- Mountain Peak Icon -->
+                    <div class="absolute text-center z-10 transform -translate-x-1/2 -translate-y-1/2" style="left: 15%; top: 25%;">
+                        <div class="bg-blue-600 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg mb-1 whitespace-nowrap">Peak 高峰</div>
+                        <i class="fas fa-mountain text-3xl text-slate-800"></i>
+                        <div class="mt-1 hidden md:block">
+                             <p class="text-xs font-bold text-slate-900">变像山</p>
+                             <p class="text-[8px] text-slate-500">v2-8</p>
+                        </div>
+                    </div>
+
+                    <!-- Valley Floor Icon -->
+                    <div class="absolute text-center z-10 transform -translate-x-1/2 -translate-y-1/2" style="left: 50%; top: 75%;">
+                        <div class="bg-slate-600 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg mb-1 whitespace-nowrap">Valley 低谷</div>
+                        <i class="fas fa-users text-3xl text-slate-700"></i>
+                         <div class="mt-1 hidden md:block">
+                             <p class="text-xs font-bold text-slate-900">山下争战</p>
+                             <p class="text-[8px] text-slate-500">v14-29</p>
+                        </div>
+                    </div>
+
+                    <!-- Home Icon -->
+                    <div class="absolute text-center z-10 transform -translate-x-1/2 -translate-y-1/2" style="left: 85%; top: 75%;">
+                        <div class="bg-green-600 text-white px-2 py-0.5 rounded-full text-[10px] font-bold shadow-lg mb-1 whitespace-nowrap">Home 家中</div>
+                        <i class="fas fa-home text-3xl text-slate-700"></i>
+                         <div class="mt-1 hidden md:block">
+                             <p class="text-xs font-bold text-slate-900">迦百农</p>
+                             <p class="text-[8px] text-slate-500">v33-37</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-between text-xs text-slate-500 px-2 md:px-4">
+                    <div class="w-1/3 text-center">
+                        <span class="block font-bold text-blue-800">看见荣耀</span>
+                        <span class="en-text text-[10px]">Seeing Glory</span>
+                    </div>
+                    <div class="w-1/3 text-center">
+                        <span class="block font-bold text-slate-800">面对无能</span>
+                        <span class="en-text text-[10px]">Facing Inability</span>
+                    </div>
+                    <div class="w-1/3 text-center">
+                        <span class="block font-bold text-green-800">学习谦卑</span>
+                        <span class="en-text text-[10px]">Learning Humility</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-slate-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-slate-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-blue-600 text-white shadow-lg shadow-blue-900/20">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-blue-100 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-blue-100 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-blue-500 pl-6">
+                <h2 class="text-2xl font-bold text-blue-900 mb-2">第一部分：登山变像 (9:1-13)</h2>
+                <h3 class="text-sm text-blue-600 italic mb-6 en-text">The Transfiguration</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-slate-500 pl-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">第二部分：医治被鬼附的孩子 (9:14-29)</h2>
+                <h3 class="text-sm text-slate-600 italic mb-6 en-text">Healing the Boy with an Impure Spirit</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-green-600 pl-6">
+                <h2 class="text-2xl font-bold text-green-800 mb-2">第三部分：谁为大与真正的门徒 (9:30-41)</h2>
+                <h3 class="text-sm text-green-600 italic mb-6 en-text">Who is the Greatest & True Discipleship</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 4 -->
+             <div class="border-l-4 border-red-600 pl-6">
+                <h2 class="text-2xl font-bold text-red-800 mb-2">第四部分：关于罪的严厉警告 (9:42-50)</h2>
+                <h3 class="text-sm text-red-600 italic mb-6 en-text">Warnings Against Sin</h3>
+                <div id="study-section-4" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-blue-100 p-4 border-b border-blue-200">
+                            <h3 class="text-xl font-bold text-blue-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-blue-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于马可的对比叙事（山上的荣耀 vs 山下的失败）、旧约背景（以利亚、摩西）及夸张修辞（砍手、挖眼）的理解。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on Mark's contrasting narratives (Glory vs Failure), OT background (Elijah, Moses), and hyperbole (cutting hand/eye).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-blue-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将“变像”视为神国降临的预尝。理解“地狱”（Gehenna）的历史背景。将“盐”解释为圣约的忠诚或净化的功能。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">See Transfiguration as a foretaste of the Kingdom. Understand historical context of "Gehenna". Interpret "Salt" as covenant loyalty or purification.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-slate-100 p-4 border-b border-slate-200">
+                            <h3 class="text-xl font-bold text-slate-700 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-slate-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于信心的操练（我信，但我信不足）、谦卑的学习（谁为大）及对罪的决绝态度。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on exercising faith ("I believe, help my unbelief"), learning humility (who is greatest), and radical stance against sin.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-600 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">诚实面对信心不足，并向主求助。在教会生活中实践“接待小孩”般的谦卑。对隐秘的罪采取“断臂”般的果断。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Admit weak faith and ask for help. Practice humility by welcoming the "child" (insignificant). Be radical against secret sin.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-200 mt-auto border-t border-slate-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"在信的人，凡事都能。"</p>
+            <p class="text-sm italic text-slate-300 mb-2 en-text">"Everything is possible for one who believes."</p>
+            <p class="text-xs opacity-50 uppercase tracking-widest font-sans">马可福音第九章中英对照研经报告 | GLORY & DISCIPLESHIP</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "9:1-8",
+                    text_cn: "耶稣带着彼得、雅各、约翰暗暗地上了高山... 变了形象，衣服放光... 忽然有摩西、以利亚向他们显现... 有声音从云彩里出来说：这是我的爱子，你们要听他。",
+                    text_en: "Jesus took Peter, James and John... up a high mountain... He was transfigured... His clothes became dazzling white... Elijah and Moses appeared... Then a cloud appeared... and a voice came from the cloud: 'This is my Son, whom I love. Listen to him!'",
+                    exegesis: {
+                        title: "登山变像",
+                        title_en: "The Transfiguration",
+                        content_cn: "这是神国降临的预演。耶稣显出祂本有的神性荣光。摩西（律法）和以利亚（先知）的出现证明耶稣是旧约的终极应验。彼得提议搭棚是想留住这荣耀时刻，但这荣耀是为将来预备的。父神的命令“听他”确立了耶稣超越一切先知的至高权威。",
+                        content_en: "A preview of the Kingdom. Jesus reveals His divine glory. Moses (Law) and Elijah (Prophets) attest He is the Fulfillment. Peter's tent idea tried to capture glory prematurely. Father's command 'Listen to Him' establishes Jesus' supreme authority."
+                    },
+                    devotional: {
+                        title: "听见神的声音",
+                        title_en: "Hearing God's Voice",
+                        content_cn: "我们在“山上”的属灵高峰体验，是为了让我们在“山下”的平凡生活中能听从主。不要试图定格荣耀的时刻（搭棚），而是要把荣耀的启示化为顺服的行动。“只见耶稣”是我们信仰的焦点。",
+                        content_en: "Mountain-top experiences are to help us obey in the valley. Don't try to freeze the glory; let the revelation lead to obedience. 'Seeing Jesus only' is the focus of our faith."
+                    }
+                },
+                {
+                    ref: "9:9-13",
+                    text_cn: "下山的时候，耶稣嘱咐他们... 人子还没有从死里复活，你们不要将所看见的告诉人... 他们就... 彼此议论从死里复活是什么意思。",
+                    text_en: "As they were coming down the mountain, Jesus gave them orders not to tell anyone... until the Son of Man had risen from the dead. They... discussed with one another what 'rising from the dead' meant.",
+                    exegesis: {
+                        title: "弥赛亚的秘密与以利亚",
+                        title_en: "Messianic Secret & Elijah",
+                        content_cn: "耶稣再次禁止门徒张扬，直到复活（那时十字架的意义才显明）。门徒困惑于以利亚必须先来的预言。耶稣解释以利亚已经来了（指施洗约翰），并且正如经上所记受了苦，暗示人子也将同样受苦。荣耀必须经过苦难。",
+                        content_en: "Jesus commands silence until Resurrection. Disciples puzzled about Elijah. Jesus explains Elijah has come (John the Baptist) and suffered, implying the Son of Man must also suffer. Glory comes through suffering."
+                    },
+                    devotional: {
+                        title: "苦难与荣耀的道路",
+                        title_en: "The Path of Suffering and Glory",
+                        content_cn: "门徒想要荣耀，却不明白复活必须先有死亡。我们常想跳过十字架直接进入荣耀。但耶稣教导我们，通往荣耀的道路必须经过苦难。施洗约翰的命运预示了跟随主的人也可能面临世界的敌意。你准备好背起十字架跟随祂了吗？",
+                        content_en: "Disciples wanted glory but didn't understand death precedes resurrection. We often want to skip the Cross. Jesus teaches that the path to glory goes through suffering. John's fate warns that followers may face hostility. Are you ready to carry the cross?"
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "9:14-19",
+                    text_cn: "我请过你的门徒把鬼赶出去，他们却是不能... 耶稣说：哎！不信的世代啊... 我忍耐你们要到几时呢？",
+                    text_en: "'I asked your disciples to drive out the spirit, but they could not.' 'You unbelieving generation,' Jesus replied... 'How long shall I put up with you?'",
+                    exegesis: {
+                        title: "门徒的失败与世代的不信",
+                        title_en: "Failure of Disciples & Unbelief",
+                        content_cn: "山下的现实是混乱和无能。门徒曾经成功赶鬼（6:13），现在却失败了，可能是因为他们倚靠过去的经验而非当下的信心。耶稣的叹息不仅针对文士，也针对门徒和众人的不信。祂的忍耐凸显了祂的神性与慈悲。",
+                        content_en: "Valley reality: chaos and failure. Disciples failed (despite past success), likely relying on past experience, not present faith. Jesus' sigh targets the general unbelief. His patience highlights His divinity and mercy."
+                    },
+                    devotional: {
+                        title: "无能的时刻",
+                        title_en: "Moments of Powerlessness",
+                        content_cn: "当我们面对生活中的难题（像这个被鬼附的孩子）感到无能为力时，正是神要显明我们信心不足的时候。不要掩饰失败，要像那位父亲一样转向耶稣。承认软弱是得能力的开始。",
+                        content_en: "Powerlessness in face of problems reveals our lack of faith. Don't hide failure; turn to Jesus like the father did. Admitting weakness is the start of receiving power."
+                    }
+                },
+                {
+                    ref: "9:20-24",
+                    text_cn: "孩子的父亲... 喊着说：我信！但我信不足，求主帮助。... 耶稣... 斥责那污鬼... 鬼就出来了。",
+                    text_en: "The boy's father... exclaimed, 'I do believe; help me overcome my unbelief!'... Jesus... rebuked the impure spirit... and it came out.",
+                    exegesis: {
+                        title: "信心的挣扎",
+                        title_en: "Struggle of Faith",
+                        content_cn: "“你若能”反映了父亲信心的软弱；“在信的人，凡事都能”是耶稣对信心的挑战。父亲诚实的呼求（我信，但我信不足）是圣经中最感人的祷告之一。真正的信心不是完美的自信，而是诚实地倚靠主的帮助。",
+                        content_en: "'If you can' shows weak faith; 'Everything is possible' is Jesus' challenge. The father's honest cry ('I believe; help my unbelief') is profound. True faith isn't perfect confidence, but honest dependence on His help."
+                    },
+                    devotional: {
+                        title: "求主帮助我的不信",
+                        title_en: "Help My Unbelief",
+                        content_cn: "我们常常在信与不信之间摇摆。神不需要我们有完美的信心，只需要我们诚实。当你觉得信心微小时，可以直接告诉主：“我信不足，求主帮助。”这本身就是信心的表现。",
+                        content_en: "We often waiver. God doesn't demand perfect faith, just honesty. When faith is small, tell Him: 'Help my unbelief.' That cry itself is an act of faith."
+                    }
+                },
+                {
+                    ref: "9:28-29",
+                    text_cn: "门徒... 问耶稣说：我们为什么不能...？耶稣说：非用祷告，这一类的鬼总不能出来。",
+                    text_en: "Disciples asked... 'Why couldn't we drive it out?' He replied, 'This kind can come out only by prayer.'",
+                    exegesis: {
+                        title: "祷告的力量",
+                        title_en: "Power of Prayer",
+                        content_cn: "门徒可能以为赶鬼是一种可以掌握的技术或权柄的自动运作。耶稣指出，属灵的能力来自于持续的、依赖神的祷告。有些属灵的坚固营垒（这一类的鬼）需要更深层的依靠和舍己（有些古卷加“禁食”）才能攻破。",
+                        content_en: "Disciples treated exorcism as technique/automatic. Jesus points to prayer: power comes from continuous dependence on God. Some strongholds need deeper reliance (and 'fasting' in some MSS) to break."
+                    },
+                    devotional: {
+                        title: "祷告作为能力的源头",
+                        title_en: "Prayer as the Source of Power",
+                        content_cn: "我们常犯的错误是依靠昨天的恩典来打今天的仗。耶稣教导我们，属灵的能力不能储存，只能通过持续不断的祷告来支取。当我们忽略祷告时，我们就切断了与能力源头的连接。要战胜顽固的罪和困难，必须回到膝盖上的功夫。",
+                        content_en: "We mistakenly rely on yesterday's grace for today's battle. Spiritual power can't be stored; it's drawn via continuous prayer. Neglecting prayer cuts the power line. Victory over stubborn sins requires knees in prayer."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "9:33-37",
+                    text_cn: "他们在路上彼此争论谁为大。耶稣... 说：若有人愿意作首先的，他必作众人末后的，作众人的用人。... 接待一个像这小孩子的... 就是接待我。",
+                    text_en: "They had argued... who was the greatest. Jesus said... 'Anyone who wants to be first must be the very last, and the servant of all.'... 'Whoever welcomes one of these little children... welcomes me.'",
+                    exegesis: {
+                        title: "颠倒的国度价值观",
+                        title_en: "Upside-Down Kingdom Values",
+                        content_cn: "当耶稣预言受难时，门徒却在争权夺利。耶稣颠覆了世界的金字塔权力结构：在神国里，伟大不等于地位，而等于服侍。小孩在当时社会地位低微，接待小孩就是接待那些无力回报的人，这才是接待主的真谛。",
+                        content_en: "While Jesus spoke of death, disciples argued over power. Jesus inverts the pyramid: Greatness = Service. Children were low status; welcoming them (those who can't repay) is welcoming Christ."
+                    },
+                    devotional: {
+                        title: "做众人的仆人",
+                        title_en: "Servant of All",
+                        content_cn: "我们潜意识里都想做“首先的”。但耶稣呼召我们往下走，去服侍那些卑微的、被忽略的（像小孩子一样的人）。在教会和家庭中，你是在寻求被服侍，还是主动寻找机会做“众人的用人”？",
+                        content_en: "We want to be first. Jesus calls us down, to serve the lowly. In church/home, do you seek to be served, or do you look for ways to be the 'servant of all'?"
+                    }
+                },
+                {
+                    ref: "9:38-41",
+                    text_cn: "约翰说：夫子，我们看见一个人奉你的名赶鬼... 我们就禁止他... 耶稣说：不要禁止他... 不敌挡我们的，就是帮助我们的。",
+                    text_en: "John said... 'we saw someone driving out demons in your name and we told him to stop...' 'Do not stop him,' Jesus said... 'for whoever is not against us is for us.'",
+                    exegesis: {
+                        title: "宗派主义的解毒剂",
+                        title_en: "Antidote to Sectarianism",
+                        content_cn: "门徒表现出狭隘的宗派心态（“他不跟从我们”）。耶稣教导宽广的胸怀：只要是奉主名行事，就是盟友。神的工作不局限于一个小圈子。甚至给门徒一杯水喝这样微小的善行，在神眼中都有永恒的价值。",
+                        content_en: "Disciples showed sectarianism ('not one of us'). Jesus teaches inclusivity: work done in His name is valid. God's work isn't limited to our circle. Even a cup of water given in His name matters eternally."
+                    },
+                    devotional: {
+                        title: "拥抱国度的胸怀",
+                        title_en: "Embracing a Kingdom Heart",
+                        content_cn: "我们容易排斥那些与我们做法不同、不在我们圈子里的弟兄姊妹。但耶稣提醒我们，神的国度比我们的宗派或团体大得多。只要是高举基督名的人，我们都应视为战友而非敌人。学会欣赏神在他人身上的工作，而不是嫉妒或禁止。",
+                        content_en: "We easily reject those outside our circle. Jesus reminds us God's Kingdom is bigger than our group. Anyone exalting Christ is an ally. Learn to appreciate God's work in others, rather than envying or stopping them."
+                    }
+                }
+            ],
+            section4: [
+                {
+                    ref: "9:42-50",
+                    text_cn: "凡使这... 小子跌倒的，倒不如把大磨石拴在这人的颈项上... 倘若你一只手叫你跌倒，就把它砍下来... 在哪里虫是不死的，火是不灭的。",
+                    text_en: "'If anyone causes one of these little ones... to stumble, it would be better for them if a large millstone were hung around their neck... If your hand causes you to stumble, cut it off... where the worms that eat them do not die, and the fire is not quenched.'",
+                    exegesis: {
+                        title: "对罪的严厉态度",
+                        title_en: "Radical Stance Against Sin",
+                        content_cn: "耶稣用极度夸张的语言（砍手、挖眼）强调罪的严重性。这并非字面上的自残，而是指对罪恶诱因的彻底切断。地狱（Gehenna）的描述引用以赛亚书66:24，指欣嫩子谷的垃圾焚烧场，象征永恒的刑罚。这是对轻忽罪恶之人的严厉警告。",
+                        content_en: "Hyperbole (cutting hand) emphasizes sin's gravity. Not literal mutilation, but radical removal of sin's causes. 'Gehenna' (Hinnom Valley) images eternal punishment (Isa 66:24). A stern warning against taking sin lightly."
+                    },
+                    devotional: {
+                        title: "当盐失了味",
+                        title_en: "When Salt Loses Flavor",
+                        content_cn: "“必用火当盐腌各人。”这可能指炼净的火或审判的火。我们要有“盐”（圣约的忠诚、防腐的功能、调和的关系）。如果基督徒失去了对罪的敏感和与人的和睦，就失去了存在的价值。在你的生活中，你是否在发挥盐的作用？",
+                        content_en: "'Salted with fire' implies purification or judgment. We must have 'salt' (loyalty, purity, peace). If we lose sensitivity to sin or peace with others, we lose value. Are you being salt in your life?"
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-slate-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-slate-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-blue-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-blue-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-blue-400 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-slate-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-slate-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-slate-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-slate-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-blue-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-red-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-red-600 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                                <h5 class="font-bold text-slate-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-slate-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-slate-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-slate-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-blue-600 text-white shadow-lg shadow-blue-900/20";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-blue-100 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+            renderVerseSection('study-section-4', studyData.section4);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

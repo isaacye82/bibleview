@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 4: Stones of Remembrance | 约书亚记第四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Stone Grey - The Memorial Stones */
+            --theme-primary: #475569; 
+            /* Gilgal Gold - The New Beginning */
+            --theme-secondary: #b45309;
+            /* River Blue - The Origin */
+            --theme-accent: #0e7490;
+            /* Texture Background */
+            --theme-bg: #f8fafc;
+            /* Text */
+            --theme-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Subtle Stone Texture Pattern */
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1h2v2H1V1zm4 4h2v2H5V5zm4 4h2v2H9V9zm4 4h2v2h-2v-2zm4 4h2v2h-2v-2z' fill='%2394a3b8' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-secondary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-secondary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px -1px rgba(71, 85, 105, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            border-top: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(71, 85, 105, 0.2);
+            border-top-color: var(--theme-secondary);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Stone Stacking Animation */
+        .stone {
+            width: 60px;
+            height: 20px;
+            background: linear-gradient(to right, #64748b, #475569);
+            border-radius: 4px;
+            margin: 2px auto;
+            opacity: 0;
+            animation: dropStone 0.5s ease-out forwards;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid #334155;
+        }
+        @keyframes dropStone {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Water Returning Animation */
+        .river-bed {
+            position: relative;
+            height: 100px;
+            width: 100%;
+            background: #d6d3d1; /* Dry ground color */
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .water-rush {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #0e7490, #22d3ee);
+            opacity: 0.8;
+            animation: rush 4s infinite ease-in-out;
+        }
+        @keyframes rush {
+            0% { left: -100%; }
+            40% { left: 0; } /* Flow back */
+            90% { left: 0; }
+            100% { left: 0; } /* Stays filled for a bit */
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px; /* Square/Stone shape */
+            font-size: 1.1rem;
+            box-shadow: 2px 2px 0px var(--theme-secondary);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-slate-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-cubes mr-2 text-slate-600"></i> 约书亚记 4章</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 4</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-amber-700">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-amber-100 mb-1">"日后你们的子孙问他们的父亲说：这些石头有什么意思呢？"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"When your children ask their fathers in time to come, 'What do these stones mean?'"</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第四章中英对照研经报告 | Stones of Remembrance</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "纪念碑的建立：教育与见证",
+                title_en: "The Monument: Education & Witness",
+                summary_zh: "约书亚记第四章紧接神迹之后，关注点从‘如何过河’转向‘如何记住’。神不仅关心当下的拯救，更关心未来的传承。通过从约旦河中取出的十二块石头，神设立了一个视觉化的教材（Visual Aid），用于向下一代讲述神的大能。本章以石头为线索，连接了过去（神迹）、现在（顺服）和未来（见证）。",
+                summary_en: "Joshua 4 follows the miracle, shifting focus from 'how to cross' to 'how to remember'. God cares not just for present salvation but future legacy. Through twelve stones from the Jordan, God establishes a visual aid to teach the next generation His power. The chapter uses stones as a thread connecting Past (Miracle), Present (Obedience), and Future (Witness).",
+                concepts: [
+                    { title: "纪念", title_en: "Memorial", hebrew: "Zikaron", color: "text-slate-700", bg: "bg-slate-100", desc_zh: "石头不是为了崇拜，而是为了激发记忆。遗忘是属灵背道的开始，纪念是信心的维系。", desc_en: "Stones are not for worship but for triggering memory. Forgetting is the start of apostasy; remembering sustains faith." },
+                    { title: "永远为记", title_en: "Sign Forever", hebrew: "Oth", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "这些石头是神介入历史的永恒物证，证明那不可见的神确实在可见的世界中行动过。", desc_en: "These stones are physical evidence of God's intervention, proving the Invisible God acted in the visible world." },
+                    { title: "敬畏", title_en: "Feared/Revered", hebrew: "Yare", color: "text-cyan-800", bg: "bg-cyan-50", desc_zh: "因着神迹，百姓敬畏约书亚如同敬畏摩西。神迹确立了领袖的权柄。", desc_en: "Because of the miracle, people revered Joshua as they did Moses. Miracles validate leadership authority." }
+                ]
+            },
+            sections: [
+                {
+                    id: "command",
+                    title: "取石的命令 (4:1-7)",
+                    title_en: "Command to Take Stones",
+                    verses: [
+                        {
+                            ref: "4:6-7",
+                            text_zh: "这些石头在你们中间可以作为证据。日后你们的子孙问你们说：‘这些石头是什么意思？’ 你们就对他们说...",
+                            text_en: "That this may be a sign among you. When your children ask in time to come, 'What do those stones mean to you?' then you shall tell them...",
+                            exegesis: {
+                                title: "提问式教育 (Catechetical Education)",
+                                content_zh: "神设立纪念碑的目的具有高度的教育性。祂预知孩子会好奇发问。这里的逻辑是：**可见的记号**（石头）引发**好奇心**（问题），从而带来**真理的讲述**（见证）。信仰的传承不能单靠抽象的神学，需要具体历史事件的记忆载体。这也表明父母是信仰教育的首要责任人。",
+                                content_en: "God's purpose is educational. He anticipates children's curiosity. The logic: **Visible Sign** (Stones) triggers **Curiosity** (Question), leading to **Narration of Truth** (Witness). Faith transmission relies not just on abstract theology but on historical memory markers. Parents are the primary educators."
+                            },
+                            devotional: {
+                                title: "你家里的石头在哪里？ (Where are Your Stones?)",
+                                content_zh: "如果你的孩子问你：“你为什么这么信神？”你能指出哪些具体的“石头”（经历）来回答吗？我们不仅要在心里感恩，还需要在生活中建立一些“记号”（家庭传统、感恩日记、特殊的纪念物），以便在未来向下一代讲述神的作为。不要让你的神迹随水流逝，要把它们立定。",
+                                content_en: "If your child asks, 'Why do you believe?', can you point to specific 'stones' (experiences)? We need not only inner gratitude but outward 'signs' (traditions, journals) to tell the next generation. Don't let miracles wash away; set them in stone."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "execution",
+                    title: "顺服与尊荣 (4:8-14)",
+                    title_en: "Obedience & Exaltation",
+                    verses: [
+                        {
+                            ref: "4:14",
+                            text_zh: "当那日，耶和华使约书亚在以色列众人眼前尊大。在他平生的日子，百姓敬畏他，像从前敬畏摩西一样。",
+                            text_en: "On that day the LORD exalted Joshua in the sight of all Israel, and they stood in awe of him just as they had stood in awe of Moses, all the days of his life.",
+                            exegesis: {
+                                title: "权柄来自顺服 (Authority from Obedience)",
+                                content_zh: "约书亚并没有寻求自己的荣耀，他只是严格执行神的命令（4:8, 10）。“尊大”（Exalted）是神的工作，不是人的自夸。经文特意提到流便、迦得、玛拿西半支派走在前面（4:12），强调了顺服的**整体性**和**合一性**。领袖的属灵权柄建立在对神话语的绝对顺服和神迹的印证之上。",
+                                content_en: "Joshua didn't seek glory; he strictly executed God's command (v.8, 10). 'Exaltation' is God's work. The text notes the Transjordan tribes crossing first (v.12), emphasizing **unity** in obedience. Spiritual authority is built on absolute obedience and divine validation."
+                            },
+                            devotional: {
+                                title: "神高举谦卑人 (God Exalts the Humble)",
+                                content_zh: "约书亚忙于安排石头和祭司，神却忙于使约书亚尊大。这是一个属灵定律：当你专注于尊荣神（顺服祂的命令，建立祂的见证）时，神会负责确立你在人面前的影响力。不要试图通过操纵来获得敬畏，要通过顺服来赢得敬重。",
+                                content_en: "Joshua was busy with stones and priests; God was busy exalting Joshua. Spiritual law: When you focus on honoring God (obedience, witness), God establishes your influence. Don't seek reverence through manipulation; earn respect through obedience."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "return",
+                    title: "水流复原：主权的展示 (4:15-18)",
+                    title_en: "Waters Return: Display of Sovereignty",
+                    verses: [
+                        {
+                            ref: "4:18",
+                            text_zh: "抬耶和华约柜的祭司...脚掌刚落旱地，约旦河的水就流到原处，仍旧涨过两岸。",
+                            text_en: "And when the priests... lifted the soles of their feet onto dry ground, the waters of the Jordan returned to their place and overflowed all its banks, as before.",
+                            exegesis: {
+                                title: "神迹的精确性 (Precision of Miracle)",
+                                content_zh: "这是一个戏剧性的时刻。水流的停止和复原完全取决于祭司的脚掌是否在河中。这排除了自然现象（如地震导致暂时断流）的巧合解释。水立刻“涨过两岸”，恢复了其凶险的本相，这反衬出刚才干地行走的惊人神迹。神对自然界的控制是精确到秒的。",
+                                content_en: "A dramatic moment. The stopping and returning of water depended entirely on the priests' feet. This rules out natural coincidence. The water immediately 'overflowed', restoring its danger, highlighting the miracle of the dry ground. God's control over nature is precise to the second."
+                            },
+                            devotional: {
+                                title: "不要把神迹当平常 (Don't Normalize Miracles)",
+                                content_zh: "当水流恢复原状时，以色列人才惊觉刚才走过的是何等危险之地。有时神移除了我们生活中的风暴，时间久了我们以为那是理所当然的‘干地’。回望过去，看到那些本该淹没你的‘水’，你会对神的保护产生更深的敬畏。那不是运气，那是神的手托住了水。",
+                                content_en: "When waters returned, Israel realized the danger they passed. Sometimes God removes storms, and we take the 'dry ground' for granted. Look back at the waters that *should* have drowned you. It wasn't luck; it was God's hand holding the water."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "gilgal",
+                    title: "吉甲的见证 (4:19-24)",
+                    title_en: "The Witness at Gilgal",
+                    verses: [
+                        {
+                            ref: "4:20-24",
+                            text_zh: "约书亚就将从约旦河里取来的那十二块石头立在吉甲...要使地上万民都知道，耶和华的手大有能力...",
+                            text_en: "And those twelve stones... Joshua set up at Gilgal... so that all the peoples of the earth may know that the hand of the LORD is mighty...",
+                            exegesis: {
+                                title: "双重目的：万民与敬畏 (Universal & Particular Purpose)",
+                                content_zh: "吉甲（Gilgal）成为了以色列在迦南的第一个大本营。立石有两个目的：1. **对外**（宣教性）：使地上万民（包括迦南人）知道耶和华的大能。2. **对内**（牧养性）：使以色列人永远敬畏神。这堆石头不仅是历史文物，它是神学宣言，宣告耶和华是全地的主。",
+                                content_en: "Gilgal became the first HQ. The stones had two purposes: 1. **External** (Missional): That all peoples know God's power. 2. **Internal** (Pastoral): That Israel fear God forever. These stones are not artifacts but a theological manifesto declaring Yahweh as Lord of all."
+                            },
+                            devotional: {
+                                title: "让世界知道 (Let the World Know)",
+                                content_zh: "我们的生命经历（那些石头）不仅是为了自己回味，更是为了向世界展示神的大能。你的见证是神给这个不信世代的‘教材’。当别人看到你生命中神迹的痕迹时，他们就被迫面对一位活神的存在。活出你的‘吉甲’，让它说话。",
+                                content_en: "Our experiences (stones) aren't just for nostalgia, but to show the world God's power. Your testimony is God's 'lesson plan' for this unbelieving age. When people see traces of miracles in you, they confront a Living God. Live out your 'Gilgal'; let it speak."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-slate-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-slate-100 text-slate-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-slate-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-slate-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-slate-500 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-slate-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-slate-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-slate-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-slate-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-slate-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-slate-200">${c.hebrew}</p>
+                                    <p class="text-xs text-slate-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Stones & The Water -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Stone Stacking -->
+                        <div class="bg-slate-200 p-4 rounded shadow-lg relative h-64 flex flex-col items-center justify-end group border border-slate-300 overflow-hidden">
+                            <h3 class="text-slate-600 font-bold uppercase tracking-widest text-xs mb-2 absolute top-4 left-4">Memory in Stone</h3>
+                            
+                            <!-- 12 Stones Stack -->
+                            <div class="flex flex-col-reverse items-center mb-4">
+                                <div class="stone" style="animation-delay: 0.1s"></div>
+                                <div class="stone" style="animation-delay: 0.2s"></div>
+                                <div class="stone" style="animation-delay: 0.3s"></div>
+                                <div class="stone" style="animation-delay: 0.4s"></div>
+                                <div class="stone" style="animation-delay: 0.5s"></div>
+                                <div class="stone" style="animation-delay: 0.6s"></div>
+                                <div class="stone" style="animation-delay: 0.7s"></div>
+                                <div class="stone" style="animation-delay: 0.8s"></div>
+                                <div class="stone" style="animation-delay: 0.9s"></div>
+                                <div class="stone" style="animation-delay: 1.0s"></div>
+                                <div class="stone" style="animation-delay: 1.1s"></div>
+                                <div class="stone" style="animation-delay: 1.2s"></div>
+                            </div>
+                            
+                            <p class="text-[10px] text-slate-500 italic">Twelve stones from the midst of Jordan</p>
+                        </div>
+
+                        <!-- Water Return Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-slate-200 flex-grow relative overflow-hidden">
+                             <h4 class="text-sm font-bold text-slate-800 mb-4 pb-2 border-b border-slate-100 flex items-center">
+                                <i class="fas fa-water mr-2 text-cyan-600"></i> 复流的神迹 The Return
+                             </h4>
+                             
+                             <div class="river-bed shadow-inner">
+                                 <!-- Dry Ground Text -->
+                                 <div class="absolute inset-0 flex items-center justify-center text-slate-400 font-bold text-xs uppercase tracking-widest z-0">
+                                     Dry Ground
+                                 </div>
+                                 <!-- Rushing Water -->
+                                 <div class="water-rush z-10"></div>
+                             </div>
+                             
+                             <p class="text-[10px] text-slate-500 text-center mt-3 italic">
+                                "水流到原处，仍旧涨过两岸"<br>Waters returned to their place
+                             </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-slate-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-slate-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-slate-600 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-slate-300 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-slate-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-slate-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-slate-100 relative">
+                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-3 font-mono border border-slate-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text pl-4 border-l-2 border-slate-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f8fafc] border-b md:border-b-0 md:border-r border-slate-200 relative">
+                            <div class="flex items-center mb-3 text-slate-700">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-slate-500 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] relative">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-700/70 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-slate-800">解经原则总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-3xl mb-4"><i class="fas fa-history"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">神学教育学 (Theological Pedagogy)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Method & Symbol</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 实物教学 Visual Aid</div>
+                                    <div class="mb-1">分析石头作为“有形记号”（Sign）在口述文化中的功能：激发问题，保存集体记忆。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Analyzing stones as visual aids in oral culture to trigger questions and preserve memory.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 历史的连续性 Continuity</div>
+                                    <div class="mb-1">将约旦河的神迹与红海神迹（4:23）平行，表明神在历史中的作为是一致的，约书亚是摩西的合法继承者。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Parallelism with the Red Sea shows God's consistency and validates Joshua's succession.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-3xl mb-4"><i class="fas fa-child"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Legacy & Gratitude</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 属灵传承 Legacy</div>
+                                    <div class="mb-1">强调父母在信仰传承中的责任。不仅要“经历”神迹，更要“讲述”神迹，让下一代知道耶和华的手大有能力。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Parents must not only experience miracles but narrate them to the next generation.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 感恩的记号 Gratitude</div>
+                                    <div class="mb-1">鼓励在生活中设立“以便以谢”（帮助之石），在顺境时纪念神的作为，作为逆境时的信心锚点。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Setting up 'Ebenezer' stones in life as anchors of faith for future trials.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

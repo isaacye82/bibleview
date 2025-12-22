@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 6: Judgment & The Ark | 创世纪第六章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Storm Navy - The Flood, Judgment */
+            --theme-primary: #1e3a8a; 
+            /* Gopher Wood - The Ark, Safety */
+            --theme-secondary: #78350f;
+            /* Grace Gold - Favor */
+            --theme-accent: #f59e0b;
+            /* Stormy Background */
+            --theme-bg: #f1f5f9;
+            /* Text */
+            --theme-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: linear-gradient(to bottom right, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        /* Ark Planking Effect on Top Border */
+        .verse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: repeating-linear-gradient(
+                45deg,
+                #78350f,
+                #78350f 10px,
+                #92400e 10px,
+                #92400e 20px
+            );
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px -5px rgba(30, 58, 138, 0.2);
+            border-color: var(--theme-primary);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Water Rise Animation */
+        .water-rise {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #1e3a8a, #3b82f6);
+            opacity: 0.8;
+            animation: rise 4s infinite alternate ease-in-out;
+            border-radius: 0 0 16px 16px;
+        }
+        @keyframes rise {
+            0% { height: 20%; }
+            100% { height: 85%; }
+        }
+
+        /* Ark Float Animation */
+        .ark-float {
+            animation: floatArk 4s infinite alternate ease-in-out;
+        }
+        @keyframes floatArk {
+            0% { transform: translateY(0) rotate(-2deg); }
+            100% { transform: translateY(-15px) rotate(2deg); }
+        }
+
+        /* Heartbeat for Divine Grief */
+        .heartbeat {
+            animation: beat 2s infinite ease-in-out;
+            transform-origin: center;
+        }
+        @keyframes beat {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-slate-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-ship mr-2 text-amber-800"></i> 创世纪 6章</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 6</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#0f172a] text-slate-400 mt-auto border-t-4 border-amber-800">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-blue-200 mb-1">"惟有挪亚在耶和华眼前蒙恩。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"But Noah found favor in the eyes of the LORD."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世纪第六章中英对照研经报告 | Judgment & The Ark</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神的忧伤与救赎的蓝图",
+                title_en: "Divine Grief & The Blueprint of Salvation",
+                summary_zh: "创世纪第六章是人类历史的至暗时刻，也是救赎恩典的闪亮登场。随着人口的增长，罪恶也呈指数级扩散，甚至突破了受造界的界限（神的儿子与人的女子）。这种全面的败坏导致了神的“心中忧伤”和随之而来的审判（洪水）。然而，在这毁灭的前夜，神通过挪亚——一个在祂眼前蒙恩的人——启示了救赎的计划。方舟，不仅是逃生的船只，更是基督救恩的宏伟预表。",
+                summary_en: "Genesis 6 marks the darkest hour of human history and the brilliant dawn of redemptive grace. As population grew, sin multiplied exponentially, breaching creation's boundaries (sons of God & daughters of man). This total depravity caused Divine Grief and judgment (the Flood). Yet, on the eve of destruction, God revealed a rescue plan through Noah—who found favor in His eyes. The Ark is not just a survival vessel, but a grand type of Christ's salvation.",
+                concepts: [
+                    { title: "败坏", title_en: "Total Depravity", hebrew: "Ra (Evil)", color: "text-red-800", bg: "bg-red-50", desc_zh: "人终日所思想的尽都是恶。罪不仅仅是行为，更渗透了人的本质和动机。", desc_en: "Every intention of the thoughts of his heart was only evil continually. Sin permeated nature and motive." },
+                    { title: "蒙恩", title_en: "Found Favor", hebrew: "Chen (Grace)", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "这是圣经第一次出现“恩典”一词。挪亚得救不是因为他无罪，而是因为神施恩。", desc_en: "The first mention of 'Grace' in the Bible. Noah was saved not by sinlessness, but by God's favor." },
+                    { title: "方舟", title_en: "The Ark", hebrew: "Tebah", color: "text-blue-900", bg: "bg-blue-50", desc_zh: "字面意思是“箱子”（与摩西的篮子同词）。它是神为那些信靠祂话语之人预备的唯一避难所。", desc_en: "Literally 'Box' (same word for Moses' basket). The sole refuge God provided for those trusting His word." }
+                ]
+            },
+            sections: [
+                {
+                    id: "corruption",
+                    title: "界限的崩溃与神的忧伤 (6:1-7)",
+                    title_en: "Collapsed Boundaries & Divine Grief",
+                    verses: [
+                        {
+                            ref: "6:2, 5-6",
+                            text_zh: "神的儿子们看见人的女子美貌，就随意挑选...耶和华见人在地上罪恶很大...耶和华就后悔造人在地上，心中忧伤。",
+                            text_en: "The sons of God saw that the daughters of man were attractive... The LORD saw that the wickedness of man was great... And the LORD regretted... and it grieved him to his heart.",
+                            exegesis: {
+                                title: "神本主义的悲情 (Theocentric Pathos)",
+                                content_zh: "关于“神的儿子”，无论是解释为堕落天使（强调灵界的混乱）还是塞特的后裔（强调圣洁防线的崩溃），核心都在于**界限的混合**与**情欲的放纵**。最令人震动的是神的反应：祂不是像暴君一样发怒，而是像父亲一样“心中忧伤”（Grieved）。“后悔”并非指神承认错误（神非人，必不致后悔），而是用拟人法描述神因人的改变而改变对待人的方式——从赐福转为审判。",
+                                content_en: "Whether 'Sons of God' are angels (supernatural chaos) or Sethites (spiritual compromise), the core is *mixed boundaries* and *lust*. Strikingly, God's reaction is not tyrant-like rage, but father-like 'grief'. 'Regretted' doesn't imply God made a mistake, but describes (anthropopathically) a change in His disposition toward man—from blessing to judgment—due to man's change."
+                            },
+                            devotional: {
+                                title: "你的罪让神心碎吗？ (Does Your Sin Break God's Heart?)",
+                                content_zh: "我们常以为罪只是违反了规则，但这几节经文告诉我们，罪是针对神的位格性冒犯。它让爱我们的造物主“心中忧伤”。当我们意识到我们的悖逆不仅仅是犯错，而是让天父心碎时，这种神圣的忧伤（Godly Sorrow）会成为我们悔改的最深动力。",
+                                content_en: "We often think sin is just breaking rules, but here we see sin is a personal offense against God. It breaks the Creator's heart. Realizing our rebellion causes Divine Grief becomes the deepest motivation for true repentance."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "grace",
+                    title: "唯一的例外：恩典 (6:8)",
+                    title_en: "The Sole Exception: Grace",
+                    verses: [
+                        {
+                            ref: "6:8",
+                            text_zh: "惟有挪亚在耶和华眼前蒙恩。",
+                            text_en: "But Noah found favor in the eyes of the LORD.",
+                            exegesis: {
+                                title: "即使...但是 (The Divine 'But')",
+                                content_zh: "这是巨大的转折连词。“蒙恩”（Chen）意为弯腰施惠给不配的人。这表明挪亚的义（6:9提到他是义人）并非他得救的原因，而是他蒙恩的结果。在普世的黑暗背景下，神保留余种（Remnant）的恩典显得尤为耀眼。",
+                                content_en: "The great adversative conjunction. 'Favor' (Chen) means bending down to give kindness to the undeserving. This implies Noah's righteousness (v.9) was the result, not the cause, of Grace. Against universal darkness, God's grace in preserving a remnant shines brightly."
+                            },
+                            devotional: {
+                                title: "眼目所在 (In the Eyes of the Lord)",
+                                content_zh: "世界看挪亚可能是一个造船的疯子，但在“耶和华眼前”，他是蒙恩的。我们在谁的眼前寻找认可？是这个将要过去的世代，还是那位永恒的主？蒙恩并不意味着生活安逸，它意味着在风暴来临前，你已经被神特别拣选并保护。",
+                                content_en: "The world saw a crazy boat-builder, but in 'the eyes of the LORD', he was favored. Whose eyes do you seek approval from? Favor doesn't mean comfort; it means being chosen and protected by God before the storm hits."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "ark",
+                    title: "救赎的方舟 (6:13-22)",
+                    title_en: "The Ark of Salvation",
+                    verses: [
+                        {
+                            ref: "6:14",
+                            text_zh: "你要用歌斐木造一只方舟...里外抹上松香。",
+                            text_en: "Make yourself an ark of gopher wood... and cover it inside and out with pitch.",
+                            exegesis: {
+                                title: "涂抹与遮盖 (Pitch and Atonement)",
+                                content_zh: "“方舟”（Tebah）在圣经中仅用于此处和盛装婴儿摩西的篮子，意为“救命的箱子”。“抹上松香”中的“抹”（Kaphar）字根与“救赎/遮盖”（Atonement）相同。这木制的方舟，因着涂抹而被密封、防水，预表了基督——祂是我们的避难所，祂的宝血（Atonement）使我们免受神愤怒洪水的审判。",
+                                content_en: "'Ark' (Tebah) is used only here and for baby Moses' basket. 'Cover with pitch' uses the root *Kaphar*, same as 'Atonement'. The wooden ark, sealed and waterproofed, typifies Christ—our refuge, whose blood (Atonement) seals us from the flood of judgment."
+                            },
+                            devotional: {
+                                title: "只有一个门 (Only One Door)",
+                                content_zh: "神指示方舟只要开一个门（6:16）。在洪水中，无论你游得多好，或是爬上最高的山，都无法得救。唯一的路是进入那扇门。耶稣说：“我就是门”（约10:9）。在这个动荡的时代，不要寻找其他的救生圈（金钱、政治、自我提升），只有在基督里（In Christ）才是绝对安全的。",
+                                content_en: "God ordered only one door (6:16). In the flood, swimming skills or high mountains won't save. The only way is through the Door. Jesus said, 'I am the door.' In turbulent times, don't look for other life rafts; absolute safety is found only 'In Christ'."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-slate-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-slate-800">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-slate-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-blue-800 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-slate-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-slate-100 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-slate-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-slate-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-slate-200">${c.hebrew}</p>
+                                    <p class="text-xs text-slate-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <!-- Background Texture -->
+                        <div class="absolute top-0 right-0 p-10 opacity-5">
+                            <i class="fas fa-cloud-showers-heavy text-9xl"></i>
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Flood & The Heart -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Rising Water -->
+                        <div class="bg-[#0f172a] rounded shadow-lg relative overflow-hidden h-64 flex flex-col items-center justify-start group border border-slate-700">
+                            <!-- Background Sky -->
+                            <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-800"></div>
+                            
+                            <!-- Rain -->
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/diagmonds-light.png')] opacity-10"></div>
+                            
+                            <!-- Rising Water Layer -->
+                            <div class="water-rise z-10 w-full flex items-start justify-center pt-4">
+                                <!-- The Ark Floating -->
+                                <div class="ark-float text-amber-700 text-6xl drop-shadow-lg relative z-20">
+                                    <i class="fas fa-ship"></i>
+                                    <div class="text-[10px] text-amber-200 font-mono absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-80">ARK</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Text Overlay -->
+                            <div class="absolute top-4 w-full text-center z-30">
+                                <h3 class="text-slate-300 font-bold uppercase tracking-widest text-xs">The Judgment of Water</h3>
+                                <p class="text-[10px] text-slate-500 italic mt-1">Sin swallowed, Grace floats</p>
+                            </div>
+                        </div>
+
+                        <!-- Divine Grief Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-slate-200 flex-grow flex items-center justify-between relative overflow-hidden">
+                             <div class="z-10 w-2/3 pr-4">
+                                 <h4 class="text-sm font-bold text-red-900 mb-1">耶和华就后悔...</h4>
+                                 <p class="text-xs text-slate-600 leading-relaxed">
+                                    "心中忧伤" (Grieved to His heart). 这不是无情的法官在宣判，而是一位慈父在流泪。
+                                 </p>
+                                 <p class="text-[10px] text-slate-400 italic mt-2 en-text">Not a cold judge, but a weeping father.</p>
+                             </div>
+                             
+                             <!-- Heartbeat Animation -->
+                             <div class="z-10 w-1/3 flex justify-center">
+                                 <div class="heartbeat text-red-100 text-6xl">
+                                     <i class="fas fa-heart-broken"></i>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-slate-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-slate-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-amber-800 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-slate-300 pb-2">
+                            <div class="w-8 h-8 rounded bg-slate-800 text-white flex items-center justify-center font-bold font-serif mr-4">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-slate-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-slate-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-slate-100 relative">
+                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-3 font-mono border border-slate-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text pl-4 border-l-2 border-slate-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f8fafc] border-b md:border-b-0 md:border-r border-slate-200 relative">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-blue-800"></div>
+                            <div class="flex items-center mb-3 text-blue-900">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-blue-900/70 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] relative">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-amber-600"></div>
+                            <div class="flex items-center mb-3 text-amber-800">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-800/70 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-slate-800">解经原则总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-blue-900">
+                            <div class="text-blue-900 text-3xl mb-4"><i class="fas fa-anchor"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">神人同性同情 (Anthropopathism)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Theology & Emotion</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-700"></i> 理解神的"后悔" Regret</div>
+                                    <div class="mb-1">解释经文如何用人类的情感语言（忧伤、后悔）来描述神对罪恶的圣洁反应，而非神属性的改变。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Interpreting emotional language (grief, regret) as God's holy reaction to sin, not a change in His nature.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-700"></i> 预表学 Typology</div>
+                                    <div class="mb-1">识别方舟的构造（木头、涂抹松香、唯一的门）指向基督的救赎工作（十字架、代赎、唯一中保）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Identifying the Ark's structure as a type of Christ's redemptive work.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-700">
+                            <div class="text-amber-700 text-3xl mb-4"><i class="fas fa-dove"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Grace & Obedience</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-600"></i> 恩典的优先性 Priority of Grace</div>
+                                    <div class="mb-1">强调得救不是因为行为完美，而是因为"蒙恩"。这是个人得救确据的基石。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Emphasizing that salvation is by 'Favor' (Grace), not perfection. The foundation of assurance.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-600"></i> 在世代中同行 Walk in Generation</div>
+                                    <div class="mb-1">鼓励信徒在充满败坏的世代中，像挪亚一样敢于与神同行，建造属灵的方舟（家庭、教会）。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Encouraging believers to walk with God amidst a corrupt generation, building spiritual arks.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

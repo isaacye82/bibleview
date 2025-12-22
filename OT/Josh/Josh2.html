@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 2: The Scarlet Cord | 约书亚记第二章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Scarlet - The Cord, Blood, Redemption */
+            --theme-primary: #9f1239; 
+            /* Stone - Jericho Walls */
+            --theme-secondary: #57534e;
+            /* Night - The Context */
+            --theme-accent: #1e1b4b;
+            /* Parchment Background */
+            --theme-bg: #f5f5f4;
+            /* Text */
+            --theme-text: #292524;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: radial-gradient(#e7e5e4 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            border-top: 4px solid var(--theme-secondary);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(159, 18, 57, 0.15);
+            border-top-color: var(--theme-primary);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scarlet Cord Animation */
+        .cord-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            background: #44403c; /* Dark Wall color */
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+        }
+        .window-frame {
+            width: 60px;
+            height: 80px;
+            background: #1c1917;
+            margin-top: 20px;
+            border: 4px solid #78716c;
+            position: relative;
+            z-index: 10;
+        }
+        .cord {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            width: 4px;
+            height: 0;
+            background-color: #e11d48; /* Scarlet */
+            box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+            transform-origin: top;
+            animation: dropCord 2s ease-out forwards, swingCord 4s ease-in-out infinite alternate 2s;
+            z-index: 5;
+        }
+        @keyframes dropCord {
+            to { height: 160px; }
+        }
+        @keyframes swingCord {
+            0% { transform: rotate(2deg); }
+            100% { transform: rotate(-2deg); }
+        }
+
+        /* Section Number Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(159, 18, 57, 0.3);
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-rose-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-bacon mr-2 text-rose-700" style="transform: rotate(90deg);"></i> 约书亚记 2章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 2</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-rose-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-rose-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1c1917] text-stone-400 mt-auto border-t-4 border-rose-800">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-rose-200 mb-1">"这朱红线绳要系在窗户上。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-2 en-text">"Bind this line of scarlet cord in the window."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第二章中英对照研经报告 | The Scarlet Cord</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "城墙上的信心与救赎的记号",
+                title_en: "Faith on the Wall & The Sign of Redemption",
+                summary_zh: "约书亚记第二章是一段充满戏剧性反转的叙事。以色列的探子进入敌人的心脏（耶利哥），却在那里找到了一位意想不到的盟友——妓女喇合。本章不仅展示了神的护理（Providence），更通过喇合的信心告白，预示了救恩将临到外邦人。那条从窗户垂下的朱红线绳，成为了整本圣经中最鲜明的救赎预表之一，指向那流血代赎的基督。",
+                summary_en: "Joshua 2 is a narrative full of dramatic reversals. Israelite spies enter the enemy's heart (Jericho), only to find an unexpected ally—Rahab the harlot. This chapter showcases not only God's Providence but also, through Rahab's confession, foreshadows salvation for Gentiles. The scarlet cord hanging from the window becomes one of the most vivid types of redemption in the Bible, pointing to the atoning blood of Christ.",
+                concepts: [
+                    { title: "喇合的信心", title_en: "Rahab's Faith", hebrew: "Emunah", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "一个被社会边缘化的迦南女子，因着‘听见’神的大能而产生了比以色列人更坚定的信心。", desc_en: "A marginalized Canaanite woman who, by 'hearing' of God's power, developed faith stronger than many Israelites." },
+                    { title: "恩慈/诚实", title_en: "Hesed & Truth", hebrew: "Hesed v'Emet", color: "text-rose-800", bg: "bg-rose-50", desc_zh: "喇合请求探子以‘恩慈’待她。这是一个立约的词汇，表明她寻求的是盟约内的保护。", desc_en: "Rahab asks for 'Hesed'. A covenant term implying she seeks protection within a covenant relationship." },
+                    { title: "朱红线", title_en: "Scarlet Cord", hebrew: "Tikvah (Cord/Hope)", color: "text-red-700", bg: "bg-stone-100", desc_zh: "这既是实体的记号，也是神学符号。‘Tikvah’在希伯来文中双关‘绳索’与‘盼望’。", desc_en: "Both a physical sign and theological symbol. 'Tikvah' is a Hebrew pun meaning both 'cord' and 'hope'." }
+                ]
+            },
+            sections: [
+                {
+                    id: "mission",
+                    title: "潜入与隐藏 (2:1-3)",
+                    title_en: "Infiltration & Hiding",
+                    verses: [
+                        {
+                            ref: "2:1",
+                            text_zh: "当下，嫩的儿子约书亚从什亭暗暗打发两个人作探子...他们去，来到一个妓女名叫喇合的家里，就在那里躺卧。",
+                            text_en: "And Joshua the son of Nun sent two men secretly from Shittim as spies... And they went and came into the house of a prostitute whose name was Rahab and lodged there.",
+                            exegesis: {
+                                title: "神圣的巧合 (Divine Coincidence)",
+                                content_zh: "约书亚吸取了38年前加低斯巴尼亚的教训，只派了两人且是‘暗暗’去的。选择妓女家作为落脚点在军事上是合理的（人流混杂，易于隐藏，且位于城墙上易于逃脱）。然而，在神的主权中，这不仅是军事策略，更是神为了拯救喇合一家而安排的‘神圣约会’。",
+                                content_en: "Joshua learned from Kadesh Barnea, sending only two men 'secretly'. Choosing a harlot's house was militarily sound (anonymous, busy, on the wall). Yet, in God's sovereignty, this was not just strategy but a 'divine appointment' to save Rahab's family."
+                            },
+                            devotional: {
+                                title: "神在寻找失丧的人 (God Seeks the Lost)",
+                                content_zh: "探子本是为了攻城，神却利用这次任务去救人。无论你的身份多么卑微（如妓女），或者你的环境多么黑暗（如耶利哥），神都有办法找到你。有时候，我们生活中的突发事件或‘意外访客’，其实是神恩典临到的伪装。",
+                                content_en: "Spies went to conquer; God used them to save. No matter how lowly your status or dark your environment, God can find you. Sometimes, unexpected events are God's grace in disguise."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "deception",
+                    title: "保护与智慧 (2:4-7)",
+                    title_en: "Protection & Wisdom",
+                    verses: [
+                        {
+                            ref: "2:4-5",
+                            text_zh: "女人将二人隐藏...天黑、要关城门的时候，他们出去了，往哪里去我不知道...",
+                            text_en: "But the woman had taken the two men and hidden them... And when the gate was about to be shut at dark, the men went out. I do not know where the men went...",
+                            exegesis: {
+                                title: "为了更高善的谎言？ (Lie for Greater Good?)",
+                                content_zh: "喇合说谎了。在伦理学上这是一个难题。但圣经（来11:31，雅2:25）称赞的是她的信心和行为（接待使者），而非她的谎言。在当时极其危险的战争背景下，她选择了背叛地上的王（耶利哥王）来效忠天上的王（耶和华）。她把探子的生命看得比诚实更重要。",
+                                content_en: "Rahab lied. Ethically complex. Yet Scripture (Heb 11:31, Jas 2:25) praises her faith/action, not the lie. In a war context, she chose treason against an earthly king to serve the Heavenly King, valuing the spies' lives above verbal accuracy."
+                            },
+                            devotional: {
+                                title: "信心的抉择 (Choice of Faith)",
+                                content_zh: "喇合冒着生命危险保护了神的子民。这表明信心不仅仅是心里的相信，更伴随着冒险的行动。当你需要在世俗的压力（如同耶利哥王的命令）和神的旨意之间做选择时，你是否敢于站在神的一边？哪怕这意味着要付上极大的代价。",
+                                content_en: "Rahab risked her life. Faith is more than belief; it's risky action. When forced to choose between worldly pressure and God's will, do you dare stand with God, even at great cost?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "confession",
+                    title: "惊人的告白 (2:8-11)",
+                    title_en: "The Astounding Confession",
+                    verses: [
+                        {
+                            ref: "2:11",
+                            text_zh: "我们一听见这些事，心就消化了...耶和华你们的神，本是上天下地的神。",
+                            text_en: "And as soon as we heard it, our hearts melted... for the LORD your God, he is God in the heavens above and on the earth beneath.",
+                            exegesis: {
+                                title: "听见即信 (Faith comes by Hearing)",
+                                content_zh: "这是全章的核心神学。耶利哥人都‘听见’了神在红海和亚摩利人身上的作为（2:10）。虽有相同的信息，反应却不同：耶利哥人是‘心消化’（恐惧），喇合却是‘敬畏与投靠’（信心）。她准确地认信神是‘上天下地的神’（独一真神论），这信心的深度甚至超过许多以色列人。",
+                                content_en: "The theological core. All Jericho 'heard' of the Red Sea (2:10). Same info, different reaction: Jericho felt fear (melting hearts); Rahab felt awe and trust. She confesses Yahweh as 'God in heaven above and earth beneath'—a profound monotheism."
+                            },
+                            devotional: {
+                                title: "你的心如何反应？ (How Does Your Heart React?)",
+                                content_zh: "神的大能对于抵挡祂的人是恐惧的消息，但对于投靠祂的人却是得救的盼望。喇合抓住了这个机会。今天，神依然在通过各种方式（新闻、见证、圣经）说话，你是否有一颗敏锐的心，能从‘听见’转化为‘相信’？",
+                                content_en: "God's power is terror to rebels but hope to seekers. Rahab seized the moment. God still speaks today. Do you have a sensitive heart to turn 'hearing' into 'believing'?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "oath",
+                    title: "恩慈的请求 (2:12-14)",
+                    title_en: "The Request for Kindness",
+                    verses: [
+                        {
+                            ref: "2:12",
+                            text_zh: "现在我既是恩待了你们，求你们指着耶和华向我起誓，也要恩待我父家，并给我一个实在的证据。",
+                            text_en: "Now then, please swear to me by the LORD that, as I have dealt kindly with you, you also will deal kindly with my father's house, and give me a sure sign.",
+                            exegesis: {
+                                title: "以恩慈换恩慈 (Hesed for Hesed)",
+                                content_zh: "喇合使用的‘恩待’（Hesed）是一个极其丰富的希伯来词，意为‘忠诚的爱’或‘盟约之爱’。她请求的不是一次性的交易，而是一种盟约关系的建立。她不想在审判日被当作外人，而想被纳入神的保护伞下。‘实在的证据’表明她寻求确据。",
+                                content_en: "Rahab asks for 'Hesed' (loyal love/covenant love). She seeks not a transaction, but a covenant relationship. She wants to be treated not as an outsider on judgment day, but protected. She asks for a 'sure sign' of this pledge."
+                            },
+                            devotional: {
+                                title: "为家人代求 (Interceding for Family)",
+                                content_zh: "喇合不仅救自己，她还心系‘父母、弟兄、姐妹’。她是一个外邦女子，却成了家人的祭司和拯救者。你是否也在为你不信的家人迫切代求？不要轻看你的影响力。一个人的信心，往往能成为全家蒙恩的入口。",
+                                content_en: "Rahab didn't just save herself; she pleaded for her whole family. This Gentile woman became a priest/savior for her house. Are you interceding for your family? One person's faith can be the doorway for a whole household's grace."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "sign",
+                    title: "朱红线绳的记号 (2:15-21)",
+                    title_en: "The Sign of the Scarlet Cord",
+                    verses: [
+                        {
+                            ref: "2:18, 21",
+                            text_zh: "我们要来到这地，你要把这条朱红线绳系在缒我们下去的窗户上...她就...把朱红线绳系在窗户上。",
+                            text_en: "Behold, when we come into the land, you shall tie this scarlet cord in the window through which you let us down... and she tied the scarlet cord in the window.",
+                            exegesis: {
+                                title: "逾越节的重演 (A New Passover)",
+                                content_zh: "朱红线绳（Scarlet Cord）在神学预表学（Typology）中具有极重分量。1. **颜色**：红色象征血。就像逾越节门框上的血让灭命天使越过一样，这红绳让以色列军队越过这房子。2. **公开性**：系在窗户上是对信心的公开宣告。3. **唯一性**：只有在有红绳的房子里才安全。",
+                                content_en: "Typologically profound. 1. **Color**: Red symbolizes blood. Like Passover blood on doorposts caused judgment to pass over, the cord protects this house. 2. **Public**: A public declaration of faith. 3. **Exclusivity**: Safety is found ONLY inside the house with the cord."
+                            },
+                            devotional: {
+                                title: "你的红绳在哪里？ (Where is Your Cord?)",
+                                content_zh: "对于基督徒，我们的‘朱红线’就是耶稣基督的宝血。我们在审判面前的唯一确据，不是我们的好行为（喇合是妓女），而是我们是否在基督的遮盖之下。这红绳也提醒我们，信心需要外在的凭据——你是否羞于在世人面前展示你的信仰标记？",
+                                content_en: "For Christians, our 'Scarlet Cord' is Christ's blood. Our assurance isn't our goodness (Rahab was a harlot), but being under Christ's covering. Also, faith needs visible evidence—are you ashamed to display your mark of faith to the world?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "report",
+                    title: "信心的回报 (2:22-24)",
+                    title_en: "The Report of Faith",
+                    verses: [
+                        {
+                            ref: "2:24",
+                            text_zh: "对约书亚说：“耶和华果然将那全地交在我们手中；那地的一切居民在我们面前心都消化了。”",
+                            text_en: "And they said to Joshua, 'Truly the LORD has given all the land into our hands. And also, all the inhabitants of the land melt away because of us.'",
+                            exegesis: {
+                                title: "新一代的眼光 (Vision of the New Generation)",
+                                content_zh: "对比民数记13章那10个探子的恶信，这两个探子带回了极好的消息。有趣的是，他们的信心在很大程度上是被喇合的见证所坚固的（引用了喇合的话‘心都消化了’）。一个外邦女子的信心，竟然坚固了以色列军队的士气。",
+                                content_en: "Contrast with the 10 spies in Numbers 13. These two bring a report of victory. Interestingly, their faith was bolstered by Rahab's testimony (quoting her 'hearts melted'). A Gentile woman's faith strengthened the morale of God's army."
+                            },
+                            devotional: {
+                                title: "互相效力 (Strengthening Each Other)",
+                                content_zh: "探子鼓励了喇合，喇合也鼓励了探子。在神的国度里，信心是可以相互传染的。即使是一个初信者（像喇合）的单纯见证，也能激励成熟的领袖。不要小看你分享的恩典经历，它可能是神用来坚固他人的关键。",
+                                content_en: "Spies encouraged Rahab; Rahab encouraged spies. Faith is contagious. Even a new believer's testimony can inspire leaders. Don't underestimate sharing your grace experience; it might be key to strengthening others."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-rose-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-rose-100 text-rose-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-rose-700 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-rose-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Cord & The Contrast -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Scarlet Cord -->
+                        <div class="bg-[#292524] p-4 rounded shadow-lg relative h-56 flex flex-col items-center justify-center group border border-stone-600">
+                            <h3 class="text-stone-300 font-bold uppercase tracking-widest text-xs mb-2 absolute top-4 left-4">The Sign of Hope</h3>
+                            
+                            <div class="cord-container shadow-inner">
+                                <div class="window-frame"></div>
+                                <div class="cord"></div>
+                            </div>
+                            
+                            <div class="absolute bottom-4 right-4 text-right">
+                                <p class="text-[10px] text-rose-400 italic en-text">"Tikvah" = Cord & Hope</p>
+                            </div>
+                        </div>
+
+                        <!-- Comparison Table -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden">
+                             <h4 class="text-sm font-bold text-stone-800 mb-4 pb-2 border-b border-stone-100 flex items-center">
+                                <i class="fas fa-exchange-alt mr-2 text-rose-600"></i> 信仰的逆转 The Reversal
+                             </h4>
+                             <div class="grid grid-cols-2 gap-4 text-xs">
+                                 <div class="text-stone-500 text-center font-bold pb-1 border-b border-dashed border-stone-200">The Kings (Jericho)</div>
+                                 <div class="text-rose-700 text-center font-bold pb-1 border-b border-dashed border-rose-200">The Harlot (Rahab)</div>
+                                 
+                                 <div class="text-center p-2 bg-stone-50 rounded text-stone-600">
+                                     <i class="fas fa-heart-broken mb-1 block"></i>
+                                     心消化了<br>Hearts Melted
+                                 </div>
+                                 <div class="text-center p-2 bg-rose-50 rounded text-rose-800">
+                                     <i class="fas fa-heart mb-1 block"></i>
+                                     信靠顺服<br>Trusted & Obeyed
+                                 </div>
+
+                                 <div class="text-center p-2 bg-stone-50 rounded text-stone-600">
+                                     <i class="fas fa-door-closed mb-1 block"></i>
+                                     关门防守<br>Shut Gates
+                                 </div>
+                                 <div class="text-center p-2 bg-rose-50 rounded text-rose-800">
+                                     <i class="fas fa-door-open mb-1 block"></i>
+                                     开窗接待<br>Open Window
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-rose-700 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-rose-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-rose-50 text-rose-800 text-[10px] font-bold rounded mb-3 font-mono border border-rose-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fafaf9] border-b md:border-b-0 md:border-r border-stone-200 relative">
+                            <div class="flex items-center mb-3 text-stone-700">
+                                <i class="fas fa-search mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fff1f2] relative">
+                            <div class="flex items-center mb-3 text-rose-800">
+                                <i class="fas fa-heart mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-rose-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-3xl mb-4"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">预表学与叙事张力 (Typology & Narrative)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Symbolism & Plot</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-stone-500"></i> 预表 Typology</div>
+                                    <div class="mb-1">将“朱红线”识别为救赎的预表。这不仅是文学象征，更是救赎历史的一贯性（从逾越节羊血到基督宝血）。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Identifying the 'Scarlet Cord' as a type of redemption, linking Passover blood to Christ.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-stone-500"></i> 叙事反讽 Irony</div>
+                                    <div class="mb-1">注意叙事中的反讽：最有权势的耶利哥王恐惧战兢，最边缘的妓女却大有信心。神颠覆了世界的价值观。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Noting the irony: The powerful King fears; the marginalized harlot believes. God inverts worldly values.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-rose-700">
+                            <div class="text-rose-700 text-3xl mb-4"><i class="fas fa-pray"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">普世恩典与个人回应 (Grace & Response)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Application</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-rose-600"></i> 恩典的广度 Breadth of Grace</div>
+                                    <div class="mb-1">从喇合的被接纳中，看到神恩典的无限可能。没有一种过去是神无法赦免的，没有一种背景是神无法使用的。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Seeing the breadth of grace in Rahab. No past is too dark for God to redeem.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-rose-600"></i> 勇敢的信心 Courageous Faith</div>
+                                    <div class="mb-1">信心不只是心里的感动，更是为了神敢于冒险的行动。鼓励信徒在生活中做出具体的、有代价的信仰抉择。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Faith acts. Encouraging believers to make concrete, costly choices for God.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

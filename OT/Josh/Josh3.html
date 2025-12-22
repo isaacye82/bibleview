@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 3: Crossing the Jordan | 约书亚记第三章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Teal - The River Jordan */
+            --theme-primary: #0f766e; 
+            /* Gold - The Ark of Covenant */
+            --theme-secondary: #d97706;
+            /* Dry Ground - The Miracle Path */
+            --theme-accent: #78350f;
+            /* Watery Background */
+            --theme-bg: #f0fdfa;
+            /* Text */
+            --theme-text: #134e4a;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(20, 184, 166, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(217, 119, 6, 0.1) 0px, transparent 50%);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(15, 118, 110, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #ccfbf1;
+            border-left: 5px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(15, 118, 110, 0.2);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Water Heap Animation */
+        .water-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #d6d3d1 50%, #f0fdfa 50%); /* Top: Dry ground upstream? No, dry ground is downstream */
+            border-radius: 8px;
+        }
+        
+        .river-bed {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 20px;
+            background: #78350f; /* Mud/Earth */
+            z-index: 5;
+        }
+
+        .water-flow {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%; /* Upstream side */
+            height: 100%;
+            background: linear-gradient(180deg, #14b8a6 0%, #0d9488 100%);
+            opacity: 0.8;
+            /* Mask to show "heap" */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+            animation: pileUp 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pileUp {
+            0% { clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%); height: 10%; bottom: 0; top: auto; } /* Flat/Low */
+            50% { clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 100%); height: 100%; top: 0; } /* Wall forming */
+            100% { clip-path: polygon(10% 0, 100% 0, 100% 100%, 10% 100%); transform: scaleY(1.1); } /* High Heap */
+        }
+
+        .dry-ground {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: #f5f5f4; /* Stone/Sand */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+
+        /* Ark Icon Animation */
+        .ark-icon {
+            animation: march 4s linear infinite;
+        }
+        @keyframes march {
+            0% { transform: translateX(-20px); opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { transform: translateX(20px); opacity: 0; }
+        }
+        
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-secondary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(217, 119, 6, 0.4);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-teal-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-teal-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-water mr-2 text-teal-600"></i> 约书亚记 3章</span>
+                        <span class="text-[10px] sm:text-xs text-teal-700 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 3</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-teal-700 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-teal-700 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#111827] text-stone-400 mt-auto border-t-4 border-teal-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-teal-200 mb-1">"要在百姓面前站住。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-2 en-text">"Stand firmly in the Jordan."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第三章中英对照研经报告 | Crossing the Jordan</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神迹的跨越：自洁与信心",
+                title_en: "The Miraculous Crossing: Consecration & Faith",
+                summary_zh: "约书亚记第三章详细记载了以色列人过约旦河的神迹。这不仅是地理上的跨越，更是属灵上的洗礼。与红海的分开不同，约旦河的分开要求祭司先将脚踏入水中，水才会立起成垒。这一章强调了神圣洁的临在（约柜）、百姓的自洁（Consecration）以及对永生神的信靠。这是新一代以色列人作为神子民身份的确立时刻。",
+                summary_en: "Joshua 3 details the miraculous crossing of the Jordan. This is not just a geographical crossing, but a spiritual baptism. Unlike the Red Sea, the Jordan required priests to step into the water *before* it parted. The chapter emphasizes God's holy presence (the Ark), the people's consecration, and trust in the Living God. It marks the validation of the new generation as God's people.",
+                concepts: [
+                    { title: "自洁", title_en: "Sanctify Yourselves", hebrew: "Kadosh", color: "text-teal-700", bg: "bg-teal-50", desc_zh: "在神行奇事之前，人必须先洁净自己。神迹不仅是能力的彰显，更是圣洁的彰显。", desc_en: "Before God does wonders, man must sanctify. Miracles are displays of holiness, not just power." },
+                    { title: "永生神", title_en: "The Living God", hebrew: "El Chai", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "这是为了区别迦南地死板的偶像。神是活泼的、介入历史的、有位格的主宰。", desc_en: "Distinguished from Canaan's dead idols. God is active, historical, and personal." },
+                    { title: "立起成垒", title_en: "In a Heap", hebrew: "Ned", color: "text-stone-700", bg: "bg-stone-100", desc_zh: "水流违背自然规律，像墙一样立起，在亚当城那里停住，显明神对自然界的绝对主权。", desc_en: "Water defied gravity, standing like a wall at Adam, showing God's absolute sovereignty over nature." }
+                ]
+            },
+            sections: [
+                {
+                    id: "preparation",
+                    title: "自洁与等候 (3:1-5)",
+                    title_en: "Consecration & Waiting",
+                    verses: [
+                        {
+                            ref: "3:3-5",
+                            text_zh: "吩咐百姓说：“你们看见...约柜...就要离开所住的地方，跟着约柜去...你们要自洁，因为明天耶和华必在你们中间行奇事。”",
+                            text_en: "Commanding the people... 'When you see the ark... then you shall set out... and follow it... Consecrate yourselves, for tomorrow the LORD will do wonders among you.'",
+                            exegesis: {
+                                title: "保持距离的敬畏 (Reverence in Distance)",
+                                content_zh: "百姓被命令要与约柜保持二千肘（约900米）的距离。这不仅是为了让所有人都能看见约柜，更是为了教导对神圣洁临在的敬畏（Reverence）。他们从未走过这条路，必须由神亲自通过约柜来引导。‘自洁’（Consecrate）通常涉及洗衣服和禁欲，象征内心的预备和专注。",
+                                content_en: "The 2,000 cubits gap served two purposes: visibility for all, and teaching reverence for God's holy presence. They had 'not passed this way before'; only God could lead. 'Consecrate' implied washing and abstinence, symbolizing inner preparation and focus."
+                            },
+                            devotional: {
+                                title: "奇事发生之前 (Before the Miracle)",
+                                content_zh: "我们都渴望看见神行奇事，但我们是否愿意先‘自洁’？在神大能彰显的前夜，往往需要我们在隐密处省察自己，除去罪的阻隔。你对明天的期待，应当建立在今天对神的圣洁回应上。不要急着出发，先确信你在跟随祂的约柜。",
+                                content_en: "We desire miracles, but are we willing to 'consecrate'? Before God's power manifests, we must examine ourselves in secret. Your expectation for tomorrow should be built on today's holy response. Don't rush; ensure you are following His Ark."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "command",
+                    title: "信心的指令 (3:6-8)",
+                    title_en: "The Command of Faith",
+                    verses: [
+                        {
+                            ref: "3:8",
+                            text_zh: "你要吩咐抬约柜的祭司说：‘你们到了约旦河的水边，就要在约旦河水里站住。’",
+                            text_en: "And you shall command the priests... 'When you come to the brink of the waters of the Jordan, you shall stand still in the Jordan.'",
+                            exegesis: {
+                                title: "先踏入，后分开 (Step First, Part Later)",
+                                content_zh: "这是一个极大的信心考验。此时正是收割的日子，约旦河水涨过两岸（3:15）。神没有先分开水再让他们走，而是命令祭司抬着沉重的约柜先踏入汹涌的河水。这展示了信心的次序：顺服的行动往往先于神迹的显现。祭司作为领袖，必须率先承担风险。",
+                                content_en: "A massive test of faith. The Jordan was at flood stage (v.15). God didn't part the water first; He commanded priests to step into the rushing water with the heavy Ark. Faith's order: Obedient action often precedes the miracle. Leaders must risk first."
+                            },
+                            devotional: {
+                                title: "弄湿你的脚 (Get Your Feet Wet)",
+                                content_zh: "如果你一直在等待环境完全顺遂（看到干地）才肯行动，你可能永远无法过河。神有时会要求我们在看见结果之前就迈出第一步。当困难像洪水一样在他面前泛滥时，你是否敢于凭着神的应许，把脚踏入水中？那是神迹开始的地方。",
+                                content_en: "If you wait for perfect conditions (dry ground) to act, you may never cross. God sometimes asks for the first step before the result is seen. When troubles flood, do you dare step in on God's promise? That's where miracles begin."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "assurance",
+                    title: "永生神的证据 (3:9-13)",
+                    title_en: "Evidence of the Living God",
+                    verses: [
+                        {
+                            ref: "3:10-11",
+                            text_zh: "约书亚说：“看哪，普天下主的约柜必在你们前头过去，到约旦河里，因此你们就知道在你们中间有永生神...”",
+                            text_en: "Joshua said, 'Here is how you shall know that the living God is among you... Behold, the ark of the covenant of the Lord of all the earth is passing over before you...'",
+                            exegesis: {
+                                title: "普天下主 (Lord of All the Earth)",
+                                content_zh: "约书亚在此使用了一个极具威严的称呼——Adon Kol HaAretz（普天下主）。这是为了反驳迦南地的地方神祇观念（以为神只管辖特定区域）。通过控制约旦河这一自然界屏障，耶和华证明祂不仅是旷野的神，也是迦南的主，是掌管万有的‘永生神’（El Chai）。",
+                                content_en: "Joshua uses a majestic title: *Adon Kol HaAretz* (Lord of All the Earth). This counters Canaanite local deity concepts. By controlling the Jordan, Yahweh proves He is not just a desert god but Lord of Canaan and nature itself—the 'Living God' (*El Chai*)."
+                            },
+                            devotional: {
+                                title: "谁在你前头？ (Who Goes Before You?)",
+                                content_zh: "如果你知道‘普天下主’正在为你开路，你的恐惧会减少多少？我们常常盯着‘约旦河’（困难）看，却忘了看‘约柜’（神的同在）。当神在前面走时，即使是深渊也会变成大道。确信神的主权，是你面对未知的最大保障。",
+                                content_en: "If you knew the 'Lord of All the Earth' was clearing your path, would fear vanish? We focus on the 'Jordan' (problems) and forget the 'Ark' (God's presence). When God leads, abysses become highways. Assurance of His sovereignty is your security."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "miracle",
+                    title: "立起成垒的神迹 (3:14-17)",
+                    title_en: "The Miracle of the Heap",
+                    verses: [
+                        {
+                            ref: "3:16-17",
+                            text_zh: "那从上往下流的水便在极远之地、撒拉但旁的亚当城那里停住，立起成垒...以色列众人都从干地上过去...",
+                            text_en: "The waters coming down from above stood and rose up in a heap very far away, at Adam... and all Israel was passing over on dry ground...",
+                            exegesis: {
+                                title: "干地 (Charabah)",
+                                content_zh: "这神迹不仅是水流停止，更是河床瞬间变干（Dry Ground）。在泥泞的河底行走是不可能的，神不仅移除了水，还处理了泥。这回响了出埃及记14章红海的神迹，表明约书亚是摩西合法的继承人，且同一位神在继续工作。水在‘亚当城’（Adam）停住，也许暗示着罪流的阻断。",
+                                content_en: "Not just stopped water, but instantly dry ground (*Charabah*). Walking on mud is impossible; God dealt with the water and the mud. This echoes the Red Sea (Ex 14), validating Joshua as Moses' successor. Water stopping at 'Adam' may typologically hint at cutting off the flow of sin."
+                            },
+                            devotional: {
+                                title: "站在河中 (Standing in the Middle)",
+                                content_zh: "祭司们抬着约柜在河干地上‘站定’，直到所有百姓都过去（3:17）。这是一幅美丽的图画：属灵领袖和神的同在‘撑住’了审判的大水，为百姓开辟了安全通道。基督就是那位站在死亡洪流中为我们撑开道路的中保。我们也应当成为那个‘站得住’的人，让别人因我们的信心而得福。",
+                                content_en: "Priests stood firm in the middle until all crossed. A beautiful image: Spiritual leaders and God's presence 'holding back' judgment waters for the people. Christ is the Mediator standing in death's flood for us. We too should 'stand firm' so others can be blessed by our faith."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-teal-100 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-teal-100 text-teal-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-teal-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-teal-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Parting & The Distance -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Water Heap -->
+                        <div class="bg-stone-800 p-4 rounded shadow-lg relative h-64 flex flex-col items-center justify-center group border border-stone-600 overflow-hidden">
+                            <div class="water-container">
+                                <!-- The Flow piling up on the right (upstream) -->
+                                <div class="water-flow"></div>
+                                <!-- The Dry Ground on the left (downstream) -->
+                                <div class="dry-ground">
+                                    <!-- Ark Icon Moving -->
+                                    <i class="fas fa-box-open text-amber-500 text-3xl ark-icon"></i>
+                                </div>
+                                <!-- River Bed -->
+                                <div class="river-bed"></div>
+                            </div>
+                            
+                            <div class="absolute top-4 left-4 z-20">
+                                <h3 class="text-teal-200 font-bold uppercase tracking-widest text-xs">The Miracle at Adam</h3>
+                                <p class="text-[10px] text-stone-400 italic">Water stood in a heap</p>
+                            </div>
+                        </div>
+
+                        <!-- Distance Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden">
+                             <h4 class="text-sm font-bold text-stone-800 mb-4 pb-2 border-b border-stone-100 flex items-center">
+                                <i class="fas fa-ruler-horizontal mr-2 text-teal-600"></i> 神圣的距离 The Holy Gap
+                             </h4>
+                             
+                             <div class="flex items-center justify-between mt-6 relative">
+                                 <!-- The Ark -->
+                                 <div class="flex flex-col items-center z-10">
+                                     <div class="w-10 h-8 bg-amber-500 rounded flex items-center justify-center shadow-lg border border-amber-600">
+                                         <i class="fas fa-star text-white text-[10px]"></i>
+                                     </div>
+                                     <span class="text-[10px] text-amber-700 font-bold mt-1">Ark</span>
+                                 </div>
+
+                                 <!-- The Gap Line -->
+                                 <div class="flex-grow mx-4 relative h-8 flex items-center justify-center">
+                                     <div class="w-full h-0.5 bg-stone-300 border-t border-dashed border-stone-400"></div>
+                                     <div class="absolute top-0 bg-stone-100 px-2 py-0.5 rounded text-[9px] text-stone-500 border border-stone-200">
+                                         2000 Cubits (~900m)
+                                     </div>
+                                 </div>
+
+                                 <!-- The People -->
+                                 <div class="flex flex-col items-center z-10">
+                                     <div class="flex space-x-1">
+                                         <div class="w-2 h-4 bg-stone-400 rounded-t"></div>
+                                         <div class="w-2 h-4 bg-stone-400 rounded-t"></div>
+                                         <div class="w-2 h-4 bg-stone-400 rounded-t"></div>
+                                     </div>
+                                     <span class="text-[10px] text-stone-600 font-bold mt-1">People</span>
+                                 </div>
+                             </div>
+                             <p class="text-[10px] text-stone-400 text-center mt-4 italic">"不可挨近...使你们知道当行的路"</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-teal-600 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-teal-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-teal-50 text-teal-800 text-[10px] font-bold rounded mb-3 font-mono border border-teal-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f0fdfa] border-b md:border-b-0 md:border-r border-teal-100 relative">
+                            <div class="flex items-center mb-3 text-teal-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-teal-800/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] relative">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-teal-700">
+                            <div class="text-teal-700 text-3xl mb-4"><i class="fas fa-map-marked-alt"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">地理与神学 (Geography & Theology)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Context & Meaning</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-teal-600"></i> 地点的象征 Symbolism of Place</div>
+                                    <div class="mb-1">约旦河作为“边界”和“死亡”的象征。过河不仅是进入应许之地，更是旧我（旷野生活）的结束和新生命的开始。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Jordan as a boundary of death and new life. Crossing signifies the end of the old self.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-teal-600"></i> 神迹的性质 Nature of Miracle</div>
+                                    <div class="mb-1">分析神迹发生的时间（收割季节、河水涨溢）和方式（立起成垒），突显神超越自然的权能。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Analyzing the timing (flood stage) and manner (heap) to highlight supernatural sovereignty.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-3xl mb-4"><i class="fas fa-shoe-prints"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">行动神学 (Theology of Action)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Faith & Step</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 信心即行动 Faith as Action</div>
+                                    <div class="mb-1">强调“脚踏入水”的重要性。真正的信心不是静态的等待，而是动态的顺服，即使环境看起来并没有改变。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Emphasizing 'stepping in'. Faith is dynamic obedience before the environment changes.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 跟随神圣 Following the Divine</div>
+                                    <div class="mb-1">在未知的路途上（“这条路你们向来没有走过”），唯一可靠的向导是神的同在（约柜），而非过去的经验。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">On unknown paths, God's presence (Ark) is the only guide, not past experience.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark 7: Tradition vs. Heart | 马可福音第七章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Purity White - Heart, Truth, Inner Life */
+            --theme-primary: #0891b2; 
+            /* Tradition Ochre - Clay jars, Pharisees, Earthy */
+            --theme-accent: #b45309;
+            /* Deep Truth - Depth, Authority */
+            --theme-dark: #155e75;
+            /* Linen/Parchment - Background */
+            --theme-bg: #fffbf0;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #451a03;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #ffedd5;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: var(--theme-accent);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-accent);
+            color: var(--theme-accent);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(180, 83, 9, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-accent);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-accent);
+        }
+
+        /* Badge Style for Washing Hands */
+        .basin-badge {
+            background: linear-gradient(135deg, #fff 0%, #ffedd5 100%);
+            border: 2px solid #b45309;
+            position: relative;
+        }
+        .basin-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #b45309;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes tilt-pour {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(15deg); }
+            100% { transform: rotate(0deg); }
+        }
+        .icon-tilt {
+            animation: tilt-pour 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-orange-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-orange-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md border border-orange-500">
+                        <span class="font-serif font-bold text-lg">Mk7</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-orange-900">马可福音第七章</h1>
+                        <p class="text-xs text-orange-600 uppercase tracking-widest en-text">Mark 7: Tradition vs. Heart</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-orange-600 bg-gradient-to-br from-white to-orange-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-orange-900 mb-2 serif-font">外在的传统与内在的洁净</h2>
+                        <h3 class="text-lg text-orange-700 italic font-serif mb-4 en-text">Outward Tradition and Inner Purity</h3>
+                        <p class="text-stone-700 text-lg leading-relaxed mb-4 font-medium">
+                            第七章是关于“洁净”观念的革命性教导。耶稣挑战了法利赛人关于洗手、饮食和器皿的繁琐遗传，直指问题的核心：人心的污秽。祂宣告“从外面进去的不能污秽人，唯有从里面出来的乃能污秽人”。随后，耶稣通过在外邦地区的神迹（推罗西顿的妇人、耳聋舌结者），表明救恩跨越了种族界限，真正的不洁不在于血统或食物，而在于不信与刚硬。
+                        </p>
+                        <p class="text-stone-500 text-sm leading-relaxed en-text">
+                            Chapter 7 presents a revolutionary teaching on "purity". Jesus challenges the elaborate traditions of hand-washing and diet, pointing to the core issue: the human heart. He declares that what goes in does not defile, but what comes out does. Through miracles in Gentile regions (Syrophoenician woman, Deaf-Mute), He shows salvation crosses ethnic lines; true uncleanness lies in unbelief, not food or lineage.
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-orange-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="basin-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-hands-wash text-orange-600 text-5xl mb-1 block icon-tilt"></i>
+                                <i class="fas fa-heart text-cyan-600 text-3xl absolute -bottom-2 -right-2 opacity-80"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-orange-900 serif-font">洗手与洁心</h3>
+                            <p class="text-[10px] font-bold text-cyan-600 uppercase tracking-widest en-text mt-1">Washed Hands vs Clean Heart</p>
+                            <div class="w-12 h-0.5 bg-orange-400 my-2"></div>
+                            <p class="text-xs text-gray-500">Tradition vs Truth<br>传统与真理</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 border-l-4 border-orange-600 bg-orange-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-scroll text-orange-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-orange-900 text-xl block">古人的遗传</span>
+                            <span class="text-xs text-orange-700 italic en-text">Tradition of the Elders</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        法利赛人将口传律法（Mishnah）提升到与圣经同等的地位。耶稣批评他们“废弃神的诫命，遵守人的遗传”。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Pharisees elevated oral law (Mishnah) to Scripture's level. Jesus critiqued them for "setting aside God's commands to observe human traditions."
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 border-l-4 border-cyan-600 bg-cyan-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-heart-broken text-cyan-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-cyan-900 text-xl block">人心的污秽</span>
+                            <span class="text-xs text-cyan-700 italic en-text">Defilement of the Heart</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        真正的污染源不是不洗手或不洁净的食物，而是从心里发出的恶念。这是对犹太洁净礼仪彻底的重新定义。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        True pollution isn't unwashed hands or food, but evil thoughts from the heart. A radical redefinition of Jewish purity laws.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 border-l-4 border-slate-600 bg-slate-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-dog text-slate-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-slate-900 text-xl block">桌下的碎渣</span>
+                            <span class="text-xs text-slate-700 italic en-text">Crumbs under the Table</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        希腊妇人的信心。她谦卑地接受“狗”的比喻，抓住了神的恩典不仅给犹太人（儿女），也临到外邦人。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        The Syrophoenician woman's faith. She humbly accepted the "dog" metaphor, grasping that grace extends beyond Jews (children) to Gentiles.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual: Burden vs Freedom Scale -->
+            <div class="card p-8 bg-white border border-orange-100">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-orange-900 mb-2">传统的重担 vs 心的自由</h3>
+                    <p class="text-sm text-slate-400 italic en-text">The Burden of Tradition vs The Freedom of the Heart</p>
+                </div>
+                
+                <div class="flex flex-col md:flex-row items-center justify-center gap-8 relative">
+                    <!-- Left: Tradition (Heavy) -->
+                    <div class="w-full md:w-1/2 p-6 bg-orange-50 border-2 border-orange-200 rounded-xl relative mt-8 md:mt-16 transform md:rotate-2">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-orange-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
+                            人的遗传 Human Tradition
+                        </div>
+                        <ul class="space-y-3 text-sm text-orange-900">
+                            <li class="flex items-center"><i class="fas fa-weight-hanging mr-2 text-orange-500"></i> 洗手与洗杯 (Washing Cups)</li>
+                            <li class="flex items-center"><i class="fas fa-weight-hanging mr-2 text-orange-500"></i> 各耳板 (Corban/Offering)</li>
+                            <li class="flex items-center"><i class="fas fa-weight-hanging mr-2 text-orange-500"></i> 废弃诫命 (Nullify Word)</li>
+                            <li class="flex items-center"><i class="fas fa-weight-hanging mr-2 text-orange-500"></i> 外在形式 (Outward Form)</li>
+                        </ul>
+                        <div class="mt-4 text-center text-xs text-orange-700 italic font-bold">
+                            "嘴唇尊敬我，心却远离我" (v6)
+                        </div>
+                    </div>
+
+                    <!-- Center Pivot -->
+                    <div class="text-gray-300 text-4xl hidden md:block">
+                        <i class="fas fa-balance-scale"></i>
+                    </div>
+
+                    <!-- Right: Heart (Light/True) -->
+                    <div class="w-full md:w-1/2 p-6 bg-cyan-50 border-2 border-cyan-200 rounded-xl relative transform md:-rotate-2">
+                        <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-cyan-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-md">
+                            神的诫命 God's Command
+                        </div>
+                        <ul class="space-y-3 text-sm text-cyan-900">
+                            <li class="flex items-center"><i class="fas fa-heart mr-2 text-cyan-500"></i> 孝敬父母 (Honor Parents)</li>
+                            <li class="flex items-center"><i class="fas fa-heart mr-2 text-cyan-500"></i> 洁净内心 (Clean Heart)</li>
+                            <li class="flex items-center"><i class="fas fa-heart mr-2 text-cyan-500"></i> 怜悯与爱 (Mercy & Love)</li>
+                            <li class="flex items-center"><i class="fas fa-heart mr-2 text-cyan-500"></i> 谦卑信心 (Humble Faith)</li>
+                        </ul>
+                        <div class="mt-4 text-center text-xs text-cyan-700 italic font-bold">
+                            "你们是离弃神的诫命" (v8)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-orange-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-orange-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-orange-700 text-white shadow-lg shadow-orange-900/20">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-orange-100 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-orange-100 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-orange-600 pl-6">
+                <h2 class="text-2xl font-bold text-orange-900 mb-2">第一部分：洁净的礼仪与人的遗传 (7:1-13)</h2>
+                <h3 class="text-sm text-orange-700 italic mb-6 en-text">Clean Hands vs. Traditions of Men</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-cyan-600 pl-6">
+                <h2 class="text-2xl font-bold text-cyan-900 mb-2">第二部分：真正的污秽来自内心 (7:14-23)</h2>
+                <h3 class="text-sm text-cyan-700 italic mb-6 en-text">Defilement Comes from Within</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-slate-600 pl-6">
+                <h2 class="text-2xl font-bold text-slate-800 mb-2">第三部分：外邦人的信心与医治 (7:24-37)</h2>
+                <h3 class="text-sm text-slate-600 italic mb-6 en-text">Faith of Gentiles & Healing</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-slate-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-orange-100 p-4 border-b border-orange-200">
+                            <h3 class="text-xl font-bold text-orange-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-orange-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于犹太背景（各耳板、洁净礼）、耶稣对旧约的引用（以赛亚书）及地理转移（推罗、西顿、低加波利）。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on Jewish context (Corban, purity laws), OT citations (Isaiah), and geographical shifts (Tyre, Decapolis).</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-orange-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">分辨神圣律法与人为传统的区别。理解耶稣废除饮食条例的神学意义（为向外邦人传福音铺路）。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Distinguish Divine Law from Human Tradition. Understand theological significance of declaring all foods clean (opening Gospel to Gentiles).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-cyan-50 p-4 border-b border-cyan-200">
+                            <h3 class="text-xl font-bold text-cyan-700 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-cyan-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于省察内心的隐秘动机、对宗教形式主义的反思，以及学习谦卑的信心。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on examining inner motives, reflecting on religious formalism, and learning humble faith.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-cyan-600 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">不仅要洗手，更要洁心。不满足于嘴唇的尊敬，追求心与神的亲近。即使被拒绝（如希腊妇人），仍坚持信靠。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Wash heart, not just hands. Seek heart-closeness, not just lip-service. Persist in faith even when tested/rejected (like the Greek woman).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-orange-950 text-orange-200 mt-auto border-t border-orange-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"从外面进去的不能污秽人，惟有从里面出来的乃能污秽人。"</p>
+            <p class="text-sm italic text-orange-300 mb-2 en-text">"Nothing outside a person can defile them by going into them. Rather, it is what comes out of a person that defiles them."</p>
+            <p class="text-xs opacity-50 uppercase tracking-widest font-sans">马可福音第七章中英对照研经报告 | TRADITION VS HEART</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "7:1-5",
+                    text_cn: "法利赛人... 看见耶稣的门徒中有人用俗手，就是没有洗的手吃饭... 他们曾拘守古人的遗传... 问耶稣说：你的门徒... 为什么不照古人的遗传...？",
+                    text_en: "The Pharisees... saw some of his disciples eating food with hands that were defiled, that is, unwashed... holding to the tradition of the elders... asked Jesus, 'Why don't your disciples live according to the tradition...?'",
+                    exegesis: {
+                        title: "古人的遗传",
+                        title_en: "Tradition of the Elders",
+                        content_cn: "“洗手”在这里不是卫生习惯，而是宗教礼仪。法利赛人建立了繁琐的“围篱律法”（Oral Law），旨在保护摩西律法，但实际上却成为了沉重的担子，并将这些人为的规条提升到与圣经同等的权威地位。",
+                        content_en: "'Washing hands' was ritual, not hygiene. Pharisees built 'fences' (Oral Law) around Torah. These human traditions became burdens and were elevated to the authority of Scripture."
+                    },
+                    devotional: {
+                        title: "传统与真理",
+                        title_en: "Tradition vs Truth",
+                        content_cn: "我们是否也有一些“不可文”的教会传统，被我们看得比圣经还重要？当我们用自己的习惯去衡量别人的属灵程度时，我们就陷入了法利赛人的错误。真正的敬虔不是外在的仪式，而是对神话语的忠诚。",
+                        content_en: "Do we hold unwritten church traditions higher than Scripture? Judging others by our habits is Pharisaic. True godliness isn't outward ritual, but loyalty to God's Word."
+                    }
+                },
+                {
+                    ref: "7:6-13",
+                    text_cn: "耶稣说：以赛亚指着你们假冒为善的人所说的预言是不错的... 这百姓用嘴唇尊敬我，心却远离我... 你们是离弃神的诫命，拘守人的遗传... 比如各耳板...",
+                    text_en: "He replied, 'Isaiah was right... These people honor me with their lips, but their hearts are far from me... You have let go of the commands of God and are holding on to human traditions... such as Corban...'",
+                    exegesis: {
+                        title: "各耳板的伪善",
+                        title_en: "Hypocrisy of Corban",
+                        content_cn: "“各耳板”意为“供献”。法利赛人教导只要说财产是献给神的，就可以不奉养父母。耶稣严厉斥责这种用宗教借口逃避道德责任（孝敬父母）的行为。这是“废了神的道”，用宗教外衣包裹自私的心。",
+                        content_en: "'Corban' means 'gift devoted to God'. Pharisees taught one could evade supporting parents by declaring wealth as Corban. Jesus condemns using religion to dodge moral duty (honoring parents), thus nullifying God's Word."
+                    },
+                    devotional: {
+                        title: "心口如一",
+                        title_en: "Integrity of Heart",
+                        content_cn: "“嘴唇尊敬，心却远离”是我们常犯的罪。我们在教会唱诗、祷告时，心是否真在神面前？还是在想午饭吃什么？神看重内心的诚实胜过外在的表演。不要让宗教活动成为你心远离神的掩护。",
+                        content_en: "'Lips honor, heart far' is a common sin. Is your heart present during worship, or wandering? God values inner honesty over performance. Don't let religious activity mask a distant heart."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "7:14-19",
+                    text_cn: "耶稣... 说：你们都要听我的话... 从外面进去的不能污秽人，惟有从里面出来的乃能污秽人... （这是说，各样的食物都是洁净的）",
+                    text_en: "Again Jesus called the crowd... 'Listen to me... Nothing outside a person can defile them... Rather, it is what comes out of a person that defiles them.' (In saying this, Jesus declared all foods clean.)",
+                    exegesis: {
+                        title: "重新定义洁净",
+                        title_en: "Redefining Purity",
+                        content_cn: "这是一个神学上的核爆炸。犹太人极为看重饮食洁净礼。耶稣指出，食物只进入肚腹，排入茅厕，不影响灵魂。真正的污秽是道德性的，源于内心。马可在此加注“各样的食物都是洁净的”，这为后来向外邦人传教奠定了基础。",
+                        content_en: "A theological bombshell. Jews prioritized dietary laws. Jesus argues food affects the stomach, not the soul. True defilement is moral, from the heart. Mark notes 'all foods clean', paving the way for Gentile mission."
+                    },
+                    devotional: {
+                        title: "保守你的心",
+                        title_en: "Guard Your Heart",
+                        content_cn: "我们常担心吃得健不健康，却很少担心“吃”进去的思想是否有毒，或心里发出的意念是否污秽。正如箴言所说：“你要保守你的心，胜过保守一切”。所有外在的恶行，最初都萌芽于内心的恶念。",
+                        content_en: "We worry about healthy food, but what about toxic thoughts entering or leaving our hearts? Prov 4:23: 'Guard your heart'. All outward evil starts as inner thought."
+                    }
+                },
+                {
+                    ref: "7:20-23",
+                    text_cn: "从人里面出来的，那才能污秽人。因为从里面，就是从人心里，发出恶念、苟合、偷盗、凶杀、奸淫、贪婪、邪恶、诡诈...",
+                    text_en: "He went on: 'What comes out of a person is what defiles them. For it is from within, out of a person’s heart, that evil thoughts come—sexual immorality, theft, murder...'",
+                    exegesis: {
+                        title: "罪恶清单",
+                        title_en: "The Catalogue of Vice",
+                        content_cn: "耶稣列出了一长串罪恶清单，包括行为（凶杀、奸淫）和态度（贪婪、嫉妒、骄傲）。这表明人类的根本问题不是环境或教育，而是“心”的败坏（原罪）。没有内在的更新，外在的礼仪毫无意义。",
+                        content_en: "Jesus lists vices: acts (murder) and attitudes (greed, pride). Shows humanity's root problem isn't environment but a corrupt heart (Original Sin). Without inner renewal, rituals are meaningless."
+                    },
+                    devotional: {
+                        title: "正视内心的黑暗",
+                        title_en: "Facing Inner Darkness",
+                        content_cn: "承认自己内心有这些恶念是痛苦的，但却是得医治的第一步。不要把自己的错怪罪于环境或他人。只有当我们承认“我得罪了天，又得罪了你”时，耶稣的宝血才能真正洁净我们的良心。",
+                        content_en: "Admitting these evils are within us is painful but necessary for healing. Don't blame environment. Only when we confess 'I have sinned', can Jesus' blood cleanse our conscience."
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "7:24-30",
+                    text_cn: "耶稣... 往推罗、西顿的境内去... 有一个妇人... 是希腊人... 求耶稣赶出那鬼... 耶稣说：不好拿儿女的饼丢给狗吃。妇人说：主啊，不错；但是狗在桌子底下也吃孩子碎渣儿。",
+                    text_en: "Jesus... went to the vicinity of Tyre... a woman... a Greek... begged him to drive the demon out... 'It is not right to take the children’s bread and toss it to the dogs.' 'Lord,' she replied, 'even the dogs under the table eat the children’s crumbs.'",
+                    exegesis: {
+                        title: "希腊妇人的信心",
+                        title_en: "The Syrophoenician Woman's Faith",
+                        content_cn: "耶稣用“狗”（家犬，小狗）的比喻看似冒犯，实则是测试。犹太人视外邦人为狗，但耶稣暗示救恩次序（先犹太人）。妇人没有因被冒犯而退缩，反而谦卑地接受了这个地位，并抓住了恩典的逻辑：即使是碎渣，也就是神丰盛恩典的一点点，也足以医治她的女儿。这是对外邦人信心的极大肯定。",
+                        content_en: "Jesus' 'dog' (pet dog) metaphor tested her. She didn't take offense but accepted the position/order (Jews first). Her faith grasped that even 'crumbs' of God's power were enough. A huge affirmation of Gentile faith."
+                    },
+                    devotional: {
+                        title: "谦卑与坚持",
+                        title_en: "Humility and Persistence",
+                        content_cn: "当我们感觉神似乎在拒绝或羞辱我们时，我们会怎么做？放弃？抱怨？这位妇人教导我们：真正的信心是谦卑的，不看自己的配得，只看主的恩典。只要还有“碎渣”，就不要放弃祈求。你的坚持可能会带来突破。",
+                        content_en: "When God seems to reject us, do we quit? This woman teaches: True faith is humble, looking not at worthiness but at Grace. Don't give up if there are 'crumbs'. Persistence brings breakthrough."
+                    }
+                },
+                {
+                    ref: "7:31-37",
+                    text_cn: "有人带着一个耳聋舌结的人来... 耶稣领他离开众人... 望天叹息... 说：以法他！就是说：开了吧！... 众人分外希奇，说：他所做的事都好...",
+                    text_en: "There some people brought to him a man who was deaf and could hardly talk... Jesus took him aside... looked up to heaven and with a deep sigh said to him, 'Ephphatha!' (which means 'Be opened!')... People were overwhelmed with amazement... 'He has done everything well.'",
+                    exegesis: {
+                        title: "以法他：开了吧",
+                        title_en: "Ephphatha: Be Opened",
+                        content_cn: "耶稣通过特殊的动作（探耳、唾沫抹舌）帮助这人建立信心。“望天叹息”显示了祂对人类受苦的深切同情。“以法他”不仅开了他的耳，也解开了他的舌。众人的赞叹“他所做的事都好”回响了创世记中神看着一切“都甚好”的评价，暗示耶稣是新创造的主。",
+                        content_en: "Tactile methods helped the man's faith. 'Sigh' shows compassion. 'Ephphatha' opened ears and tongue. The crowd's 'He has done everything well' echoes Genesis creation ('It was good'), hinting Jesus is the Lord of New Creation."
+                    },
+                    devotional: {
+                        title: "开启属灵的感官",
+                        title_en: "Opening Spiritual Senses",
+                        content_cn: "我们是否也是属灵上的“耳聋舌结”？听不见神的声音，说不出赞美的话？我们需要主带我们“离开众人”（独处），并对我们的生命说“以法他”。只有被主开启，我们才能真正听见真理，传扬福音。",
+                        content_en: "Are we spiritually deaf/mute? Can't hear God, can't praise? We need Jesus to take us 'aside' and say 'Ephphatha'. Only when opened by Him can we truly hear Truth and speak the Gospel."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-orange-700 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-orange-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-orange-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-orange-800 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-orange-500 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-orange-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-cyan-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-cyan-600 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-cyan-50 p-4 rounded-lg border border-cyan-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-orange-700 text-white shadow-lg shadow-orange-900/20";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-orange-100 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

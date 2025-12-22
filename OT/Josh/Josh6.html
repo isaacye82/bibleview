@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 6: The Fall of Jericho | 约书亚记第六章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Trumpet Gold - Victory, Shout */
+            --theme-primary: #d97706; 
+            /* Rubble Grey - Walls, Destruction */
+            --theme-secondary: #44403c;
+            /* Herem Red - The Ban */
+            --theme-accent: #9f1239;
+            /* Dusty Background */
+            --theme-bg: #fffbeb;
+            /* Text */
+            --theme-text: #292524;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d97706' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px -1px rgba(217, 119, 6, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #fcd34d;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(217, 119, 6, 0.15);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Wall Crumble Animation */
+        .wall-container {
+            position: relative;
+            height: 160px;
+            width: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            overflow: hidden;
+            background: linear-gradient(to top, #44403c 0%, #a8a29e 100%);
+            border-radius: 8px;
+        }
+        
+        .wall-block {
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    #57534e 0px,
+                    #57534e 18px,
+                    #44403c 20px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    #57534e 0px,
+                    #57534e 18px,
+                    #44403c 20px
+                );
+            position: absolute;
+            top: 0;
+            animation: crumble 4s infinite ease-in-out;
+        }
+
+        .dust-cloud {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 0;
+            background: #d6d3d1;
+            filter: blur(10px);
+            opacity: 0.8;
+            animation: dustRise 4s infinite ease-in-out;
+        }
+
+        @keyframes crumble {
+            0%, 40% { transform: translateY(0) scale(1); opacity: 1; }
+            50% { transform: translateY(10px) rotate(2deg); }
+            60% { transform: translateY(160px) scale(0.9); opacity: 0.5; }
+            100% { transform: translateY(160px); opacity: 0; }
+        }
+
+        @keyframes dustRise {
+            0%, 50% { height: 0; opacity: 0; }
+            60% { height: 80px; opacity: 0.8; }
+            100% { height: 120px; opacity: 0; }
+        }
+
+        /* Marching Circle Animation */
+        .march-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+        .city-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            color: #44403c;
+        }
+        .marcher {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px dashed #d97706;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+        .marcher::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: #d97706;
+            border-radius: 50%;
+            transform: translateX(-50%);
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px rgba(217, 119, 6, 0.4);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-amber-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-bullhorn mr-2 text-amber-600"></i> 约书亚记 6章</span>
+                        <span class="text-[10px] sm:text-xs text-amber-800 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 6</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-amber-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-amber-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-stone-400 mt-auto border-t-4 border-amber-700">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-amber-100 mb-1">"百姓便大声呼喊，城墙就塌陷了。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-2 en-text">"The people shouted... and the wall fell down flat."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第六章中英对照研经报告 | The Fall of Jericho</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "信心的呼喊与城墙的陷落",
+                title_en: "The Shout of Faith & The Fall of Walls",
+                summary_zh: "约书亚记第六章记载了圣经中最著名的战役之一。耶利哥城的陷落不是靠攻城锤或云梯，而是靠神看似‘愚拙’的策略——七日的绕城、祭司的号角和百姓的呼喊。这一章不仅展示了神的大能，更深刻地教导了‘属灵争战’的原则：完全的顺服、忍耐的静默和信心的宣告。同时，在毁灭中对喇合一家的拯救，再次彰显了神在审判中不忘怜悯的属性。",
+                summary_en: "Joshua 6 records one of the most famous battles in the Bible. Jericho fell not by battering rams but by God's seemingly 'foolish' strategy—seven days of marching, priestly trumpets, and a shout. This chapter teaches the principles of 'spiritual warfare': total obedience, disciplined silence, and faithful proclamation. Amidst destruction, the rescue of Rahab highlights God's mercy within judgment.",
+                concepts: [
+                    { title: "当灭之物", title_en: "Herem (The Ban)", hebrew: "Cherem", color: "text-rose-800", bg: "bg-rose-50", desc_zh: "指‘完全奉献给神’（通过毁灭）。耶利哥是迦南的‘初熟果子’，属于神，人不可私取。", desc_en: "Devoted to destruction/God. Jericho was the 'firstfruits' of Canaan, belonging wholly to God." },
+                    { title: "七", title_en: "Seven", hebrew: "Sheva", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "七个祭司、七个羊角、第七天、绕七次。强调这是神完美的作为，而非人的军事行动。", desc_en: "7 priests, 7 trumpets, 7th day, 7 times. Emphasizes divine perfection, not human military action." },
+                    { title: "呼喊", title_en: "Shout", hebrew: "Ruwa", color: "text-stone-800", bg: "bg-stone-100", desc_zh: "不是惊恐的尖叫，而是得胜的战吼和对神的欢呼。这是信心在行动上的高潮。", desc_en: "Not a scream of terror, but a war cry of victory and acclamation to God." }
+                ]
+            },
+            sections: [
+                {
+                    id: "strategy",
+                    title: "奇怪的战略 (6:1-5)",
+                    title_en: "The Strange Strategy",
+                    verses: [
+                        {
+                            ref: "6:2-3",
+                            text_zh: "耶和华晓谕约书亚说：‘看哪，我已经把耶利哥和耶利哥的王...交在你手中。你们的一切兵丁要围绕这城...’",
+                            text_en: "The LORD said to Joshua, 'See, I have given Jericho into your hand... You shall march around the city...'",
+                            exegesis: {
+                                title: "已成的得胜 (Victory Foretold)",
+                                content_zh: "神在战斗开始前就宣告‘我已经把...交在你手中’（完成时态）。神给出的策略在军事上极其荒谬：让祭司吹角、抬约柜绕城。这旨在羞辱迦南的假神，并表明这是‘耶和华的战争’。神要以色列人学会：在面对最坚固的堡垒时，依靠的不是刀剑，而是神的同在（约柜）。",
+                                content_en: "God declares 'I have given' (perfect tense) before the battle. The strategy (priests, ark, marching) was militarily absurd but designed to mock Canaanite gods and prove it's 'Yahweh's War'. Lesson: Against strongholds, rely on God's presence (Ark), not swords."
+                            },
+                            devotional: {
+                                title: "看似愚拙的顺服 (Foolish Obedience)",
+                                content_zh: "神有时会要求我们做一些理智上通不过的事（如爱仇敌、十一奉献、静默等待）。就像绕城一样，这些行动看似无用，却是信心的试金石。你是否愿意放下自己的‘聪明’，去执行神看似‘愚拙’的计划？得胜往往就在你觉得最没有道理的顺服之后。",
+                                content_en: "God often asks for things that defy logic (love enemies, tithe, wait). Like marching, these seem useless but test faith. Will you lay down your 'intelligence' to follow God's 'foolish' plan? Victory often follows the most illogical obedience."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "silence",
+                    title: "静默的游行 (6:6-14)",
+                    title_en: "The Procession of Silence",
+                    verses: [
+                        {
+                            ref: "6:10",
+                            text_zh: "约书亚吩咐百姓说：‘你们不可呼喊，不可出声，连一句话也不可出你们的口，等到我吩咐你们呼喊的日子，那时才可以呼喊。’",
+                            text_en: "But Joshua commanded the people, 'You shall not shout or make your voice heard, neither shall any word go out of your mouth, until the day I tell you to shout.'",
+                            exegesis: {
+                                title: "舌头的纪律 (Discipline of the Tongue)",
+                                content_zh: "六天的绕行，每天一次，但这几十万人的大军竟然鸦雀无声，只有号角声。这是极高难度的纪律。静默是为了（1）防止埋怨（像旷野时期那样），（2）专注聆听神的角声，（3）积蓄信心的力量。这是一种‘神圣的等待’。",
+                                content_en: "Six days of marching in total silence, save for trumpets. This required immense discipline. Silence prevented grumbling (like in the wilderness), focused attention on God's trumpets, and built up faith. It was a 'holy waiting'."
+                            },
+                            devotional: {
+                                title: "在神面前静默 (Silence Before God)",
+                                content_zh: "面对生活中的‘耶利哥城’（巨大的困难），我们通常的反应是‘呼喊’——抱怨、讨论、求救、甚至尖叫。但神教导我们：先闭嘴。在神行动之前，勒住你的舌头，不要让消极的话语流出。在静默中，你的信心会沉淀，你的灵会更加敏锐。",
+                                content_en: "Facing our 'Jerichos', we usually shout—complain, discuss, scream. God says: Shut up first. Before God moves, bridle your tongue from negativity. In silence, faith settles and the spirit sharpens."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "shout",
+                    title: "信心的爆发 (6:15-21)",
+                    title_en: "The Shout of Faith",
+                    verses: [
+                        {
+                            ref: "6:20",
+                            text_zh: "于是百姓呼喊，祭司也吹角...城墙就塌陷，百姓便上去进城，各人往前直上，将城夺取。",
+                            text_en: "So the people shouted, and the trumpets were blown... and the wall fell down flat, so that the people went up into the city, every man straight before him, and they captured the city.",
+                            exegesis: {
+                                title: "塌陷 (Fell Down Flat)",
+                                content_zh: "‘塌陷’原文意为‘就在原地倒塌’（Fell under itself）。考古学发现耶利哥的城墙确实是向外倒塌的，形成了一个斜坡，方便以色列人‘往前直上’。这呼喊不是为了震倒城墙（物理上不可能），而是信心的宣告。当信心达到顶点（第七日第七次），神的大能就介入。",
+                                content_en: "'Fell down flat' implies collapsing in place or outward, forming a ramp for Israelites to go 'straight up'. The shout didn't physically collapse the walls; it was a faith declaration. When faith peaked (7th day, 7th time), God's power intervened."
+                            },
+                            devotional: {
+                                title: "这是你的时刻 (This is Your Moment)",
+                                content_zh: "在这个‘第七日’，当所有看似无用的绕行结束后，你需要发出信心的呼喊。这呼喊是在城墙倒塌*之前*发出的。这就是信心：在看见结果之前就赞美神。为你生命中即将倒塌的坚固营垒欢呼吧，不是因为你看见了裂缝，而是因为神说了话。",
+                                content_en: "On this '7th day', after seemingly useless marching, shout! The shout came *before* the walls fell. Faith praises before seeing results. Shout for the strongholds in your life to fall, not because you see cracks, but because God spoke."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rahab",
+                    title: "信实的拯救 (6:22-25)",
+                    title_en: "Faithful Rescue",
+                    verses: [
+                        {
+                            ref: "6:23, 25",
+                            text_zh: "探子的两个少年人就进去，将喇合与她的父母...都带出来...约书亚却救了妓女喇合...她就住在以色列中，直到今日。",
+                            text_en: "So the young men who had been spies went in and brought out Rahab and her father... But Rahab the prostitute... Joshua saved alive. And she has lived in Israel to this day.",
+                            exegesis: {
+                                title: "审判中的方舟 (Ark in Judgment)",
+                                content_zh: "在全城被‘当灭之物’（Herem）的咒诅覆盖时，喇合的家成了唯一的避难所（像诺亚方舟）。这证明了神的守约施慈爱：即便是外邦人、妓女，只要有信心的记号（红绳），就能免受审判。她‘住在以色列中’表明她不仅肉体得救，更被接纳进入神的子民。",
+                                content_en: "Amidst the 'Herem' (ban), Rahab's house was an ark of safety. This proves God's covenant loyalty: even a Gentile harlot with the sign of faith (cord) is spared. Living 'in Israel' shows she was not just saved physically, but adopted into God's people."
+                            },
+                            devotional: {
+                                title: "神不忘记 (God Does Not Forget)",
+                                content_zh: "在大军攻城的混乱中，神没有忘记那个窗口有红绳的房子。约书亚特意吩咐去救她。神绝不会在审判大日忘记任何一个属祂的人。无论世界如何动荡，如果你有基督的印记，你就是安全的。同时，也要像喇合一样，不仅自己得救，还带全家得救。",
+                                content_en: "In the chaos of war, God didn't forget the house with the red cord. Joshua specifically ordered her rescue. God won't forget His own in judgment. If you have Christ's mark, you are safe amidst chaos. Like Rahab, bring your family to safety too."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-amber-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-amber-100 text-amber-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-amber-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-amber-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Crumble & The March -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Wall Collapse -->
+                        <div class="bg-stone-800 p-4 rounded shadow-lg relative h-48 flex flex-col items-center justify-end group border border-stone-600 overflow-hidden">
+                            <h3 class="text-stone-300 font-bold uppercase tracking-widest text-xs mb-2 absolute top-4 left-4">The Walls Fell Flat</h3>
+                            
+                            <div class="wall-container shadow-inner">
+                                <div class="wall-block"></div>
+                                <div class="dust-cloud"></div>
+                            </div>
+                            
+                            <p class="text-[10px] text-stone-400 italic mt-2 text-center">Faith brought them down</p>
+                        </div>
+
+                        <!-- 7 Days March Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex items-center justify-between">
+                             <div class="z-10 w-2/3 pr-4">
+                                 <h4 class="text-sm font-bold text-amber-800 mb-1">七日的顺服 (Seven Days)</h4>
+                                 <p class="text-xs text-stone-600 leading-relaxed">
+                                    每天一次，第七天七次。这不仅仅是行军，这是耐心的操练。
+                                 </p>
+                                 <p class="text-[10px] text-stone-400 italic mt-2 en-text">Patience perfected in obedience.</p>
+                             </div>
+                             
+                             <!-- March Animation -->
+                             <div class="z-10 w-1/3 flex justify-center">
+                                 <div class="march-container">
+                                     <div class="city-center"><i class="fas fa-city"></i></div>
+                                     <div class="marcher"></div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-amber-600 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-amber-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-amber-50 text-amber-800 text-[10px] font-bold rounded mb-3 font-mono border border-amber-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] border-b md:border-b-0 md:border-r border-amber-100 relative">
+                            <div class="flex items-center mb-3 text-amber-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-amber-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#f5f5f4] relative">
+                            <div class="flex items-center mb-3 text-stone-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-3xl mb-4"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">圣战神学 (Holy War Theology)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Context & Justice</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 当灭之物 Herem</div>
+                                    <div class="mb-1">解释"毁灭"（Herem）不是种族清洗，而是对罪恶满盈的迦南文化的公义审判，且是神主权的奉献。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Explaining 'Herem' not as genocide but divine judgment on sin and consecration to God.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 数字象征 Numerology</div>
+                                    <div class="mb-1">分析"7"的使用，表明这场战争的本质是礼仪性的敬拜，而非传统的军事行动。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">The use of '7' marks this as a liturgical act of worship, not a standard military campaign.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-stone-600">
+                            <div class="text-stone-600 text-3xl mb-4"><i class="fas fa-heart"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Faith & Obedience</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-stone-500"></i> 攻破营垒 Strongholds</div>
+                                    <div class="mb-1">将耶利哥城墙应用为个人生命中拦阻神旨意的坚固营垒（林后10:4），靠顺服和信心攻破。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Applying Jericho as spiritual strongholds (2 Cor 10:4) demolished by obedience and faith.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-stone-500"></i> 等候的信心 Waiting Faith</div>
+                                    <div class="mb-1">强调在静默绕行（看似无果的时期）中持守信心的重要性。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">The importance of sustaining faith during the silent marching (seeming fruitlessness).</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

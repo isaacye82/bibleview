@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 7: The Great Flood | 创世纪第七章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Deep Abyss - The Chaos */
+            --theme-primary: #0f172a; 
+            /* Storm Grey - The Rain */
+            --theme-secondary: #334155;
+            /* Ark Wood/Safety - Warmth inside */
+            --theme-accent: #9a3412;
+            /* Wet Background */
+            --theme-bg: #e2e8f0;
+            /* Text */
+            --theme-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Subtle Rain Texture */
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%2394a3b8' fill-opacity='0.1' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='1'/%3E%3Ccircle cx='13' cy='13' r='1'/%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+            border-color: #475569;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Rain Animation */
+        .rain-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .raindrop {
+            position: absolute;
+            background-color: #a5b4fc;
+            width: 2px;
+            height: 10px;
+            top: -10px;
+            opacity: 0.6;
+            animation: rain-fall linear infinite;
+        }
+        @keyframes rain-fall {
+            to { transform: translateY(300px); }
+        }
+
+        /* Rising Water Level Animation */
+        .flood-level {
+            width: 100%;
+            background: linear-gradient(to top, #0f172a 0%, #1e40af 100%);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            opacity: 0.9;
+            transition: height 2s ease-in-out;
+            animation: surge 4s infinite alternate ease-in-out;
+        }
+        @keyframes surge {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        /* Door Shut Animation */
+        .door-panel {
+            transition: transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .door-shut .door-left { transform: translateX(0); }
+        .door-shut .door-right { transform: translateX(0); }
+        .door-open .door-left { transform: translateX(-90%); }
+        .door-open .door-right { transform: translateX(90%); }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-300">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-slate-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-water mr-2 text-blue-900"></i> 创世纪 7章</span>
+                        <span class="text-[10px] sm:text-xs text-slate-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 7</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-900 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-500 hover:text-slate-900 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#020617] text-slate-400 mt-auto border-t-4 border-blue-900">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-blue-200 mb-1">"耶和华就把他关在里面。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"And the LORD shut him in."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世纪第七章中英对照研经报告 | The Abyss & The Door</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "逆向创造与神圣封印",
+                title_en: "De-Creation and the Divine Seal",
+                summary_zh: "创世纪第七章不仅仅描述了一场自然灾害，它描述了‘逆向创造’（De-Creation）。创世纪第一章中神将水分为上下，确立秩序；而在此章，‘大渊的泉源’裂开，‘天上的窗户’敞开，混沌（Chaos）重新吞没世界。然而，在这宇宙性的崩溃中，有一个安全的微型宇宙——方舟。本章的高潮在于神亲自关上了方舟的门，既标志着审判的不可逆转，也标志着对信靠之人的绝对保护。",
+                summary_en: "Genesis 7 describes more than a natural disaster; it depicts 'De-Creation'. In Genesis 1, God separated waters to establish order; here, the 'fountains of the great deep' burst and 'windows of heaven' open, as Chaos re-engulfs the world. Yet, amidst cosmic collapse, a safe micro-cosmos exists—the Ark. The climax is God personally shutting the door, marking both the irreversibility of judgment and the absolute protection of the faithful.",
+                concepts: [
+                    { title: "大渊裂开", title_en: "Fountains Burst", hebrew: "Tehom Rabbah", color: "text-blue-900", bg: "bg-blue-50", desc_zh: "不仅是降雨，而是地壳变动和深渊水的涌出，象征秩序的彻底瓦解。", desc_en: "Not just rain, but tectonic upheaval and abyssal waters, symbolizing total collapse of order." },
+                    { title: "神关门", title_en: "God Shut Him In", hebrew: "Sagar", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "救恩的主权在于神。门一旦关上，既保证了内部的安全，也断绝了外部的机会。", desc_en: "Salvation is sovereign. Once shut, it guarantees safety inside and seals fate outside." },
+                    { title: "水势浩大", title_en: "Waters Prevailed", hebrew: "Gabar", color: "text-slate-800", bg: "bg-slate-100", desc_zh: "原意为‘得胜’或‘强壮’。水战胜了陆地，审判战胜了罪恶。", desc_en: "Literally 'prevailed' or 'was strong'. Water conquered land; judgment conquered sin." }
+                ]
+            },
+            sections: [
+                {
+                    id: "entry",
+                    title: "最后的呼召与进入 (7:1-9)",
+                    title_en: "The Final Call & Entry",
+                    verses: [
+                        {
+                            ref: "7:1",
+                            text_zh: "耶和华对挪亚说：“你和你的全家都要进入方舟...”",
+                            text_en: "Then the LORD said to Noah, 'Go into the ark, you and all your household...'",
+                            exegesis: {
+                                title: "进入还是过来？ (Go into or Come into?)",
+                                content_zh: "中文翻译为“进入”，但在某些原文语境中，这个动词（Bo）带有“过来”的含义。许多古代教父认为，这暗示神已经在方舟里等候挪亚。神不是把他们赶进去，而是呼召他们进入祂的同在。此外，洁净与不洁净动物的区分（七公七母 vs 一公一母）是为了将来出方舟后的献祭（敬拜）预备的。",
+                                content_en: "Translated as 'Go into', the verb (Bo) can imply 'Come'. Ancient fathers saw this implying God was already inside, waiting. God didn't shoo them in but called them into His presence. The distinction of clean/unclean animals (7 pairs vs 1 pair) prepared for future sacrifice (worship)."
+                            },
+                            devotional: {
+                                title: "神在安全之地等你 (God Waits in Safety)",
+                                content_zh: "当风暴将至，最安全的地方就是神所在的地方。神对挪亚的呼召也是对我们的呼召：“到我这里来”。顺服这个呼召需要巨大的信心，因为当时还没有看见一滴雨。你是否愿意在危机爆发前，就凭信心进入神为你预备的“方舟”（基督里）？",
+                                content_en: "When storms approach, the safest place is where God is. His call to Noah is His call to us: 'Come to Me.' Obeying requires faith when no rain is seen yet. Will you enter the 'Ark' (Christ) by faith before the crisis hits?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "onset",
+                    title: "洪水的爆发与关门 (7:10-16)",
+                    title_en: "The Outbreak & The Shut Door",
+                    verses: [
+                        {
+                            ref: "7:11, 16",
+                            text_zh: "...大渊的泉源都裂开了，天上的窗户也敞开了...耶和华就把他关在里面。",
+                            text_en: "...all the fountains of the great deep burst forth, and the windows of the heavens were opened... And the LORD shut him in.",
+                            exegesis: {
+                                title: "神圣的封印 (The Divine Seal)",
+                                content_zh: "挪亚建造了方舟，但他不能自己关上那扇巨大的门（或者说，这扇门代表救恩的终极主权）。神亲自关门，这具有双重意义：对内是**保护**（没有任何洪水能冲开神关的门），对外是**终局**（恩典时期结束）。这预表了基督救恩的安全性——信徒被“密封”在圣灵里（弗1:13）。",
+                                content_en: "Noah built the ark, but God shut the door. This signifies sovereign salvation. Double meaning: **Protection** inside (no flood can force open God's door) and **Finality** outside (grace period ends). It typifies security in Christ—believers are 'sealed' with the Spirit (Eph 1:13)."
+                            },
+                            devotional: {
+                                title: "当门关上时 (When the Door Shuts)",
+                                content_zh: "我们常希望机会永远敞开，但圣经清醒地告诉我们，恩典是有时限的。当神关上门时，那是为了保护你免受洪水的吞噬。如果你现在正面临“关上的门”（失去的机会、关系的结束），请相信神的主权。如果是神关的，不要试图踢开；如果是神开的，无人能关。",
+                                content_en: "We wish chances were forever, but grace has a timeline. When God shuts a door, it protects you from the flood. If you face a 'closed door' today, trust His sovereignty. If God shut it, don't kick it; if He opens it, none can shut."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "prevail",
+                    title: "逆向创造的完成 (7:17-24)",
+                    title_en: "De-Creation Completed",
+                    verses: [
+                        {
+                            ref: "7:19-20",
+                            text_zh: "水势在地上极其浩大，天下的高山都淹没了。水势比山高过十五肘，山岭都淹没了。",
+                            text_en: "And the waters prevailed so mightily on the earth that all the high mountains... were covered. The waters prevailed above the mountains, covering them fifteen cubits deep.",
+                            exegesis: {
+                                title: "彻底的审判 (Total Judgment)",
+                                content_zh: "“高过十五肘”恰好是方舟吃水的深度（方舟高30肘，满载约吃水一半）。这意味着方舟可以安全地漂浮在最高的山峰之上，不会触礁。这是一幅强烈的画面：人类最伟大的成就、最高的避难所（高山）都在审判之下，唯有神设计的救赎（方舟）能浮在审判之上。",
+                                content_en: "'Fifteen cubits above' likely matches the Ark's draft (half its 30-cubit height). This means the Ark floated safely over the highest peaks without grounding. A powerful image: Human achievements/refuges (mountains) are under judgment; only God's design (Ark) floats above it."
+                            },
+                            devotional: {
+                                title: "浮在风暴之上 (Floating Above the Storm)",
+                                content_zh: "洪水并没有淹没方舟，反而将它托起，使它更接近天空。在你的生命中，苦难和试炼也是如此。如果你在“方舟”里，那些试图毁灭你的洪水，只会成为让你灵性升高的浮力。不要怕水深，要怕不在船上。",
+                                content_en: "The flood didn't sink the Ark; it lifted it closer to heaven. So are trials. If you are 'in the Ark', the waters meant to destroy you only serve as buoyancy to lift your spirit higher. Don't fear the depth; fear being off the boat."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+            initRain();
+        });
+
+        function initRain() {
+            const container = document.getElementById('rain-bg');
+            if(!container) return;
+            const dropCount = 50;
+            for(let i=0; i<dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('raindrop');
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDuration = (Math.random() * 1 + 0.5) + 's';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(drop);
+            }
+        }
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+                if(view === 'dashboard') initRain();
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-slate-300 relative overflow-hidden">
+                        <div id="rain-bg" class="rain-container"></div>
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-slate-200 text-slate-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-slate-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-slate-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-slate-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-blue-900 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-slate-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-slate-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-slate-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-slate-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-slate-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-slate-200">${c.hebrew}</p>
+                                    <p class="text-xs text-slate-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Flood Gauge & The Door -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Flood Gauge -->
+                        <div class="bg-[#1e293b] rounded shadow-lg relative overflow-hidden h-64 flex flex-col items-center justify-end group border border-slate-600">
+                            <!-- Mountain Silhouette -->
+                            <div class="absolute bottom-0 left-0 right-0 z-0 flex items-end justify-center opacity-30">
+                                <i class="fas fa-mountain text-9xl text-slate-500 transform scale-150 translate-y-4"></i>
+                            </div>
+
+                            <!-- Rising Water -->
+                            <div class="flood-level z-10 flex items-start justify-center pt-8 overflow-hidden">
+                                <!-- Debris floating -->
+                                <i class="fas fa-tree text-slate-900 text-xs absolute top-4 left-10 opacity-50 animate-bounce" style="animation-duration: 3s"></i>
+                            </div>
+
+                            <!-- The Ark (Safe) -->
+                            <div class="absolute top-8 z-20 text-amber-600 text-5xl drop-shadow-2xl ark-float">
+                                <i class="fas fa-ship"></i>
+                            </div>
+
+                            <!-- Scale Indicators -->
+                            <div class="absolute right-2 top-0 bottom-0 flex flex-col justify-between py-4 text-[9px] text-slate-400 font-mono z-20">
+                                <span>15 Cubits</span>
+                                <span>High Mtn</span>
+                                <span>Hills</span>
+                                <span>Ground</span>
+                            </div>
+                            
+                            <div class="absolute top-2 left-4 z-30">
+                                <span class="text-xs font-bold text-blue-200 uppercase tracking-widest">Water Prevailing</span>
+                            </div>
+                        </div>
+
+                        <!-- The Shut Door Visualization -->
+                        <div class="bg-[#451a03] p-1 rounded shadow-sm border border-amber-900 flex-grow relative overflow-hidden group">
+                             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/wood-pattern.png')] opacity-30"></div>
+                             
+                             <div class="relative z-10 bg-black/20 h-full w-full flex flex-col items-center justify-center p-4">
+                                 <!-- Door Animation -->
+                                 <div class="w-32 h-24 bg-black/40 relative mb-2 overflow-hidden rounded border border-amber-800/50 door-shut" id="door-anim">
+                                     <div class="absolute left-0 top-0 bottom-0 w-1/2 bg-amber-900 border-r border-black/50 door-left door-panel flex items-center justify-end pr-1">
+                                        <div class="w-1 h-1 bg-amber-500 rounded-full"></div>
+                                     </div>
+                                     <div class="absolute right-0 top-0 bottom-0 w-1/2 bg-amber-900 border-l border-black/50 door-right door-panel flex items-center justify-start pl-1">
+                                        <div class="w-1 h-1 bg-amber-500 rounded-full"></div>
+                                     </div>
+                                 </div>
+
+                                 <h4 class="text-amber-100 font-bold text-sm">耶和华关门 (Yahweh Shut)</h4>
+                                 <p class="text-[10px] text-amber-200/70 text-center mt-1">
+                                    终极的安全与终极的审判。<br>Final Security & Final Judgment.
+                                 </p>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Trigger door animation loop
+            const door = document.getElementById('door-anim');
+            if(door) {
+                setInterval(() => {
+                    door.classList.remove('door-shut');
+                    door.classList.add('door-open');
+                    setTimeout(() => {
+                        door.classList.remove('door-open');
+                        door.classList.add('door-shut');
+                    }, 1000);
+                }, 4000);
+            }
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-slate-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-slate-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-blue-900 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-slate-300 pb-2">
+                            <div class="w-8 h-8 rounded bg-slate-800 text-white flex items-center justify-center font-bold font-serif mr-4">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-slate-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-slate-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-slate-100 relative">
+                        <span class="inline-block px-2 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded mb-3 font-mono border border-slate-200">${verse.ref}</span>
+                        <p class="text-slate-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-slate-500 font-serif text-sm italic en-text pl-4 border-l-2 border-slate-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f1f5f9] border-b md:border-b-0 md:border-r border-slate-200 relative">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-slate-600"></div>
+                            <div class="flex items-center mb-3 text-slate-700">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-slate-500 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fff7ed] relative">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-amber-600"></div>
+                            <div class="flex items-center mb-3 text-amber-800">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-800/70 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-slate-800">解经原则总结</h2>
+                        <p class="text-slate-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-slate-700">
+                            <div class="text-slate-700 text-3xl mb-4"><i class="fas fa-undo-alt"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">逆向创造神学 (De-Creation Theology)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Context & Structure</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 文学结构对应 Structure</div>
+                                    <div class="mb-1">将洪水的描述（大渊裂开）与创世记1章（分开水）进行对比，揭示洪水是“反创造”，是秩序的撤回。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Contrasting Flood imagery with Creation to reveal the theme of 'un-creation' or reversal of order.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 原文细读 Word Study</div>
+                                    <div class="mb-1">分析“关门”（Sagar）和“水势浩大”（Gabar）等词，强调神的主权和审判的彻底性。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Analyzing Hebrew terms like 'Sagar' (shut) to emphasize Divine Sovereignty.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-700">
+                            <div class="text-amber-700 text-3xl mb-4"><i class="fas fa-door-closed"></i></div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-slate-400 mb-6 uppercase tracking-wider">Urgency & Safety</p>
+                            
+                            <ul class="space-y-4 text-sm text-slate-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-600"></i> 紧迫感 Urgency</div>
+                                    <div class="mb-1">从“神关门”的历史事实中，汲取对当下恩典时期的紧迫感。不要等到门关上才后悔。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">Drawing urgency from the 'Shut Door'. Don't wait until grace ends.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-slate-100 pt-3">
+                                    <div class="flex items-center font-bold text-slate-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-600"></i> 唯一的拯救 Exclusivity</div>
+                                    <div class="mb-1">方舟是唯一的救法。在多元化的世界中，持守“基督是唯一道路”的真理，并为此感恩。</div>
+                                    <div class="text-xs italic text-slate-400 en-text">The Ark was the ONLY way. Holding to the exclusivity of Christ in a pluralistic world.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

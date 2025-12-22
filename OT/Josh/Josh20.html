@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 20: The Cities of Refuge | 约书亚记第二十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Sanctuary Blue - Protection, Heaven */
+            --theme-primary: #2563eb; 
+            /* Avenger Red - Judgment, Blood */
+            --theme-secondary: #dc2626;
+            /* Gate Gold - Entry point */
+            --theme-accent: #fbbf24;
+            /* Light Background */
+            --theme-bg: #f8fafc;
+            /* Text */
+            --theme-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Grid lines for "Mapping" feel */
+            background-image: 
+                linear-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(37, 99, 235, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.15);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Runner Animation */
+        .runner-track {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(to right, #fca5a5 0%, #e0f2fe 100%); /* Red to Blue */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .runner {
+            position: absolute;
+            font-size: 24px;
+            color: #2563eb;
+            left: 0;
+            animation: runToSafety 3s infinite linear;
+            z-index: 10;
+        }
+        
+        .avenger {
+            position: absolute;
+            font-size: 28px;
+            color: #dc2626;
+            left: -40px;
+            opacity: 0.7;
+            animation: chase 3s infinite linear;
+            z-index: 5;
+        }
+
+        .city-gate {
+            position: absolute;
+            right: 10px;
+            font-size: 40px;
+            color: #fbbf24;
+            text-shadow: 0 0 10px #f59e0b;
+        }
+
+        @keyframes runToSafety {
+            0% { left: 0; }
+            80% { left: 80%; opacity: 1; }
+            90% { left: 85%; opacity: 0; transform: scale(0.5); } /* Enters gate */
+            100% { left: 85%; opacity: 0; }
+        }
+        
+        @keyframes chase {
+            0% { left: -40px; }
+            80% { left: 70%; opacity: 0.7; }
+            90% { left: 75%; opacity: 0; } /* Stops at gate */
+            100% { left: 75%; opacity: 0; }
+        }
+
+        /* Map Dots Animation */
+        .map-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            border: 2px solid #94a3b8;
+        }
+        .jordan-river {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 4px;
+            height: 100%;
+            background: #60a5fa;
+            transform: translateX(-50%);
+        }
+        .city-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fbbf24;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.3);
+            animation: pulseCity 2s infinite;
+        }
+        /* West Cities */
+        .kedesh { top: 15%; left: 35%; }
+        .shechem { top: 45%; left: 35%; animation-delay: 0.5s; }
+        .hebron { top: 75%; left: 35%; animation-delay: 1s; }
+        /* East Cities */
+        .golan { top: 20%; left: 65%; animation-delay: 0.2s; }
+        .ramoth { top: 50%; left: 65%; animation-delay: 0.7s; }
+        .bezer { top: 80%; left: 65%; animation-delay: 1.2s; }
+
+        @keyframes pulseCity {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(251, 191, 36, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(251, 191, 36, 0); }
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-blue-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-blue-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-shield-alt mr-2 text-blue-600"></i> 约书亚记 20章</span>
+                        <span class="text-[10px] sm:text-xs text-blue-500 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 20</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1e293b] text-stone-400 mt-auto border-t-4 border-blue-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-blue-200 mb-1">"为你们设立逃城...使误杀人的可以逃到那里。"</p>
+            <p class="text-xs sm:text-sm italic text-blue-400/70 mb-2 en-text">"Appoint the cities of refuge... that the manslayer who strikes any person without intent may flee there."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第二十章中英对照研经报告 | The Cities of Refuge</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "逃城：公义中的恩典",
+                title_en: "Cities of Refuge: Grace Amidst Justice",
+                summary_zh: "约书亚记第20章处理了一个关键的法律与神学问题：如何平衡公义的追讨与对无心之过的怜悯。在土地分配接近尾声时，神命令约书亚设立六座‘逃城’（Cities of Refuge）。这是为了保护那些‘误杀人’的免受‘报血仇者’的击杀。这一制度体现了神对生命的珍视，同时也深刻预表了基督作为罪人的终极避难所。",
+                summary_en: "Joshua 20 addresses a crucial legal and theological issue: balancing the pursuit of justice with mercy for unintentional sins. As land distribution concludes, God commands Joshua to appoint six 'Cities of Refuge'. These protected the 'unintentional manslayer' from the 'avenger of blood'. This system reflects God's value for life and profoundly typifies Christ as the ultimate refuge for sinners.",
+                concepts: [
+                    { title: "逃城", title_en: "City of Refuge", hebrew: "Miklat", color: "text-blue-800", bg: "bg-blue-50", desc_zh: "字面意为‘接纳’或‘吸收’之地。它是神为绝望者提供的法定避难所。", desc_en: "Literally 'place of intake/absorption'. God's legal sanctuary for the desperate." },
+                    { title: "报血仇的", title_en: "Avenger of Blood", hebrew: "Goel HaDam", color: "text-red-700", bg: "bg-red-50", desc_zh: "死者的近亲，有责任执行公义的刑罚。在律法中，血必须用血来偿还。", desc_en: "The nearest kinsman responsible for executing justice. Under law, blood requires blood." },
+                    { title: "大祭司", title_en: "High Priest", hebrew: "Kohen Gadol", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "大祭司的死带来特赦。这预表了基督（我们的大祭司）之死带来的完全自由。", desc_en: "The death of the High Priest brings amnesty. Typifies Christ's death bringing total freedom." }
+                ]
+            },
+            sections: [
+                {
+                    id: "purpose",
+                    title: "设立的目的与程序 (20:1-6)",
+                    title_en: "Purpose & Procedure",
+                    verses: [
+                        {
+                            ref: "20:3-4",
+                            text_zh: "使无心而误杀人的，可以逃到那里...他要站在城门口，将他的事情说给城内的长老们听...",
+                            text_en: "That the manslayer who strikes any person without intent or unknowingly may flee there... He shall stand at the entrance of the gate of the city and explain his case to the elders...",
+                            exegesis: {
+                                title: "区分动机 (Distinguishing Motive)",
+                                content_zh: "逃城制度的核心在于区分‘谋杀’（有预谋）和‘误杀’（无心）。这显示了神律法的精细与公平。逃到城里并不是自动获释，而是获得受审的机会。如果证实是误杀，他就能住下。‘站在城门口’是寻求法律保护的公开行动。神不允许私刑泛滥，即便是在愤怒中也要有程序正义。",
+                                content_en: "The core is distinguishing 'murder' (premeditated) from 'manslaughter' (unintentional). This shows the nuance of God's law. Fleeing didn't mean automatic acquittal, but a right to trial. 'Standing at the gate' is seeking legal protection. God forbids vigilante justice; even in anger, there must be due process."
+                            },
+                            devotional: {
+                                title: "唯一的出路 (The Only Way Out)",
+                                content_zh: "对于那个误杀人者，除了逃城，别无生路。他不能回家，不能用钱赎命，只能跑。这描绘了罪人的光景：虽然我们可能不是故意的（或因软弱），但罪的工价乃是死，律法（报血仇者）在追赶我们。我们唯一的出路就是奔向基督。你是否已经跑进了这扇恩典的门？",
+                                content_en: "For the manslayer, there was no other way—no going home, no paying ransom, only running. This depicts the sinner: pursued by the Law (avenger) for our guilt. Our only exit is running to Christ. Have you entered this Door of Grace?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "freedom",
+                    title: "大祭司之死与自由 (20:6)",
+                    title_en: "Death of the High Priest & Freedom",
+                    verses: [
+                        {
+                            ref: "20:6",
+                            text_zh: "他要住在那城里...直等到那时的大祭司死了，杀人的才可以回到本城本家...",
+                            text_en: "And he shall remain in that city... until the death of the high priest who shall be in those days. Then the manslayer may return to his own town...",
+                            exegesis: {
+                                title: "代赎的奥秘 (Mystery of Atonement)",
+                                content_zh: "为什么大祭司死了，这人就自由了？犹太拉比认为，大祭司的死具有某种‘赎罪’功能，他的生命替代了杀人者的流亡。在基督论中，这预表极其清晰：虽然我们在逃城（基督）里得蒙保守，但真正让我们重获自由、罪债全消的，是我们的大祭司耶稣基督的死。祂的死结束了我们的被囚。",
+                                content_en: "Why does the High Priest's death bring freedom? Rabbis saw an 'atoning' value in his death, substituting for the exile. Christologically, it's clear: While we are safe in the Refuge (Christ), it is the death of our High Priest, Jesus, that cancels the debt and restores total liberty."
+                            }
+                            ,
+                            devotional: {
+                                title: "真正的释放 (True Release)",
+                                content_zh: "住在逃城虽然安全，但仍是被囚禁的（不能出城）。直到大祭司死，他才完全恢复自由。基督徒的生活不仅是‘躲避审判’，更是‘得享自由’。因着耶稣的死，我们不仅不被定罪，更被恢复了神儿女的权利，可以‘回到本家’（天家）。为此我们要欢喜快乐！",
+                                content_en: "Living in the city was safe but confined. Only the Priest's death brought full release. Christian life isn't just 'evading judgment' but 'enjoying freedom'. Through Jesus' death, we are not just acquitted but restored to sonship and our true Home. Rejoice in this!"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "locations",
+                    title: "六座城的分布 (20:7-9)",
+                    title_en: "Distribution of the Six Cities",
+                    verses: [
+                        {
+                            ref: "20:7-8",
+                            text_zh: "于是...在拿弗他利...设立基低斯，在以法莲...设立示剑，在犹大...设立希伯仑...在约旦河东...设立比悉...基列拉末...哥兰。",
+                            text_en: "So they set apart Kedesh in Galilee... Shechem in the hill country of Ephraim, and Kiriath-arba (that is, Hebron)... And beyond the Jordan... Bezer... Ramoth... and Golan...",
+                            exegesis: {
+                                title: "恩典的可及性 (Accessibility of Grace)",
+                                content_zh: "这六座城分布得非常均匀：河西三座（北、中、南），河东三座（北、中、南）。目的是让任何地方的人，如果在急难中，都能在一天内跑到最近的逃城。且这些城都在高处，易于看见。路标必须清晰，道路必须修直（申19:3）。这表明神的救恩是普世的、易得的，神不愿一人沉沦。",
+                                content_en: "Six cities, evenly spaced: 3 West (N, M, S), 3 East (N, M, S). The goal: anyone in crisis could run to one within a day. Located on hills, visible. Roads were kept clear (Deut 19:3). This shows God's salvation is universal and accessible; He desires none to perish."
+                            },
+                            devotional: {
+                                title: "修直道路 (Prepare the Way)",
+                                content_zh: "作为基督徒，我们是指向‘逃城’（耶稣）的路标。我们的任务是确保那条路是通畅的，没有绊脚石（伪善、冷漠、律法主义）。当身边的人在罪疚和绝望中奔跑时，你能否清晰地指给他看：‘往这边跑，那里有赦免’？不要让寻求神的人在你这里迷路。",
+                                content_en: "Christians are signposts to the Refuge (Jesus). Our job is to keep the road clear of stumbling blocks (hypocrisy, legalism). When people run in guilt, can you clearly point: 'This way to forgiveness'? Don't let seekers get lost because of you."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-blue-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-blue-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-blue-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Runner & The Map -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Runner -->
+                        <div class="bg-white p-4 rounded shadow-lg relative h-48 flex flex-col items-center justify-center group border border-stone-300 overflow-hidden">
+                            <h3 class="text-stone-700 font-bold uppercase tracking-widest text-xs mb-4 absolute top-2 left-4">Running for Life</h3>
+                            
+                            <div class="runner-track shadow-inner">
+                                <div class="city-gate"><i class="fas fa-dungeon"></i></div>
+                                <div class="runner"><i class="fas fa-running"></i></div>
+                                <div class="avenger"><i class="fas fa-user-ninja"></i></div>
+                            </div>
+                            
+                            <p class="text-[10px] text-red-400 italic mt-2 text-center">"Lest the avenger of blood pursue..."</p>
+                        </div>
+
+                        <!-- Map Animation -->
+                        <div class="bg-slate-100 p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex flex-col justify-center items-center">
+                             <div class="z-10 w-full mb-2 text-center">
+                                 <h4 class="text-sm font-bold text-blue-900 mb-1">
+                                    六座逃城 (Six Cities)
+                                 </h4>
+                                 <p class="text-xs text-stone-500">
+                                    恩典遍布全地 (Grace Everywhere)
+                                 </p>
+                             </div>
+                             
+                             <div class="map-container shadow-inner">
+                                 <div class="jordan-river"></div>
+                                 <!-- Cities -->
+                                 <div class="city-dot kedesh"></div>
+                                 <div class="city-dot shechem"></div>
+                                 <div class="city-dot hebron"></div>
+                                 <div class="city-dot golan"></div>
+                                 <div class="city-dot ramoth"></div>
+                                 <div class="city-dot bezer"></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-blue-700 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-blue-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-blue-50 text-blue-800 text-[10px] font-bold rounded mb-3 font-mono border border-blue-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f8fafc] border-b md:border-b-0 md:border-r border-blue-100 relative">
+                            <div class="flex items-center mb-3 text-blue-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-blue-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] relative">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-3xl mb-4"><i class="fas fa-cross"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">类型学与律法 (Typology & Law)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Shadow & Reality</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-500"></i> 律法中的福音 Gospel in Law</div>
+                                    <div class="mb-1">逃城制度展示了旧约律法并非无情的定罪，而是包含了为罪人（误犯者）预备的出路，体现了神的慈爱。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Refuge Cities show the Gospel within the Law: Mercy for the sinner.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-500"></i> 基督论 Christology</div>
+                                    <div class="mb-1">将大祭司之死与杀人者得释放联系起来，这是对基督代赎之死的直接预表（来7:23-25）。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">High Priest's death bringing freedom typifies Christ's atoning death.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-red-600">
+                            <div class="text-red-600 text-3xl mb-4"><i class="fas fa-road"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Access & Safety</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-red-500"></i> 唯一的避难所 Sole Refuge</div>
+                                    <div class="mb-1">在这个充满定罪（报血仇者）的世界，基督是我们唯一的安全港。鼓励信徒时常"逃"进基督里。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Christ is the only safe harbor in a condemning world. Run to Him.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-red-500"></i> 成为路标 Being Signposts</div>
+                                    <div class="mb-1">教会和信徒应当像通往逃城的路标一样，清晰、易找，指引罪人找到耶稣。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Believers must be clear signposts pointing sinners to Jesus.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

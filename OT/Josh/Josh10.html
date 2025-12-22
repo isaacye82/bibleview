@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 10: The Longest Day | 约书亚记第十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Solar Gold - The Miracle Sun */
+            --theme-primary: #ca8a04; 
+            /* Midnight Blue - The Moon/Night */
+            --theme-secondary: #1e3a8a;
+            /* Hailstone White/Blue - Divine Weapon */
+            --theme-accent: #bae6fd;
+            /* Celestial Background */
+            --theme-bg: #fffbeb;
+            /* Text */
+            --theme-text: #27272a;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: linear-gradient(to bottom, #fff7ed 0%, #fffbeb 100%);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(202, 138, 4, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #fef08a;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(202, 138, 4, 0.2);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Sun Stand Still Animation */
+        .celestial-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            background: linear-gradient(to right, #f59e0b 0%, #60a5fa 100%); /* Sun to Moon gradient */
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #ca8a04;
+        }
+        
+        .sun {
+            position: absolute;
+            top: 20px;
+            left: 20%;
+            width: 60px;
+            height: 60px;
+            background: #fef3c7;
+            border-radius: 50%;
+            box-shadow: 0 0 30px #fbbf24, 0 0 60px #f59e0b;
+            animation: sunPulse 3s infinite alternate;
+            z-index: 10;
+        }
+        
+        .moon {
+            position: absolute;
+            top: 40px;
+            right: 20%;
+            width: 40px;
+            height: 40px;
+            background: #e0f2fe;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #bfdbfe;
+            opacity: 0.8;
+            z-index: 10;
+        }
+
+        .time-stop-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0) 0px,
+                rgba(255, 255, 255, 0) 4px,
+                rgba(255, 255, 255, 0.1) 5px
+            );
+            animation: pauseLines 10s linear infinite; /* Very slow to imply stillness */
+        }
+
+        @keyframes sunPulse {
+            0% { transform: scale(1); box-shadow: 0 0 30px #fbbf24; }
+            100% { transform: scale(1.1); box-shadow: 0 0 50px #fbbf24, 0 0 80px #f59e0b; }
+        }
+
+        /* Hailstone Animation */
+        .hail-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .hailstone {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall 1s linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(200px); opacity: 0; }
+        }
+
+        /* Cave of Kings Animation */
+        .cave-container {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            background: #44403c;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+        }
+        .king-crown {
+            font-size: 20px;
+            color: #fbbf24; /* Gold crown */
+            margin: 0 5px;
+            opacity: 0.5; /* Hiding in darkness */
+            transform: translateY(5px);
+        }
+        .great-stone {
+            position: absolute;
+            bottom: 0;
+            width: 100px;
+            height: 80px;
+            background: #78716c;
+            border-radius: 50% 50% 0 0;
+            box-shadow: -5px 0 10px rgba(0,0,0,0.5);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-secondary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-[#fffbeb]/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-yellow-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-sun mr-2 text-yellow-600"></i> 约书亚记 10章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 10</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-yellow-700 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-yellow-700 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1e3a8a] text-blue-200 mt-auto border-t-4 border-yellow-500">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-yellow-100 mb-1">"日头啊，你要停在基遍！"</p>
+            <p class="text-xs sm:text-sm italic text-blue-300 mb-2 en-text">"Sun, stand still at Gibeon!"</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第十章中英对照研经报告 | The Longest Day</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神圣干预与彻底的得胜",
+                title_en: "Divine Intervention & Total Victory",
+                summary_zh: "约书亚记第10章记录了迦南战争中最长、最壮观的一天。当南方五王联盟攻击以色列的新盟友基遍时，约书亚连夜驰援。这一章的高潮在于神超自然的介入：先是巨大的冰雹，接着是日头停住。这不仅是一场军事胜利，更是一场神学宣告——耶和华掌管受造界，连日月都要听命。本章以处决五王和横扫南方诸城结束，展示了神对罪恶审判的彻底性。",
+                summary_en: "Joshua 10 records the longest and most spectacular battle in the Canaan campaign. When the five Amorite kings attacked Israel's new ally Gibeon, Joshua marched all night to rescue them. The climax is God's supernatural intervention: first giant hailstones, then the sun standing still. This is not just military victory, but theological proclamation—Yahweh rules creation. The chapter ends with the execution of the five kings and the sweeping of the south, showcasing the thoroughness of divine judgment.",
+                concepts: [
+                    { title: "日头停住", title_en: "Sun Stood Still", hebrew: "Dom (Be Silent)", color: "text-yellow-700", bg: "bg-yellow-50", desc_zh: "神迹中的神迹。约书亚命令太阳‘静止’（Dom），神听了人的祷告，延长了白昼以便彻底得胜。", desc_en: "Miracle of miracles. Joshua commanded the sun to be 'silent/still'. God listened, prolonging daylight for total victory." },
+                    { title: "冰雹", title_en: "Hailstones", hebrew: "Avnei-Barad", color: "text-blue-800", bg: "bg-blue-50", desc_zh: "神亲自使用的武器。经文强调‘被冰雹打死的’比‘以色列人用刀杀的’还多。", desc_en: "God's own weapon. The text emphasizes that more died from hailstones than from Israelite swords." },
+                    { title: "脚踏颈项", title_en: "Feet on Necks", hebrew: "Simu...Tzavreihem", color: "text-stone-800", bg: "bg-stone-100", desc_zh: "古代近东征服的象征性动作。预表基督将仇敌践踏在脚下，以此鼓励领袖们不要惧怕。", desc_en: "ANE symbol of subjugation. Typifies Christ putting enemies underfoot, encouraging leaders not to fear." }
+                ]
+            },
+            sections: [
+                {
+                    id: "coalition",
+                    title: "五王的联盟与基遍的危机 (10:1-6)",
+                    title_en: "The Five Kings & Gibeon's Crisis",
+                    verses: [
+                        {
+                            ref: "10:5-6",
+                            text_zh: "于是五个亚摩利王...大家聚集，率领他们的众军上去，对着基遍安营...基遍人打发人去见约书亚...说：‘求你...快快上来拯救我们...’",
+                            text_en: "So the five kings of the Amorites... gathered their forces and went up with all their armies and encamped against Gibeon... And the men of Gibeon sent to Joshua... saying, 'Come up to us quickly and save us...'",
+                            exegesis: {
+                                title: "履行盟约的考验 (The Test of Covenant)",
+                                content_zh: "耶路撒冷王亚多尼洗德（意为‘我的主是公义’，具讽刺意味）组建联盟攻击基遍。这对以色列是一个考验：是否要为了这群欺骗者（基遍人）而战？约书亚信守了第9章的誓言。这表明，一旦进入神的盟约，即便你是次等的（劈柴挑水），你也受盟约的保护。攻击基遍就是攻击以色列的神。",
+                                content_en: "Adoni-Zedek ('My Lord is Righteous', ironic) attacks Gibeon. A test for Israel: Fight for these deceivers? Joshua honored the Chapter 9 oath. This shows: once in Covenant, even as menial servants, you are protected. Attacking Gibeon was attacking Israel's God."
+                            },
+                            devotional: {
+                                title: "神保护祂的盟友 (God Protects His Allies)",
+                                content_zh: "基遍人虽然诡诈，但他们现在的身份是‘神的仆人’。当魔鬼（像五王一样）联合起来攻击你时，不要害怕向神呼求（‘快快上来拯救我们’）。你虽不配，但因着基督的盟约，神必为你争战。神对这一‘不配’盟友的忠诚，正是福音的写照。",
+                                content_en: "Gibeonites were deceptive but now 'servants'. When the enemy attacks, cry out like them. You may be unworthy, but because of the Covenant in Christ, God will fight for you. God's loyalty to this 'unworthy' ally mirrors the Gospel."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "miracle",
+                    title: "天上的石头与停住的太阳 (10:7-15)",
+                    title_en: "Heavenly Stones & The Stopped Sun",
+                    verses: [
+                        {
+                            ref: "10:11-12",
+                            text_zh: "耶和华从天上降大冰雹在他们身上...被冰雹打死的，比以色列人用刀杀死的还多...约书亚就祷告耶和华...说：‘日头啊，你要停在基遍！’",
+                            text_en: "The LORD threw down large stones from heaven on them... there were more who died because of the hailstones than the sons of Israel killed with the sword... Joshua spoke to the LORD... 'Sun, stand still at Gibeon!'",
+                            exegesis: {
+                                title: "谁在争战？ (Who is Fighting?)",
+                                content_zh: "经文特意强调冰雹的战果超过刀剑，是为了表明这是‘耶和华的战争’。至于日头停住，这是为了反驳迦南的神话（太阳和月亮是迦南的主神）。约书亚命令太阳‘停住’（原文Dom，意为静默/停止），实际上是命令迦南的神在耶和华面前‘闭嘴’并停止运行。这是对受造界权柄的终极展示。",
+                                content_en: "Hailstones killing more than swords proves this is 'Yahweh's War'. The sun standing still is a polemic against Canaanite astral deities. Joshua commands the sun to 'Dom' (be silent/still), effectively silencing Canaan's gods before Yahweh. An ultimate display of authority over creation."
+                            },
+                            devotional: {
+                                title: "大信心的祷告 (Audacious Prayer)",
+                                content_zh: "约书亚敢于在众军面前命令太阳停下，这是何等的信心！我们不敢做大梦，不敢求大事，往往是因为我们的神太小了。当你行在神的旨意中（约书亚是为了守约而战），你可以求神行‘不可能’的事来完成祂的托付。神听了人的祷告（10:14），这是极大的恩典。",
+                                content_en: "Joshua commanded the sun publicly—what faith! We dream small because our God is small. When in God's will (Joshua fought to keep an oath), ask for the 'impossible' to finish the task. 'The LORD heeded the voice of a man' (v.14)—what grace!"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "victory",
+                    title: "脚踏颈项与彻底审判 (10:16-27)",
+                    title_en: "Feet on Necks & Total Judgment",
+                    verses: [
+                        {
+                            ref: "10:24-25",
+                            text_zh: "约书亚就对...军长说：‘你们近前来，把脚踏在这些王的颈项上。’...‘你们不要惧怕...因为耶和华向你们所要攻打的一切仇敌，必这样行。’",
+                            text_en: "Joshua said to the chiefs... 'Come near, put your feet on the necks of these kings.'... 'Do not be afraid... for thus the LORD will do to all your enemies...'",
+                            exegesis: {
+                                title: "得胜的确据 (Assurance of Victory)",
+                                content_zh: "五王躲在洞里，最终被拉出来。‘脚踏颈项’是古代近东完全征服的记号。约书亚让军长们这样做，是为了训练他们的信心——这不仅仅是对这五个王的胜利，更是对未来所有战争的预演。这幅图画预表了基督将仇敌（罪、死亡、撒但）践踏在脚下（林前15:25）。",
+                                content_en: "Five kings hid in a cave, then dragged out. 'Feet on necks' signifies total subjugation. Joshua had chiefs do this to train their faith—a rehearsal for all future battles. This typifies Christ putting enemies (sin, death, Satan) under His feet (1 Cor 15:25)."
+                            },
+                            devotional: {
+                                title: "把罪踏在脚下 (Trample the Sin)",
+                                content_zh: "很多时候，我们把‘王’（主要的罪、老我）关在洞里（压抑、隐藏），而不是杀死它们。神要我们将它们拉出来，把脚踏在它们的颈项上，然后处决。对于罪，不能有仁慈。不要让昨天的‘王’成为明天的网罗。靠着主，宣告你对罪的权柄。",
+                                content_en: "Often we hide 'kings' (major sins) in a cave (suppression) instead of killing them. God wants them dragged out, stepped on, and executed. No mercy for sin. Don't let yesterday's 'king' be tomorrow's trap. In Christ, declare authority over sin."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "conquest",
+                    title: "南方战役的总结 (10:28-43)",
+                    title_en: "Summary of Southern Campaign",
+                    verses: [
+                        {
+                            ref: "10:40, 42",
+                            text_zh: "这样，约书亚击杀全地的人...没有留下一个...是照耶和华以色列的神所吩咐的...因为耶和华以色列的神为以色列争战。",
+                            text_en: "So Joshua struck the whole land... he left none remaining... as the LORD God of Israel commanded... because the LORD God of Israel fought for Israel.",
+                            exegesis: {
+                                title: "耶和华争战 (Yahweh Fought)",
+                                content_zh: "这一长串的战胜名单（玛基大、立拿、拉吉...）不仅仅是流水账，而是对神信实的见证。经文反复强调‘没有留下一个’，这是对‘当灭之物’（Herem）命令的彻底执行。这一切得胜的根本原因只有一句话：‘因为耶和华以色列的神为以色列争战’。这是约书亚记的神学基石。",
+                                content_en: "The list of victories (Makkedah, Libnah, Lachish...) is a testimony to faithfulness. 'Left none remaining' emphasizes strict obedience to 'Herem'. The root cause of all victory: 'Because the LORD God of Israel fought for Israel.' This is the theological bedrock of Joshua."
+                            },
+                            devotional: {
+                                title: "不要窃取神的荣耀 (Don't Steal God's Glory)",
+                                content_zh: "当我们在生活或事奉中取得一连串胜利时，很容易以为是自己‘战术高明’或‘能力出众’。第10章提醒我们：无论是天降冰雹，还是日头停住，亦或是军长们的勇气，全部源于‘神为我们争战’。将荣耀归给神，是持续得胜的秘诀。",
+                                content_en: "In a winning streak, it's easy to credit our own tactics or power. Chapter 10 reminds us: Whether hailstones, the sun, or courage, it's all because 'God fought for us.' Giving glory to God is the secret to sustained victory."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+            initHail();
+        });
+
+        function initHail() {
+            const container = document.getElementById('hail-layer');
+            if(!container) return;
+            // Only create if empty
+            if(container.children.length > 0) return;
+
+            const hailCount = 20;
+            for(let i=0; i<hailCount; i++) {
+                const hail = document.createElement('div');
+                hail.classList.add('hailstone');
+                // Random size
+                const size = Math.random() * 8 + 4;
+                hail.style.width = size + 'px';
+                hail.style.height = size + 'px';
+                
+                hail.style.left = Math.random() * 100 + '%';
+                hail.style.animationDuration = (Math.random() * 0.5 + 0.5) + 's';
+                hail.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(hail);
+            }
+        }
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+                if(view === 'dashboard') initHail();
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-yellow-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-yellow-100 text-yellow-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-yellow-500 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-yellow-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Miracle & The Triumph -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Sun & Moon -->
+                        <div class="bg-stone-800 p-4 rounded shadow-lg relative h-56 flex flex-col items-center justify-end group border border-stone-600 overflow-hidden">
+                            <div class="absolute top-2 left-4 z-20">
+                                <h3 class="text-yellow-200 font-bold uppercase tracking-widest text-xs">The Day Time Stopped</h3>
+                                <p class="text-[10px] text-stone-400 italic">Sun at Gibeon, Moon at Aijalon</p>
+                            </div>
+
+                            <div class="celestial-container shadow-inner">
+                                <div id="hail-layer" class="hail-container"></div>
+                                <div class="sun"></div>
+                                <div class="moon"></div>
+                                <div class="time-stop-effect"></div>
+                            </div>
+                            
+                            <div class="absolute bottom-2 text-center w-full z-20">
+                                <span class="text-[10px] text-blue-200 font-bold">Hailstones fell from heaven</span>
+                            </div>
+                        </div>
+
+                        <!-- Feet on Necks Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex flex-col justify-between">
+                             <div class="z-10 w-full mb-2">
+                                 <h4 class="text-sm font-bold text-stone-800 mb-1 flex items-center">
+                                    <i class="fas fa-shoe-prints mr-2 text-stone-600"></i>
+                                    彻底的征服 (Feet on Necks)
+                                 </h4>
+                                 <p class="text-xs text-stone-600 leading-relaxed">
+                                    将脚踏在仇敌的颈项上，这不是为了羞辱，而是为了确立胜局。
+                                 </p>
+                             </div>
+                             
+                             <!-- Cave & Kings Animation -->
+                             <div class="cave-container relative">
+                                 <div class="king-crown"><i class="fas fa-crown"></i></div>
+                                 <div class="king-crown"><i class="fas fa-crown"></i></div>
+                                 <div class="king-crown"><i class="fas fa-crown"></i></div>
+                                 <div class="king-crown"><i class="fas fa-crown"></i></div>
+                                 <div class="king-crown"><i class="fas fa-crown"></i></div>
+                                 <!-- The Great Stone Blocking -->
+                                 <div class="great-stone flex items-center justify-center">
+                                     <span class="text-[9px] text-stone-400">Makkedah</span>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            initHail();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-yellow-600 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-yellow-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-yellow-50 text-yellow-800 text-[10px] font-bold rounded mb-3 font-mono border border-yellow-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] border-b md:border-b-0 md:border-r border-yellow-100 relative">
+                            <div class="flex items-center mb-3 text-yellow-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-yellow-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#f0f9ff] relative">
+                            <div class="flex items-center mb-3 text-blue-800">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-blue-800/70 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-yellow-600">
+                            <div class="text-yellow-600 text-3xl mb-4"><i class="fas fa-star"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">宗教论战 (Polemical Theology)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Yahweh vs Canaan Gods</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-yellow-500"></i> 天体神话 Astral Myths</div>
+                                    <div class="mb-1">将"日头停住"解释为对迦南日月神只的羞辱。约书亚的命令表明耶和华超越一切受造之物。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Interpreting the sun miracle as a humiliation of Canaanite astral gods.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-yellow-500"></i> 神人协同 Synergy</div>
+                                    <div class="mb-1">神听人的声音（10:14）不仅是神迹，更是盟约关系的体现。神与祂的百姓并肩作战。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">God heeding man's voice shows the depth of the Covenant partnership.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-blue-800">
+                            <div class="text-blue-800 text-3xl mb-4"><i class="fas fa-fist-raised"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Boldness & Finality</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-600"></i> 胆量 Boldness</div>
+                                    <div class="mb-1">鼓励信徒在神的旨意中不仅要"顺服"，更要"命令"。信心可以支取神无限的资源。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Encouraging believers to command mountains/sun in God's will.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-600"></i> 斩草除根 Ruthlessness</div>
+                                    <div class="mb-1">对罪的仁慈就是对灵魂的残忍。必须像对待五王一样，将罪从洞中拉出来处决。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Mercy to sin is cruelty to the soul. Expose and execute the hidden kings.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

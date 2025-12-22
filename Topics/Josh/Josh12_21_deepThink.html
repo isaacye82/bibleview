@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>约书亚记 12-21章：应许与产业深度研读</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Chosen Palette: Earthy & Ancient Near East */
+        :root {
+            --color-bg: #FDFBF7; /* Warm Parchment */
+            --color-primary: #8B4513; /* Saddle Brown - Earth/Leather */
+            --color-secondary: #556B2F; /* Olive Green - Land/Life */
+            --color-accent: #DAA520; /* Goldenrod - Glory/Promise */
+            --color-text: #2C2C2C; /* Charcoal - Text */
+            --color-muted: #8D8D8D;
+        }
+        
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .card-shadow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-active {
+            border-bottom: 3px solid var(--color-primary);
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            border-bottom: 3px solid transparent;
+            color: var(--color-muted);
+        }
+        
+        .tab-inactive:hover {
+            color: var(--color-secondary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8; 
+        }
+    </style>
+    <!-- Application Structure Plan: 
+         1. Header: Context setting (Joshua 12-21).
+         2. Navigation: Tab-based navigation for the 6 Lectures.
+         3. Dynamic Content Area:
+            a. Overview: Intro text & Scripture range.
+            b. Theological Triangulation: Cards comparing Gen 49 (Prophecy) -> Deut 33 (Blessing) -> Joshua (Reality).
+            c. Spiritual Dynamics Chart: A Scatter Plot visualizing "Faith/Obedience" vs "Difficulty of Territory" for the tribes in the current lecture.
+            d. Discussion Deck: Interactive carousel for the 8 questions.
+            e. Summary: Key takeaways listing.
+         Why: This structure breaks down the dense "cadaster" text into manageable themes, highlights the prophetic connections visually, and gamifies the discussion questions.
+    -->
+    <!-- Visualization & Content Choices:
+         1. Theological Triangulation: Side-by-side text cards. Goal: Compare prophecy vs reality. Justification: Textual comparison is key to the study.
+         2. Spiritual Dynamics Chart (Chart.js Scatter): X-axis = Difficulty, Y-axis = Faith/Success. Goal: Visualizing the abstract "success" of each tribe. Justification: Helps differentiate Caleb (High/High) from Dan (High Difficulty/Low Success).
+         3. Discussion Carousel: JS-driven card switch. Goal: Focus on one question at a time.
+         4. CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- Chosen Palette: Warm Parchment, Saddle Brown, Olive Green (Biblical/Historical feel) -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-[#8B4513] serif">约书亚记深度研读</span>
+                    <span class="ml-4 text-sm text-stone-500 hidden md:block">12-21章：应许之地与产业的分配</span>
+                </div>
+                <div class="text-sm font-medium text-[#556B2F]">
+                    结合创世记49章 & 申命记33章
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation Tabs -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-x-auto">
+            <div class="flex space-x-8 whitespace-nowrap" id="nav-tabs">
+                <!-- Populated by JS -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow bg-[#FDFBF7] py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Intro Section -->
+            <section id="intro-section" class="mb-10 animate-fade-in">
+                <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-[#8B4513]">
+                    <h2 id="lecture-title" class="text-2xl font-bold text-gray-900 mb-2 serif"></h2>
+                    <p id="lecture-range" class="text-sm font-bold text-[#556B2F] uppercase tracking-wide mb-4"></p>
+                    <p id="lecture-desc" class="text-gray-700 leading-relaxed"></p>
+                </div>
+            </section>
+
+            <!-- Two Column Layout for Analysis & Chart -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-10">
+                
+                <!-- Left: Theological Triangulation (Tribes) -->
+                <div class="lg:col-span-7">
+                    <div class="mb-4 flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800 serif">神学视角：预言与应验</h3>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">点击卡片查看详情</span>
+                    </div>
+                    <div id="tribes-container" class="space-y-4">
+                        <!-- Tribe Cards Injected Here -->
+                    </div>
+                </div>
+
+                <!-- Right: Visualization -->
+                <div class="lg:col-span-5">
+                    <div class="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 serif border-b pb-2">属灵动态分析</h3>
+                        <p class="text-sm text-gray-600 mb-4">
+                            此图表展示本讲涉及人物/支派的<b>“环境挑战难度”</b>与<b>“信心/得胜程度”</b>的关系。
+                        </p>
+                        <div class="chart-container">
+                            <canvas id="dynamicsChart"></canvas>
+                        </div>
+                        <div class="mt-4 text-xs text-gray-500 italic text-center">
+                            * 数据基于经文叙事定性分析生成的估值
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discussion & Summary Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Discussion Questions Carousel -->
+                <div class="bg-[#F5F5DC] bg-opacity-30 rounded-xl p-6 border border-[#E0D8C0]">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-xl font-bold text-[#8B4513] serif">深度讨论</h3>
+                        <div class="flex space-x-2">
+                            <button id="prev-btn" class="p-2 rounded-full bg-white hover:bg-[#8B4513] hover:text-white transition shadow-sm">
+                                &#8592;
+                            </button>
+                            <span id="q-counter" class="py-2 px-3 font-mono text-sm bg-white rounded-md shadow-inner">1/8</span>
+                            <button id="next-btn" class="p-2 rounded-full bg-white hover:bg-[#8B4513] hover:text-white transition shadow-sm">
+                                &#8594;
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-8 min-h-[200px] flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-2 h-full bg-[#DAA520]"></div>
+                        <p id="question-text" class="text-lg text-gray-800 font-medium leading-relaxed text-center"></p>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <span class="text-xs text-[#556B2F] font-semibold tracking-wider uppercase">思考方向</span>
+                        <p class="text-xs text-gray-500 mt-1">请结合经文与当下生活进行反思</p>
+                    </div>
+                </div>
+
+                <!-- Summary Section -->
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6 serif flex items-center">
+                        <span class="bg-[#556B2F] text-white w-8 h-8 rounded-full flex items-center justify-center text-sm mr-3">∑</span>
+                        本讲小结
+                    </h3>
+                    <ul id="summary-list" class="space-y-4">
+                        <!-- Summary Items -->
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-12 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
+            <p>&copy; 2023 约书亚记查经资料. 基于提供的查经指南生成。</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data Source ---
+        const lectures = [
+            {
+                id: 1,
+                title: "第一讲：回顾与河东的产业",
+                subtitle: "未尽之工与神的恩典",
+                range: "约书亚记 12-13章",
+                desc: "本讲回顾了摩西与约书亚的得胜清单，同时也面对“未得之地”的现实。重点探讨流便、迦得与玛拿西半支派在约旦河东的选择及其深远的属灵含义。",
+                tribes: [
+                    {
+                        name: "流便 (Reuben)",
+                        gen49: "滚沸如水，必不得居首位 (因污秽父床)",
+                        deut33: "愿流便存活，不至死亡，人数不至稀少 (维持性恩典)",
+                        joshua: "选择了河东。虽肥沃但远离中心。失去了长子的双倍福分与领导地位。",
+                        status: "compromise"
+                    },
+                    {
+                        name: "迦得 (Gad)",
+                        gen49: "必被敌军追逼，他却要追逼他们的脚跟",
+                        deut33: "使迦得扩张的...他为自己选择头一段地...如母狮",
+                        joshua: "选择河东头一段地。必须骁勇善战才能在边境生存。应验了追逼敌人的预言。",
+                        status: "warrior"
+                    }
+                ],
+                chartData: [
+                    { x: 3, y: 5, label: "流便 (Reuben)", r: 10, context: "妥协的选择" },
+                    { x: 8, y: 8, label: "迦得 (Gad)", r: 10, context: "边境的战士" },
+                    { x: 9, y: 4, label: "未得之地", r: 15, context: "艰难的任务" } // Abstract point
+                ],
+                questions: [
+                    "约书亚记12章事无巨细地列出了31个被击败的国王名字，这种“清单式”的记录对当时的以色列人和今天的信徒有什么属灵意义？",
+                    "上帝在13章1节对约书亚说“你年纪老迈了，还有许多未得之地”，这句话是责备还是事实陈述？这对我们理解“得胜的生命”有何启发？",
+                    "流便和迦得支派选择留在约旦河东（虽然这是摩西允许的），结合雅各说流便“必不得居首位”，这是否暗示了某种属灵追求的妥协？",
+                    "“未得之地”（13:2-6）中包括了非利士人和西顿人的地，为什么神要在分地之前特别列出这些强大的敌人？",
+                    "利未支派在13章14节和33节两次被提及“没有产业”，为什么在这一大段分地的经文中要重复强调这一点？这是一种剥夺还是一种特权？",
+                    "结合申命记33章摩西对迦得“如母狮”的形容，这如何解释他们在河东这种易受攻击的地理位置上的生存之道？",
+                    "巴兰的结局在13章22节被顺带提及，这一笔看似突兀的记录，放在分地的背景中有何警示作用？",
+                    "如果神已经把地赐给以色列人，为什么还需要他们去“赶出”居民？如果赶不出去（如13:13），责任在谁？"
+                ],
+                summary: [
+                    "<b>数算恩典是信心的基础：</b>12章的清单是神信实的凭据，支撑未来挑战。",
+                    "<b>应许与现实的张力：</b>“已赐给”但“尚需占领”是属灵常态，需尽征战责任。",
+                    "<b>选择的属灵含义：</b>河东支派的选择虽合法，但始终处于边缘，应验了先祖预言。"
+                ]
+            },
+            {
+                id: 2,
+                title: "第二讲：信心的标杆",
+                subtitle: "迦勒的专一与希伯仑",
+                range: "约书亚记 14章",
+                desc: "特写85岁的老将迦勒。他不求安逸，只求最难攻打的希伯仑山地（亚纳族巨人之地）。他是跨越40年旷野信心依旧锋利的见证。",
+                tribes: [
+                    {
+                        name: "迦勒 (Caleb)",
+                        gen49: "（归入犹大支派）",
+                        deut33: "（摩西曾应许他脚掌所踏之地）",
+                        joshua: "85岁仍强壮。主动要求挑战亚纳族人（巨人）。专心跟从耶和华。",
+                        status: "hero"
+                    }
+                ],
+                chartData: [
+                    { x: 10, y: 10, label: "迦勒 (Caleb)", r: 15, context: "信心的巅峰" },
+                    { x: 5, y: 5, label: "普通百姓", r: 8, context: "依靠拈阄" }
+                ],
+                questions: [
+                    "为什么在正式给九个半支派分地之前，经文要特写迦勒这一号人物？他在分地叙事中扮演了什么角色？",
+                    "迦勒说“我还是强壮，像摩西打发我去的那天一样”（14:11），这种强壮是指身体素质还是属灵心志？这对于年长的信徒有何挑战？",
+                    "迦勒为什么专门挑选“希伯仑”这块有亚纳族人（巨人）盘踞的山地？他为什么不选择一块已经平定的肥沃平原安享晚年？",
+                    "“或者耶和华照他所应许的与我同在，我就把他们赶出去”（14:12），这里的“或者”是否表示迦勒的信心不确定？如何理解这种表达？",
+                    "迦勒说自己“专心跟从耶和华”（14:8, 9, 14），这个“专心”（Wholeheartedly）的具体表现是什么？与那十个探子有何本质区别？",
+                    "希伯仑是亚伯拉罕埋葬之地，迦勒得此地作为产业，在救赎历史传承中有什么象征意义？",
+                    "在集体拈阄决定命运的时刻，迦勒凭神的应许提出个人要求，这是否破坏了公平原则？应许与程序的优先次序是什么？",
+                    "迦勒虽然被归入犹大支派，但他原是基尼洗人（创15:19，外邦人背景），这对理解以色列作为一个“信仰群体”而非单纯“血缘群体”有什么意义？"
+                ],
+                summary: [
+                    "<b>信心的不老性：</b>迦勒证明信心是穿越时间考验的力量，眼光不随年龄衰退。",
+                    "<b>挑战困难的勇气：</b>真正的信心敢于挑战最强敌人（亚纳族），而非寻求安逸。",
+                    "<b>应许高于运气：</b>迦勒依靠神明确的话语，而非拈阄的运气。"
+                ]
+            },
+            {
+                id: 3,
+                title: "第三讲：狮子的咆哮",
+                subtitle: "犹大支派的产业与未完成的征服",
+                range: "约书亚记 15章",
+                desc: "犹大支派分得最大、最核心的土地。包含迦勒的女儿押撒求水泉的故事，但也留下了无法赶出耶路撒冷耶布斯人的遗憾。",
+                tribes: [
+                    {
+                        name: "犹大 (Judah)",
+                        gen49: "手必掐住仇敌颈项...圭必不离犹大...乃是小狮子...洗衣服在葡萄酒中",
+                        deut33: "求你使他归于本族，为他扶助，抵挡仇敌",
+                        joshua: "得地最广，主要核心区。应验了王者地位。但也未能完全赶出耶布斯人。",
+                        status: "leader"
+                    },
+                    {
+                        name: "押撒 (Achsah)",
+                        gen49: "N/A",
+                        deut33: "N/A",
+                        joshua: "不满足于南地干旱，主动求“上泉和下泉”。象征渴慕更多福分。",
+                        status: "seeker"
+                    }
+                ],
+                chartData: [
+                    { x: 7, y: 9, label: "犹大支派", r: 12, context: "广阔的疆域" },
+                    { x: 9, y: 2, label: "攻打耶路撒冷", r: 8, context: "失败的尝试" },
+                    { x: 6, y: 8, label: "押撒求泉", r: 10, context: "主动的渴慕" }
+                ],
+                questions: [
+                    "犹大支派首先分地且地域最广，这如何应验了创世记49章关于“圭必不离犹大”的预言？",
+                    "15章中间插入了押撒向父亲迦勒求“水泉”的故事（15:16-19），这一段温馨的家庭叙事夹杂在枯燥的地名中，意图何在？",
+                    "俄陀聂作为士师时代的第一个士师，在此处登场攻打基列西弗，这对于犹大支派在未来的领导地位有何预示？",
+                    "押撒求“上泉和下泉”不仅是物质的请求，结合圣经中“水”的意象，这给我们关于祈求属灵福分什么启示？",
+                    "15:63提到“犹大人不能赶出……耶布斯人”，这与前面的得胜形成了对比。为什么最强大的犹大支派也无法完全得胜？这暗示了什么？",
+                    "犹大支派的产业包含了从旷野到山地多种地形，结合他们后来在历史中的表现（如大卫逃亡旷野），地理环境如何塑造了这个支派的灵性？",
+                    "对比雅各预言犹大“洗衣服在葡萄酒中”（创49:11）的丰富，与犹大支派实际得到的干旱南地（需要求水泉），我们如何理解预言的诗意与现实的地理？",
+                    "“耶路撒冷的耶布斯人与犹大人同住，直到今日”，这句话揭示了当时怎样的社会和属灵混杂状态？这给今天的教会什么警示？"
+                ],
+                summary: [
+                    "<b>领袖的责任与赏赐：</b>长子名分（犹大）意味着最大的疆土防卫责任。",
+                    "<b>渴慕更多的祝福：</b>押撒求水泉象征信徒应渴慕圣灵活水，神乐意赐下。",
+                    "<b>得胜中的遗憾：</b>最强支派也有攻不下的堡垒（耶路撒冷），指向未来弥赛亚的完全得胜。"
+                ]
+            },
+            {
+                id: 4,
+                title: "第四讲：双倍的福分与怨言",
+                subtitle: "约瑟家（以法莲与玛拿西）",
+                range: "约书亚记 16-17章",
+                desc: "约瑟家分得肥沃的中部山地，但抱怨地太小且惧怕平原的铁车。约书亚挑战他们去开垦树林，依靠神扩张境界。",
+                tribes: [
+                    {
+                        name: "以法莲 (Ephraim)",
+                        gen49: "多结果子的树枝...弓箭手将他苦害...他的弓仍旧坚硬",
+                        deut33: "地之宝物...野牛的角，用以抵触万邦",
+                        joshua: "得肥沃山地。未赶出基色人（作苦工）。抱怨地小。",
+                        status: "complainer"
+                    },
+                    {
+                        name: "玛拿西 (Manasseh)",
+                        gen49: "（同约瑟）",
+                        deut33: "（同约瑟）",
+                        joshua: "跨河两岸巨大版图。惧怕铁车。西罗非哈女儿继承权确立。",
+                        status: "mixed"
+                    }
+                ],
+                chartData: [
+                    { x: 8, y: 4, label: "约瑟家", r: 12, context: "资源多信心小" },
+                    { x: 9, y: 1, label: "面对铁车", r: 10, context: "恐惧的障碍" },
+                    { x: 5, y: 7, label: "西罗非哈之女", r: 8, context: "争取公义" }
+                ],
+                questions: [
+                    "约瑟家（以法莲和玛拿西）作为当时人数众多且地位显赫的支派，为什么会对约书亚抱怨“族大人多，地业太少”？这种抱怨反映了怎样的心态？",
+                    "约书亚如何巧妙地回答约瑟家的抱怨（17:15, 17-18）？他的回答如何揭露了约瑟家“既想要更多权利，又不愿付代价”的问题？",
+                    "以法莲人没有赶出基色的迦南人，使他们做苦工（16:10）。这种为了经济利益（苦工）而妥协神命令（灭绝）的行为，造成了什么深远后果？",
+                    "西罗非哈的女儿们争取产业的案例（17:3-6）再次出现，在父系社会的背景下，这件事对理解神眼中的公平和女性地位有何意义？",
+                    "结合雅各预言约瑟是“多结果子的树枝，枝子探出墙外”，对比他们在17章表现出的自我设限（惧怕铁车），障碍到底是在环境上还是在人心里？",
+                    "“铁车”在当时代表了顶尖的军事科技，约瑟家因此不敢进入平原。今天阻碍教会拓展“境界”的“铁车”通常是什么？",
+                    "约书亚本身是以法莲人，但他并没有偏袒本族，反而对他们提出了最严厉的挑战（去开垦树林）。这对教会领袖处理亲属/亲信关系有何榜样作用？",
+                    "玛拿西支派跨越约旦河两岸居住，这种分散的布局对于该支派保持合一和信仰纯正带来了哪些挑战？"
+                ],
+                summary: [
+                    "<b>恩典不是懒惰的借口：</b>双倍祝福伴随更高呼召，不能只想得地不想付代价。",
+                    "<b>信心胜过铁车：</b>限制疆界的往往是内心的惧怕，而非客观的困难（铁车）。",
+                    "<b>开拓的精神：</b>“砍伐树林”表明属灵扩张需要行动，改变环境而非坐等环境改变。"
+                ]
+            },
+            {
+                id: 5,
+                title: "第五讲：拖延与剩余支派",
+                subtitle: "便雅悯至但",
+                range: "约书亚记 18-19章",
+                desc: "约书亚责备七个支派“耽延不去”。会幕设立在示罗。通过画地势图和拈阄分地。但支派表现出明显的失败与随意迁移。",
+                tribes: [
+                    {
+                        name: "便雅悯 (Benjamin)",
+                        gen49: "撕掠的狼",
+                        deut33: "耶和华所亲爱的",
+                        joshua: "夹在犹大与约瑟之间。战略要地（耶利哥/耶路撒冷周边）。",
+                        status: "strategic"
+                    },
+                    {
+                        name: "但 (Dan)",
+                        gen49: "道上的蛇，判断民",
+                        deut33: "跳出来的狮子",
+                        joshua: "分到沿海（非利士地），放弃挑战，向北迁移攻打利善。避重就轻。",
+                        status: "failure"
+                    },
+                    {
+                        name: "西布伦/以萨迦",
+                        gen49: "停船海口 / 负重",
+                        deut33: "吸取海里丰富",
+                        joshua: "加利利地区。外邦与贸易路线。",
+                        status: "galilee"
+                    }
+                ],
+                chartData: [
+                    { x: 4, y: 3, label: "其余7支派", r: 10, context: "属灵拖延" },
+                    { x: 9, y: 1, label: "但 (Dan)", r: 12, context: "完全失败/迁移" },
+                    { x: 6, y: 6, label: "便雅悯", r: 8, context: "高压中心" }
+                ],
+                questions: [
+                    "为什么这七个支派会“耽延不去”得地？是什么导致了他们的属灵被动？我们需要如何警惕这种“属灵拖延症”？",
+                    "会幕从吉甲搬到示罗（18:1），这一地理中心的转移标志着以色列历史进入了什么新阶段？",
+                    "便雅悯的产业夹在两个最强大的支派（犹大和以法莲）之间，且包含耶路撒冷、耶利哥、伯特利等重镇。这种地理位置如何解释后来扫罗（便雅悯人）的兴起与该支派的悲剧（士师记）？",
+                    "西缅的产业是“在犹大人的地业中间”（19:1, 9），这如何应验了雅各预言中“我要使他们分居在雅各家里，散住在以色列地中”（创49:7）的咒诅？但这咒诅是否也包含恩典？",
+                    "但支派本来分到了沿海非利士人的地界，但他们放弃了挑战，转而向北攻打弱小的利善（19:47）。这种“避重就轻”的迁移行为在神学上意味着什么？",
+                    "以萨迦和西布伦位于加利利地区，也就是后来耶稣出来传道的主要地区（太4:15-16）。从救赎历史看，这一块被轻视的“外邦人的加利利”为何在分地时就被预备？",
+                    "约书亚在19:49-50最后才为自己求地，而且是在众人都分完之后。这体现了怎样的领袖风范？与今日世界的领袖观有何不同？",
+                    "这次分地是通过三个人每支派去“画地势图”（18:4）然后拈阄。这种“实地考察+听天命（神意）”的结合方式，告诉我们做决策时应如何平衡理性规划与寻求神意？"
+                ],
+                summary: [
+                    "<b>克服属灵惰性：</b>缺乏的往往不是应许，而是占领的动力。需警惕拖延。",
+                    "<b>地理决定命运：</b>但支派逃避神量给的界限（非利士前线），导致后来的偶像崇拜。",
+                    "<b>咒诅化为祝福：</b>西缅虽分散在犹大中（应验咒诅），但也因此受保护（恩典）。"
+                ]
+            },
+            {
+                id: 6,
+                title: "第六讲：公义与安息",
+                subtitle: "逃城、利未城与全书小结",
+                range: "约书亚记 20-21章",
+                desc: "设立逃城体现公义与怜悯。利未人散居各支派，神将咒诅翻转为祝福。全书以“神的话一句不落空”作为信实的总结。",
+                tribes: [
+                    {
+                        name: "利未 (Levi)",
+                        gen49: "趁怒杀害人命...分居在雅各家，散住在以色列地 (咒诅)",
+                        deut33: "掌管土明和乌陵...教导律法 (因金牛犊事件转正)",
+                        joshua: "真的“散住”了(无地)，但拥有耶和华产业。咒诅形式保留，实质变为祝福。",
+                        status: "transformed"
+                    },
+                    {
+                        name: "逃城 (Refuge)",
+                        gen49: "N/A",
+                        deut33: "N/A",
+                        joshua: "6座城，均匀分布。公义中的怜悯。",
+                        status: "grace"
+                    }
+                ],
+                chartData: [
+                    { x: 2, y: 10, label: "利未人", r: 12, context: "咒诅变祝福" },
+                    { x: 5, y: 9, label: "神的信实", r: 15, context: "一句不落空" },
+                    { x: 8, y: 3, label: "未赶出的敌人", r: 8, context: "人的软弱" }
+                ],
+                questions: [
+                    "逃城的设立对于一个刚刚建立的国家有什么重要的司法和社会意义？它如何平衡了“血亲复仇”的传统与“尊重生命”的神学？",
+                    "逃城必须是“容易到达”且分布均匀的（河东河西各三座）。这预表了基督救恩的什么特质？",
+                    "利未人要求城邑时，引用了耶和华藉摩西的吩咐（21:2）。为什么这一群“无产者”的请求没有被视为贪婪，反而被视为顺服？",
+                    "请深入分析利未人的结局：雅各在创49章说要使他们“散住”是作为惩罚，但这里他们真的“散住”了，却成了祝福。神是如何转化咒诅为祝福的？关键转折点在哪里？",
+                    "如果利未人集中居住在一个像“梵蒂冈”一样的地方，对以色列的信仰生活会有什么负面影响？“散居”模式对于今天的教会牧养有何启示？",
+                    "21:43-45说“耶和华应许...一句都没有落空”，但前面我们也读到有些地没有攻下来（如15:63）。如何调和“神的话全部应验”与“以色列人的不完全顺服/得胜”？",
+                    "大祭司的死是误杀人者得释放的条件（20:6）。这在救赎论上指向什么？",
+                    "从13章到21章，分地叙事以“争战”开始，以“平安”（21:44）结束。这对于我们理解基督徒的生命历程（从称义到成圣再到得荣耀）有什么宏观的图画？"
+                ],
+                summary: [
+                    "<b>公义中的恩典：</b>逃城表明神国度不仅关乎土地，更关乎公义与生命怜悯。",
+                    "<b>咒诅的逆转：</b>利未人的散居从惩罚变为教导的特权。神能翻转生命的破口。",
+                    "<b>信实的总结：</b>人的软弱（未赶出的敌人）不能废掉神的信实。平安源于守约的神。"
+                ]
+            }
+        ];
+
+        // --- State Management ---
+        let currentLectureId = 1;
+        let currentQuestionIndex = 0;
+        let chartInstance = null;
+
+        // --- DOM Elements ---
+        const navTabs = document.getElementById('nav-tabs');
+        const lectureTitle = document.getElementById('lecture-title');
+        const lectureRange = document.getElementById('lecture-range');
+        const lectureDesc = document.getElementById('lecture-desc');
+        const tribesContainer = document.getElementById('tribes-container');
+        const questionText = document.getElementById('question-text');
+        const qCounter = document.getElementById('q-counter');
+        const summaryList = document.getElementById('summary-list');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+
+        // --- Initialization ---
+        function init() {
+            renderNav();
+            loadLecture(1);
+            setupEventListeners();
+        }
+
+        // --- Core Logic ---
+
+        function renderNav() {
+            navTabs.innerHTML = lectures.map(l => `
+                <button 
+                    onclick="loadLecture(${l.id})"
+                    class="px-3 py-4 text-sm font-medium transition-colors duration-200 ${l.id === currentLectureId ? 'tab-active' : 'tab-inactive'}"
+                    id="tab-${l.id}"
+                >
+                    第${l.id}讲
+                </button>
+            `).join('');
+        }
+
+        function loadLecture(id) {
+            currentLectureId = id;
+            currentQuestionIndex = 0;
+            const data = lectures.find(l => l.id === id);
+
+            // Update UI State for Tabs
+            document.querySelectorAll('#nav-tabs button').forEach(b => {
+                b.className = b.id === `tab-${id}` 
+                    ? 'px-3 py-4 text-sm font-medium transition-colors duration-200 tab-active' 
+                    : 'px-3 py-4 text-sm font-medium transition-colors duration-200 tab-inactive';
+            });
+
+            // Update Header Info
+            lectureTitle.textContent = data.title + "：" + data.subtitle;
+            lectureRange.textContent = data.range;
+            lectureDesc.textContent = data.desc;
+
+            // Render Tribes (Theological Triangulation)
+            tribesContainer.innerHTML = data.tribes.map(tribe => `
+                <div class="bg-white rounded-lg p-5 border-l-4 border-[#DAA520] card-shadow cursor-pointer group" onclick="toggleTribeDetails(this)">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-bold text-lg text-[#8B4513] group-hover:text-[#DAA520] transition-colors">${tribe.name}</h4>
+                        <span class="text-xs text-gray-400">&#9660; 展开对比</span>
+                    </div>
+                    <div class="space-y-3 hidden details-content animate-fade-in text-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            <div class="bg-gray-50 p-3 rounded">
+                                <span class="text-xs font-bold text-gray-500 uppercase block mb-1">创世记 49 (雅各预言)</span>
+                                <p class="text-gray-700 italic">"${tribe.gen49}"</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded">
+                                <span class="text-xs font-bold text-gray-500 uppercase block mb-1">申命记 33 (摩西祝福)</span>
+                                <p class="text-gray-700 italic">"${tribe.deut33}"</p>
+                            </div>
+                            <div class="bg-[#FDFBF7] p-3 rounded border border-[#556B2F] border-opacity-20">
+                                <span class="text-xs font-bold text-[#556B2F] uppercase block mb-1">约书亚记 (现状/应验)</span>
+                                <p class="text-gray-900 font-medium">${tribe.joshua}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Auto expand first tribe for better UX
+            if(tribesContainer.firstElementChild) {
+                toggleTribeDetails(tribesContainer.firstElementChild);
+            }
+
+            // Update Chart
+            updateChart(data.chartData);
+
+            // Update Questions
+            updateQuestionDisplay();
+
+            // Update Summary
+            summaryList.innerHTML = data.summary.map(item => `
+                <li class="flex items-start text-gray-700 text-sm leading-relaxed">
+                    <span class="text-[#DAA520] mr-2 mt-1">&#10022;</span>
+                    <span>${item}</span>
+                </li>
+            `).join('');
+        }
+
+        function toggleTribeDetails(card) {
+            const content = card.querySelector('.details-content');
+            const icon = card.querySelector('span.text-xs');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerHTML = '&#9650; 收起';
+                card.classList.add('bg-stone-50');
+            } else {
+                content.classList.add('hidden');
+                icon.innerHTML = '&#9660; 展开对比';
+                card.classList.remove('bg-stone-50');
+            }
+        }
+
+        function updateQuestionDisplay() {
+            const data = lectures.find(l => l.id === currentLectureId);
+            questionText.textContent = data.questions[currentQuestionIndex];
+            qCounter.textContent = `${currentQuestionIndex + 1}/${data.questions.length}`;
+            
+            // Disable buttons if at ends
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === data.questions.length - 1;
+            
+            prevBtn.style.opacity = currentQuestionIndex === 0 ? '0.5' : '1';
+            nextBtn.style.opacity = currentQuestionIndex === data.questions.length - 1 ? '0.5' : '1';
+        }
+
+        function setupEventListeners() {
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    updateQuestionDisplay();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const data = lectures.find(l => l.id === currentLectureId);
+                if (currentQuestionIndex < data.questions.length - 1) {
+                    currentQuestionIndex++;
+                    updateQuestionDisplay();
+                }
+            });
+        }
+
+        function updateChart(dataPoints) {
+            const ctx = document.getElementById('dynamicsChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: '支派属灵动态',
+                        data: dataPoints,
+                        backgroundColor: function(context) {
+                            const val = context.raw?.y;
+                            // Color coding based on success/faith level
+                            if (val >= 8) return 'rgba(85, 107, 47, 0.7)'; // High success - Olive
+                            if (val <= 3) return 'rgba(220, 20, 60, 0.6)'; // Low success - Red
+                            return 'rgba(218, 165, 32, 0.7)'; // Medium - Gold
+                        },
+                        borderColor: 'rgba(139, 69, 19, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.raw.label}: ${context.raw.context}`;
+                                }
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#8B4513',
+                            bodyColor: '#333',
+                            borderColor: '#8B4513',
+                            borderWidth: 1,
+                            padding: 10
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '环境困难 / 挑战程度 (Low → High)',
+                                color: '#666',
+                                font: { size: 12 }
+                            },
+                            min: 0,
+                            max: 11,
+                            grid: { color: '#f0f0f0' }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '信心 / 得胜程度 (Low → High)',
+                                color: '#666',
+                                font: { size: 12 }
+                            },
+                            min: 0,
+                            max: 11,
+                            grid: { color: '#f0f0f0' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Run Init
+        document.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 5: The Scroll of Generations | 创世纪第五章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Sepia/Bronze - History, Earth, Scroll */
+            --theme-primary: #78350f; 
+            /* Ink Blue - Text, Depth */
+            --theme-secondary: #0f172a;
+            /* Gold - Enoch, Hope */
+            --theme-accent: #d97706;
+            /* Parchment Background */
+            --theme-bg: #fffbeb;
+            /* Text */
+            --theme-text: #292524;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: radial-gradient(#fcd34d 0.5px, transparent 0.5px), radial-gradient(#fcd34d 0.5px, var(--theme-bg) 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 4px; /* Scroll-like corners */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            border-top: 4px solid var(--theme-primary); /* Bookmark effect */
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-width: 0 16px 16px 0;
+            border-color: transparent #fffbeb transparent transparent;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(120, 53, 15, 0.15);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timeline Drop Animation (Death) */
+        .drop-death {
+            width: 2px;
+            height: 40px;
+            background: linear-gradient(to bottom, #78350f, transparent);
+            animation: dropLine 2s infinite ease-in;
+            opacity: 0.5;
+        }
+        @keyframes dropLine {
+            0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+            50% { transform: scaleY(1); opacity: 1; }
+            100% { transform: scaleY(1) translateY(10px); opacity: 0; }
+        }
+
+        /* Enoch Ascension Animation */
+        .ascend-life {
+            width: 6px;
+            height: 6px;
+            background-color: #d97706;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #fbbf24;
+            animation: ascendStar 3s infinite ease-out;
+        }
+        @keyframes ascendStar {
+            0% { transform: translateY(20px) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-30px) scale(1.2); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-[#fffbeb]/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-amber-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-amber-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-scroll mr-2 text-amber-700"></i> 创世纪 5章</span>
+                        <span class="text-[10px] sm:text-xs text-amber-800 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 5</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-amber-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-amber-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-stone-400 mt-auto border-t-4 border-amber-700">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-amber-100 mb-1">"以诺与神同行，神将他取去。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-2 en-text">"Enoch walked with God, and he was not, for God took him."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世纪第五章中英对照研经报告 | The Scroll of Generations</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "死亡的节拍与永恒的步伐",
+                title_en: "The Rhythm of Death & The Walk of Life",
+                summary_zh: "创世纪第五章不仅仅是一份枯燥的家谱，它是一座连接亚当与挪亚的桥梁，也是对死亡与盼望的深刻沉思。整章不断重复“就死了”这一副歌，如同丧钟敲响，证实了神在创世记2:17中的警告。然而，在这死亡的游行队伍中，以诺的出现如同一道闪电——“与神同行”打破了死亡的定律。本章最终指向挪亚，他的名字预示着在受咒诅的地上得着安息。",
+                summary_en: "Genesis 5 is not merely a dry genealogy; it is a bridge connecting Adam to Noah and a profound meditation on death and hope. The chapter repeats the refrain 'and he died' like a funeral bell, confirming God's warning in Gen 2:17. Yet, amidst this procession of death, Enoch appears like lightning—'walking with God' breaks the law of death. The chapter culminates in Noah, whose name prophesies rest on the cursed ground.",
+                concepts: [
+                    { title: "形象的传递", title_en: "Transmission of Image", hebrew: "Tzelem", color: "text-blue-800", bg: "bg-blue-50", desc_zh: "亚当生子“形象样式和自己相似”。尽管堕落，神的形象并未完全消失，而是在后裔中延续。", desc_en: "Adam fathered a son 'in his own likeness'. Despite the Fall, God's image is not erased but transmitted through generations." },
+                    { title: "就死了", title_en: "And He Died", hebrew: "Vayamot", color: "text-stone-600", bg: "bg-stone-200", desc_zh: "这是一个不断重复的阴郁叠句，强调了罪的工价乃是死，无人能幸免。", desc_en: "A somber, repetitive refrain emphasizing that the wages of sin is death; no one is exempt." },
+                    { title: "与神同行", title_en: "Walked with God", hebrew: "Hithpael Form", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "以诺的特质。希伯来文显示这是一种持续的、亲密的互动，最终超越了死亡。", desc_en: "Enoch's distinct trait. The Hebrew indicates a continuous, intimate interaction that ultimately transcended death." }
+                ]
+            },
+            sections: [
+                {
+                    id: "image",
+                    title: "堕落后的形象 (5:1-3)",
+                    title_en: "The Image After the Fall",
+                    verses: [
+                        {
+                            ref: "5:1, 3",
+                            text_zh: "当神造人的日子，是照着自己的样式造的...亚当...生了一个儿子，形像样式和自己相似，就给他起名叫塞特。",
+                            text_en: "When God created man, he made him in the likeness of God... Adam... fathered a son in his own likeness, after his image, and named him Seth.",
+                            exegesis: {
+                                title: "破碎镜子中的倒影 (Reflection in a Broken Mirror)",
+                                content_zh: "这里有一个微妙的平行：神照着祂的形象造亚当，亚当照着他的形象生塞特。这表明“神的形象”（Imago Dei）并没有因堕落而完全丧失（这一点反驳了某些极端的人性全然败坏论）。人类依然承载着神性的尊严，尽管现在这形象已经通过有罪的亚当被玷污和扭曲了。",
+                                content_en: "A subtle parallel: God made Adam in His image; Adam fathered Seth in his image. This indicates the 'Imago Dei' was not wholly lost in the Fall (countering views of total erasure). Humanity still bears divine dignity, though now stained and distorted through sinful Adam."
+                            },
+                            devotional: {
+                                title: "你比你想象的更尊贵 (More Than Biology)",
+                                content_zh: "当你看着镜子，或是看着你的孩子时，你看到的不仅仅是生物基因的延续，而是一个神圣形象的传递者。即使我们有软弱和罪，我们依然是“像神”的受造物。这份尊贵应当成为我们自尊和尊重他人的基础。不管一个人多么破碎，他/她身上仍有神的影子。",
+                                content_en: "When you look in the mirror or at your children, you see more than biology; you see a bearer of the divine image. Despite our flaws, we are 'God-like' creatures. This dignity is the basis for self-worth and respecting others. No matter how broken, God's shadow remains in them."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "mortality",
+                    title: "死亡的连祷 (5:5-20)",
+                    title_en: "The Litany of Death",
+                    verses: [
+                        {
+                            ref: "5:5",
+                            text_zh: "亚当共活了九百三十岁就死了。",
+                            text_en: "Thus all the days that Adam lived were 930 years, and he died.",
+                            exegesis: {
+                                title: "不可避免的终局 (The Inevitable End)",
+                                content_zh: "虽然这些人极长寿（这是古代近东家谱的特征，可能象征大洪水前的生命力），但每一段记载都以无情的“就死了”（Vayamot）结束。这不仅是历史记录，更是神学声明：罪带来了死亡。无论人类成就多高、寿命多长，死亡是所有自然人的终点。",
+                                content_en: "Despite immense longevity (common in ANE genealogies, symbolizing pre-Flood vitality), every entry ends with the relentless 'and he died' (Vayamot). This is a theological statement: Sin brings death. No matter the achievement or lifespan, death is the terminus for the natural man."
+                            },
+                            devotional: {
+                                title: "学会数算日子 (Numbering Our Days)",
+                                content_zh: "这长长的死亡名单是否让你感到压抑？如果是，那就对了。它提醒我们要正视生命的有限性。我们通常像这些列祖一样忙碌生养，却忘记结局。摩西在诗篇90篇（可能是看着倒毙旷野的人群）祷告说：“求你指教我们怎样数算自己的日子，好叫我们得着智慧的心。”",
+                                content_en: "Does this long list of death depress you? It should. It forces us to confront mortality. We busy ourselves like these patriarchs, forgetting the end. Moses prayed (Ps 90): 'Teach us to number our days that we may get a heart of wisdom.'"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "enoch",
+                    title: "例外：以诺 (5:21-24)",
+                    title_en: "The Exception: Enoch",
+                    verses: [
+                        {
+                            ref: "5:24",
+                            text_zh: "以诺与神同行，神将他取去，他就不在世了。",
+                            text_en: "Enoch walked with God, and he was not, for God took him.",
+                            exegesis: {
+                                title: "打破死亡定律 (Breaking the Law of Death)",
+                                content_zh: "在连串的“就死了”中，突然出现了一个例外。以诺没有“死”，而是被“取去”（Laqach）。“与神同行”在希伯来文中使用的是Hithpael词干，表示一种强烈的、反复的、持续的互动。这种亲密关系是如此深厚，以至于超越了生死的界限。他是复活和被提的预表。",
+                                content_en: "Amidst the 'and he died' refrain, an exception appears. Enoch didn't die; he was 'taken' (Laqach). 'Walked with God' is in the Hithpael stem, indicating intense, reflexive, continuous interaction. This intimacy was so profound it transcended the boundary of life and death."
+                            },
+                            devotional: {
+                                title: "日常的同行 (The Daily Walk)",
+                                content_zh: "以诺是在生儿育女的300年中与神同行的（5:22），不是在修道院里。这意味着真正的灵性是在日常琐事（换尿布、工作、家庭）中与神保持亲密。你不需要逃离世界才能亲近神。如果你今天在凡事上寻求祂，你就已经是在打破属灵死亡的权势了。",
+                                content_en: "Enoch walked with God while parenting for 300 years, not in a monastery. True spirituality is intimacy with God amidst daily grind (diapers, work). You don't need to escape the world to be close to God. Seeking Him in everything today breaks the power of spiritual death."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "noah",
+                    title: "盼望：挪亚 (5:28-29)",
+                    title_en: "The Hope: Noah",
+                    verses: [
+                        {
+                            ref: "5:29",
+                            text_zh: "给他起名叫挪亚，说：“这个儿子必为我们的操作和手中的劳苦安慰我们...”",
+                            text_en: "and called his name Noah, saying, 'Out of the ground that the LORD has cursed, this one shall bring us relief from our work and from the painful toil of our hands.'",
+                            exegesis: {
+                                title: "预言性的名字 (Prophetic Naming)",
+                                content_zh: "拉麦（虽然是塞特后裔，名字与该隐后裔相同）给儿子起名“挪亚”（Noach），意为“安息”或“安慰”。他提到了“地受咒诅”（回指3:17）。这是一句充满渴望的预言：在这个因罪而劳苦的世界里，人类极度渴望安息。挪亚不仅是方舟的建造者，也是新世界的开启者。",
+                                content_en: "Lamech names his son 'Noah' (Noach), meaning 'Rest' or 'Comfort'. He references the 'cursed ground' (Gen 3:17). This is a prophecy of longing: in a toil-filled world, humanity desperate for rest. Noah is not just the ark-builder, but the usher of a new world."
+                            },
+                            devotional: {
+                                title: "在劳苦中寻找安息 (Rest in Toil)",
+                                content_zh: "你是否感到生活充满了“操作和手中的劳苦”？这是堕落世界的常态。但神并不希望我们在疲惫中绝望。挪亚指向了那位真正的安息赐予者——耶稣，祂说：“凡劳苦担重担的人可以到我这里来，我就使你们得安息。”",
+                                content_en: "Do you feel the 'painful toil of your hands'? This is the norm of a fallen world. But God offers hope. Noah points to the true Giver of Rest—Jesus, who said, 'Come to me, all who labor and are heavy laden, and I will give you rest.'"
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-8 bg-white p-6 sm:p-8 rounded shadow-sm border border-stone-200 relative">
+                        <!-- Decorative Scroll Header -->
+                        <div class="absolute top-0 left-0 w-full h-2 bg-amber-800 opacity-20"></div>
+
+                        <div class="flex items-center mb-4 mt-2">
+                            <span class="bg-amber-100 text-amber-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-800">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-amber-800 pl-4 text-justify font-serif">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-100 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The River of Generations -->
+                    <div class="lg:col-span-4 flex flex-col gap-6">
+                        
+                        <!-- Animated Timeline -->
+                        <div class="bg-[#1c1917] p-6 rounded shadow-lg relative overflow-hidden h-96 flex flex-col items-center justify-start group border-2 border-amber-900/30">
+                            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+                            
+                            <h3 class="text-amber-200 font-bold uppercase tracking-widest text-xs mb-4 z-10 border-b border-amber-800 pb-1 w-full text-center">The Line of Seth</h3>
+                            
+                            <!-- Timeline Graphic -->
+                            <div class="relative w-full h-full flex flex-col items-center space-y-3 overflow-hidden">
+                                <!-- Adam to Jared (Death) -->
+                                <div class="flex items-center space-x-2 w-full justify-center opacity-60">
+                                    <span class="text-[10px] text-stone-400 w-12 text-right">Adam</span>
+                                    <div class="drop-death"></div>
+                                    <span class="text-[10px] text-stone-500 w-12 text-left">Died</span>
+                                </div>
+                                <div class="flex items-center space-x-2 w-full justify-center opacity-60" style="animation-delay: 0.5s">
+                                    <span class="text-[10px] text-stone-400 w-12 text-right">Seth</span>
+                                    <div class="drop-death"></div>
+                                    <span class="text-[10px] text-stone-500 w-12 text-left">Died</span>
+                                </div>
+                                 <div class="flex items-center space-x-2 w-full justify-center opacity-60" style="animation-delay: 1s">
+                                    <span class="text-[10px] text-stone-400 w-12 text-right">...</span>
+                                    <div class="drop-death"></div>
+                                    <span class="text-[10px] text-stone-500 w-12 text-left">...</span>
+                                </div>
+
+                                <!-- Enoch (Ascension) -->
+                                <div class="flex items-center space-x-2 w-full justify-center mt-4">
+                                    <span class="text-xs font-bold text-amber-300 w-12 text-right">Enoch</span>
+                                    <div class="ascend-life"></div>
+                                    <span class="text-[10px] font-bold text-amber-300 w-12 text-left">TOOK</span>
+                                </div>
+
+                                <!-- Noah (Rest) -->
+                                <div class="flex items-center space-x-2 w-full justify-center mt-4 opacity-80">
+                                    <span class="text-[10px] text-stone-300 w-12 text-right">Noah</span>
+                                    <div class="w-3 h-3 border border-stone-500 rounded-sm bg-stone-800"></div>
+                                    <span class="text-[10px] text-stone-400 w-12 text-left">Comfort</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Info Block -->
+                        <div class="bg-amber-50 p-4 rounded shadow-sm border border-amber-200 flex-grow">
+                             <div class="flex items-start">
+                                 <i class="fas fa-hourglass-half text-amber-700 mt-1 mr-3"></i>
+                                 <div>
+                                     <h4 class="text-sm font-bold text-amber-900">寿数的奥秘</h4>
+                                     <p class="text-xs text-amber-800/70 mt-1 leading-relaxed">
+                                        这些列祖的平均寿命超过900岁。这不仅展示了大洪水前人类的生命力，也突显了神对生命的宽容。然而，无论多长，结局都是"就死了"。
+                                     </p>
+                                     <p class="text-[10px] text-amber-800/50 italic mt-1 en-text">Longevity underscores vitality, yet death remains the inevitable conclusion.</p>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-0.5 bg-amber-800 mx-auto mt-4 rounded-full opacity-50"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-amber-200 pb-2">
+                            <div class="w-8 h-8 rounded-full bg-amber-800 text-amber-100 flex items-center justify-center font-bold font-serif mr-4">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-stone-100 text-stone-600 text-[10px] font-bold rounded mb-3 font-mono border border-stone-200">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-amber-200">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fff7ed] border-b md:border-b-0 md:border-r border-amber-100">
+                            <div class="flex items-center mb-3 text-amber-800">
+                                <i class="fas fa-scroll mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-amber-800/70 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#f0f9ff]">
+                            <div class="flex items-center mb-3 text-blue-800">
+                                <i class="fas fa-heart mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-blue-800/70 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-800">
+                            <div class="text-amber-800 text-3xl mb-4"><i class="fas fa-project-diagram"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">模式识别 (Pattern Recognition)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Literary Structure</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-700"></i> 重复与例外 Repetition & Exception</div>
+                                    <div class="mb-1">通过识别“就死了”的重复模式，来突显以诺“被神取去”这一例外的神学意义。这种文学结构强调了死亡的普遍性与恩典的特殊性。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Highlighting theology by contrasting the repetitive 'and he died' with Enoch's exception.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-700"></i> 名字寓意 Name Etymology</div>
+                                    <div class="mb-1">分析希伯来名字（如挪亚=安息）的含义，理解其作为对前文咒诅（创3:17）的回应和预言。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Analyzing Hebrew names (e.g., Noah = Rest) as prophetic responses to the Curse.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-blue-700">
+                            <div class="text-blue-700 text-3xl mb-4"><i class="fas fa-walking"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Life & Hope</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-600"></i> 生死观 View of Mortality</div>
+                                    <div class="mb-1">将枯燥的寿命数字转化为对个人生命有限性的反思，激发“数算日子”的智慧心。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Transforming dry genealogy numbers into a reflection on mortality and wisdom.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-600"></i> 此时此地 Here & Now</div>
+                                    <div class="mb-1">将以诺的“与神同行”去神秘化，应用到日常的家庭生活和工作中，而非避世修行。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Demystifying Enoch's walk, applying it to daily family life rather than asceticism.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

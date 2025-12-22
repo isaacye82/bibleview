@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark 4: Parables of the Kingdom | 马可福音第四章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* 引入中英文衬线与无衬线字体 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Fertile Green - Growth, Life, Good Soil */
+            --theme-primary: #15803d; 
+            /* Harvest Gold - Fruitfulness, Glory, Kingdom */
+            --theme-accent: #ca8a04;
+            /* Soil Brown - Foundation, Earth */
+            --theme-dark: #451a03;
+            /* Soft Earth - Background */
+            --theme-bg: #fcfbf9;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: #1c1917;
+        }
+
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', 'Playfair Display', serif;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+            letter-spacing: 0.02em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+            border: 1px solid #dcfce7;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border-color: var(--theme-primary);
+        }
+
+        /* 选中状态的 Tab 样式 */
+        .tab-active {
+            border-bottom: 3px solid var(--theme-primary);
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+
+        .tab-inactive {
+            color: rgba(21, 128, 61, 0.6); 
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab-inactive:hover {
+            color: var(--theme-primary);
+        }
+
+        /* 隐藏/显示板块 */
+        .section-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .section-content.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 经文卡片左侧边框 */
+        .verse-card {
+            border-left: 4px solid var(--theme-primary);
+        }
+
+        /* Badge Style for The Seed */
+        .seed-badge {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid #166534;
+            position: relative;
+        }
+        .seed-badge::before {
+            content: '';
+            position: absolute;
+            top: 4px; left: 4px; right: 4px; bottom: 4px;
+            border: 1px dashed #166534;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Animation */
+        @keyframes sprout {
+            0% { transform: scale(0.5); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .icon-sprout {
+            animation: sprout 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-green-50 min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-green-200 sticky top-0 z-50 shadow-sm">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <!-- Logo / Title -->
+                <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                    <div class="bg-green-700 text-white w-10 h-10 flex items-center justify-center rounded-lg shadow-md border border-green-500">
+                        <span class="font-serif font-bold text-lg">Mk4</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold tracking-wide serif-font text-green-900">马可福音第四章</h1>
+                        <p class="text-xs text-green-600 uppercase tracking-widest en-text">Mark 4: Parables of the Kingdom</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="flex space-x-8 text-sm md:text-base">
+                    <button onclick="switchTab('overview')" id="tab-overview-btn" class="tab-active pb-2 transition-all duration-300">
+                        <span class="block text-lg">概览</span>
+                        <span class="block text-xs font-light en-text">Overview</span>
+                    </button>
+                    <button onclick="switchTab('study')" id="tab-study-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">经文研读</span>
+                        <span class="block text-xs font-light en-text">Verse Study</span>
+                    </button>
+                    <button onclick="switchTab('methodology')" id="tab-methodology-btn" class="tab-inactive pb-2 transition-all duration-300">
+                        <span class="block text-lg">方法论</span>
+                        <span class="block text-xs font-light en-text">Methodology</span>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+
+        <!-- ==================== TAB 1: OVERVIEW (概览) ==================== -->
+        <section id="tab-overview" class="section-content active space-y-8">
+            <!-- Intro Banner -->
+            <div class="card p-0 border-t-4 border-green-600 bg-gradient-to-br from-white to-green-50 overflow-hidden">
+                <div class="flex flex-col md:flex-row items-stretch">
+                    <!-- Left: Text Content -->
+                    <div class="p-8 md:w-2/3">
+                        <h2 class="text-3xl font-bold text-green-900 mb-2 serif-font">天国的奥秘：种子与土壤</h2>
+                        <h3 class="text-lg text-green-700 italic font-serif mb-4 en-text">Mysteries of the Kingdom: The Seed and the Soil</h3>
+                        <p class="text-stone-700 text-lg leading-relaxed mb-4 font-medium">
+                            第四章是马可福音中关于天国比喻的核心篇章。耶稣用最日常的农耕景象——种子、土壤、生长、收割——来揭示神国度扩张的秘密。天国的道是种子，人心是土壤。本章以平静风浪的神迹结束，不仅展示了耶稣对自然界的主权，更向门徒提出了一个核心问题：“你们还没有信心吗？”
+                        </p>
+                        <p class="text-stone-500 text-sm leading-relaxed en-text">
+                            Chapter 4 is central to Jesus' teaching on the Kingdom in Mark. Using common agrarian imagery—seed, soil, growth, harvest—He reveals the secrets of the Kingdom's expansion. The Word is the seed; the human heart is the soil. The chapter ends with the calming of the storm, demonstrating Jesus' sovereignty over nature and posing a core question: "Do you still have no faith?"
+                        </p>
+                    </div>
+
+                    <!-- Right: Visual Badge -->
+                    <div class="bg-green-800 p-6 md:w-1/3 flex flex-col justify-center items-center relative overflow-hidden">
+                        <!-- Decorative bg -->
+                        <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(#fbbf24 1px, transparent 1px); background-size: 20px 20px;"></div>
+
+                        <div class="seed-badge rounded-full w-48 h-48 flex flex-col justify-center items-center text-center shadow-2xl transform hover:scale-105 transition-transform duration-300 z-10 bg-white">
+                            <div class="relative mb-2">
+                                <i class="fas fa-seedling text-green-600 text-5xl mb-1 block icon-sprout"></i>
+                                <i class="fas fa-sun text-yellow-500 text-2xl absolute -top-4 -right-2"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-green-900 serif-font">生长的种子</h3>
+                            <p class="text-[10px] font-bold text-yellow-600 uppercase tracking-widest en-text mt-1">The Growing Seed</p>
+                            <div class="w-12 h-0.5 bg-green-400 my-2"></div>
+                            <p class="text-xs text-gray-500">Hidden Power<br>隐藏的大能</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Concepts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Concept 1 -->
+                <div class="card p-6 border-l-4 border-green-500 bg-green-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-headphones text-green-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-green-900 text-xl block">听的责任</span>
+                            <span class="text-xs text-green-700 italic en-text">Responsibility to Hear</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        “有耳可听的，就应当听！”耶稣强调听道的态度决定了属灵生命的果效。比喻只向寻求者显明真理，对无心者则是隐藏。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        "Whoever has ears to hear, let them hear!" Attitude determines fruitfulness. Parables reveal truth to seekers but hide it from the indifferent.
+                    </p>
+                </div>
+
+                <!-- Concept 2 -->
+                <div class="card p-6 border-l-4 border-yellow-500 bg-yellow-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-chart-line text-yellow-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-yellow-900 text-xl block">神国的扩张</span>
+                            <span class="text-xs text-yellow-700 italic en-text">Kingdom Expansion</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        从微小的芥菜种到巨大的树，天国的开始虽然不起眼，但具有不可阻挡的生命力和最终的巨大成就。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        From mustard seed to great tree. The Kingdom starts small and unnoticed but possesses unstoppable life and ultimate greatness.
+                    </p>
+                </div>
+
+                <!-- Concept 3 -->
+                <div class="card p-6 border-l-4 border-blue-500 bg-blue-50">
+                    <div class="flex items-center mb-3">
+                        <i class="fas fa-anchor text-blue-700 text-xl mr-3"></i>
+                        <div>
+                            <span class="font-bold text-blue-900 text-xl block">信心的考验</span>
+                            <span class="text-xs text-blue-700 italic en-text">Test of Faith</span>
+                        </div>
+                    </div>
+                    <p class="text-stone-700 text-sm mb-2">
+                        平静风浪的神迹不仅展示了耶稣对自然界的主权，更揭示了门徒“小信”的问题。真信心是在风浪中仍能安息。
+                    </p>
+                    <p class="text-xs text-stone-500 italic en-text">
+                        Calming the storm shows sovereignty over nature and exposes disciples' "little faith". True faith rests even in the storm.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visual: The Four Soils Matrix -->
+            <div class="card p-8 bg-white border border-green-100">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-green-900 mb-2">撒种的比喻：四种心田的剖析</h3>
+                    <p class="text-sm text-slate-400 italic en-text">The Parable of the Sower: Analysis of Four Soils</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <!-- Soil 1 -->
+                    <div class="flex flex-col p-4 bg-stone-100 rounded-lg border-t-4 border-stone-500 text-center">
+                        <div class="text-stone-500 text-3xl mb-2"><i class="fas fa-road"></i></div>
+                        <h4 class="font-bold text-stone-800 text-sm mb-1">路旁 Path</h4>
+                        <p class="text-xs text-stone-600 mb-2">刚硬、繁忙、被践踏</p>
+                        <div class="bg-white p-2 rounded border border-stone-200 text-xs text-left">
+                            <span class="font-bold text-red-500">结果：</span> 撒但立刻夺去。<br>
+                            <span class="italic text-gray-400">No penetration.</span>
+                        </div>
+                    </div>
+
+                    <!-- Soil 2 -->
+                    <div class="flex flex-col p-4 bg-yellow-50 rounded-lg border-t-4 border-yellow-500 text-center">
+                        <div class="text-yellow-600 text-3xl mb-2"><i class="fas fa-mountain"></i></div>
+                        <h4 class="font-bold text-yellow-900 text-sm mb-1">土浅石头地 Rocky</h4>
+                        <p class="text-xs text-stone-600 mb-2">情绪化、肤浅、无根</p>
+                        <div class="bg-white p-2 rounded border border-yellow-200 text-xs text-left">
+                            <span class="font-bold text-orange-500">结果：</span> 遇患难即跌倒。<br>
+                            <span class="italic text-gray-400">No root.</span>
+                        </div>
+                    </div>
+
+                    <!-- Soil 3 -->
+                    <div class="flex flex-col p-4 bg-green-50 rounded-lg border-t-4 border-green-700 text-center">
+                        <div class="text-green-700 text-3xl mb-2"><i class="fas fa-holly-berry"></i></div>
+                        <h4 class="font-bold text-green-900 text-sm mb-1">荆棘地 Thorny</h4>
+                        <p class="text-xs text-stone-600 mb-2">忧虑、贪财、私欲</p>
+                        <div class="bg-white p-2 rounded border border-green-200 text-xs text-left">
+                            <span class="font-bold text-yellow-600">结果：</span> 道被挤住，无果。<br>
+                            <span class="italic text-gray-400">Choked.</span>
+                        </div>
+                    </div>
+
+                    <!-- Soil 4 -->
+                    <div class="flex flex-col p-4 bg-green-100 rounded-lg border-t-4 border-green-500 text-center">
+                        <div class="text-green-600 text-3xl mb-2"><i class="fas fa-seedling"></i></div>
+                        <h4 class="font-bold text-green-900 text-sm mb-1">好土 Good Soil</h4>
+                        <p class="text-xs text-stone-600 mb-2">领受、持守、忍耐</p>
+                        <div class="bg-white p-2 rounded border border-green-200 text-xs text-left">
+                            <span class="font-bold text-green-600">结果：</span> 30, 60, 100倍。<br>
+                            <span class="italic text-gray-400">Fruitful.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==================== TAB 2: VERSE STUDY (经文研读) ==================== -->
+        <section id="tab-study" class="section-content space-y-12">
+            
+            <!-- Filter Controls -->
+            <div class="sticky top-20 z-40 bg-green-50/90 backdrop-blur-sm p-2 rounded-lg shadow-sm border border-green-200 flex justify-center space-x-4 mb-8">
+                <button onclick="updateStudyFilter('all')" id="btn-all" class="px-4 py-2 rounded-md text-sm font-bold transition-all bg-green-700 text-white shadow-lg shadow-green-900/20">
+                    全部显示 <span class="block text-[10px] font-normal en-text">All</span>
+                </button>
+                <button onclick="updateStudyFilter('exegesis')" id="btn-exegesis" class="px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-green-100 transition-all">
+                    经文含义 <span class="block text-[10px] font-normal en-text">Meaning</span>
+                </button>
+                <button onclick="updateStudyFilter('devotional')" id="btn-devotional" class="px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-green-100 transition-all">
+                    灵修默想 <span class="block text-[10px] font-normal en-text">Devotional</span>
+                </button>
+            </div>
+
+            <!-- SECTION 1 -->
+            <div class="border-l-4 border-green-600 pl-6">
+                <h2 class="text-2xl font-bold text-green-800 mb-2">第一部分：撒种的比喻与解释 (4:1-20)</h2>
+                <h3 class="text-sm text-green-600 italic mb-6 en-text">The Parable of the Sower & Explanation</h3>
+                <div id="study-section-1" class="space-y-6"></div>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="border-l-4 border-yellow-500 pl-6">
+                <h2 class="text-2xl font-bold text-yellow-800 mb-2">第二部分：灯与量器的比喻 (4:21-25)</h2>
+                <h3 class="text-sm text-yellow-600 italic mb-6 en-text">The Lamp & The Measure</h3>
+                <div id="study-section-2" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 3 -->
+             <div class="border-l-4 border-green-400 pl-6">
+                <h2 class="text-2xl font-bold text-green-700 mb-2">第三部分：种子生长的奥秘 (4:26-34)</h2>
+                <h3 class="text-sm text-green-500 italic mb-6 en-text">The Mystery of Seed Growth</h3>
+                <div id="study-section-3" class="space-y-6"></div>
+            </div>
+
+             <!-- SECTION 4 -->
+             <div class="border-l-4 border-blue-600 pl-6">
+                <h2 class="text-2xl font-bold text-blue-800 mb-2">第四部分：平静风浪 (4:35-41)</h2>
+                <h3 class="text-sm text-blue-600 italic mb-6 en-text">Calming the Storm</h3>
+                <div id="study-section-4" class="space-y-6"></div>
+            </div>
+
+        </section>
+
+
+        <!-- ==================== TAB 3: METHODOLOGY (方法论) ==================== -->
+        <section id="tab-methodology" class="section-content">
+            <div class="max-w-4xl mx-auto space-y-8">
+                
+                <!-- Intro -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl font-bold text-stone-800 mb-3 serif-font">解经与应用的方法论</h2>
+                    <p class="text-stone-500 italic en-text">Methodology of Interpretation and Application</p>
+                </div>
+
+                <!-- Two Column Layout -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Column 1: Exegesis -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-green-100 p-4 border-b border-green-200">
+                            <h3 class="text-xl font-bold text-green-800 flex items-center">
+                                <i class="fas fa-book-reader mr-3"></i> 权威释义
+                            </h3>
+                            <p class="text-xs text-green-600 uppercase tracking-wider mt-1 en-text">Authoritative Exegesis</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于比喻（Parable）的文学形式，理解其“既隐藏又显明”的双重功能。分析天国“已然未然”（Already but Not Yet）的本质。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on the literary form of Parables: revealing and concealing. Analyzing the "Already/Not Yet" nature of the Kingdom.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-green-700 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">不要过度寓意化（Allegorize）比喻的每个细节，而要抓住其中心教导。理解“天国的奥秘”指神国度以意想不到的微小方式临到。</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Avoid over-allegorizing. Grasp the central point. "Mystery" means the Kingdom coming in humble, unexpected ways.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Devotional -->
+                    <div class="card overflow-hidden">
+                        <div class="bg-yellow-50 p-4 border-b border-yellow-200">
+                            <h3 class="text-xl font-bold text-yellow-700 flex items-center">
+                                <i class="fas fa-heart mr-3"></i> 灵修默想
+                            </h3>
+                            <p class="text-xs text-yellow-600 uppercase tracking-wider mt-1 en-text">Spiritual Devotion</p>
+                        </div>
+                        <div class="p-6">
+                            <p class="text-sm text-slate-600 mb-4 italic">
+                                侧重于省察心田的状态，培养属灵的听觉，以及在人生风暴中对主的信靠。
+                                <br><span class="text-xs text-slate-400 en-text">Focusing on examining heart soil, cultivating spiritual hearing, and trusting Christ in life's storms.</span>
+                            </p>
+                            <ul class="space-y-4 text-sm text-slate-700">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-yellow-600 mb-1">
+                                        <i class="fas fa-check-circle mr-2"></i> 核心原则 Principles
+                                    </div>
+                                    <div class="mb-1">将自己置于比喻的听众中：我是哪种土壤？我的灯是否放在灯台上？在风浪中，我是否确信主在船上？</div>
+                                    <div class="text-xs italic text-slate-500 en-text">Ask: Which soil am I? Is my lamp on a stand? In the storm, do I trust that He is in the boat?</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-950 text-green-200 mt-auto border-t border-green-800">
+        <div class="max-w-7xl mx-auto py-8 px-4 text-center">
+            <p class="text-lg font-serif italic text-white mb-1">"有耳可听的，就应当听！"</p>
+            <p class="text-sm italic text-green-300 mb-2 en-text">"Whoever has ears to hear, let them hear!"</p>
+            <p class="text-xs opacity-50 uppercase tracking-widest font-sans">马可福音第四章中英对照研经报告 | PARABLES OF THE KINGDOM</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Data & Logic -->
+    <script>
+        // --- DATA SOURCE ---
+        const studyData = {
+            section1: [
+                {
+                    ref: "4:1-9",
+                    text_cn: "耶稣... 用比喻教训他们许多道理... 撒种的出去撒种... 有落在路旁的... 土浅石头地的... 荆棘里的... 好土里的... 有耳可听的，就应当听！",
+                    text_en: "Jesus began to teach... in parables... 'A farmer went out to sow his seed. As he was scattering the seed, some fell along the path... on rocky places... among thorns... on good soil... Whoever has ears to hear, let them hear!'",
+                    exegesis: {
+                        title: "撒种者的比喻",
+                        title_en: "Parable of the Sower",
+                        content_cn: "这是天国比喻的基础。重点不在于撒种者或种子的质量（道是完美的），而在于土壤（人心）的反应。四种土壤代表四种对神话语的回应状态。这个比喻解释了为什么同样的福音在不同人身上产生截然不同的结果。",
+                        content_en: "The foundational parable. Focus is not on the Sower or Seed (Word is perfect), but the Soil (Heart). Four soils represent four responses to God's Word. Explains why the same Gospel produces different results."
+                    },
+                    devotional: {
+                        title: "你的心是哪种土壤？",
+                        title_en: "Which Soil is Your Heart?",
+                        content_cn: "我们常以为自己自然是“好土”，但心田的状态是动态的。忙碌（路旁）、浅薄（石头地）、忧虑贪欲（荆棘）随时可能侵入。我们需要求圣灵时刻翻耕我们的心土，除去硬心和杂草，使道能扎根结实。",
+                        content_en: "We assume we are 'good soil', but heart conditions change. Busyness (path), shallowness (rocks), anxiety/greed (thorns) invade. Ask the Spirit to plow your heart daily, removing hardness and weeds."
+                    }
+                },
+                {
+                    ref: "4:13-20",
+                    text_cn: "撒种之人所撒的就是道... 撒但立刻来，把道夺了去... 根基不深... 患难临到就跌倒了... 世上的思虑、钱财的迷惑... 把道挤住了... 领受三十倍、六十倍、一百倍。",
+                    text_en: "The farmer sows the word... Satan comes and takes away the word... they have no root... when trouble comes they fall away... worries of this life, deceitfulness of wealth... choke the word... accept it and produce a crop...",
+                    exegesis: {
+                        title: "比喻的解释",
+                        title_en: "Explanation of the Parable",
+                        content_cn: "耶稣亲自解释：1. **路旁**：心硬无法领受，被撒但夺去；2. **石头地**：情绪化接受但无根，经不起试炼；3. **荆棘地**：被世俗（忧虑/财富）挤住，虽有生命却不结果；4. **好土**：听道、领受并持守，产生丰盛果效。结果子是真信心的标志。",
+                        content_en: "Jesus explains: 1. **Path**: Hard heart, Satan steals; 2. **Rocky**: Emotional but rootless, fails in trial; 3. **Thorny**: Choked by worldliness (worry/wealth), unfruitful; 4. **Good**: Hears, accepts, persists, fruitful. Fruit is the mark of true faith."
+                    },
+                    devotional: {
+                        title: "松土与除草",
+                        title_en: "Tilling and Weeding",
+                        content_cn: "要成为好土，需要付代价。如果你发现自己听道却不记得（路旁），遇到困难就退缩（石头），或被生活压得喘不过气（荆棘），请在神面前悔改。求神赐下深刻的根基，并帮助你剪除生命中的荆棘（贪欲和忧虑）。",
+                        content_en: "Becoming good soil costs something. If you forget the Word (Path), quit in trouble (Rocks), or are overwhelmed by life (Thorns), repent. Ask God for deep roots and help to cut out the thorns of greed and worry."
+                    }
+                }
+            ],
+            section2: [
+                {
+                    ref: "4:21-23",
+                    text_cn: "人拿灯来，岂是要放在斗底下... 不显露出来吗？... 有耳可听的，就应当听！",
+                    text_en: "'Do you bring in a lamp to put it under a bowl... Instead, don't you put it on its stand?... If anyone has ears to hear, let them hear!'",
+                    exegesis: {
+                        title: "灯的比喻：显明真理",
+                        title_en: "Parable of the Lamp: Revealing Truth",
+                        content_cn: "灯（真理/耶稣自己）的目的就是照亮。虽然天国的奥秘暂时隐藏（在比喻中），但最终目的是要被显明和传扬。神不希望真理被隐藏，只等待合适的时间和预备好的人心。",
+                        content_en: "The purpose of a lamp (Truth/Jesus) is to shine. Though the Kingdom mystery is hidden (in parables) temporarily, its goal is revelation. God intends truth to be known in due time to prepared hearts."
+                    },
+                    devotional: {
+                        title: "成为发光体",
+                        title_en: "Be a Light Bearer",
+                        content_cn: "作为基督徒，我们既然领受了光，就不能把光藏起来（放在斗底下）。无论环境如何黑暗，神点亮我们是为了照亮周围的人。你的生命是在为主发光，还是被世界的杂物遮盖了？",
+                        content_en: "Having received Light, we cannot hide it. God lit us to shine, no matter the darkness. Is your life shining for Him, or covered by worldly clutter?"
+                    }
+                },
+                {
+                    ref: "4:24-25",
+                    text_cn: "你们用什么量器量给人，也必用什么量器量给你们... 因为有的，还要给他；没有的，连他所有的也要夺去。",
+                    text_en: "'With the measure you use, it will be measured to you... Whoever has will be given more; whoever does not have, even what they have will be taken from them.'",
+                    exegesis: {
+                        title: "量器的原则：属灵成长的律",
+                        title_en: "Principle of Measure: Law of Spiritual Growth",
+                        content_cn: "这不仅指对他人的审判，更指对真理的渴慕程度。你越用心“量”取神的话，神就越加倍赐给你亮光。属灵世界没有中间地带：不进则退。对真理的冷漠会导致现有领受的丧失。",
+                        content_en: "Refers to hunger for truth. The more you 'measure' (seek) God's Word, the more light He gives. No spiritual plateau: use it or lose it. Indifference leads to losing what you thought you had."
+                    },
+                    devotional: {
+                        title: "属灵的马太效应",
+                        title_en: "Spiritual Matthew Effect",
+                        content_cn: "你是否渴望更多认识神？如果你对神的话语充满渴慕，神承诺会给你更多。反之，如果我们对读经祷告敷衍了事，我们属灵的生命就会逐渐枯干。把你的“大桶”拿来，向神支取丰盛的恩典吧！",
+                        content_en: "Do you hunger for God? If you crave His Word, He promises more. If we are casual about faith, we dry up. Bring your 'large bucket' and draw deeply from God's grace!"
+                    }
+                }
+            ],
+            section3: [
+                {
+                    ref: "4:26-29",
+                    text_cn: "神的国如同人把种撒在地上... 地生五谷是出于自然的... 谷既熟了，就用镰刀去，因为收成的时候到了。",
+                    text_en: "'This is what the kingdom of God is like. A man scatters seed... All by itself the soil produces grain... As soon as the grain is ripe, he puts the sickle to it...'",
+                    exegesis: {
+                        title: "种子自动生长的比喻",
+                        title_en: "Parable of the Growing Seed",
+                        content_cn: "这是马可独有的比喻。强调神国度生长的神圣主权和内在生命力（Automate - 自动）。农夫（传道者）撒种后，生长在于神。尽管人不知道过程，但收割（审判/终局）是必然的。这鼓励我们在看不见果效时仍要信靠神的工作。",
+                        content_en: "Unique to Mark. Emphasizes divine sovereignty and intrinsic life ('Automate') of the Kingdom. Farmer sows, God grows. Process is hidden, but Harvest is certain. Encourages trust when results are unseen."
+                    },
+                    devotional: {
+                        title: "信靠生长的过程",
+                        title_en: "Trust the Process of Growth",
+                        content_cn: "我们常因看不到立竿见影的效果而焦虑。这个比喻教导我们：只要忠心撒种，神会负责生长。即使在你睡觉的时候，神的工作也在进行。放下掌控的焦虑，安息在神的大能中。",
+                        content_en: "We worry about results. This teaches: Sow faithfully, God gives growth. Even while you sleep, God works. Let go of control-anxiety and rest in His power."
+                    }
+                },
+                {
+                    ref: "4:30-32",
+                    text_cn: "神的国... 好像一粒芥菜种... 种在地里的时候，比地上百种都小... 长起来... 甚至天上的飞鸟可以宿在它的荫下。",
+                    text_en: "'What shall we say the kingdom of God is like?... It is like a mustard seed... smallest of all seeds... Yet when planted, it grows... birds can perch in its shade.'",
+                    exegesis: {
+                        title: "芥菜种的比喻",
+                        title_en: "Parable of the Mustard Seed",
+                        content_cn: "对比“开始的微小”与“结局的巨大”。耶稣的事工看似不起眼（加利利的木匠，几个渔夫），但最终将扩展成为荫庇万国的国度（飞鸟宿在荫下，参以西结书17:23，指外邦人得福）。",
+                        content_en: "Contrasts 'Small Beginning' with 'Massive Outcome'. Jesus' ministry seemed insignificant, yet grows into a Kingdom blessing all nations (Birds in shade = Gentiles blessed, cf. Ezek 17:23)."
+                    },
+                    devotional: {
+                        title: "勿以善小而不为",
+                        title_en: "Don't Despise Small Beginnings",
+                        content_cn: "不要轻看微小的开始——一句鼓励的话、一次短祷、一点奉献。在神手中，最小的种子可以长成最大的树。对你的事工、生命成长要有信心，因为神国度的DNA就在那微小的种子在。",
+                        content_en: "Don't despise small starts—a word, a prayer, a gift. In God's hands, the smallest seed becomes a great tree. Have faith in your growth/ministry; the Kingdom DNA is in the seed."
+                    }
+                }
+            ],
+            section4: [
+                {
+                    ref: "4:35-41",
+                    text_cn: "忽然起了暴风... 耶稣在船尾上，枕着枕头睡觉... 耶稣醒了，斥责风... 风就止住，大大的平静了... 你们还没有信心吗？",
+                    text_en: "A furious squall came up... Jesus was in the stern, sleeping on a cushion... He got up, rebuked the wind... it died down and was completely calm... 'Do you still have no faith?'",
+                    exegesis: {
+                        title: "平静风浪：掌管自然的主",
+                        title_en: "Calming the Storm: Lord over Nature",
+                        content_cn: "耶稣的人性（睡觉、疲累）与神性（斥责风浪）完美结合。“斥责”一词与赶鬼时所用相同，暗示风浪背后可能有黑暗势力的搅扰。耶稣的问题直指门徒的核心：恐惧是因为缺乏信心。祂就在船上，这就是最大的保障。",
+                        content_en: "Jesus' humanity (sleeping) meets His divinity (rebuking nature). 'Rebuke' echoes exorcism language. The storm might be demonic. Jesus exposes the root of fear: lack of faith. His presence in the boat is the ultimate security."
+                    },
+                    devotional: {
+                        title: "风浪中的真平安",
+                        title_en: "True Peace in the Storm",
+                        content_cn: "人生的风暴常突如其来。我们在风浪中常像门徒一样惊慌：“主啊，你不顾吗？”其实主一直在船上。真正的信心不是没有风浪，而是在风浪中因知主同在而有的平静。不要看风浪，要看那位能命令风浪的主。",
+                        content_en: "Storms hit suddenly. We panic: 'Lord, don't you care?' He is there. Faith isn't the absence of storms, but peace within them because of His presence. Don't look at the waves; look at the Lord who commands them."
+                    }
+                }
+            ]
+        };
+
+        const appState = {
+            studyFilter: 'all' // 'all', 'exegesis', 'devotional'
+        };
+
+        // --- FUNCTIONS ---
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.classList.remove('active');
+                setTimeout(() => {
+                   if(!el.classList.contains('active')) el.style.display = 'none';
+                }, 300);
+            });
+
+            const selectedSection = document.getElementById('tab-' + tabId);
+            selectedSection.style.display = 'block';
+            void selectedSection.offsetWidth; 
+            selectedSection.classList.add('active');
+
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+            const activeBtn = document.getElementById('tab-' + tabId + '-btn');
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+        }
+
+        function renderVerseSection(containerId, versesData) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            versesData.forEach(verse => {
+                const card = document.createElement('div');
+                card.className = 'card p-6 verse-card bg-white';
+
+                let contentHTML = `
+                    <div class="mb-5">
+                        <span class="inline-block bg-green-700 text-white text-xs font-bold px-2 py-1 rounded mb-2 serif-font">Vs ${verse.ref}</span>
+                        <p class="text-stone-900 font-medium mb-1 leading-relaxed text-lg">${verse.text_cn}</p>
+                        <p class="text-stone-500 text-sm italic en-text">${verse.text_en}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6 border-t border-green-100 pt-5">
+                `;
+
+                const showExegesis = appState.studyFilter === 'all' || appState.studyFilter === 'exegesis';
+                const showDevotional = appState.studyFilter === 'all' || appState.studyFilter === 'devotional';
+
+                // Column 1: Exegesis
+                if (showExegesis) {
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'exegesis' ? 'col-span-2' : ''}">
+                            <h4 class="flex items-center text-green-800 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-book-open mr-2"></i> 经文含义 <span class="ml-2 text-[10px] text-green-500 font-normal en-text">Meaning</span>
+                            </h4>
+                            <h5 class="font-bold text-stone-800 mb-1 text-base">${verse.exegesis.title}</h5>
+                            <p class="text-xs text-stone-400 mb-3 italic en-text">${verse.exegesis.title_en}</p>
+                            <div class="text-sm text-stone-700 leading-relaxed">
+                                <p class="mb-2">${verse.exegesis.content_cn}</p>
+                                <p class="text-xs text-stone-500 italic en-text">${verse.exegesis.content_en}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Column 2: Devotional
+                if (showDevotional) {
+                    const devData = verse.devotional || { title: "Reflecting...", title_en: "Reflecting...", content_cn: "...", content_en: "..." };
+                    
+                    contentHTML += `
+                        <div class="${appState.studyFilter === 'devotional' ? 'col-span-2' : ''} ${showExegesis && appState.studyFilter === 'all' ? 'md:border-l md:border-green-100 md:pl-8' : ''}">
+                            <h4 class="flex items-center text-yellow-700 font-bold mb-3 text-sm uppercase tracking-wide">
+                                <i class="fas fa-heart mr-2"></i> 灵修默想 <span class="ml-2 text-[10px] text-yellow-600 font-normal en-text">Devotional</span>
+                            </h4>
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100">
+                                <h5 class="font-bold text-stone-800 mb-1 text-base">${devData.title}</h5>
+                                <p class="text-xs text-stone-400 mb-3 italic en-text">${devData.title_en}</p>
+                                <div class="text-sm text-stone-700 leading-relaxed">
+                                    <p class="mb-2">${devData.content_cn}</p>
+                                    <p class="text-xs text-stone-500 italic en-text">${devData.content_en}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                contentHTML += `</div>`;
+                card.innerHTML = contentHTML;
+                container.appendChild(card);
+            });
+        }
+
+        function updateStudyFilter(filter) {
+            appState.studyFilter = filter;
+            renderAllStudySections();
+            
+            // Update buttons styling
+            ['all', 'exegesis', 'devotional'].forEach(type => {
+                const btn = document.getElementById('btn-' + type);
+                if (type === filter) {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-bold transition-all bg-green-700 text-white shadow-lg shadow-green-900/20";
+                } else {
+                    btn.className = "px-4 py-2 rounded-md text-sm font-medium text-stone-500 hover:bg-green-100 transition-all";
+                }
+            });
+        }
+
+        function renderAllStudySections() {
+            renderVerseSection('study-section-1', studyData.section1);
+            renderVerseSection('study-section-2', studyData.section2);
+            renderVerseSection('study-section-3', studyData.section3);
+            renderVerseSection('study-section-4', studyData.section4);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAllStudySections();
+            switchTab('overview');
+        });
+
+    </script>
+</body>
+</html>

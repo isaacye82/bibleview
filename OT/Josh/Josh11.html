@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 11: Chariots & Fire | 约书亚记第十一章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Iron Grey - Enemy Technology/Chariots */
+            --theme-primary: #334155; 
+            /* Burning Orange - Fire of Hazor */
+            --theme-secondary: #c2410c;
+            /* Sand Beige - Multitude */
+            --theme-accent: #fcd34d;
+            /* Smoky Background */
+            --theme-bg: #f8fafc;
+            /* Text */
+            --theme-text: #0f172a;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            background-image: linear-gradient(to bottom, #f1f5f9 0%, #e2e8f0 100%);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-secondary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-secondary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px -1px rgba(51, 65, 85, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #cbd5e1;
+            border-left: 4px solid var(--theme-secondary); /* Fire Orange Border */
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(194, 65, 12, 0.15);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Burning Wheel Animation */
+        .wheel-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .chariot-wheel {
+            width: 100px;
+            height: 100px;
+            border: 8px solid #475569;
+            border-radius: 50%;
+            position: relative;
+            animation: collapseWheel 4s infinite ease-in-out;
+        }
+        .spoke {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #475569;
+            transform-origin: center;
+        }
+        .spoke:nth-child(1) { transform: translateY(-50%) rotate(0deg); }
+        .spoke:nth-child(2) { transform: translateY(-50%) rotate(45deg); }
+        .spoke:nth-child(3) { transform: translateY(-50%) rotate(90deg); }
+        .spoke:nth-child(4) { transform: translateY(-50%) rotate(135deg); }
+
+        .fire-overlay {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 80px;
+            color: #ea580c;
+            opacity: 0.8;
+            filter: drop-shadow(0 -10px 10px #f97316);
+            animation: fireFlicker 2s infinite alternate;
+        }
+
+        @keyframes collapseWheel {
+            0% { transform: rotate(0deg) scale(1); border-color: #475569; }
+            50% { transform: rotate(180deg) scale(1); border-color: #7c2d12; }
+            100% { transform: rotate(360deg) scale(0.8) skewX(20deg); border-color: #451a03; opacity: 0.5; }
+        }
+        @keyframes fireFlicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.7; }
+            100% { transform: translateX(-50%) scale(1.1); opacity: 0.9; }
+        }
+
+        /* Map Conquest Animation */
+        .map-conquest {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .map-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #ca8a04, #c2410c);
+            animation: conquer 3s ease-out forwards;
+        }
+        @keyframes conquer {
+            to { width: 100%; }
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-secondary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px; /* Slight rounded square */
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-slate-900 shadow-md sticky top-0 z-50 border-b border-orange-700">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-orange-100 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire mr-2 text-orange-500"></i> 约书亚记 11章</span>
+                        <span class="text-[10px] sm:text-xs text-slate-400 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 11</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center text-orange-100">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-400 hover:text-orange-300 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-slate-400 hover:text-orange-300 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#0f172a] text-slate-400 mt-auto border-t-4 border-orange-800">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-orange-200 mb-1">"砍断他们马的蹄筋，用火焚烧他们的车辆。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Hamstring their horses and burn their chariots with fire."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第十一章中英对照研经报告 | Chariots & Fire</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "北方终极战役与安息",
+                title_en: "The Final Northern Campaign & Rest",
+                summary_zh: "约书亚记第11章记录了征服迦南的最后一战——北方战役。夏琐王耶宾组建了一个空前强大的联盟，拥有‘多如海边之沙’的军队和令人生畏的铁车马兵。然而，神指示了一个反常规的战略：摧毁敌人的高科技武器（马匹与战车），而不是据为己有。本章展示了神对世俗力量的审判，以及经过长久争战后，地终于得享太平。",
+                summary_en: "Joshua 11 records the final battle of the conquest—the Northern Campaign. Jabin of Hazor assembled a massive coalition, numerous 'as the sand on the seashore', armed with horses and chariots. Yet, God commanded a counter-intuitive strategy: destroy the advanced weaponry, don't adopt it. This chapter showcases judgment on worldly power and, after a long war, the land finally resting from war.",
+                concepts: [
+                    { title: "砍断蹄筋", title_en: "Hamstring", hebrew: "Aqar", color: "text-slate-800", bg: "bg-slate-100", desc_zh: "使战马残废。神不希望以色列依靠军事科技（诗20:7），而要单单依靠耶和华。", desc_en: "Disabling warhorses. God wanted Israel to rely on Him, not military tech (Ps 20:7)." },
+                    { title: "诸国之首", title_en: "Head of Kingdoms", hebrew: "Rosh", color: "text-orange-800", bg: "bg-orange-50", desc_zh: "夏琐是迦南的政治和军事中心。焚烧夏琐象征着砍下蛇头，彻底瓦解迦南的势力。", desc_en: "Hazor was the political/military center. Burning Hazor symbolized cutting off the snake's head." },
+                    { title: "许久", title_en: "Long Time", hebrew: "Yamim Rabbim", color: "text-stone-700", bg: "bg-stone-100", desc_zh: "与南方的闪电战不同，北方战役持续了很久。信心不仅是瞬间的爆发，更是长期的忍耐。", desc_en: "Unlike the southern blitzkrieg, this war lasted 'many days'. Faith is also long-term endurance." }
+                ]
+            },
+            sections: [
+                {
+                    id: "coalition",
+                    title: "北方的超级联盟 (11:1-5)",
+                    title_en: "The Northern Super-Coalition",
+                    verses: [
+                        {
+                            ref: "11:4-5",
+                            text_zh: "这些王和他们的众军都出来，人数多如海边的沙，并有许多马匹车辆...在米伦水边一同安营，要与以色列人争战。",
+                            text_en: "And they came out, with all their troops, a great horde, in number like the sand that is on the seashore, with very many horses and chariots... at the waters of Merom...",
+                            exegesis: {
+                                title: "最后的反扑 (The Final Resistance)",
+                                content_zh: "这是以色列面临的最大规模集结。敌人不仅人数众多（‘海边的沙’），更重要的是拥有‘马匹车辆’（当时的坦克）。夏琐王耶宾（‘耶宾’可能是王室头衔，意为‘聪明/有辨识力’）显然是这个联盟的策划者。这是人类力量与技术的巅峰对抗神的子民。",
+                                content_en: "The largest gathering Israel faced. Not just numbers ('sand'), but technology ('horses/chariots' = tanks). Jabin (likely a royal title meaning 'Discerning') orchestrated this. It represents the peak of human power and tech against God's people."
+                            },
+                            devotional: {
+                                title: "面对‘战车’的恐惧 (Fear of 'Chariots')",
+                                content_zh: "我们在生活中也会遇到‘拥有战车’的敌人——那些拥有更多资源、更高技术、更强背景的竞争对手或困难。看起来我们毫无胜算（以色列没有骑兵）。但这种实力的悬殊正是神彰显祂荣耀的舞台。敌人的强大不是为了以此吓倒我们，而是为了以此显明神的得胜。",
+                                content_en: "We face enemies with 'chariots'—competitors with more resources/tech. It seems hopeless. But this disparity is the stage for God's glory. The enemy's strength isn't there to scare us, but to highlight God's victory."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "command",
+                    title: "神的战略：去军事化 (11:6-9)",
+                    title_en: "Divine Strategy: Demilitarization",
+                    verses: [
+                        {
+                            ref: "11:6",
+                            text_zh: "耶和华对约书亚说：‘你不要因他们惧怕...你必砍断他们马的蹄筋，用火焚烧他们的车辆。’",
+                            text_en: "And the LORD said to Joshua, 'Do not be afraid of them... you shall hamstring their horses and burn their chariots with fire.'",
+                            exegesis: {
+                                title: "依靠神而非武器 (Trust God, Not Weapons)",
+                                content_zh: "神给出的命令令人费解：为何不缴获战车来增强自己的军力？神要切断以色列人对‘先进武器’的依赖。‘有人靠车，有人靠马，但我们要提到耶和华我们神的名’（诗20:7）。在古代，拥有战车就等于拥有安全感，但神要成为他们唯一的安全感。",
+                                content_en: "A puzzling command: Why not capture the chariots? God wanted to cut off reliance on 'advanced weaponry'. 'Some trust in chariots... but we trust in the name of the LORD.' Chariots equaled security; God wanted to be their sole security."
+                            },
+                            devotional: {
+                                title: "烧掉你的退路 (Burn the Chariots)",
+                                content_zh: "有时神要求我们放弃一些看似能给我们带来安全感的东西（存款、人脉、备胎），因为这些东西在不知不觉中取代了神的位置。‘砍断马腿’意味着自废武功，但这正是信心的真谛——除了神，我别无依靠。你敢烧掉你的‘战车’吗？",
+                                content_en: "God may ask us to abandon things that give false security (savings, connections). These replace God. 'Hamstringing' means disabling self-reliance. This is faith—having no Plan B but God. Dare you burn your 'chariots'?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "hazor",
+                    title: "焚烧夏琐 (11:10-15)",
+                    title_en: "Burning of Hazor",
+                    verses: [
+                        {
+                            ref: "11:10-11",
+                            text_zh: "当时约书亚转回夺了夏琐...素来夏琐在这诸国中是为首的...约书亚又用火焚烧夏琐。",
+                            text_en: "Joshua turned back... and struck Hazor... for Hazor formerly was the head of all those kingdoms... And he burned Hazor with fire.",
+                            exegesis: {
+                                title: "打蛇打头 (Striking the Head)",
+                                content_zh: "考古发掘证实夏琐在晚青铜时期被大火彻底毁灭。夏琐是‘诸国之首’，是迦南文化的中心。焚烧夏琐具有战略和神学双重意义：战略上摧毁指挥中心，神学上审判迦南的罪恶核心。经文特意提到‘造在山冈上的城’都没有焚烧，唯独焚烧了夏琐，这显示了审判的针对性。",
+                                content_en: "Archaeology confirms Hazor's destruction by fire. As 'head of kingdoms', it was the Canaanite hub. Burning it was strategic (destroying HQ) and theological (judging the core of sin). Only Hazor was burnt, not other cities on mounds, showing targeted judgment."
+                            },
+                            devotional: {
+                                title: "对付罪的源头 (Deal with the Head)",
+                                content_zh: "在我们的生命中，也有一些‘夏琐’——那些控制我们思想、习惯和行为模式的‘为首’的罪。我们可能处理了一些小问题（周边的小城），但如果那个核心的‘王’（骄傲、贪婪、情欲）没有被火焚烧，争战就不会结束。找出你生命中的夏琐，彻底焚烧它。",
+                                content_en: "We have 'Hazors' in life—core sins ruling our habits. We may deal with small issues, but if the 'head' (pride, greed) isn't burnt, war continues. Identify your Hazor and burn it down completely."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "summary",
+                    title: "从争战到安息 (11:16-23)",
+                    title_en: "From War to Rest",
+                    verses: [
+                        {
+                            ref: "11:18, 23",
+                            text_zh: "约书亚和这诸王争战了许多年日...于是国中太平，没有争战了。",
+                            text_en: "Joshua made war a long time with all those kings... And the land had rest from war.",
+                            exegesis: {
+                                title: "忍耐的得胜 (Persevering Victory)",
+                                content_zh: "‘许多年日’（Long time）据推算约为7年。这纠正了我们对‘得胜’的误解——以为得胜总是瞬间的神迹（如耶利哥）。更多时候，得胜是日复一日的坚持。除了基遍人，没有一城是求和的（11:19），这是神任凭他们心里刚硬，为了执行公义的审判。最终的‘太平’（Rest）是神应许的实现。",
+                                content_en: "'A long time' (approx. 7 years) corrects the misconception that victory is always instant (like Jericho). Often, it's daily persistence. No city made peace (except Gibeon) because God hardened their hearts for judgment. The final 'rest' is the fulfillment of promise."
+                            },
+                            devotional: {
+                                title: "坚持就是胜利 (Persistence is Victory)",
+                                content_zh: "你的属灵争战已经持续了‘许多年日’吗？不要灰心。并不是因为你做错了什么，而是因为征服全地需要时间。约书亚没有在中途放弃。真正的安息是在彻底完成神托付之后来到的。在那日之前，请继续挥剑，继续前行。",
+                                content_en: "Has your battle lasted 'a long time'? Don't lose heart. It's not because you're wrong, but conquest takes time. Joshua didn't quit. True rest comes after completing God's mandate. Until then, keep swinging the sword."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-400');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-400');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-orange-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-orange-100 text-orange-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-orange-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-orange-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Burning Wheel & Map -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Burning Wheel -->
+                        <div class="bg-slate-800 p-4 rounded shadow-lg relative h-56 flex flex-col items-center justify-center group border border-slate-600 overflow-hidden">
+                            <div class="absolute top-2 left-4 z-20">
+                                <h3 class="text-orange-200 font-bold uppercase tracking-widest text-xs">Burn the Chariots</h3>
+                                <p class="text-[10px] text-slate-400 italic">"Trust not in horses"</p>
+                            </div>
+
+                            <div class="wheel-container">
+                                <div class="chariot-wheel">
+                                    <div class="spoke"></div>
+                                    <div class="spoke"></div>
+                                    <div class="spoke"></div>
+                                    <div class="spoke"></div>
+                                </div>
+                                <div class="fire-overlay"><i class="fas fa-fire"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Map Conquest Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex flex-col justify-center">
+                             <div class="z-10 w-full mb-4">
+                                 <h4 class="text-sm font-bold text-stone-800 mb-1 flex items-center">
+                                    <i class="fas fa-map mr-2 text-stone-600"></i>
+                                    得地为业 (Taking the Land)
+                                 </h4>
+                                 <p class="text-xs text-stone-600 leading-relaxed">
+                                    从南到北，从平原到高山。争战了许多年日，终于得了安息。
+                                 </p>
+                             </div>
+                             
+                             <!-- Progress Bar Animation -->
+                             <div class="w-full">
+                                 <div class="flex justify-between text-[10px] text-stone-400 mb-1 font-mono uppercase">
+                                     <span>South</span>
+                                     <span>North (Hazor)</span>
+                                     <span>Rest</span>
+                                 </div>
+                                 <div class="map-conquest">
+                                     <div class="map-progress"></div>
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-orange-600 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-orange-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-orange-50 text-orange-800 text-[10px] font-bold rounded mb-3 font-mono border border-orange-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fff7ed] border-b md:border-b-0 md:border-r border-orange-100 relative">
+                            <div class="flex items-center mb-3 text-orange-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-orange-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#f8fafc] relative">
+                            <div class="flex items-center mb-3 text-slate-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-slate-600 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-orange-600">
+                            <div class="text-orange-600 text-3xl mb-4"><i class="fas fa-ban"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">反向文化 (Counter-Cultural)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Warfare & Trust</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-orange-500"></i> 去军事化 Demilitarization</div>
+                                    <div class="mb-1">分析神命令"焚烧战车"的神学含义。这违反了当时军事常识，表明神要建立一个只依靠祂的国度，而非军事强国。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Burning chariots contradicts military logic, emphasizing a Kingdom relying solely on God.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-orange-500"></i> 总结性叙事 Summarization</div>
+                                    <div class="mb-1">理解第11章作为约书亚记前半部（征服）的总结，强调"凡耶和华所吩咐的...约书亚没有一件懈怠不行的"。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Ch 11 summarizes the Conquest: Joshua left nothing undone of God's command.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-slate-600">
+                            <div class="text-slate-600 text-3xl mb-4"><i class="fas fa-hourglass-half"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Endurance & Source</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 长期的信心 Long-term Faith</div>
+                                    <div class="mb-1">得胜不是百米冲刺，而是马拉松。鼓励信徒在漫长的"许多年日"中持守信心，直到国中太平。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Victory is a marathon. Encouraging endurance through 'many days' until rest comes.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-slate-500"></i> 唯一的依靠 Sole Source</div>
+                                    <div class="mb-1">挑战信徒检视自己的安全感来源。如果"战车"（金钱、地位）被烧毁，你是否还能站立得住？</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Challenging our security source. Can you stand if your 'chariots' are burned?</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

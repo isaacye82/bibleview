@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joshua 18: The Survey at Shiloh | 约书亚记第十八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Shiloh Blue - The Tabernacle, Presence */
+            --theme-primary: #1e3a8a; 
+            /* Scroll Parchment - The Survey Book */
+            --theme-secondary: #92400e;
+            /* Survey Red - Measuring Lines */
+            --theme-accent: #dc2626;
+            /* Background */
+            --theme-bg: #f0f9ff;
+            /* Text */
+            --theme-text: #172554;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Graph paper pattern for "Surveying" theme */
+            background-image: 
+                linear-gradient(rgba(30, 58, 138, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(30, 58, 138, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(30, 58, 138, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(30, 58, 138, 0.15);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Drawing Map Animation */
+        .map-canvas {
+            position: relative;
+            height: 180px;
+            width: 100%;
+            background: #fffbeb; /* Paper color */
+            border: 1px solid #d4d4d8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .map-line {
+            position: absolute;
+            height: 2px;
+            background: #dc2626;
+            transform-origin: left;
+            animation: drawLine 3s infinite;
+        }
+        .line-1 { top: 30%; left: 20%; width: 60px; transform: rotate(15deg); }
+        .line-2 { top: 45%; left: 35%; width: 50px; transform: rotate(45deg); animation-delay: 1s; }
+        .line-3 { top: 75%; left: 45%; width: 70px; transform: rotate(-10deg); animation-delay: 2s; }
+        
+        .surveyor-pen {
+            position: absolute;
+            font-size: 24px;
+            color: #1e3a8a;
+            animation: write 3s infinite;
+            z-index: 10;
+        }
+
+        @keyframes drawLine {
+            0% { width: 0; opacity: 0; }
+            20% { opacity: 1; }
+            100% { width: 60px; opacity: 1; }
+        }
+        @keyframes write {
+            0% { top: 30%; left: 20%; }
+            33% { top: 45%; left: 35%; }
+            66% { top: 75%; left: 45%; }
+            100% { top: 30%; left: 20%; }
+        }
+
+        /* Tabernacle Rising Animation */
+        .tent-base {
+            width: 80px;
+            height: 50px;
+            background: #1e3a8a;
+            position: relative;
+            margin: 0 auto;
+            clip-path: polygon(0% 100%, 15% 0%, 85% 0%, 100% 100%);
+            animation: riseUp 2s ease-out forwards;
+            transform-origin: bottom;
+        }
+        .tent-pole {
+            width: 4px;
+            height: 70px;
+            background: #92400e;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1;
+            animation: poleUp 2s ease-out forwards;
+        }
+        @keyframes riseUp {
+            0% { transform: scaleY(0); }
+            100% { transform: scaleY(1); }
+        }
+        @keyframes poleUp {
+            0% { height: 0; }
+            100% { height: 70px; }
+        }
+
+        /* Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(30, 58, 138, 0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-blue-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-blue-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-campground mr-2 text-blue-600"></i> 约书亚记 18章</span>
+                        <span class="text-[10px] sm:text-xs text-blue-500 en-text font-normal ml-6 sm:ml-8">Joshua Chapter 18</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-blue-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#172554] text-stone-400 mt-auto border-t-4 border-blue-700">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-blue-100 mb-1">"要起身走遍那地，划明地势。"</p>
+            <p class="text-xs sm:text-sm italic text-blue-300 mb-2 en-text">"Rise, walk through the land and describe it."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">约书亚记第十八章中英对照研经报告 | The Survey at Shiloh</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "示罗的会幕与土地的勘测",
+                title_en: "The Tabernacle at Shiloh & The Survey of the Land",
+                summary_zh: "约书亚记第18章标志着一个新的开始。随着主要战役的结束，以色列的政治和宗教中心从吉甲（战场大本营）转移到了示罗，并在那里设立了会幕。然而，约书亚不得不责备剩下的七个支派，因为他们对于承受产业表现出了懈怠。为了推动他们，约书亚派出了一支‘勘测队’（每支派三人），走遍那地并‘画图’（Describe/Write）。这不仅是地理上的测量，更是信心上的丈量。",
+                summary_en: "Joshua 18 marks a new beginning. With major battles over, the political and religious center shifts from Gilgal (camp) to Shiloh, where the Tabernacle is set up. However, Joshua rebukes the remaining seven tribes for their slackness in taking inheritance. To mobilize them, he sends a 'survey team' (3 per tribe) to walk through and 'describe' the land. This is not just geography; it's measuring by faith.",
+                concepts: [
+                    { title: "耽延", title_en: "Slack", hebrew: "Raphah", color: "text-red-700", bg: "bg-red-50", desc_zh: "原意为‘松开’、‘下垂’。指手软、消极、缺乏行动力。这是得胜后常见的属灵惰性。", desc_en: "Means to 'let drop', be slack. Spiritual lethargy common after initial victories." },
+                    { title: "示罗", title_en: "Shiloh", hebrew: "Shiloh", color: "text-blue-800", bg: "bg-blue-50", desc_zh: "意为‘安息之地’。会幕在此停留了约369年，象征神在百姓中间正式的掌权和居住。", desc_en: "Means 'Place of Rest'. The Tabernacle stayed here ~369 years, symbolizing God's central rule." },
+                    { title: "画图", title_en: "Describe/Write", hebrew: "Kathab", color: "text-amber-700", bg: "bg-amber-50", desc_zh: "这是圣经中首次提到详细的‘土地勘测’。将神的应许具体化、书面化，是获得产业的重要步骤。", desc_en: "First biblical mention of land survey. Visualizing/Writing God's promise is key to possession." }
+                ]
+            },
+            sections: [
+                {
+                    id: "shiloh",
+                    title: "设立会幕：以神为中心 (18:1)",
+                    title_en: "Setting up the Tabernacle: God Centered",
+                    verses: [
+                        {
+                            ref: "18:1",
+                            text_zh: "以色列全会众都聚集在示罗，把会幕设立在那里，那地已经被他们制伏了。",
+                            text_en: "Then the whole congregation of the people of Israel assembled at Shiloh and set up the tent of meeting there. The land lay subdued before them.",
+                            exegesis: {
+                                title: "从征服到敬拜 (From Conquest to Worship)",
+                                content_zh: "吉甲是争战的基地，示罗是安息的中心。会幕的设立标志着神正式‘入住’祂赐给百姓的土地。这也确立了之后分配土地的原则：一切产业的分配都要在‘耶和华面前’（18:6）进行。这意味着生活的所有领域（地理、经济）都要围绕着敬拜（神学）来构建。",
+                                content_en: "Gilgal was for war; Shiloh for rest. Setting up the Tabernacle signaled God 'moving in'. It established the principle that all land distribution happens 'before the LORD' (v.6). All of life (geography, economy) must be centered around worship."
+                            },
+                            devotional: {
+                                title: "你的生命中心在哪里？ (Where is Your Center?)",
+                                content_zh: "以色列人不再四处漂泊打仗，而是有了固定的中心——示罗的会幕。你的生活是否有一个‘示罗’？在忙碌的工作和应酬中，是否有一个让神‘设立会幕’的空间？当我们将神置于生活的正中心时，周围的‘土地’（生活各层面）才能真正被‘制伏’和安顿。",
+                                content_en: "Israel stopped drifting and centered on Shiloh. Do you have a 'Shiloh'? Amidst busyness, is there a space where God's tent is pitched? When God is central, the surrounding 'land' (life areas) becomes subdued and ordered."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "rebuke",
+                    title: "责备懈怠 (18:2-3)",
+                    title_en: "Rebuke for Slackness",
+                    verses: [
+                        {
+                            ref: "18:3",
+                            text_zh: "约书亚对以色列人说：‘耶和华你们列祖的神所赐给你们的地，你们耽延不去得，要到几时呢？’",
+                            text_en: "So Joshua said to the people of Israel, 'How long will you put off going in to take possession of the land, which the LORD, the God of your fathers, has given you?'",
+                            exegesis: {
+                                title: "得胜后的瘫痪 (Post-Victory Paralysis)",
+                                content_zh: "七个支派此时可能已经厌倦了战争，或者是满足于现有的战利品，或者是因为那是山区难攻而不愿动身。约书亚的责备一针见血：地已经是神‘赐给’（Given）的，但问题在于人‘不去得’（Not Going）。神的主权恩典并不废除人的责任。被动的等待不是信心，是懒惰。",
+                                content_en: "Seven tribes were likely war-weary, satisfied with spoils, or intimidated by terrain. Joshua's rebuke is sharp: The land is 'Given' by God, but the problem is you are 'Not Going'. Divine sovereignty doesn't cancel human responsibility. Passive waiting isn't faith; it's laziness."
+                            },
+                            devotional: {
+                                title: "你要耽延到几时？ (How Long Will You Wait?)",
+                                content_zh: "我们常说‘我在等候神’，但很多时候其实是神在等候我们。神已经把应许（如成圣的能力、事奉的机会、家庭的复兴）赐下了，但我们却因为畏难或安逸而‘耽延’。今天，听约书亚的呼喊：‘要到几时呢？’ 起来，去得那地！",
+                                content_en: "We say 'I'm waiting on God', but often God is waiting on us. He has given the promise, but we delay due to fear or comfort. Hear Joshua today: 'How long?' Get up and take possession!"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "survey",
+                    title: "走遍与画图 (18:4-10)",
+                    title_en: "Walking & Describing",
+                    verses: [
+                        {
+                            ref: "18:4, 8",
+                            text_zh: "你们要...起身走遍那地，按着各支派应得的地业写明...他们就去了，走遍那地...画了地势。",
+                            text_en: "Rise and go through the land and describe it for inheritance... So the men went and passed up and down in the land and described it...",
+                            exegesis: {
+                                title: "具体的信心 (Specific Faith)",
+                                content_zh: "为了克服懈怠，约书亚给出了具体的行动计划：1. **走遍**（实地考察，用脚掌去踏）；2. **写明/画图**（视觉化，具体化）。这一行动迫使他们面对现实的地理环境，并将抽象的‘应许’转化为具体的‘地图’。这是一种‘预言性的行动’，在未得之地先画出蓝图。",
+                                content_en: "To overcome slackness, Joshua gave a plan: 1. **Walk** (survey, tread with feet); 2. **Describe** (visualize, specify). This forced them to engage reality and turn abstract 'promise' into a concrete 'map'. A prophetic act: blueprinting the unclaimed."
+                            },
+                            devotional: {
+                                title: "为你的未来画图 (Map Your Future)",
+                                content_zh: "信心不仅是心里的相信，也需要具体的规划。如果你相信神要赐福你的家庭或事业，那就去‘走遍那地’（做调研、了解情况），并‘画图’（写下计划、设​​定目标）。当你把神的应许具体化时，你就离‘得着’更近了一步。不要只做梦，要画图。",
+                                content_en: "Faith needs planning. If you believe God for blessing, 'walk the land' (research) and 'describe it' (set goals, write plans). Concretizing God's promise brings you closer to possession. Don't just dream; draw the map."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "benjamin",
+                    title: "便雅悯的产业 (18:11-28)",
+                    title_en: "Benjamin's Inheritance",
+                    verses: [
+                        {
+                            ref: "18:11",
+                            text_zh: "便雅悯支派...拈阄所得之地，是在犹大子孙和约瑟子孙中间。",
+                            text_en: "The lot of the tribe of the people of Benjamin... came up, and the territory allotted to them lay between the people of Judah and the people of Joseph.",
+                            exegesis: {
+                                title: "缓冲与连接 (Buffer & Connector)",
+                                content_zh: "便雅悯虽然是最小的支派，但其地业极其重要。它位于两个最强大的支派（南方的犹大和北方的以法莲/约瑟）之间，包含耶路撒冷（虽然当时未攻取）、耶利哥和基遍等战略要地。这不仅是地理上的缓冲，也是属灵上的连接。神将重要的城邑托付给‘小’支派，显示了祂独特的拣选。",
+                                content_en: "Benjamin, the smallest, got vital land. Situated between the superpowers (Judah & Ephraim), holding Jerusalem, Jericho, Gibeon. A geographical buffer and spiritual connector. God entrusted strategic cities to the 'small' tribe, showing His unique election."
+                            },
+                            devotional: {
+                                title: "虽小却重要 (Small but Strategic)",
+                                content_zh: "你可能觉得自己像便雅悯一样‘微小’，夹在‘大人物’或‘大环境’（犹大和约瑟）的夹缝中。但神量给你的地界往往包含着关键的战略意义（如耶路撒冷）。不要轻看神给你的位置，你在‘夹缝’中可能正是神用来连接或平衡的关键。",
+                                content_en: "You may feel small like Benjamin, squeezed between 'giants'. Yet God assigns you strategic ground. Don't despise your lot; your position in the 'gap' might be God's key for connection or balance."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-blue-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-blue-100 text-blue-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-blue-800 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-blue-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Survey & The Tent -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Map Drawing -->
+                        <div class="bg-white p-4 rounded shadow-lg relative h-56 flex flex-col items-center justify-center group border border-stone-300 overflow-hidden">
+                            <h3 class="text-stone-700 font-bold uppercase tracking-widest text-xs mb-4 absolute top-2 left-4">Mapping the Promise</h3>
+                            
+                            <div class="map-canvas shadow-inner">
+                                <div class="map-line line-1"></div>
+                                <div class="map-line line-2"></div>
+                                <div class="map-line line-3"></div>
+                                <div class="surveyor-pen"><i class="fas fa-pen-fancy"></i></div>
+                            </div>
+                            
+                            <p class="text-[10px] text-stone-400 italic mt-2 text-center">"Walk through and describe it"</p>
+                        </div>
+
+                        <!-- Tabernacle Visualization -->
+                        <div class="bg-blue-50 p-6 rounded shadow-sm border border-blue-200 flex-grow relative overflow-hidden flex flex-col justify-end items-center">
+                             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/fabric-of-squares.png')] opacity-10"></div>
+                             
+                             <div class="relative z-10 w-full text-center mb-4">
+                                 <h4 class="text-sm font-bold text-blue-900 mb-1">示罗 (Shiloh)</h4>
+                                 <p class="text-xs text-blue-700/70">Center of Worship</p>
+                             </div>
+                             
+                             <!-- Tent Animation -->
+                             <div class="relative w-full flex justify-center items-end h-20">
+                                 <div class="tent-pole"></div>
+                                 <div class="tent-base"></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-blue-800 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-blue-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-blue-50 text-blue-800 text-[10px] font-bold rounded mb-3 font-mono border border-blue-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f0f9ff] border-b md:border-b-0 md:border-r border-blue-100 relative">
+                            <div class="flex items-center mb-3 text-blue-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-blue-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fffbeb] relative">
+                            <div class="flex items-center mb-3 text-amber-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-amber-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-blue-600">
+                            <div class="text-blue-600 text-3xl mb-4"><i class="fas fa-map"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">神圣地理学 (Sacred Geography)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Place & Action</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-500"></i> 中心的转移 Shift of Center</div>
+                                    <div class="mb-1">分析从吉甲到示罗的转移，象征着从军事征服阶段进入宗教与社会秩序建立的阶段。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Shift from Gilgal to Shiloh: from Conquest to Order.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-blue-500"></i> 视觉化 Visualizing</div>
+                                    <div class="mb-1">"画地势"（Map making）的神学意义：信心需要具体的视觉化，将不可见的应许转化为可见的蓝图。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Mapping as a theological act: Visualizing the invisible promise.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-amber-600">
+                            <div class="text-amber-600 text-3xl mb-4"><i class="fas fa-running"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Action & Center</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 克服属灵惰性 Lethargy</div>
+                                    <div class="mb-1">挑战信徒"耽延"的状态。不要满足于现状，要主动出击，去得着神为你预备但尚未开发的领域。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Challenge spiritual lethargy. Don't settle; actively pursue the unclaimed.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-amber-500"></i> 生活的中心 Centering</div>
+                                    <div class="mb-1">无论生活如何忙碌，都要确保有"示罗"（与神的会幕）作为中心，让生活围绕敬拜而展开。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Keep 'Shiloh' (worship) as the center around which life revolves.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
