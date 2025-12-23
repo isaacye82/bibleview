@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 8: The Dove & The Altar | 创世记第八章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Sprout Green - New Life, Olive Leaf */
+            --theme-primary: #65a30d; 
+            /* Ararat Grey - Mountain, Stability */
+            --theme-secondary: #475569;
+            /* Clear Sky Blue - Peace, Wind */
+            --theme-accent: #0ea5e9;
+            /* Background */
+            --theme-bg: #f7fee7;
+            /* Text */
+            --theme-text: #1a2e05;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Subtle texture of receding water/wind */
+            background-image: linear-gradient(120deg, #f0fdf4 0%, #ecfccb 100%);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(101, 163, 13, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #d9f99d;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(101, 163, 13, 0.2);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dove Animation */
+        .sky-container {
+            position: relative;
+            height: 160px;
+            width: 100%;
+            background: linear-gradient(to bottom, #bae6fd 0%, #e0f2fe 100%);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #7dd3fc;
+        }
+        .ark-silhouette {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            font-size: 40px;
+            color: #78350f;
+            z-index: 10;
+        }
+        .dove {
+            position: absolute;
+            font-size: 20px;
+            color: white;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.1));
+            animation: flyDove 6s infinite ease-in-out;
+        }
+        .olive-leaf {
+            position: absolute;
+            font-size: 12px;
+            color: #4d7c0f;
+            opacity: 0;
+            animation: carryLeaf 6s infinite ease-in-out;
+        }
+
+        @keyframes flyDove {
+            0% { left: 40px; top: 100px; transform: scaleX(1); }
+            40% { left: 80%; top: 30px; transform: scaleX(1); }
+            50% { left: 85%; top: 30px; transform: scaleX(-1); } /* Turn around */
+            90% { left: 45px; top: 90px; transform: scaleX(-1); } /* Return */
+            100% { left: 40px; top: 100px; transform: scaleX(1); }
+        }
+        @keyframes carryLeaf {
+            0%, 45% { opacity: 0; left: 80%; top: 30px; }
+            50% { opacity: 1; left: 85%; top: 35px; } /* Pick up leaf */
+            90% { opacity: 1; left: 35px; top: 95px; } /* Bring back */
+            100% { opacity: 0; left: 40px; top: 100px; }
+        }
+
+        /* Receding Water Animation */
+        .mountains-container {
+            position: relative;
+            height: 140px;
+            width: 100%;
+            background: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+        .mountain {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 100px solid #64748b;
+            z-index: 5;
+        }
+        .mountain.small {
+            left: 20px;
+            border-bottom: 60px solid #94a3b8;
+        }
+        .mountain.large {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .water-level {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(14, 165, 233, 0.6);
+            z-index: 10;
+            animation: recede 5s infinite alternate ease-in-out;
+        }
+        @keyframes recede {
+            0% { height: 100%; }
+            100% { height: 20%; }
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(101, 163, 13, 0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-green-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-dove mr-2 text-green-600"></i> 创世记 8章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 8</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-green-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-green-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1a2e05] text-stone-400 mt-auto border-t-4 border-green-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-green-200 mb-1">"地还存留的时候...寒暑、冬夏、昼夜就永不停息了。"</p>
+            <p class="text-xs sm:text-sm italic text-green-400/60 mb-2 en-text">"While the earth remains... cold and heat, summer and winter, day and night, shall not cease."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世记第八章中英对照研经报告 | The Dove & The Altar</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "神记念与新世界的开端",
+                title_en: "God Remembers & The Beginning of the New World",
+                summary_zh: "创世记第8章是洪水叙事的转折点。在那看似无尽的漂流和死寂中，‘神记念挪亚’（8:1）成为了改变一切的关键。洪水开始消退，方舟停在亚拉腊山上。本章通过乌鸦与鸽子的试探，展现了挪亚在等待中的耐心。最终，大地干了，挪亚一家走出方舟。他们做的第一件事不是为自己盖房，而是为神筑坛。神闻到馨香之气，许下不再咒诅地的承诺。",
+                summary_en: "Genesis 8 is the turning point of the Flood narrative. Amidst seemingly endless drifting and silence, 'God remembered Noah' (8:1) becomes the key that changes everything. The waters recede, and the Ark rests on Ararat. Through the testing of the raven and dove, the chapter reveals Noah's patience in waiting. Finally, the earth dries, and Noah exits. His first act is not building a house for himself, but an altar for God. God smells the pleasing aroma and promises never to curse the ground again.",
+                concepts: [
+                    { title: "神记念", title_en: "God Remembered", hebrew: "Zakar", color: "text-blue-700", bg: "bg-blue-50", desc_zh: "并非神之前忘记了，而是神开始采取拯救行动。这是恩典介入的时刻。", desc_en: "Not that God forgot, but that He began to act for salvation. The moment of intervening grace." },
+                    { title: "安息/停下", title_en: "Rested", hebrew: "Nuach", color: "text-slate-700", bg: "bg-slate-100", desc_zh: "方舟‘停’在亚拉腊山上。这与挪亚名字的含义（安息）相呼应。风浪中的平安。", desc_en: "The Ark 'rested' on Ararat. Echoes the meaning of Noah's name (Rest). Peace amidst the storm." },
+                    { title: "馨香之气", title_en: "Pleasing Aroma", hebrew: "Reach Nichoach", color: "text-green-800", bg: "bg-green-50", desc_zh: "神悦纳了挪亚的献祭。这预表了基督的牺牲使神的心意满足，止息了愤怒。", desc_en: "God accepted Noah's sacrifice. Typifies Christ's sacrifice satisfying God and appeasing wrath." }
+                ]
+            },
+            sections: [
+                {
+                    id: "receding",
+                    title: "风吹地干 (8:1-5)",
+                    title_en: "The Wind & The Receding Waters",
+                    verses: [
+                        {
+                            ref: "8:1, 4",
+                            text_zh: "神记念挪亚...神叫风吹地，水势渐落...七月十七日，方舟停在亚拉腊山上。",
+                            text_en: "But God remembered Noah... And God made a wind blow over the earth, and the waters subsided... and on the seventeenth day of the seventh month the ark came to rest on the mountains of Ararat.",
+                            exegesis: {
+                                title: "再创造的风 (Wind of Re-Creation)",
+                                content_zh: "‘神叫风（Ruach）吹地’回响着创世记1:2‘神的灵（Ruach）运行在水面上’。这是一个‘再创造’（Re-creation）的过程。神正在从混乱（Chaos）中重新建立秩序。‘神记念’是整个人类历史的转折点，表明即使在审判中，神也没有离弃祂的余民。",
+                                content_en: "'God made a wind (Ruach) blow' echoes Gen 1:2 'Spirit (Ruach) of God hovering'. This is a 'Re-creation'. God is re-establishing order out of Chaos. 'God remembered' is the pivot of history, showing that even in judgment, God does not forsake His remnant."
+                            },
+                            devotional: {
+                                title: "在被遗忘感中 (Feeling Forgotten?)",
+                                content_zh: "在漫长的等待和封闭的方舟中，挪亚可能会觉得被神遗忘了。你也正处于人生的‘洪水期’吗？感觉神似乎沉默了？请记住，‘神记念’。祂从未忘记你。当祂的时间到了，祂会叫‘风’吹过，让你的困难消退，带你进入新的季节。",
+                                content_en: "In the long wait and closed Ark, Noah might have felt forgotten. Are you in a 'flood season'? Does God seem silent? Remember, 'God remembered'. He never forgets. When His time comes, He will send the 'wind' to subside your troubles and usher in a new season."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "birds",
+                    title: "乌鸦与鸽子 (8:6-12)",
+                    title_en: "The Raven & The Dove",
+                    verses: [
+                        {
+                            ref: "8:11",
+                            text_zh: "到了晚上，鸽子回到他那里，嘴里叼着一个新拧下来的橄榄叶子，挪亚就知道地上的水退了。",
+                            text_en: "And the dove came back to him in the evening, and behold, in her mouth was a freshly plucked olive leaf. So Noah knew that the waters had subsided from the earth.",
+                            exegesis: {
+                                title: "寻找落脚之地 (Seeking a Resting Place)",
+                                content_zh: "乌鸦（不洁净的鸟，食腐）飞来飞去，可能在尸体上找到了落脚点。鸽子（洁净的鸟）起初找不到落脚地，直到有了橄榄叶（生命的迹象）。这象征着圣灵（鸽子）在旧造的废墟中寻找新生命的证据。橄榄叶成为了普世和平与和解的象征。",
+                                content_en: "The Raven (unclean, scavenger) flew back and forth, likely resting on carrion. The Dove (clean) found no rest until there was an olive leaf (sign of life). This symbolizes the Holy Spirit (Dove) seeking evidence of new life amidst the ruins of the old. The olive leaf became a universal symbol of peace."
+                            },
+                            devotional: {
+                                title: "你是乌鸦还是鸽子？ (Raven or Dove?)",
+                                content_zh: "乌鸦满足于在死亡（尸体）上盘旋，而鸽子渴望洁净和生命。你的心在什么事物上能找到满足？是这个世界的败坏（八卦、情欲、名利），还是神国度的新生命？求神给我们一颗‘鸽子的心’，对罪敏感，单单在充满神生命的地方找落脚点。",
+                                content_en: "The raven is content hovering over death; the dove craves purity and life. Where does your heart find rest? In the world's corruption (gossip, lust, fame) or the Kingdom's new life? Ask God for a 'dove's heart', sensitive to sin, resting only where God's life is found."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "exit",
+                    title: "出方舟的命令 (8:13-19)",
+                    title_en: "The Command to Exit",
+                    verses: [
+                        {
+                            ref: "8:15-16",
+                            text_zh: "神对挪亚说：‘你和你的妻子、儿子、儿妇都可以出方舟。’...于是挪亚...都出来了。",
+                            text_en: "Then God said to Noah, 'Go out from the ark, you and your wife, and your sons and your sons' wives with you.'... So Noah went out...",
+                            exegesis: {
+                                title: "顺服的等候 (Obedient Waiting)",
+                                content_zh: "地干了（8:13）到神命令出方舟（8:15）之间，可能相隔了近两个月（比较8:13和8:14的日期）。虽然门打开了，环境似乎允许了，但挪亚没有擅自行动。他既然听命进入，也听命出来。这种在‘显而易见’的事情上依然等候神指示的态度，是极大的信心操练。",
+                                content_en: "Between the ground drying (8:13) and the command to exit (8:15), nearly two months passed. Though the door was open, Noah didn't presume. He entered by command; he exited by command. Waiting for God's directive even when the next step seems 'obvious' is a profound discipline of faith."
+                            },
+                            devotional: {
+                                title: "不抢跑 (Don't Jump the Gun)",
+                                content_zh: "我们常在困境中迫切祷告，一旦环境稍有好转，就立刻凭己意冲出去，不再求问神。挪亚教导我们：即使‘地干了’，也要等候神说‘出来’。神的时间表往往比我们的观察更精准。耐心的等候能避免许多不必要的弯路。",
+                                content_en: "We pray desperately in trouble, but the moment things improve, we rush out without asking God. Noah teaches us: Even if the 'ground is dry', wait for God to say 'Go'. God's timing is more precise than our observation. Patient waiting prevents many detours."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "covenant",
+                    title: "筑坛与盟约 (8:20-22)",
+                    title_en: "Altar & Covenant",
+                    verses: [
+                        {
+                            ref: "8:20-21",
+                            text_zh: "挪亚为耶和华筑了一座坛...献在坛上。耶和华闻那馨香之气，就心里说：‘我不再因人的缘故咒诅地...’",
+                            text_en: "Then Noah built an altar to the LORD... and offered burnt offerings... And when the LORD smelled the pleasing aroma, the LORD said in his heart, 'I will never again curse the ground because of man...'",
+                            exegesis: {
+                                title: "首要的任务 (First Priority)",
+                                content_zh: "在新世界里的第一个动作是**敬拜**。挪亚牺牲了珍贵的洁净动物（那时动物数量稀少，这是巨大的代价）来感谢神。‘馨香之气’（Pleasing Aroma）是平息神怒气的神学用语。这预表了十字架上的基督，祂不仅是救我们的方舟，也是那平息神怒的祭物。因着这祭，神承诺维持自然的规律（寒暑、冬夏）。",
+                                content_en: "The first act in the new world was **Worship**. Noah sacrificed precious clean animals (a huge cost given scarcity) to thank God. 'Pleasing aroma' is theological language for propitiation. This typifies Christ on the Cross—not just the Ark that saves, but the Sacrifice that appeases wrath. Because of this, God promised the stability of nature."
+                            },
+                            devotional: {
+                                title: "感恩作为基石 (Gratitude as Foundation)",
+                                content_zh: "当我们在风暴后重建生活时，第一件事应该是筑坛献祭（感恩与奉献），而不是盖房囤粮。你的优先次序决定了你新生活的质量。当你把敬拜放在首位，神就必坚立你手中的工，并赐下‘四季循环’般的安稳。",
+                                content_en: "When rebuilding after a storm, the first act should be building an altar (gratitude/offering), not hoarding. Your priorities define your new life's quality. When worship comes first, God establishes your work and grants stability like the 'seasons'."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-green-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-green-100 text-green-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-green-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-green-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: Dove & Water -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Dove -->
+                        <div class="bg-sky-200 p-4 rounded shadow-lg relative h-56 flex flex-col items-center justify-end group border border-sky-400 overflow-hidden">
+                            <h3 class="text-sky-800 font-bold uppercase tracking-widest text-xs mb-4 absolute top-4 left-4">The Sign of Life</h3>
+                            
+                            <div class="sky-container shadow-inner">
+                                <div class="ark-silhouette"><i class="fas fa-ship"></i></div>
+                                <div class="dove"><i class="fas fa-dove"></i></div>
+                                <div class="olive-leaf"><i class="fas fa-leaf"></i></div>
+                            </div>
+                            
+                            <p class="text-[10px] text-sky-700 italic mt-2 text-center">"Freshly plucked olive leaf"</p>
+                        </div>
+
+                        <!-- Receding Water Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex flex-col justify-center items-center">
+                             <div class="z-10 w-full mb-2 text-center">
+                                 <h4 class="text-sm font-bold text-stone-900 mb-1">
+                                    水势渐落 (Waters Subsided)
+                                 </h4>
+                                 <p class="text-xs text-stone-600">
+                                    山顶现出来了 (Mountains appeared)
+                                 </p>
+                             </div>
+                             
+                             <div class="mountains-container w-full">
+                                 <div class="mountain small"></div>
+                                 <div class="mountain large"></div>
+                                 <div class="water-level"></div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-green-700 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-green-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-green-50 text-green-800 text-[10px] font-bold rounded mb-3 font-mono border border-green-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#f7fee7] border-b md:border-b-0 md:border-r border-green-100 relative">
+                            <div class="flex items-center mb-3 text-green-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-green-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fcfcfc] relative">
+                            <div class="flex items-center mb-3 text-sky-700">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-sky-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-green-600">
+                            <div class="text-green-600 text-3xl mb-4"><i class="fas fa-scroll"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">叙事神学 (Narrative Theology)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Themes & Types</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-green-500"></i> 再创造主题 Re-Creation</div>
+                                    <div class="mb-1">将洪水后的世界视为"新创造"。风吹地、水消退、生养众多等词汇呼应创世记第1章。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Viewing the post-flood world as a 'New Creation' echoing Genesis 1.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-green-500"></i> 献祭神学 Sacrifice</div>
+                                    <div class="mb-1">分析挪亚祭坛的神学意义：通过牺牲（代赎）来恢复人与神、人与自然的关系。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Noah's altar as the means to restore relationship through atonement.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-sky-600">
+                            <div class="text-sky-600 text-3xl mb-4"><i class="fas fa-hourglass-start"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Waiting & Worship</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-sky-500"></i> 主动等候 Active Waiting</div>
+                                    <div class="mb-1">学习挪亚在"地干了"之后依然等候神命令的顺服。信心不只是行动，也是忍耐。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Faith is waiting for God's command even when the path seems clear.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-sky-500"></i> 优先敬拜 Worship First</div>
+                                    <div class="mb-1">在每一次新的开始（新工作、搬家、痊愈）时，首先建立祭坛（感恩），而不是建立事业。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Build an altar before building a house in every new beginning.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
