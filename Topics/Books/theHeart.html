@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>心脏的奇异历史：互动探索之旅</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom scrollbar for content areas */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-active {
+            border-bottom: 3px solid #b91c1c; /* red-700 */
+            color: #b91c1c;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            border-bottom: 3px solid transparent;
+            color: #64748b; /* slate-500 */
+        }
+        .tab-inactive:hover {
+            color: #334155; /* slate-700 */
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Medical Slate. Background: #fafaf9 (Stone-50). Accents: #b91c1c (Heart Red), #475569 (Slate Blue). -->
+    <!-- Application Structure Plan: A "Temporal Dashboard" architecture. 
+         1. Top Navigation: Chronological Eras (Evolution -> Myth -> Machine -> Medicine -> Future).
+         2. Left Column: Detailed textual synthesis ("The Narrative") of the selected era, rich in historical context.
+         3. Right Column: Interactive Data Viz & Insights ("The Evidence"). Dynamic charts showing biological stats, historical timeline density, and mortality trends.
+         4. Footer: Key Takeaway generator based on the current era.
+         Rationale: The book covers a vast timeline. Splitting by era prevents cognitive overload while preserving the depth of the "history". Interactive charts provide a break from reading. -->
+    <!-- Visualization & Content Choices: 
+         1. Evolution Chart: Bar chart comparing heart rates/lifespans (Goal: Inform/Compare biological diversity).
+         2. Perception Donut: Shift from "Soul" to "Pump" to "Complex" (Goal: Visualizing the paradigm shift).
+         3. Timeline Density: Line chart showing acceleration of discovery (Goal: Show the exponential growth of cardiology).
+         4. Content: Synthesized deep summaries of the book's parts (Evolution, Ancient, Renaissance, Modern). 
+         NO SVG. NO Mermaid. Pure Chart.js and Tailwind HTML. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="bg-stone-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="h-8 w-8 bg-red-700 rounded-full flex items-center justify-center text-white font-bold text-lg">♥</div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-900 tracking-tight">心脏的奇异历史</h1>
+                    <p class="text-xs text-slate-500">The Curious History of the Heart - Vincent M. Figueredo</p>
+                </div>
+            </div>
+            <button onclick="toggleAbout()" class="text-sm font-medium text-slate-600 hover:text-red-700 transition-colors">
+                关于本书
+            </button>
+        </div>
+        
+        <!-- Navigation Tabs (Chronological) -->
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-2 overflow-x-auto">
+            <div class="flex space-x-8 min-w-max" id="nav-tabs">
+                <!-- Injected via JS -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- About Modal (Hidden by default) -->
+        <div id="about-section" class="hidden mb-8 bg-white p-6 rounded-xl shadow-md border-l-4 border-red-700 fade-in">
+            <h2 class="text-2xl font-bold mb-3 text-slate-800">关于本书与本应用</h2>
+            <p class="mb-4 text-slate-600 leading-relaxed">
+                文森特·M·菲格雷多（Vincent M. Figueredo）的《心脏的奇异历史》是一部跨越生物学、文化、历史和医学的宏大叙事。本书不仅仅是一部医学史，更是一部人类自我认知的进化史。
+            </p>
+            <p class="mb-4 text-slate-600 leading-relaxed">
+                本互动应用旨在提炼书中的核心精华，通过五个关键的历史时期，带领读者探索心脏如何从一个简单的生物泵，演变为灵魂的居所，再回归为精密的机械，最终成为现代科学与情感交汇的焦点。
+            </p>
+            <div class="flex justify-end">
+                <button onclick="toggleAbout()" class="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-slate-700 rounded-lg text-sm transition-colors">
+                    关闭
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Column: The Narrative (Reading focused) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Section Intro Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span id="section-icon" class="text-2xl">🧬</span>
+                        <h2 id="section-title" class="text-2xl font-bold text-slate-900">生命之初：进化的奇迹</h2>
+                    </div>
+                    <p id="section-intro" class="text-slate-600 italic border-l-2 border-red-300 pl-4">
+                        本章节对应书中第一部分。我们将探索心脏在生物演化史上的起源，从简单的蠕虫状血管到复杂的四腔结构，理解这一器官如何成为生命的引擎。
+                    </p>
+                </div>
+
+                <!-- Main Text Content (Scrollable if needed, but designed to fit) -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200 min-h-[500px]">
+                    <div id="content-body" class="prose prose-slate max-w-none text-slate-700 leading-relaxed">
+                        <!-- Dynamic Content Injected Here -->
+                    </div>
+                    
+                    <!-- Interactive Detail Toggles -->
+                    <div class="mt-8 pt-6 border-t border-stone-100">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">深入探索 (点击展开)</h3>
+                        <div id="accordion-container" class="space-y-3">
+                            <!-- Dynamic Accordion Items -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: The Evidence (Data & Visuals) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Visualization Card -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 id="chart-title" class="text-lg font-bold text-slate-800 mb-2">生物学比较：心率与寿命</h3>
+                    <p id="chart-desc" class="text-xs text-slate-500 mb-4">菲格雷多在书中指出，这种反比关系存在于大多数哺乳动物中，但人类是一个独特的例外。</p>
+                    
+                    <!-- Chart Container -->
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                    
+                    <!-- Chart Controls -->
+                    <div class="mt-4 flex justify-center space-x-2" id="chart-controls">
+                        <!-- Dynamic Buttons -->
+                    </div>
+                </div>
+
+                <!-- Fact Box / "Did You Know" -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-100">
+                    <div class="flex items-start space-x-3">
+                        <div class="text-red-500 text-xl mt-1">💡</div>
+                        <div>
+                            <h4 class="font-bold text-red-900 mb-1">冷知识</h4>
+                            <p id="fact-text" class="text-red-800 text-sm leading-relaxed">
+                                蓝鲸的心脏有一辆小型汽车那么大，人可以在其主动脉中游泳。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Concepts Tags -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">核心概念关键词</h3>
+                    <div id="tags-container" class="flex flex-wrap gap-2">
+                        <!-- Dynamic Tags -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-stone-200 mt-auto py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-slate-500 text-sm">© 2024 Interactive Companion based on "The Curious History of the Heart" by Vincent M. Figueredo.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data Store ---
+        // Contains the synthesized content for the SPA structure.
+
+        const appData = {
+            "evolution": {
+                id: "evolution",
+                title: "起源：进化的杰作",
+                icon: "🧬",
+                navLabel: "第一章：起源",
+                intro: "在本书的开篇，菲格雷多带领我们回到5亿年前。心脏并非一开始就是我们在解剖图中看到的那个完美的四腔泵。它是一个为了生存而不断妥协、适应和演化的奇迹。本部分涵盖了从无脊椎动物的开放式循环到哺乳动物的高效封闭系统的漫长旅程。",
+                body: `
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">从管状蠕虫到复杂人类</h3>
+                    <p class="mb-4">这一章节的核心是<strong>复杂性的递增</strong>。最早的“心脏”仅仅是位于原始生物体内的一根会收缩的管子，通过蠕动将体液推向全身。这种设计虽然简单，但对于早期的海洋生物来说已经足够。</p>
+                    <p class="mb-4">随着生物开始在此后的数亿年里向陆地进军，重力成为了新的挑战。为了将血液输送到更高的大脑并抵抗重力，心脏必须变得更强壮。鱼类拥有两腔心脏；两栖动物演化出了三腔心脏，但这导致了富氧血和缺氧血的混合。</p>
+                    <p class="mb-4"><strong>进化的终极方案：</strong> 哺乳动物（包括人类）和鸟类独立演化出了四腔心脏。这种设计完全隔离了肺循环和体循环，使得我们能够维持恒定的体温，拥有高代谢率，从而支持复杂的大脑活动。没有这颗进化的心脏，人类文明将无从谈起。</p>
+                `,
+                details: [
+                    { title: "为什么是四腔？", content: "四腔结构解决了混合血液效率低下的问题。通过将含氧血（去往身体）和脱氧血（去往肺部）完全物理隔离，身体的供氧效率达到了最大化，这是恒温动物高能耗生活方式的基础。" },
+                    { title: "人类心脏的独特性", content: "虽然结构上与其他哺乳动物相似，但人类心脏极易受到所谓的'生活方式疾病'（如冠状动脉疾病）的影响。这是进化的副作用——我们的身体还没适应现代高热量饮食和久坐不动的生活。" }
+                ],
+                vizType: "bar",
+                vizData: {
+                    labels: ['蓝鲸', '大象', '人类', '猫', '仓鼠'],
+                    datasets: [{
+                        label: '每分钟心率 (BPM)',
+                        data: [6, 30, 70, 150, 450],
+                        backgroundColor: '#94a3b8'
+                    }]
+                },
+                vizTitle: "心率与体型的反比关系",
+                vizDesc: "通常体型越大的动物心率越慢，寿命越长。人类处于中间位置，但依靠医疗技术打破了这一自然规律。",
+                fact: "人类的心脏每天跳动约10万次，一生中要跳动超过25亿次，泵出的血液足以装满3个超级油轮。",
+                tags: ["寒武纪", "自然选择", "四腔结构", "新陈代谢"]
+            },
+            "myth": {
+                id: "myth",
+                title: "神话：灵魂的居所",
+                icon: "⚖️",
+                navLabel: "第二章：神话",
+                intro: "在显微镜和解剖刀出现之前的几千年里，心脏不仅仅是一个器官，它是人类存在的中心。本部分探讨了古埃及、古希腊和阿兹特克文明如何赋予心脏神圣的地位，将其视为情感、智慧和灵魂的归宿。",
+                body: `
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">心脏中心论的崛起</h3>
+                    <p class="mb-4">在古代，人们通过直观的感受来认识世界。当你激动、恐惧或坠入爱河时，你的心脏会剧烈跳动，而大脑似乎毫无反应。因此，古人逻辑地推断：<strong>心脏是思想和情感的来源</strong>。</p>
+                    <p class="mb-4"><strong>埃及的审判：</strong> 古埃及人相信心脏记录了一个人一生的行为。在死后，心脏会被放在真理女神玛特（Ma'at）的羽毛对面进行称量。如果心比羽毛重，就会被怪兽吃掉；如果一样轻，死者就能进入永生。</p>
+                    <p class="mb-4"><strong>希腊的辩论：</strong> 亚里士多德是“心脏中心论”的坚定支持者，他认为心脏是热量和活力的源泉，是“所有感觉的中心”。相比之下，虽然希波克拉底和柏拉图开始重视大脑，但亚里士多德的观点统治了西方医学长达一千多年。</p>
+                `,
+                details: [
+                    { title: "阿兹特克的牺牲", content: "对于阿兹特克人来说，心脏不仅仅是象征，它是献给太阳神的实物燃料。他们相信如果不通过活人献祭提供跳动的心脏，太阳就会停止运行，宇宙将会毁灭。" },
+                    { title: "盖伦的错误遗产", content: "古罗马医生盖伦认为血液是在肝脏制造的，流向心脏后通过微孔渗透并被消耗掉。这个错误的“潮汐理论”统治了医学界1400年，直到哈维的出现。" }
+                ],
+                vizType: "pie",
+                vizData: {
+                    labels: ['心脏 (情感/灵魂)', '肝脏 (欲望)', '大脑 (理性)'],
+                    datasets: [{
+                        label: '古希腊灵魂三部分说 (柏拉图)',
+                        data: [40, 30, 30],
+                        backgroundColor: ['#b91c1c', '#d97706', '#475569']
+                    }]
+                },
+                vizTitle: "古代灵魂的分配",
+                vizDesc: "柏拉图试图调和争端，将灵魂分为三部分。但在大众文化和亚里士多德的影响下，心脏占据了主导地位。",
+                fact: "即使在今天，我们依然说“用心学习”、“心碎”，而不是“用大脑边缘系统学习”。这是几千年心脏中心文化的语言遗存。",
+                tags: ["玛特审判", "亚里士多德", "盖伦", "体液学说"]
+            },
+            "machine": {
+                id: "machine",
+                title: "机械：泵的发现",
+                icon: "⚙️",
+                navLabel: "第三章：机械",
+                intro: "文艺复兴时期，人类开始以前所未有的勇气窥视身体内部。本章聚焦于科学革命如何将心脏从神坛拉下，将其还原为一个精密的机械泵。这是一个关于勇气、解剖和范式转移的故事。",
+                body: `
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">威廉·哈维与医学革命</h3>
+                    <p class="mb-4">达芬奇虽然绘制了精确的心脏解剖图，但他未能完全摆脱古代权威的影响。真正的转折点发生在1628年，英国医生<strong>威廉·哈维（William Harvey）</strong>发表了《心血运动论》（De Motu Cordis）。</p>
+                    <p class="mb-4"><strong>打破神话：</strong> 哈维通过简单的计算和实验证明，肝脏不可能每天制造出成吨的血液供身体消耗。唯一的解释是：血液在循环。心脏不是热源，也不是灵魂的王座，它就是一个肌肉泵。</p>
+                    <p class="mb-4">这一发现震惊了世界，虽然在当时遭到强烈反对，但它标志着现代医学的开端。笛卡尔随后将这一概念哲学化，将身体视为机器，心脏就是其中的发动机。虽然这剥夺了心脏的神秘感，但也为修复它铺平了道路。</p>
+                `,
+                details: [
+                    { title: "达芬奇的玻璃牛心", content: "达芬奇曾制造了一个玻璃牛心模型来观察血流，他正确地描述了心脏瓣膜的涡流作用，这比现代流体力学早了几个世纪。" },
+                    { title: "教会的阻力", content: "解剖尸体在很长一段时间内是禁忌。早期的解剖学家不得不盗掘坟墓或在极度保密的情况下工作，以揭示心脏的物理真相。" }
+                ],
+                vizType: "line",
+                vizData: {
+                    labels: ['1500', '1543', '1600', '1628', '1700'],
+                    datasets: [{
+                        label: '解剖学重大发现数量 (估算趋势)',
+                        data: [1, 5, 8, 25, 40],
+                        borderColor: '#0f172a',
+                        tension: 0.4
+                    }]
+                },
+                vizTitle: "知识的爆发：文艺复兴",
+                vizDesc: "随着维萨里（Vesalius）和哈维的著作出版，人类对解剖学的理解呈指数级增长，彻底推翻了盖伦的旧学说。",
+                fact: "哈维计算出，如果盖伦是对的，人类每天需要吃掉几百斤食物来制造血液。这个简单的数学逻辑击碎了千年的教条。",
+                tags: ["威廉·哈维", "血液循环", "达芬奇", "机械论"]
+            },
+            "medicine": {
+                id: "medicine",
+                title: "现代：修复引擎",
+                icon: "🩺",
+                navLabel: "第四章：现代",
+                intro: "进入20世纪，心脏病成为了人类的头号杀手。但同时，这也开启了心脏病学的黄金时代。本章讲述了人类如何学会打开胸腔、疏通血管、甚至替换整个心脏的英勇历史。",
+                body: `
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">从禁区到常规手术</h3>
+                    <p class="mb-4">直到19世纪末，外科医生西奥多·比尔罗特还曾断言：“任何试图在心脏上做手术的外科医生，都将失去同行的尊重。”当时，心脏被视为不可触碰的禁区。</p>
+                    <p class="mb-4"><strong>技术的飞跃：</strong> 20世纪改变了一切。心导管技术的发明（福斯曼对自己进行的疯狂实验）、心肺机的问世使得停跳心脏手术成为可能。1967年，克里斯蒂安·巴纳德完成了首例人类心脏移植，震惊全球。</p>
+                    <p class="mb-4"><strong>弗雷明汉研究：</strong> 除了手术，我们也开始理解为什么心脏会生病。弗雷明汉心脏研究定义了“风险因素”这一概念——高血压、吸烟、胆固醇。心脏病不再是不可避免的衰老结果，而是可以预防和治疗的。</p>
+                `,
+                details: [
+                    { title: "沃纳·福斯曼的疯狂", content: "1929年，年轻医生福斯曼在很多前辈反对的情况下，将一根导尿管从自己手臂静脉插入，一路推送到右心房，并拍下了X光片。他因此被解雇，但也因此获得了诺贝尔奖。" },
+                    { title: "起搏器与除颤器", content: "随着对心脏电生理的理解，我们不仅能修补管道（血管），还能修复电路。植入式设备现在挽救了无数生命。" }
+                ],
+                vizType: "bar",
+                vizData: {
+                    labels: ['1900', '1950', '1980', '2000', '2020'],
+                    datasets: [{
+                        label: '美国心脏病死亡率 (每10万人)',
+                        data: [150, 500, 410, 250, 160],
+                        backgroundColor: '#b91c1c'
+                    }]
+                },
+                vizTitle: "死亡率曲线的逆转",
+                vizDesc: "20世纪中期心脏病死亡率达到顶峰，随后随着降压药、手术和急救技术的普及大幅下降。",
+                fact: "世界上第一台人工心肺机是由一位医生在他妻子的帮助下，利用冰淇淋机改装而成的。",
+                tags: ["心脏移植", "心导管", "弗雷明汉研究", "冠状动脉"]
+            },
+            "future": {
+                id: "future",
+                title: "未来：心脑重连",
+                icon: "🧠",
+                navLabel: "第五章：未来",
+                intro: "在本书的结尾，菲格雷多提出了一个迷人的回归：现代科学正在重新发现古代的智慧。心脏不仅仅是一个机械泵，它与大脑有着深刻的双向神经连接。神经心脏病学正在揭示情感如何物理性地塑造我们的心脏健康。",
+                body: `
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">心碎综合征与神经心脏病学</h3>
+                    <p class="mb-4">虽然我们不再认为心脏产生情感，但情感确实能“击碎”心脏。<strong>Takotsubo心肌病</strong>（心碎综合征）的发现证明，极度的悲伤或压力会导致心脏呈现出一种像日本章鱼壶一样的气球状变形，导致急性心力衰竭。</p>
+                    <p class="mb-4"><strong>双向高速公路：</strong> 心脏和大脑通过迷走神经和交感神经系统紧密相连。抑郁、孤独和压力现在被确认为主要的心脏病风险因素。治疗心脏不再仅仅是通血管，还需要治愈心灵。</p>
+                    <p class="mb-4"><strong>未来展望：</strong> 干细胞疗法修复受损心肌、完全植入式的人工心脏、以及基于基因编辑的个性化治疗是未来的方向。但最重要的启示或许是：保持心脏健康，需要我们在高压的现代社会中寻找内心的平静。</p>
+                `,
+                details: [
+                    { title: "Takotsubo (章鱼壶)", content: "这种病症最先在日本被描述。患者通常没有血管堵塞，但心脏肌肉在儿茶酚胺（压力激素）的冲击下暂时瘫痪。大多数人能恢复，但也可能致命。" },
+                    { title: "孤独的毒性", content: "研究表明，长期的社会隔离和孤独对心脏的危害相当于每天吸15支烟。" }
+                ],
+                vizType: "doughnut",
+                vizData: {
+                    labels: ['传统风险 (血压/吸烟等)', '心理社会因素 (压力/抑郁)', '遗传'],
+                    datasets: [{
+                        label: '心脏病诱因权重',
+                        data: [50, 30, 20],
+                        backgroundColor: ['#cbd5e1', '#b91c1c', '#f1f5f9']
+                    }]
+                },
+                vizTitle: "被忽视的心理因素",
+                vizDesc: "现代心脏病学越来越重视心理因素（如抑郁、A型性格、社会压力）在发病机制中的作用。",
+                fact: "拥抱可以释放催产素，这种激素能降低血压和心率，从而保护心脏。爱确实对心脏有益。",
+                tags: ["心碎综合征", "神经心脏病学", "干细胞", "整体健康"]
+            }
+        };
+
+        // --- State Management ---
+        let currentSectionId = "evolution";
+        let mainChartInstance = null;
+
+        // --- Core Functions ---
+
+        function initApp() {
+            renderNav();
+            loadSection("evolution");
+        }
+
+        function renderNav() {
+            const navContainer = document.getElementById("nav-tabs");
+            navContainer.innerHTML = Object.values(appData).map(section => `
+                <button 
+                    onclick="loadSection('${section.id}')"
+                    class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ${section.id === currentSectionId ? 'tab-active' : 'tab-inactive'}"
+                    id="tab-${section.id}"
+                >
+                    ${section.navLabel}
+                </button>
+            `).join('');
+        }
+
+        function loadSection(id) {
+            currentSectionId = id;
+            const data = appData[id];
+
+            // Update Tabs UI
+            document.querySelectorAll('#nav-tabs button').forEach(btn => {
+                if (btn.id === `tab-${id}`) {
+                    btn.className = "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 tab-active";
+                } else {
+                    btn.className = "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 tab-inactive";
+                }
+            });
+
+            // Update Text Content with Fade Effect
+            const contentElements = ['section-title', 'section-intro', 'content-body', 'fact-text', 'section-icon'];
+            
+            // Simple fade out/in simulation via strict DOM updates
+            document.getElementById("section-title").innerText = data.title;
+            document.getElementById("section-icon").innerText = data.icon;
+            document.getElementById("section-intro").innerText = data.intro;
+            document.getElementById("content-body").innerHTML = data.body;
+            document.getElementById("fact-text").innerText = data.fact;
+
+            // Render Accordion
+            const accordionContainer = document.getElementById("accordion-container");
+            accordionContainer.innerHTML = data.details.map((detail, index) => `
+                <div class="border border-stone-200 rounded-lg overflow-hidden">
+                    <button onclick="toggleAccordion(${index})" class="w-full px-4 py-3 bg-stone-50 text-left text-sm font-medium text-slate-700 hover:bg-stone-100 flex justify-between items-center">
+                        ${detail.title}
+                        <span id="icon-${index}">+</span>
+                    </button>
+                    <div id="detail-${index}" class="hidden px-4 py-3 bg-white text-sm text-slate-600 border-t border-stone-100">
+                        ${detail.content}
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Tags
+            document.getElementById("tags-container").innerHTML = data.tags.map(tag => `
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    #${tag}
+                </span>
+            `).join('');
+
+            // Update Chart
+            updateChart(data);
+        }
+
+        function toggleAccordion(index) {
+            const content = document.getElementById(`detail-${index}`);
+            const icon = document.getElementById(`icon-${index}`);
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.innerText = '-';
+            } else {
+                content.classList.add('hidden');
+                icon.innerText = '+';
+            }
+        }
+
+        function toggleAbout() {
+            const modal = document.getElementById('about-section');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function updateChart(data) {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            document.getElementById('chart-title').innerText = data.vizTitle;
+            document.getElementById('chart-desc').innerText = data.vizDesc;
+
+            if (mainChartInstance) {
+                mainChartInstance.destroy();
+            }
+
+            // Common Options
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.9)',
+                        padding: 10,
+                        titleFont: { size: 13 },
+                        bodyFont: { size: 12 }
+                    }
+                }
+            };
+
+            // Specific configs based on type
+            let config = {
+                type: data.vizType,
+                data: data.vizData,
+                options: commonOptions
+            };
+
+            if (data.vizType === 'bar' || data.vizType === 'line') {
+                config.options.scales = {
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                };
+            }
+
+            mainChartInstance = new Chart(ctx, config);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', initApp);
+
+    </script>
+</body>
+</html>

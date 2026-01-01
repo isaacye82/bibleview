@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最好的告别 (Being Mortal) - 深度交互解读</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: "Mortal Warmth" - Grounded in warm text papers, soft greys, and organic sage/terracotta accents to reflect the human, sensitive nature of end-of-life care. -->
+    <!-- Application Structure Plan: Sidebar Navigation SPA. The report is linear (chapters), but the app allows non-linear exploration. 
+         - Sidebar: Persist navigation for 8 chapters + Overview.
+         - Main Area: Dynamic content injection.
+         - Dashboard/Overview: Visualizing the "Trajectories of Death" (Key Concept).
+         - Chapter Views: Split pane. Left: Deep Textual Summary (Scrollable to accommodate the requested length). Right: Interactive Context (Charts/Key Takeaway Cards).
+         - Logic: Central state object holds all chapter data. Functions render content and destroy/rebuild charts to ensure performance.
+    -->
+    <!-- Visualization & Content Choices:
+         - Trajectories of Death (Line Chart): To compare sudden death, terminal illness, and frailty. (Goal: Inform/Compare)
+         - The Three Plagues (Interactive Cards): Boredom, Loneliness, Helplessness. (Goal: Organize/Relationships)
+         - Doctor Communication Styles (Tabbed Interaction): Paternalistic vs Informative vs Interpretive. (Goal: Change/Compare)
+         - Life Priorities (Bar Chart): Medical goals vs. Well-being goals. (Goal: Inform)
+         - Interaction: Clicking chapters updates text and visual context instantly.
+         - Justification: Users need to digest heavy text (800+ words) alongside simplifying visuals that reinforce the core mental models of the book.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fcfbf9; /* Warm paper white */
+            color: #2d3748;
+        }
+        h1, h2, h3, .serif-font {
+            font-family: 'Noto Serif SC', serif;
+        }
+        /* Custom Scrollbar for heavy text areas */
+        .custom-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e0; 
+            border-radius: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0; 
+        }
+        
+        .nav-item.active {
+            background-color: #e2e8f0;
+            border-right: 4px solid #c05621; /* Terracotta accent */
+            font-weight: 700;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Chart Container Styling Constraints */
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            max-height: 400px;
+            margin: 0 auto;
+        }
+        
+        .quote-card {
+            border-left: 4px solid #81e6d9; /* Soft Teal */
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Mobile Header -->
+    <header class="md:hidden bg-white border-b border-gray-200 p-4 flex justify-between items-center z-20">
+        <h1 class="text-xl font-bold serif-font text-gray-800">最好的告别</h1>
+        <button id="menu-btn" class="text-gray-600 hover:text-gray-900 focus:outline-none">
+            <span class="text-2xl">☰</span>
+        </button>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 md:w-64 lg:w-72 bg-gray-50 border-r border-gray-200 transition-transform duration-300 ease-in-out z-10 flex flex-col h-full shadow-lg md:shadow-none">
+        <div class="p-6 border-b border-gray-200 bg-white hidden md:block">
+            <h1 class="text-2xl font-bold serif-font text-gray-900 leading-tight">最好的告别<br><span class="text-sm font-normal text-gray-500">Being Mortal</span></h1>
+            <p class="text-xs text-gray-500 mt-2">作者: Atul Gawande</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto custom-scroll py-4">
+            <ul id="nav-list" class="space-y-1">
+                <!-- Nav items injected via JS -->
+            </ul>
+        </div>
+        
+        <div class="p-4 border-t border-gray-200 bg-gray-100">
+            <p class="text-xs text-gray-500 italic">"我们终有一死，但如何度过最后的时光，是我们自己的选择。"</p>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 flex flex-col h-full relative overflow-hidden bg-[#fcfbf9]">
+        <!-- Mobile Overlay -->
+        <div id="overlay" class="fixed inset-0 bg-black opacity-50 z-0 hidden md:hidden"></div>
+
+        <!-- Content Container -->
+        <div id="content-container" class="flex-1 overflow-y-auto custom-scroll p-4 md:p-8 lg:p-12 fade-in">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+    </main>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- Data Store ---
+        const bookData = {
+            overview: {
+                title: "全书概览：关于衰老与死亡的常识",
+                intro: "《最好的告别》不仅是一部关于医学的著作，更是一部关于人性的沉思录。阿图·葛文德医生通过大量的临床案例和深刻的社会学观察，揭示了现代医学在面对不可避免的衰老与死亡时的困境。本应用将带领您深入每一章的核心，探索如何让生命的最后阶段更有尊严、更有意义。",
+                content: `
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-bold mb-4 serif-font text-gray-800">核心冲突：医学的目标 vs. 生命的质量</h3>
+                            <p class="mb-4 text-gray-700 leading-relaxed">现代医学的进步使我们得以延长寿命，但也带来了一个意想不到的后果：我们将衰老和死亡“医学化”了。我们试图“修复”每一个健康问题，却往往忽略了患者作为“人”的需求——他们需要的不仅仅是生存，还有自主权、尊严和生活的乐趣。</p>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                                <div class="p-4 bg-orange-50 rounded border border-orange-100 text-center">
+                                    <div class="text-2xl mb-2">💊</div>
+                                    <h4 class="font-bold text-gray-800">医疗化</h4>
+                                    <p class="text-sm text-gray-600 mt-2">将死亡视为技术失败，试图用无尽的治疗来对抗。</p>
+                                </div>
+                                <div class="p-4 bg-teal-50 rounded border border-teal-100 text-center">
+                                    <div class="text-2xl mb-2">🏡</div>
+                                    <h4 class="font-bold text-gray-800">机构化</h4>
+                                    <p class="text-sm text-gray-600 mt-2">将老人从家庭移入注重安全但缺乏生活气息的疗养院。</p>
+                                </div>
+                                <div class="p-4 bg-blue-50 rounded border border-blue-100 text-center">
+                                    <div class="text-2xl mb-2">🗣️</div>
+                                    <h4 class="font-bold text-gray-800">艰难的对话</h4>
+                                    <p class="text-sm text-gray-600 mt-2">缺乏勇气去讨论“如果治疗失败，什么对你最重要”。</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-bold mb-4 serif-font text-gray-800">生命衰退的三种轨迹</h3>
+                            <p class="mb-4 text-gray-600 text-sm">理解不同的死亡轨迹有助于我们制定更合理的照护计划。</p>
+                            <div class="chart-wrapper">
+                                <canvas id="trajectoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            chapters: [
+                {
+                    id: 1,
+                    title: "第一章：独立自主 (The Independent Self)",
+                    subtitle: "由于寿命延长，我们将如何度过晚年？",
+                    vizType: "bar",
+                    vizTitle: "独居老人的比例变化 (趋势示意)",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 探讨了现代社会中“独立”观念的兴起与老年现实之间的矛盾。过去，多代同堂是常态，老人掌握权威；而今，随着经济独立和寿命延长，老年人更倾向于独居，直到身体无法支撑。我们渴望独立，但衰老的生理现实往往让这种渴望变得脆弱。</p>
+                        
+                        <h4 class="font-bold text-lg mt-6 mb-2">传统与现代的断裂</h4>
+                        <p class="mb-4">葛文德首先描述了他的祖父在印度的晚年生活。在那个传统的农业社会，老去并不是一个需要独自面对的问题。祖父直到100多岁去世，始终生活在家庭的中心，被儿孙环绕，享有极高的地位。这代表了人类历史上大部分时间的养老模式：<strong>敬老与家庭照护</strong>。在这种模式下，老人是智慧的象征，也是家庭权力的核心。</p>
+                        <p class="mb-4">然而，这种模式在现代社会迅速瓦解。随着工业化和城市化的发展，年轻一代为了工作机会迁徙，核心家庭取代了大家族。更重要的是，医学的进步和经济的发展赋予了老年人前所未有的“独立性”。现代老年人只要身体允许，更愿意独自居住，保留自己的生活方式，而不是依附于子女。这是一种巨大的社会进步，被称为“独居时代的来临”。</p>
+                        
+                        <h4 class="font-bold text-lg mt-6 mb-2">独立的代价</h4>
+                        <p class="mb-4">然而，这种对独立的推崇在面对高龄的现实时显得力不从心。作者通过爱丽丝·霍布森（Alice Hobson）的案例展示了这一点。爱丽丝是一位充满活力的老太太，独自生活，拥有完全的自主权。但随着一系列看似微小的身体衰退——记性变差、腿脚不灵便、一次跌倒——她的独立生活大厦瞬间崩塌。我们建立了一个崇尚独立的社会系统，但当独立变得不再可能时，我们却没有准备好合适的替代方案。</p>
+                        <p class="mb-4">在现代，当老人无法自理时，往往面临着并非自愿的选择：要么勉强维持充满风险的独居生活，要么进入像医院一样的机构，牺牲所有的隐私和自主权来换取“安全”。我们还没有学会如何在尊重老人独立意愿的同时，提供必要的支持。</p>
+                        
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>历史的转变：</strong> 我们的目标从“生存”变成了“生活质量”，但老龄化社会的配套设施尚未跟上。</li>
+                            <li><strong>代际契约的破裂：</strong> 子女不再是默认的照护者，这不仅是子女的选择，往往也是父母为了维护自尊的选择。</li>
+                            <li><strong>脆弱的平衡：</strong> 现代老年的独立建立在脆弱的健康基础上，一旦健康受损，生活方式将面临剧烈动荡。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 2,
+                    title: "第二章：崩溃 (Things Fall Apart)",
+                    subtitle: "衰老不是一种病，而是一个过程。",
+                    vizType: "doughnut",
+                    vizTitle: "身体系统衰退的构成",
+                    fullText: `
+                         <p class="mb-4"><strong>本章核心：</strong> 深入剖析了衰老的生物学过程。葛文德强调，衰老并非单一的疾病，而是身体各个系统功能的逐渐衰退和累积性损伤。理解这一过程，有助于我们调整对医疗干预的预期。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">身体的逐渐瓦解</h4>
+                        <p class="mb-4">本章以极为细腻且冷静的笔触描述了人体衰老的物理过程。无论是牙齿的磨损、骨骼密度的流失、血管壁的硬化，还是大脑处理速度的下降，这一切都是不可逆转的熵增过程。作者指出，现代医学往往将每一个症状（如高血压、关节炎）视为单独的“疾病”来治疗，试图通过药物和手术来“修复”它们。然而，对于高龄老人来说，真正的问题不是某个单一的病灶，而是<strong>系统性的崩溃</strong>。</p>
+                        <p class="mb-4">这就像一辆开了几十年的老车，你修好了轮胎，变速箱又坏了；修好了变速箱，引擎又开始漏油。在这个阶段，过度的医疗干预往往不仅无法逆转衰老，反而会带来更多的副作用和痛苦。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">医学的局限性</h4>
+                        <p class="mb-4">通过费利克斯（Felix）医生的案例，作者展示了即使是医学专家也难以接受自己的衰老。费利克斯一生都在照顾病人，但当自己面临心脏衰竭和多种并发症时，他也陷入了不断求医问药的循环中。这反映了现代医学教育的一个盲点：<strong>我们擅长拯救生命，却不知道如何面对无法治愈的衰退。</strong></p>
+                        <p class="mb-4">老年病学（Geriatrics）作为一门学科的衰落尤其令人担忧。专门研究如何管理衰老、提高老年人生活质量的医生越来越少，因为这门学科收入低、耗时长，且缺乏高科技治疗带来的“成就感”。但正是这些医生，能够通过调整药物、改善脚部护理、预防跌倒等细致入微的工作，显著提高老人的生活质量，而不是仅仅延长他们躺在病床上的时间。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>衰老的复杂性：</strong> 衰老是多重因素共同作用的结果，没有单一的“解药”。</li>
+                            <li><strong>脚部护理的隐喻：</strong> 关注看似微不足道的细节（如脚趾甲的修剪、脚部的知觉），往往比昂贵的手术更能维持老人的行动能力和独立性。</li>
+                            <li><strong>预期管理：</strong> 我们需要从“治愈”转向“管理”，接受身体功能的下降，并在此基础上寻找最佳的生活方式。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 3,
+                    title: "第三章：依赖 (Dependence)",
+                    subtitle: "当我们无法自理时，我们将去向何方？",
+                    vizType: "line",
+                    vizTitle: "疗养院数量的历史变迁",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 回顾了养老机构（从救济院到现代疗养院）的历史演变。这一演变过程实际上是我们将老年生活从“家庭责任”转移给“医疗机构”的过程，但在这个过程中，我们牺牲了老人的尊严和自主权。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">从救济院到疗养院</h4>
+                        <p class="mb-4">在过去，无法自理且没有家庭支持的老人只能进入令人闻风丧胆的“救济院”（Poorhouses）。那里条件恶劣，象征着彻底的社会遗弃。随着社会进步，现代疗养院（Nursing Homes）应运而生。最初，它们是为了解决医院床位紧张问题而设计的“康复中心”，目的是帮助病人恢复健康后回归社会。</p>
+                        <p class="mb-4">然而，随着人口老龄化，疗养院逐渐变成了老人度过余生的场所。问题在于，疗养院的设计逻辑依然是<strong>医院式的</strong>：强调安全、卫生、规则和效率，而不是<strong>家庭式的</strong>：强调隐私、自由、个性和舒适。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">安全与自主的博弈</h4>
+                        <p class="mb-4">在疗养院里，生活被严格的时刻表所控制：几点起床、几点洗澡、几点吃饭、穿什么衣服，往往不由老人自己决定，而是由护工的排班表决定。为了防止跌倒，老人可能被束缚在轮椅上；为了防止噎食，食物被做成糊状。<strong>我们将“安全”置于一切之上，却忘记了对于一个人来说，活着的意义往往在于那些稍微有点“不安全”但充满乐趣的事情。</strong></p>
+                        <p class="mb-4">作者通过具体的采访揭示了这种机构化生活的残酷：它剥夺了人的主体性（Agency）。一个完全没有控制权的生活，就像是一种监禁。这解释了为什么许多老人宁愿独自在家中冒着死亡的风险，也不愿进入疗养院。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>机构化的代价：</strong> 疗养院解决了照护的“技术”问题，但制造了“存在”问题。</li>
+                            <li><strong>优先级的错位：</strong> 医疗机构优先考虑的是健康指标和安全，而老人优先考虑的是隐私、伴侣、回忆和日常的小确幸。</li>
+                            <li><strong>全面的控制：</strong> 失去对日常琐事的控制权，是老年人心理崩溃的主要原因。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 4,
+                    title: "第四章：援助 (Assistance)",
+                    subtitle: "辅助生活理念的诞生与妥协",
+                    vizType: "bar-group",
+                    vizTitle: "辅助生活 vs 传统疗养院满意度对比",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 介绍了“辅助生活”（Assisted Living）这一概念的起源和初衷，以及它如何在普及过程中逐渐变味。这一章探讨了如何在安全与自由之间找到中间地带。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">凯伦·布朗·威尔逊的实验</h4>
+                        <p class="mb-4">凯伦·布朗·威尔逊（Keren Brown Wilson）是辅助生活运动的先驱。为了让她那不仅瘫痪而且极度厌恶疗养院的母亲过上好日子，她构想了一种新的居住模式：<strong>拥有独立公寓的隐私和自由，同时提供必要的医疗帮助。</strong> 她的理念是：让居住者自己决定由于身体的限制愿意冒多大的风险，而不是由机构来决定。</p>
+                        <p class="mb-4">在这个实验性的住所里，老人们可以锁上自己的门，可以拥有宠物，可以决定什么时候睡觉，甚至可以根据自己的意愿拒绝服用药物或洗澡。结果令人震惊：这种赋予自主权的环境并没有导致更高的死亡率，反而让老人们的身心健康状况显著改善，因为他们觉得自己还“活着”。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">理念的异化</h4>
+                        <p class="mb-4">然而，当“辅助生活”作为一个商业概念被广泛推广时，它开始变味了。为了规避法律责任、迎合子女对“安全”的焦虑，以及便于管理，许多所谓的“辅助生活社区”逐渐退化成了“装修得更好的疗养院”。</p>
+                        <p class="mb-4">管理者开始重新收回控制权，禁止这个，限制那个。这揭示了一个深刻的社会心理：<strong>子女往往比父母更害怕风险。</strong> 子女希望父母绝对安全，而父母往往愿意为了自由冒一点风险。真正的辅助生活，应该是在提供帮助的同时，最大程度地捍卫老人对自己生活的掌控权。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>“家”的定义：</strong> 家不仅是一个睡觉的地方，更是我们拥有主权的地方。</li>
+                            <li><strong>服务的边界：</strong> 最好的援助是“不仅提供帮助，而且退后一步”，让被帮助者依然感到自己是生活的主人。</li>
+                            <li><strong>市场的扭曲：</strong> 好的理念在规模化复制时，往往会被效率和安全导向的官僚主义所稀释。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 5,
+                    title: "第五章：更好的生活 (A Better Life)",
+                    subtitle: "战胜疗养院的三大瘟疫",
+                    vizType: "cards",
+                    vizTitle: "疗养院的三大瘟疫及其解药",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 讲述了比尔·托马斯（Bill Thomas）及其“伊甸园替代方案”（Eden Alternative）的故事。通过引入植物、动物和儿童，彻底改变了疗养院死气沉沉的氛围，证明了生命的活力是最好的良药。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">疗养院的三大瘟疫</h4>
+                        <p class="mb-4">比尔·托马斯医生指出，疗养院里的老人主要遭受三种痛苦的折磨，他称之为“三大瘟疫”：</p>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>厌倦（Boredom）：</strong> 日复一日单调、无所事事的日程安排。</li>
+                            <li><strong>孤独（Loneliness）：</strong> 缺乏亲密关系，缺乏与他人的深刻连接。</li>
+                            <li><strong>无助（Helplessness）：</strong> 只能接受照料，而没有机会去照料别的东西（人或物）。</li>
+                        </ul>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">将生命带回机构</h4>
+                        <p class="mb-4">托马斯采取了激进的行动。他在一家传统的疗养院里引入了100只长尾小鹦鹉、4条狗、2只猫，还有大量的植物，并建立了一个儿童保育中心。不仅如此，他还要求每一个员工，甚至包括护工和清洁工，都参与到这种生态系统的维护中，并鼓励老人参与照顾这些生命。</p>
+                        <p class="mb-4">结果是奇迹般的。原本沉默不语、整天对着电视发呆的老人开始说话了，因为他们要喂鸟、要遛狗。那些被认为无法自理的老人，开始为了照顾植物而主动活动。<strong>“照顾”这一行为赋予了他们生存的目的感。</strong> 药费支出下降了，死亡率下降了，员工的满意度也上升了。这个案例证明，让生活变得有意义的，往往是那些让我们产生“被需要感”的事物。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">绿房子的实验</h4>
+                        <p class="mb-4">本章还介绍了另一种模式——“绿房子”（Green House）。这种模式打破了大型机构的格局，建立了只有10-12人居住的小型社区。这里没有穿白大褂的医生和推着大药车的护士，只有像家人一样的协助者。这种去中心化、去医疗化的环境，真正实现了让老人“在家里终老”的愿景。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>生存的目的：</strong> 人不仅需要被照顾，更需要有机会去爱、去关心、去付出。</li>
+                            <li><strong>环境的力量：</strong> 充满生命力的环境（由于不可预测性而带来的混乱）比无菌的整洁环境更能滋养灵魂。</li>
+                            <li><strong>自主权的回归：</strong> 允许老人按照自己的节奏生活，而不是机构的节奏。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 6,
+                    title: "第六章：放手 (Letting Go)",
+                    subtitle: "什么时候该停止治疗？",
+                    vizType: "bubble",
+                    vizTitle: "临终医疗支出 vs 生命质量",
+                    fullText: `
+                         <p class="mb-4"><strong>本章核心：</strong> 探讨了当疾病不可治愈时，何时应该从“全力抢救”转向“姑息治疗”（Palliative Care）。通过莎拉·莫诺波利（Sara Monopoli）等癌症晚期患者的故事，揭示了过度医疗带来的痛苦。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">如果不做些什么，就是放弃吗？</h4>
+                        <p class="mb-4">莎拉是一位年轻的母亲，即使在肺癌晚期扩散到全身时，她和她的家人依然坚持尝试每一种可能的化疗方案。这代表了绝大多数患者和家属的心态：<strong>只要还有一线希望，就要战斗到底。</strong> 而医生们也往往配合这种心态，推荐哪怕只有微乎其微成功率的实验性疗法。</p>
+                        <p class="mb-4">然而，这种“战斗”是有代价的。代价是莎拉生命的最后时光是在ICU的管子、仪器和化疗的剧烈副作用中度过的，而不是在家中陪伴新出生的孩子。她没有机会好好道别，没有机会完成心愿，最终在痛苦和由于治疗引起的并发症中离世。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">善终护理（Hospice）的误解</h4>
+                        <p class="mb-4">很多人认为选择善终护理（Hospice）就是“放弃治疗”或“等死”。但研究表明，选择善终护理的绝症患者，不仅生活质量更高（疼痛更少、清醒时间更长），甚至往往比那些在ICU里接受积极治疗的患者<strong>活得更久</strong>。这是因为停止了对身体有害的高强度化疗，让身体得到休息，反而维持了最后的能量。</p>
+                        <p class="mb-4">关键的转变在于目标的改变：从“消灭肿瘤”转变为“控制症状，让剩下的每一天都过得舒服”。这需要医生和患者都有巨大的勇气去承认医学的局限。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">25%的医疗支出</h4>
+                        <p class="mb-4">数据显示，医疗保险支出的25%往往花在病人生命的最后一年，而其中大部分花在最后的一个月。但这巨额的投入并没有买来更好的结果，往往只是买来了更多的痛苦。这是一个系统性的失败，源于我们无法接受死亡是生命自然一部分的事实。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>勇气的定义：</strong> 有时候，勇气不是继续战斗，而是接受现实，并专注于当下最重要的事情。</li>
+                            <li><strong>生活质量优先：</strong> 在生命尽头，即使只有几天，高质量的陪伴也比痛苦的延命更有价值。</li>
+                            <li><strong>医生的责任：</strong> 医生不应只是技术的执行者，更应是帮助患者做出艰难选择的向导。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 7,
+                    title: "艰难的谈话 (Hard Conversations)",
+                    subtitle: "如何谈论死亡与临终愿望",
+                    vizType: "flow",
+                    vizTitle: "临终谈话的四个关键问题",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 提供了具体的沟通工具和框架。葛文德分析了医生与患者沟通的三种模式，并提出了临终关怀中至关重要的四个问题。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">医生的三种类型</h4>
+                        <p class="mb-4">葛文德将医生分为三类：</p>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>家长型（Paternalistic）：</strong> “我知道什么对你最好，你听我的。” 这种模式在现代逐渐被摒弃。</li>
+                            <li><strong>资讯型（Informative）：</strong> “这里有红色药丸和蓝色药丸，成功率分别是X和Y，你自己选。” 这是目前的主流，但往往让毫无医学背景的患者陷入选择焦虑。</li>
+                            <li><strong>解释型（Interpretive）：</strong> 理想的模式。医生不仅提供信息，还帮助患者理解这些信息对其生活的意义。医生会问：“在这个阶段，什么对你最重要？”然后根据患者的目标（例如：参加女儿的婚礼、不感到疼痛、甚至只是想回家吃冰淇淋）来推荐治疗方案。</li>
+                        </ul>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">四个关键问题</h4>
+                        <p class="mb-4">为了进行“解释型”的对话，葛文德总结了在重症护理中必须问的四个问题（也被称为苏珊·布洛克的问题）：</p>
+                        <ol class="list-decimal pl-5 space-y-2 mb-4 bg-yellow-50 p-4 rounded border border-yellow-100">
+                            <li><strong>你对自己的病情和预后是如何理解的？</strong> (确认认知是否一致)</li>
+                            <li><strong>你对未来最担心的是什么？</strong> (识别恐惧)</li>
+                            <li><strong>如果不算治愈，你在这个阶段最看重什么（目标是什么）？</strong> (确定优先级)</li>
+                            <li><strong>为了实现这些目标，你愿意牺牲什么？又有什么是你绝不愿意牺牲的？</strong> (划定底线)</li>
+                        </ol>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">谈话的力量</h4>
+                        <p class="mb-4">这些谈话并不容易，往往令人落泪。但通过这些谈话，患者和家属能够从混乱和恐慌中找到方向。它将决策权从单纯的“医学指征”交还给了“人的价值观”。葛文德父亲的案例是这一章的高潮。当身为医生的父亲患上脊髓肿瘤时，正是通过这些艰难的谈话，他明确了自己不愿为了微小的延命机会而牺牲作为外科医生和父亲的尊严，最终在这一原则指导下度过了最后的时光。</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">核心观点总结</h4>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>沟通是医疗的一部分：</strong> 手术是技术，谈话是艺术，后者往往决定了前者的价值。</li>
+                            <li><strong>目标导向治疗：</strong> 治疗本身不是目的，帮助患者实现其生活目标才是目的。</li>
+                            <li><strong>打破禁忌：</strong> 谈论死亡不会加速死亡，反而会让剩下的生更加从容。</li>
+                        </ul>
+                    `
+                },
+                {
+                    id: 8,
+                    title: "第八章：勇气 (Courage)",
+                    subtitle: "直面必死命运的勇气",
+                    vizType: "polar",
+                    vizTitle: "这一生，什么最重要？",
+                    fullText: `
+                        <p class="mb-4"><strong>本章核心：</strong> 全书的总结。勇气不仅指面对死亡的无畏，更指在两条道路之间做出艰难选择的决断力：是为了通过治疗争取更多时间而牺牲当下的舒适，还是为了当下的生活质量而接受时间的有限性？</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">两种勇气</h4>
+                        <p class="mb-4">葛文德认为我们需要两种勇气：</p>
+                        <ul class="list-disc pl-5 space-y-2 mb-4">
+                            <li><strong>第一种勇气：</strong> 面对人终有一死这一现实的勇气。承认我们的身体是有限的，承认医学无法解决所有问题。这是理性的勇气。</li>
+                            <li><strong>第二种勇气：</strong> 依照我们发现的真相去行动的勇气。这意味着我们要敢于对无休止的治疗说“不”，敢于选择回家，敢于去追求那些对我们个人而言最重要的结局。</li>
+                        </ul>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">结尾的意义</h4>
+                        <p class="mb-4">通过回顾全书，特别是他父亲去世的过程，葛文德提出了“峰终定律”（Peak-End Rule）在生命叙事中的应用。我们对一段经历的记忆，主要取决于它的高峰和结尾。如果我们能在生命的最后阶段，哪怕只是很短的时间里，拥有平静、圆满、被爱环绕的结尾，那么整个人生的故事就会变得截然不同。</p>
+                        <p class="mb-4">最好的告别，并不是没有痛苦的告别，而是<strong>符合死者意愿的告别</strong>。它要求我们在还能做决定的时候，就清晰地思考：生命的意义究竟是什么？</p>
+
+                        <h4 class="font-bold text-lg mt-6 mb-2">全书结语</h4>
+                        <p class="mb-4">《最好的告别》不仅是给医生看的，也是给每一个会老、会死、会照顾老人的凡人看的。它告诉我们，作为凡人，我们的任务不是追求永生，而是即使在身体衰退的时候，依然能创造出一个有意义的叙事。医学的职责，是帮助我们完成这个叙事。</p>
+                        
+                        <div class="mt-8 p-6 bg-gray-800 text-white rounded-lg text-center">
+                            <p class="text-xl serif-font italic">"生老病死是自然的进程，医学可以延缓这一进程，但不能阻止它。我们的目标不是好死，而是好好地活到终了。"</p>
+                        </div>
+                    `
+                }
+            ]
+        };
+
+        // --- State Management ---
+        let state = {
+            currentView: 'overview', // 'overview' or chapter index (0-7)
+            chartInstance: null
+        };
+
+        // --- DOM Elements ---
+        const navList = document.getElementById('nav-list');
+        const contentContainer = document.getElementById('content-container');
+        const menuBtn = document.getElementById('menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+
+        // --- Initialization ---
+        function init() {
+            renderNav();
+            renderOverview();
+            
+            // Event Listeners
+            menuBtn.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', toggleSidebar);
+        }
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+            }
+        }
+
+        function renderNav() {
+            // Add Overview Link
+            const overviewLi = document.createElement('li');
+            overviewLi.innerHTML = `
+                <button onclick="handleNavClick('overview')" class="w-full text-left px-6 py-3 text-sm hover:bg-gray-100 transition-colors nav-item ${state.currentView === 'overview' ? 'active' : ''}">
+                    <span class="font-bold block">全书概览</span>
+                    <span class="text-xs text-gray-500">Overview</span>
+                </button>
+            `;
+            navList.appendChild(overviewLi);
+
+            // Add Chapter Links
+            bookData.chapters.forEach((chapter, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <button onclick="handleNavClick(${index})" class="w-full text-left px-6 py-3 text-sm hover:bg-gray-100 transition-colors nav-item ${state.currentView === index ? 'active' : ''}">
+                        <span class="font-bold block text-gray-700">第 ${chapter.id} 章</span>
+                        <span class="text-xs text-gray-500 truncate block">${chapter.title.split('：')[1] || chapter.title}</span>
+                    </button>
+                `;
+                navList.appendChild(li);
+            });
+        }
+
+        function handleNavClick(view) {
+            state.currentView = view;
+            // Update active state in nav
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            // Re-render nav (inefficient but simple for this scale) or just toggle class
+            renderNav(); // Simplicity wins here
+            navList.innerHTML = ''; 
+            renderNav();
+
+            if (window.innerWidth < 768) {
+                toggleSidebar(); // Close sidebar on mobile on click
+            }
+
+            if (view === 'overview') {
+                renderOverview();
+            } else {
+                renderChapter(view);
+            }
+        }
+
+        function renderOverview() {
+            const data = bookData.overview;
+            contentContainer.innerHTML = `
+                <div class="max-w-4xl mx-auto pb-10">
+                    <div class="mb-8 border-b border-gray-200 pb-4">
+                         <span class="text-sm font-bold tracking-widest text-teal-600 uppercase mb-2 block">Interactive Summary</span>
+                        <h2 class="text-3xl md:text-4xl font-bold serif-font text-gray-900 mb-4">${data.title}</h2>
+                        <p class="text-lg text-gray-600 leading-relaxed">${data.intro}</p>
+                    </div>
+                    
+                    <div class="bg-white p-2 rounded-lg fade-in">
+                        ${data.content}
+                    </div>
+                </div>
+            `;
+            initTrajectoryChart();
+        }
+
+        function renderChapter(index) {
+            const ch = bookData.chapters[index];
+            contentContainer.innerHTML = `
+                <div class="max-w-6xl mx-auto pb-10 grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Text Column -->
+                    <div class="lg:col-span-7 fade-in order-2 lg:order-1">
+                        <div class="bg-white p-6 md:p-10 rounded-lg shadow-sm border border-gray-100">
+                             <span class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-2 block">Chapter ${ch.id}</span>
+                            <h2 class="text-2xl md:text-3xl font-bold serif-font text-gray-900 mb-2">${ch.title}</h2>
+                            <h3 class="text-lg text-teal-700 font-medium mb-6 border-l-4 border-teal-500 pl-3">${ch.subtitle}</h3>
+                            
+                            <div class="prose prose-slate max-w-none text-gray-700 leading-7 text-justify">
+                                ${ch.fullText}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Context Column -->
+                    <div class="lg:col-span-5 fade-in order-1 lg:order-2">
+                        <div class="sticky top-4 space-y-6">
+                            <!-- Visualization Card -->
+                            <div class="bg-white p-4 rounded-lg shadow-lg border-t-4 border-orange-400">
+                                <h4 class="font-bold text-gray-800 mb-4 flex items-center">
+                                    <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded mr-2">图解核心</span>
+                                    ${ch.vizTitle}
+                                </h4>
+                                <div id="dynamic-viz-container" class="chart-wrapper bg-gray-50 rounded flex items-center justify-center">
+                                    <canvas id="chapterChart"></canvas>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-3 text-center italic">可视化旨在辅助理解本章核心概念</p>
+                            </div>
+
+                            <!-- Interactive Key Takeaway -->
+                            <div class="bg-gray-800 text-white p-6 rounded-lg shadow-md">
+                                <h4 class="font-bold text-teal-300 mb-2 border-b border-gray-600 pb-2">💡 思考时刻</h4>
+                                <p class="text-sm leading-relaxed text-gray-300">
+                                    读完这一章，请思考：在你或你亲人的生活中，是否遇到过类似的困境？如果是你，你会如何做出不同的选择？
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Trigger Visualization Rendering based on Chapter Type
+            setTimeout(() => {
+                renderChapterViz(ch.vizType, ch.vizTitle);
+            }, 100);
+        }
+
+        // --- Chart Logic ---
+
+        function initTrajectoryChart() {
+            if (state.chartInstance) {
+                state.chartInstance.destroy();
+            }
+            const ctx = document.getElementById('trajectoryChart').getContext('2d');
+            
+            // Mock data representing the 3 trajectories
+            const timeLabels = Array.from({length: 20}, (_, i) => i);
+            
+            // Sudden Death: High function then drops to 0 instantly
+            const suddenData = timeLabels.map(t => t < 18 ? 100 : 0);
+            
+            // Terminal Illness: High function, then steep decline over time (Cancer)
+            const terminalData = timeLabels.map(t => t < 10 ? 95 : Math.max(0, 95 - (t-10)*10));
+            
+            // Frailty: Slow sawtooth decline (Organ Failure/Age)
+            const frailtyData = timeLabels.map(t => {
+                let val = 90 - (t * 3); // General decline
+                if (t % 5 === 0) val -= 10; // Crisis event (fall, infection)
+                else if (t % 5 === 1 || t % 5 === 2) val += 5; // Partial recovery
+                return Math.max(0, val);
+            });
+
+            state.chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['健康', '', '', '', '', '衰老过程 -->', '', '', '', '', '死亡'],
+                    datasets: [
+                        {
+                            label: '猝死 (很少见)',
+                            data: suddenData,
+                            borderColor: '#4fd1c5', // Teal
+                            borderWidth: 2,
+                            tension: 0,
+                            pointRadius: 0
+                        },
+                        {
+                            label: '绝症 (如癌症)',
+                            data: terminalData,
+                            borderColor: '#f6ad55', // Orange
+                            borderWidth: 2,
+                            tension: 0.3,
+                            pointRadius: 0
+                        },
+                        {
+                            label: '衰老/器官衰竭 (最常见)',
+                            data: frailtyData,
+                            borderColor: '#fc8181', // Red
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            tension: 0.3,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { enabled: true, mode: 'index', intersect: false }
+                    },
+                    scales: {
+                        y: { 
+                            title: { display: true, text: '身体机能 / 独立性' },
+                            min: 0, max: 110,
+                            ticks: { display: false } 
+                        },
+                        x: { display: false }
+                    }
+                }
+            });
+        }
+
+        function renderChapterViz(type, title) {
+            const canvas = document.getElementById('chapterChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            // Destroy previous chart if it exists on this canvas
+            // Note: In a real app we'd track specific instances better, 
+            // but here we just need to ensure the canvas is fresh.
+            if (window.chapterChartInstance) {
+                window.chapterChartInstance.destroy();
+            }
+
+            let config = {};
+
+            // --- Visualization Logic Switch ---
+            if (type === 'bar') {
+                // Chapter 1: Solo Living Trend
+                config = {
+                    type: 'bar',
+                    data: {
+                        labels: ['1900年', '1950年', '2000年', '2020年'],
+                        datasets: [{
+                            label: '65岁以上老人独居比例',
+                            data: [10, 25, 45, 60], // Illustrative data
+                            backgroundColor: '#cbd5e0',
+                            hoverBackgroundColor: '#c05621'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }
+                    }
+                };
+            } else if (type === 'doughnut') {
+                // Chapter 2: Systems Failure
+                config = {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['肌肉流失', '骨密度下降', '心血管硬化', '感官退化', '认知减慢'],
+                        datasets: [{
+                            data: [20, 20, 20, 20, 20],
+                            backgroundColor: ['#e2e8f0', '#cbd5e0', '#a0aec0', '#718096', '#4a5568']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                };
+            } else if (type === 'line') {
+                // Chapter 3: Nursing Homes
+                config = {
+                    type: 'line',
+                    data: {
+                        labels: ['1950', '1970', '1990', '2010'],
+                        datasets: [{
+                            label: '疗养院床位数 (爆炸式增长)',
+                            data: [20, 60, 90, 95],
+                            borderColor: '#e53e3e',
+                            backgroundColor: 'rgba(229, 62, 62, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: { y: { display: false } }
+                    }
+                };
+            } else if (type === 'bar-group') {
+                // Chapter 4: Assisted Living Satisfaction
+                config = {
+                    type: 'bar',
+                    data: {
+                        labels: ['隐私感', '自由度', '生活满意度'],
+                        datasets: [
+                            {
+                                label: '传统疗养院',
+                                data: [20, 15, 30],
+                                backgroundColor: '#a0aec0'
+                            },
+                            {
+                                label: '辅助生活社区',
+                                data: [85, 80, 90],
+                                backgroundColor: '#38b2ac' // Teal
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                    }
+                };
+            } else if (type === 'cards') {
+                // Chapter 5: Three Plagues (Custom HTML render instead of Chart.js for this specific one)
+                const container = document.getElementById('dynamic-viz-container');
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 gap-2 w-full h-full overflow-y-auto p-2">
+                        <div class="bg-gray-100 p-3 rounded border-l-4 border-gray-500">
+                            <h5 class="font-bold text-gray-700">瘟疫 1: 厌倦</h5>
+                            <p class="text-xs text-gray-500">解药: 自发性与意外 (Spontaneity)</p>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded border-l-4 border-gray-500">
+                            <h5 class="font-bold text-gray-700">瘟疫 2: 孤独</h5>
+                            <p class="text-xs text-gray-500">解药: 陪伴与照顾他人 (Companionship)</p>
+                        </div>
+                        <div class="bg-gray-100 p-3 rounded border-l-4 border-gray-500">
+                            <h5 class="font-bold text-gray-700">瘟疫 3: 无助</h5>
+                            <p class="text-xs text-gray-500">解药: 给予机会去付出 (Giving)</p>
+                        </div>
+                    </div>
+                `;
+                return; // Exit chart rendering
+            } else if (type === 'bubble') {
+                // Chapter 6: Cost vs Quality
+                config = {
+                    type: 'bubble',
+                    data: {
+                        datasets: [
+                            {
+                                label: '积极治疗 (ICU)',
+                                data: [{x: 90, y: 20, r: 25}], // High Cost, Low Quality
+                                backgroundColor: '#fc8181'
+                            },
+                            {
+                                label: '善终护理 (Hospice)',
+                                data: [{x: 20, y: 80, r: 20}], // Low Cost, High Quality
+                                backgroundColor: '#68d391'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { title: { display: true, text: '医疗支出' }, min: 0, max: 100 },
+                            y: { title: { display: true, text: '生活质量/舒适度' }, min: 0, max: 100 }
+                        },
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                };
+            } else if (type === 'flow') {
+                // Chapter 7: 4 Questions (HTML Render)
+                 const container = document.getElementById('dynamic-viz-container');
+                container.innerHTML = `
+                    <div class="flex flex-col justify-center h-full space-y-2 p-2 w-full">
+                        <div class="bg-blue-50 p-2 rounded text-center text-xs border border-blue-200">1. 理解病情</div>
+                        <div class="text-center text-gray-400">↓</div>
+                        <div class="bg-blue-50 p-2 rounded text-center text-xs border border-blue-200">2. 识别恐惧</div>
+                        <div class="text-center text-gray-400">↓</div>
+                        <div class="bg-teal-50 p-2 rounded text-center text-xs border border-teal-200 font-bold">3. 确定优先目标</div>
+                        <div class="text-center text-gray-400">↓</div>
+                        <div class="bg-orange-50 p-2 rounded text-center text-xs border border-orange-200">4. 权衡取舍 (底线)</div>
+                    </div>
+                `;
+                return;
+            } else if (type === 'polar') {
+                // Chapter 8: Courage
+                config = {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['避免痛苦', '神志清醒', '陪伴家人', '延长生命', '身体完整'],
+                        datasets: [{
+                            data: [90, 85, 95, 40, 60], // Hypothetical priorities of a patient
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.5)',
+                                'rgba(54, 162, 235, 0.5)',
+                                'rgba(255, 206, 86, 0.5)',
+                                'rgba(255, 99, 132, 0.5)', // Prolonging life often lower priority at end
+                                'rgba(153, 102, 255, 0.5)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'right', labels: {boxWidth: 10} } }
+                    }
+                };
+            }
+
+            window.chapterChartInstance = new Chart(ctx, config);
+        }
+
+        // Run
+        init();
+
+    </script>
+</body>
+</html>

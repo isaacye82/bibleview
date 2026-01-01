@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel 1: The Great Awakening | 约珥书第1章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Drought Brown - Desolation */
+            --theme-primary: #78350f; /* Amber 900 */
+            /* Locust Olive - The Plague */
+            --theme-secondary: #3f6212; /* Lime 800 */
+            /* Sackcloth Grey - Repentance */
+            --theme-accent: #a8a29e; /* Stone 400 */
+            /* Background */
+            --theme-bg: #f5f5f4; /* Stone 100 */
+            /* Text */
+            --theme-text: #1c1917; /* Stone 900 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(120, 53, 15, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        .exegesis-box {
+            background-color: #fefce8; /* Yellow 50 (faint parchment) */
+            border-top: 3px solid #854d0e; /* Yellow 800 */
+        }
+        
+        .devotional-box {
+            background-color: #f0fdf4; /* Green 50 (faint life) */
+            border-top: 3px solid #3f6212; /* Lime 800 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Locust Simulation CSS --- */
+        .field-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #d6d3d1; /* Stone 300 - bare earth */
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* The Green Layer (Crops) */
+        .crop-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #4ade80 0%, #16a34a 100%);
+            transition: clip-path 0.5s ease-out;
+            z-index: 1;
+        }
+
+        /* Locust Particles */
+        .locust {
+            position: absolute;
+            width: 6px;
+            height: 2px;
+            background-color: #362f2d;
+            border-radius: 1px;
+            opacity: 0.8;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .stage-label {
+            position: absolute;
+            background: rgba(0,0,0,0.6);
+            color: #ecfccb;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-bug mr-2 text-lime-800"></i> 约珥书 1章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-8">Joel Chapter 1</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-lime-900 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-lime-900 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1c1917] text-stone-400 mt-auto border-t-4 border-lime-800">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-lime-100 mb-1">"哀号吧... 因为耶和华的日子临近。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-4 en-text">"Wail... for the day of the LORD is near."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">约珥书第1章中英对照研经报告 | The Plague & The Call</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "灾难的唤醒：蝗灾与神的日子",
+                title_en: "The Awakening: The Locust Plague & The Day of the Lord",
+                summary_zh: "《约珥书》以一场空前绝后的蝗灾开篇。先知约珥并未仅仅将其视为自然灾害，而是将其解读为“耶和华的日子”临近的前兆。这一章是对全地发出的紧急警报，呼唤从酒醉者到祭司的所有人，从麻木中醒来，披麻蒙灰，痛悔寻求神。",
+                summary_en: "Joel opens with an unprecedented locust plague. The prophet Joel sees this not merely as a natural disaster, but as a harbinger of the 'Day of the LORD'. This chapter is an urgent alarm to the whole land, calling everyone—from drunkards to priests—to wake from their stupor, mourn, and seek God.",
+                concepts: [
+                    { 
+                        title: "四重蝗灾", 
+                        title_en: "The Fourfold Plague", 
+                        icon: "fa-locust",
+                        color: "text-lime-800", 
+                        bg: "bg-lime-100", 
+                        desc_zh: "剪虫、群蝗、蝻子、蚂蚱。彻底的剥夺，象征神审判的全面性与不可逃避。", 
+                        desc_en: "Gnawing, swarming, creeping, stripping locusts. Total deprivation, symbolizing the inescapable judgment." 
+                    },
+                    { 
+                        title: "唤醒沉睡者", 
+                        title_en: "Wake Up the Sleepers", 
+                        icon: "fa-bell",
+                        color: "text-amber-800", 
+                        bg: "bg-amber-100", 
+                        desc_zh: "灾难的首要目的是唤醒那些沉迷于安逸（醉酒的人）和依靠常规（农夫）的人。", 
+                        desc_en: "The primary purpose of disaster is to wake those numbed by comfort (drunkards) and routine (farmers)." 
+                    },
+                    { 
+                        title: "严肃会", 
+                        title_en: "Solemn Assembly", 
+                        icon: "fa-users",
+                        color: "text-stone-700", 
+                        bg: "bg-stone-200", 
+                        desc_zh: "面对无法抗拒的灾难，唯一的出路是集体的悔改与禁食，转向神自己。", 
+                        desc_en: "In the face of irresistible disaster, the only way out is collective repentance and fasting." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "plague",
+                    title: "空前的灾难 (1:1-4)",
+                    title_en: "The Unprecedented Disaster",
+                    verses: [
+                        {
+                            ref: "1:2-4",
+                            text_zh: "老年人哪，当听我的话！... 在你们的日子，或你们列祖的日子，曾有这样的事吗？... 剪虫剩下的，群蝗来吃；群蝗剩下的，蝻子来吃...",
+                            text_en: "Hear this, you elders... Has such a thing happened in your days...? What the cutting locust left, the swarming locust has eaten. What the swarming locust left, the hopping locust has eaten...",
+                            exegesis: {
+                                title: "彻底的毁灭 (Total Devastation)",
+                                content_zh: "约珥使用了四个不同的希伯来词（Gazam, Arbeh, Yelek, Chasil）来描述蝗虫。这可能指不同种类的蝗虫，或蝗虫发育的四个阶段。重点不在于昆虫学分类，而在于**毁灭的彻底性**。这是一场“反创造”（De-creation），将大地的生机一层层剥去，直到完全荒凉。先知要求将此事“传与子孙”，表明这是历史上独特的审判记号。",
+                                content_en: "Joel uses four Hebrew terms for locusts. Whether referring to species or growth stages, the point is **total devastation**. It is a 'de-creation', stripping the land layer by layer. The command to 'tell your children' marks this as a unique historical sign of judgment."
+                            },
+                            devotional: {
+                                title: "当安全感被一层层剥离 (When Layers are Stripped)",
+                                content_zh: "有时生活中的打击接踵而至，像这四重蝗虫一样：刚解决一个财务危机，健康又出了问题；刚处理好工作，关系又破裂了。神允许这些发生，往往是为了剥去我们对外在安全感的层层依赖，直到我们赤露地面对祂。当你的“绿地”变成了“荒场”，别只盯着蝗虫，要抬头看那掌管蝗虫的神。",
+                                content_en: "Sometimes life's hits come in waves, like these locusts: financial crisis, then health issues, then relationship breakdown. God allows layers of security to be stripped so we face Him bare. When your 'green field' turns brown, don't just stare at the locusts; look up to the God who controls them."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "drunkards",
+                    title: "对麻木者的呼唤 (1:5-7)",
+                    title_en: "Call to the Numbed",
+                    verses: [
+                        {
+                            ref: "1:5",
+                            text_zh: "酒醉的人哪，要清醒哭泣；好酒的人哪，都要为甜酒哀号，因为从你们的口中断绝了。",
+                            text_en: "Awake, you drunkards, and weep, and wail, all you drinkers of wine, because of the sweet wine, for it is cut off from your mouth.",
+                            exegesis: {
+                                title: "断绝的快乐源泉 (The Source of Joy Cut Off)",
+                                content_zh: "“酒醉的人”代表那些活在当下、追求感官享受、对属灵现实麻木的人。蝗灾摧毁了葡萄树，也就切断了“甜酒”（享乐）的来源。神通过剥夺物质的快乐，来强行打断他们的沉睡。这里的“清醒”（Awake）不仅是酒醒，更是灵里的苏醒。",
+                                content_en: "'Drunkards' represent those living for pleasure, numb to spiritual reality. The plague destroys the vines, cutting off the 'sweet wine' (escapism). God forcibly interrupts their slumber by removing material joy. 'Awake' implies spiritual sobbing up."
+                            },
+                            devotional: {
+                                title: "你的‘甜酒’是什么？ (What is Your Sweet Wine?)",
+                                content_zh: "什么是你生活中用来麻醉自己、逃避现实的东西？是无止境的娱乐、购物，还是工作的成就感？当神拿走这些“甜酒”时，虽然痛苦，但这却是祂唤醒你的恩典。不要等到“酒”断绝了才去思考人生的意义。现在就从麻木中醒来吧。",
+                                content_en: "What do you use to numb yourself? Entertainment, shopping, or work achievements? When God removes this 'sweet wine', it is painful but gracious grace to wake you up. Don't wait until the supply is cut off to ponder life's meaning. Awake from your numbness now."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "farmers_priests",
+                    title: "对劳动者与祭司的呼唤 (1:8-14)",
+                    title_en: "Call to Workers & Priests",
+                    verses: [
+                        {
+                            ref: "1:11, 13",
+                            text_zh: "农夫啊，你们要惭愧... 祭司啊，你们当腰束麻布痛哭... 因为素祭和奠祭从你们神的殿中断绝了。",
+                            text_en: "Be ashamed, O tillers of the soil... Put on sackcloth and lament, O priests... for the grain offering and the drink offering are withheld from the house of your God.",
+                            exegesis: {
+                                title: "从经济危机到敬拜危机 (From Economy to Worship)",
+                                content_zh: "灾难波及了所有阶层。农夫（生产者）绝望，因为大麦小麦都没了；祭司（宗教领袖）哀哭，因为没有祭物可以献给神了。这表明灾难的严重性已经破坏了神与人之间的盟约维系（献祭）。“素祭和奠祭断绝”意味着人无法再按常规方式接近神，这迫使人们寻求更深层的悔改。",
+                                content_en: "The disaster hits all classes. Farmers despair as crops fail; Priests lament as offerings cease. The covenant link (sacrifice) is broken. The cessation of offerings implies routine worship is impossible, forcing a deeper, desperate repentance."
+                            },
+                            devotional: {
+                                title: "当常规生活停摆时 (When Routine Stops)",
+                                content_zh: "当我们的工作（农夫的田）受挫，甚至教会生活（祭司的殿）也因故暂停时，我们该怎么办？这是一个“腰束麻布”（谦卑悔改）的时刻。神有时会震动我们的经济和宗教常规，是为了让我们不再依赖“形式”，而是用心灵和诚实单独面对祂。",
+                                content_en: "When work fails or church routine stops, what do we do? It's time for 'sackcloth' (humility). God shakes our economic and religious routines so we stop relying on 'forms' and face Him alone in spirit and truth."
+                            }
+                        },
+                        {
+                            ref: "1:14",
+                            text_zh: "你们要分定禁食的日子，宣告严肃会，招聚长老和国中的居民... 向耶和华哀求。",
+                            text_en: "Consecrate a fast; call a solemn assembly. Gather the elders and all the inhabitants of the land... and cry out to the LORD.",
+                            exegesis: {
+                                title: "集体的回应 (Corporate Response)",
+                                content_zh: "面对国家级的灾难，个人的反省是不够的，必须有集体的行动。“分定”（Consecrate）意为分别为圣。禁食不是为了绝食抗议，而是为了表明对神的渴望胜过对食物的渴望。这是全会众在危机中唯一的出路：合一地转向神。",
+                                content_en: "National disaster demands corporate action. 'Consecrate' means set apart. Fasting isn't a hunger strike, but declaring hunger for God exceeds hunger for food. The only way out is for the community to turn to God in unity."
+                            },
+                            devotional: {
+                                title: "集体的力量 (The Power of Togetherness)",
+                                content_zh: "现代信仰常被私有化，但约珥提醒我们在危机中需要“严肃会”。当你感到软弱无力时，不要独自硬撑。回到信仰群体中，和弟兄姐妹一起“哀求”。有时候，集体的祷告能托住个人无法承担的重担。",
+                                content_en: "Modern faith is often privatized, but Joel reminds us of the need for a 'solemn assembly'. When weak, don't endure alone. Return to the community, 'cry out' together. Sometimes, corporate prayer carries burdens individuals cannot bear."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "day_of_lord",
+                    title: "耶和华的日子 (1:15-20)",
+                    title_en: "The Day of the LORD",
+                    verses: [
+                        {
+                            ref: "1:15",
+                            text_zh: "哀哉！这日子！因为耶和华的日子临近，好像毁灭从全能者来到。",
+                            text_en: "Alas for the day! For the day of the LORD is near, and as destruction from the Almighty it comes.",
+                            exegesis: {
+                                title: "影儿与实体 (Shadow & Substance)",
+                                content_zh: "这是本章的高潮。约珥指出，眼前的蝗灾不仅仅是昆虫的问题，它是一个巨大的神学符号——指向终末的“耶和华的日子”。当下的苦难是那更大审判的预演（影儿）。“毁灭”（Shod）与“全能者”（Shaddai）在希伯来文中是双关语，强调审判直接源于神的主权。",
+                                content_en: "The climax. The locusts are a theological symbol pointing to the eschatological 'Day of the LORD'. Current suffering is a preview (shadow) of that greater judgment. 'Destruction' (Shod) and 'Almighty' (Shaddai) are a Hebrew wordplay, emphasizing judgment comes from God's sovereignty."
+                            },
+                            devotional: {
+                                title: "在警钟声中预备 (Prepare in the Alarm)",
+                                content_zh: "如果现在的困境（蝗灾）都让我们难以承受，那将来面对神完全的审判时谁能站立得住呢？神让我们经历暂时的苦难，是仁慈的警钟，让我们有机会在那个最终的日子来到之前，就调整好生命的方向。不要浪费你的苦难，让它成为你灵魂苏醒的契机。",
+                                content_en: "If we can't handle current troubles, how will we stand in the final judgment? Temporary suffering is a merciful alarm, giving us a chance to align our lives before that Day comes. Don't waste your suffering; let it awaken your soul."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-stone-200 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-lime-100 text-lime-900 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-800">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-lime-800 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: The Locust Plague Simulator -->
+                    <div class="lg:col-span-5 bg-stone-900 text-white p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden">
+                        <div class="z-10 w-full mb-2 flex justify-between items-center">
+                             <h3 class="text-lg font-bold text-lime-400">
+                                吞噬模拟器 <span class="text-xs font-normal opacity-60 ml-2 en-text text-white">Devastation Simulator</span>
+                             </h3>
+                             <button onclick="runLocustSimulation()" class="px-3 py-1 bg-lime-800 hover:bg-lime-700 text-xs rounded shadow transition border border-lime-600">
+                                <i class="fas fa-play mr-1"></i> 开始灾害 Start Plague
+                             </button>
+                        </div>
+
+                        <!-- Field Canvas -->
+                        <div id="field-container" class="field-container mt-2">
+                             <div id="crop-layer" class="crop-layer"></div>
+                             <div id="locust-layer" class="absolute inset-0"></div>
+                             
+                             <div id="stage-msg" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-30 opacity-0 transition-opacity duration-500 pointer-events-none">
+                                <h4 class="text-2xl font-bold text-white drop-shadow-md bg-black/50 px-4 py-2 rounded">丰收 Harvest</h4>
+                             </div>
+                        </div>
+                        
+                        <div class="mt-3 text-center h-6">
+                            <p id="sim-status" class="text-xs text-stone-400 italic transition-all duration-300">The land is green and fruitful...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-lime-100 text-lime-900 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-amber-900">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 sm:p-6 border-b border-stone-200 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-stone-700 text-stone-100 text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-stone-200 flex-grow mx-4"></div>
+                            <i class="fas fa-scroll text-stone-300 text-xl"></i>
+                        </div>
+                        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 font-medium">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-amber-900 opacity-80">
+                                <i class="fas fa-search mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-900 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-amber-900/10">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-lime-800 opacity-80">
+                                <i class="fas fa-church mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-lime-900 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-lime-800/10">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Methodology Summary</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-amber-900">
+                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-900 text-xl mb-4">
+                                <i class="fas fa-glasses"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 经文原意 (Contextual Meaning)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Symbolic & Historical</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于理解经文中的自然灾害（蝗灾）如何作为历史事实，同时作为指向未来的神学符号（耶和华的日子）。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>字词研究：</strong> 分析“剪虫、群蝗...”等词汇的累积效应，强调毁灭的彻底性。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>预表：</strong> 将当下的灾难（影儿）与终末的审判（实体）联系起来。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>社会切片：</strong> 分析灾难对不同社会群体（酒醉者、农夫、祭司）的具体影响。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-lime-800">
+                            <div class="w-12 h-12 bg-lime-100 rounded-full flex items-center justify-center text-lime-800 text-xl mb-4">
+                                <i class="fas fa-praying-hands"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Awakening & Response</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                将“灾难的唤醒”应用到个人属灵生命的沉睡与苏醒中。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-lime-700 mt-1 mr-2 text-xs"></i> <span><strong>警钟效应：</strong> 学习将生活中的挫折视为神“唤醒”我们脱离麻木的恩典。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-lime-700 mt-1 mr-2 text-xs"></i> <span><strong>偶像的破除：</strong> 反思当“甜酒”（享乐）断绝时，我们内心的真实光景。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-lime-700 mt-1 mr-2 text-xs"></i> <span><strong>集体悔改：</strong> 重新发现集体祷告（严肃会）在应对危机中的力量。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Animation Logic ---
+        function runLocustSimulation() {
+            const cropLayer = document.getElementById('crop-layer');
+            const locustLayer = document.getElementById('locust-layer');
+            const status = document.getElementById('sim-status');
+            const stageMsg = document.getElementById('stage-msg');
+            
+            // Reset
+            cropLayer.style.clipPath = 'inset(0% 0% 0% 0%)'; // Full green
+            locustLayer.innerHTML = '';
+            stageMsg.innerHTML = '';
+            stageMsg.style.opacity = '0';
+            
+            // Stages
+            const stages = [
+                { name: "剪虫 (Gnawing)", pct: 10, delay: 0 },
+                { name: "群蝗 (Swarming)", pct: 40, delay: 1500 },
+                { name: "蝻子 (Crawling)", pct: 70, delay: 3000 },
+                { name: "蚂蚱 (Consuming)", pct: 100, delay: 4500 }
+            ];
+
+            stages.forEach((stage, idx) => {
+                setTimeout(() => {
+                    // Update Status
+                    status.innerText = `Stage ${idx+1}: ${stage.name} arriving...`;
+                    
+                    // Show Stage Message
+                    stageMsg.innerHTML = `<h4 class="text-2xl font-bold text-white drop-shadow-md bg-black/50 px-4 py-2 rounded">${stage.name}</h4>`;
+                    stageMsg.style.opacity = '1';
+                    setTimeout(() => stageMsg.style.opacity = '0', 1000);
+
+                    // Eat Crops (Clip Path)
+                    // We simulate eating by clipping the green layer from top down
+                    cropLayer.style.clipPath = `inset(${stage.pct}% 0% 0% 0%)`;
+
+                    // Generate Locust Particles
+                    const particleCount = 20 * (idx + 1);
+                    for(let i=0; i<particleCount; i++) {
+                        const l = document.createElement('div');
+                        l.className = 'locust';
+                        // Random position within the newly eaten area (approx)
+                        const topMin = (idx === 0) ? 0 : stages[idx-1].pct;
+                        const topMax = stage.pct;
+                        
+                        l.style.top = (Math.random() * (topMax - topMin) + topMin) + '%';
+                        l.style.left = (Math.random() * 100) + '%';
+                        
+                        // Add some movement
+                        l.style.transition = 'all 2s ease-out';
+                        setTimeout(() => {
+                            l.style.transform = `translate(${Math.random()*20-10}px, ${Math.random()*20+10}px)`;
+                        }, 100);
+
+                        locustLayer.appendChild(l);
+                    }
+
+                    if(idx === 3) {
+                        setTimeout(() => {
+                            status.innerText = "The land is laid waste. Awake and mourn!";
+                            stageMsg.innerHTML = `<h4 class="text-2xl font-bold text-red-500 drop-shadow-md bg-black/80 px-4 py-2 rounded">DESOLATION</h4>`;
+                            stageMsg.style.opacity = '1';
+                        }, 1500);
+                    }
+
+                }, stage.delay);
+            });
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonah 1: The Descent | 约拿书第一章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Abyss / Deep Sea */
+            --theme-deep: #0f172a; /* Slate 900 */
+            /* Storm / Wave */
+            --theme-storm: #334155; /* Slate 700 */
+            /* Warning / Rebellion */
+            --theme-rebel: #be123c; /* Rose 700 */
+            /* Grace / Fish */
+            --theme-grace: #0ea5e9; /* Sky 500 */
+            /* Text */
+            --theme-text-light: #e2e8f0; /* Slate 200 */
+            --theme-bg: #020617; /* Slate 950 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text-light);
+            background-image: linear-gradient(to bottom, #0f172a 0%, #020617 100%);
+        }
+
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+
+        .en-text {
+            font-family: 'Lato', sans-serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+        }
+        
+        .nav-btn:hover {
+            opacity: 1;
+            color: var(--theme-grace);
+        }
+
+        .active-tab {
+            opacity: 1;
+            color: var(--theme-grace);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-grace);
+            box-shadow: 0 0 10px var(--theme-grace);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: rgba(30, 41, 59, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: 1px solid #334155;
+            backdrop-filter: blur(5px);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--theme-grace);
+            box-shadow: 0 10px 20px -3px rgba(14, 165, 233, 0.15);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Ship Rocking Animation */
+        .ship-container {
+            width: 80px;
+            height: 80px;
+            animation: rock 3s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+        @keyframes rock {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        /* Descent Arrow Animation */
+        .arrow-down {
+            animation: descend 2s infinite;
+        }
+        @keyframes descend {
+            0% { transform: translateY(0); opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { transform: translateY(10px); opacity: 0.5; }
+        }
+
+        /* Bubble Animation (Underwater feel) */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -10px;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+        }
+        .bubble:nth-child(1) { left: 10%; animation-duration: 8s; }
+        .bubble:nth-child(2) { left: 30%; animation-duration: 12s; width: 6px; height: 6px;}
+        .bubble:nth-child(3) { left: 70%; animation-duration: 7s; }
+        .bubble:nth-child(4) { left: 90%; animation-duration: 11s; width: 8px; height: 8px;}
+
+        @keyframes rise {
+            0% { bottom: -10px; transform: translateX(0); }
+            50% { transform: translateX(20px); }
+            100% { bottom: 100%; transform: translateX(-20px); }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <!-- Bubbles Background -->
+    <div class="bubbles">
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-[#0f172a]/90 backdrop-blur-md sticky top-0 z-50 border-b border-slate-700 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center mr-3 text-sky-400 border border-slate-600">
+                        <i class="fas fa-anchor"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-slate-100 serif flex flex-col leading-none">
+                        <span>约拿书 <span class="text-rose-500">1章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-slate-400 en-title tracking-widest mt-1">THE GREAT DESCENT</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium text-slate-300">
+                        <i class="fas fa-compass block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium text-slate-300">
+                        <i class="fas fa-book-open block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium text-slate-300">
+                        <i class="fas fa-layer-group block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full z-10">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#020617] text-slate-500 mt-auto border-t-4 border-sky-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-slate-300 mb-1">"救恩出于耶和华。"</p>
+            <p class="text-xs italic opacity-60 en-text">"Salvation belongs to the LORD." (Jonah 2:9)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "向下，再向下：逃避神的路",
+                title_en: "Down, Down, Down: The Flight from God",
+                summary_zh: "约拿书第1章不仅是一个关于“大鱼”的故事，更是一个关于“主权与反叛”的叙事。当神发出“起来”的命令时，先知却选择了“下去”。本章充满了讽刺：先知在沉睡，外邦水手在祷告；先知想要逃避神的面，神却用风暴“追赶”他。这是一个关于人试图逃离神，而神却不放手的恩典故事。",
+                summary_en: "Jonah 1 is not just about a 'big fish', but a narrative of 'Sovereignty vs Rebellion'. When God commanded 'Arise', the prophet chose to 'Go Down'. The chapter is dripping with irony: the prophet sleeps while pagans pray. It's a story of a man trying to outrun God, and the relentless grace that chases him through the storm.",
+                concepts: [
+                    {
+                        title: "下去", title_en: "Went Down", hebrew: "Yarad",
+                        icon: "fa-arrow-down", color: "text-rose-500",
+                        desc_zh: "这是本章的关键字。约拿先下到约帕，再下到船上，然后下到底舱（沉睡），最后下到海里。罪的路径永远是向下的。",
+                        desc_en: "Key verb. Jonah went down to Joppa, down to the ship, down to the hold, down to the sea. The trajectory of sin is always downward."
+                    },
+                    {
+                        title: "抛掷", title_en: "Hurled", hebrew: "Tul",
+                        icon: "fa-wind", color: "text-sky-400",
+                        desc_zh: "神“抛”出大风；水手“抛”出货物；最后水手将约拿“抛”入海中。这显示了神对自然界和人类行动的绝对掌控。",
+                        desc_en: "God 'hurled' the wind; sailors 'hurled' cargo; finally sailors 'hurled' Jonah. Shows God's absolute sovereignty over nature and action."
+                    },
+                    {
+                        title: "敬畏", title_en: "Fear", hebrew: "Yare",
+                        icon: "fa-praying-hands", color: "text-amber-500",
+                        desc_zh: "水手因风暴而“惧怕”，约拿口称“敬畏”神却在违背神，最后水手大大“敬畏”耶和华。真敬畏在风暴中被显明。",
+                        desc_en: "Sailors 'feared' the storm; Jonah claimed to 'fear' God while disobeying; finally sailors 'feared' Yahweh greatly. True fear is revealed in the storm."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "呼召与逃跑：代价高昂的违背 (1:1-3)",
+                    title_en: "The Call & The Flight: The High Cost of 'No'",
+                    verses: [
+                        {
+                            ref: "1:3",
+                            text_zh: "约拿却起来...逃往他施...遇见一只船...给了船价，就上船，要与船上的人同往他施去躲避耶和华。",
+                            text_en: "But Jonah rose to flee to Tarshish... he found a ship... paid the fare and went down into it, to go with them to Tarshish, away from the presence of the LORD.",
+                            exegesis: {
+                                title: "他施的方向 (Direction of Tarshish)",
+                                content_zh: "尼尼微在东（亚述），他施在西（可能是西班牙）。约拿不仅是拒绝，而是走向了地球上已知的最反方向。他“给了船价”，这细节暗示了违背神的代价——顺服神需要付出，但违背神往往需要付出更高的代价（金钱、时间、安宁）。“躲避耶和华的面”是神学上的荒谬，反映了他在罪中的非理性。",
+                                content_en: "Nineveh is East; Tarshish is likely West (Spain). Jonah went the exact opposite direction. He 'paid the fare'—a detail implying the cost of disobedience. Sin isn't free. 'Fleeing from God's presence' is theologically absurd, reflecting the irrationality of sin."
+                            },
+                            devotional: {
+                                title: "你在买去哪里的船票？ (Where is your ticket to?)",
+                                content_zh: "我们每个人心中都有一个“他施”——那个我们认为比神的计划更安全、更舒适的地方。或许是某种职业规划，或许是一段神不喜悦的关系。为了去那里，我们不惜“付船价”（牺牲原则、消耗积蓄）。但请记住，任何让你“躲避神”的船，最终都会驶向风暴。",
+                                content_en: "We all have a 'Tarshish'—a place we think is safer than God's will. Maybe a career path or a relationship. We 'pay the fare' to go there. But remember: any ship sailing away from God is destined for a storm."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "风暴与沉睡：先知的麻木 (1:4-6)",
+                    title_en: "The Storm & The Sleep: Spiritual Stupor",
+                    verses: [
+                        {
+                            ref: "1:4-6",
+                            text_zh: "耶和华使海中起大风...约拿已下到底舱，躺卧沉睡...船主对他说：你这沉睡的人哪...",
+                            text_en: "But the LORD hurled a great wind... Jonah had gone down into the inner part of the ship and had lain down and was fast asleep... The captain said to him, 'What do you mean, you sleeper?'",
+                            exegesis: {
+                                title: "不自然的沉睡 (Unnatural Sleep)",
+                                content_zh: "当经验丰富的水手都惧怕时，约拿却在“沉睡”（Radam，类似亚当受造时的深睡）。这并非安息，而是灵性的麻木和抑郁的逃避。最大的讽刺是，一个外邦船长不得不来唤醒神的先知去祷告。世界（水手）比教会（约拿）对危机更清醒，这是何等的羞耻。",
+                                content_en: "Sailors panicked, but Jonah was in a 'deep sleep' (Radam). This isn't peace; it's spiritual stupor and depressive escapism. Irony: A pagan captain has to wake the Prophet to pray. Shameful when the world is more awake to crisis than the church."
+                            },
+                            devotional: {
+                                title: "你的风暴唤醒你了吗？ (Are you awake?)",
+                                content_zh: "有时神允许风暴临到（家庭危机、健康问题），是为了摇醒在底舱沉睡的我们。你是否正处于灵性的“昏睡”中？对周围人的痛苦无动于衷，对神的呼唤充耳不闻？不要等到世界来问你：“你这沉睡的人哪，为何这样呢？”",
+                                content_en: "God sends storms to shake us awake. Are you in spiritual coma? Indifferent to others' pain, deaf to God? Don't wait for the world to ask you: 'Sleeper, what are you doing?' Wake up before the ship breaks."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "掣签与认罪：言行不一 (1:7-10)",
+                    title_en: "Lots & Confession: The Gap",
+                    verses: [
+                        {
+                            ref: "1:9-10",
+                            text_zh: "他说：我是希伯来人。我敬畏耶和华─那创造沧海旱地之天上的神...我们知道他躲避耶和华...",
+                            text_en: "He said to them, 'I am a Hebrew, and I fear the LORD, the God of heaven, who made the sea and the dry land.' ... the men knew that he was fleeing from the presence of the LORD...",
+                            exegesis: {
+                                title: "正统神学 vs 悖逆行为 (Orthodoxy vs Orthopraxy)",
+                                content_zh: "约拿的信条（Creed）是完美的：“我敬畏创造天地的神”。但他的行为却是“躲避神”。这是一个巨大的矛盾。他在风暴中承认神创造了海洋，却以为自己能坐船逃离这位神。这种神学认知与生活实践的脱节，正是先知最大的罪。",
+                                content_en: "Jonah's creed was perfect: 'I fear the Creator.' His conduct was opposite: 'Fleeing.' He confessed God made the sea, yet tried to escape God by sea. The gap between his theology and his reality is his great sin."
+                            }
+                            ,
+                            devotional: {
+                                title: "如果你的标签是“基督徒”... (If you say 'I am a Christian')",
+                                content_zh: "当别人问你是谁时，你可能像约拿一样回答：“我是基督徒，我敬畏神。”但如果旁边的人（同事、家人）看着你的行为说：“既然如此，你为什么这样做？”（第10节），那就是最严厉的指责。让我们的“行”配得上我们的“名”。",
+                                content_en: "You say, 'I am a Christian.' But if observers ask, 'Then why do you act like this?' (v10), it's a sting. Let your walk match your talk. Don't let your label be a lie."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "抛入海中：替代性的牺牲 (1:11-17)",
+                    title_en: "Cast Overboard: Substitutionary Sacrifice",
+                    verses: [
+                        {
+                            ref: "1:12, 15",
+                            text_zh: "他对他们说：你们将我抬起来，抛在海中，海就平静了...他们便将约拿抬起，抛在海中，海的狂浪就平息了。",
+                            text_en: "He said to them, 'Pick me up and hurl me into the sea; then the sea will quiet down for you'... So they picked up Jonah and hurled him into the sea, and the sea ceased from its raging.",
+                            exegesis: {
+                                title: "一人替众人 (One for Many)",
+                                content_zh: "约拿在这里成为了一个类似基督的“预表”（Type）。只有通过一个人的牺牲（被抛入愤怒的风暴中），众人的性命才能得救。当约拿落水，风暴立刻停止，不仅救了水手的命，也使他们敬畏神。大鱼的出现不是为了惩罚，而是为了拯救约拿免于溺毙，这是严厉恩典的载体。",
+                                content_en: "Jonah acts as a type of Christ. One man must be sacrificed to the storm so the many can live. When he hits the water, wrath ceases. The fish isn't just punishment; it's a rescue vessel, a carrier of severe grace."
+                            },
+                            devotional: {
+                                title: "停止挣扎，全然降服 (Surrender stops the Storm)",
+                                content_zh: "只要约拿还在船上（坚持自我），风暴就不会停止。有些风暴持续，是因为我们还紧抓着船舷不放。只有当你对自己说：“主啊，我投降，把我抛下去吧”，那种与神对抗的内在风暴才会平息。大鱼（神的管教与保护）正在下面等着接住你。",
+                                content_en: "As long as Jonah stayed on board (clinging to self), the storm raged. Some storms last because we refuse to let go. Only when you say, 'Lord, I surrender, throw me in,' does the internal war cease. God's fish is waiting to catch you."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-300');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-300');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-[#1e293b]/80 border border-slate-700 rounded-2xl p-6 sm:p-8 shadow-lg relative overflow-hidden backdrop-blur-sm">
+                        
+                        <div class="flex flex-col sm:flex-row items-start justify-between relative z-10">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 bg-rose-900/30 text-rose-400 text-xs font-bold rounded-full mb-3 uppercase tracking-wider border border-rose-800">Chapter Theme</span>
+                                <h1 class="text-3xl sm:text-4xl font-bold text-slate-100 serif mb-2">${chapterData.intro.title}</h1>
+                                <h2 class="text-lg text-slate-400 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                                <p class="text-sm text-slate-300 leading-relaxed border-l-4 border-rose-600 pl-4 text-justify mb-6">
+                                    ${chapterData.intro.summary_zh}
+                                </p>
+                            </div>
+                            
+                            <!-- Visual: The Descent Steps -->
+                            <div class="mt-8 sm:mt-0 sm:ml-8 flex-shrink-0 text-center">
+                                <div class="bg-slate-900/80 p-4 rounded-xl border border-slate-700 relative">
+                                    <div class="absolute left-1/2 top-4 bottom-4 w-0.5 bg-slate-700 -translate-x-1/2"></div>
+                                    <div class="relative z-10 flex flex-col gap-4">
+                                        <div class="bg-slate-800 px-3 py-1 rounded text-xs text-sky-300 border border-slate-600 shadow">Joppa</div>
+                                        <i class="fas fa-chevron-down text-rose-500 text-xs arrow-down"></i>
+                                        <div class="bg-slate-800 px-3 py-1 rounded text-xs text-sky-300 border border-slate-600 shadow">Ship</div>
+                                        <i class="fas fa-chevron-down text-rose-500 text-xs arrow-down" style="animation-delay: 0.5s"></i>
+                                        <div class="bg-slate-800 px-3 py-1 rounded text-xs text-slate-400 border border-slate-600 shadow">Hold (Sleep)</div>
+                                        <i class="fas fa-chevron-down text-rose-500 text-xs arrow-down" style="animation-delay: 1s"></i>
+                                        <div class="bg-slate-800 px-3 py-1 rounded text-xs text-slate-500 border border-slate-600 shadow">Sea</div>
+                                        <i class="fas fa-chevron-down text-rose-500 text-xs arrow-down" style="animation-delay: 1.5s"></i>
+                                        <div class="bg-slate-800 px-3 py-1 rounded text-xs text-slate-600 border border-slate-600 shadow">Fish Belly</div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 mt-3 font-mono">THE TRAJECTORY</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <div class="bg-slate-800/80 border border-slate-600 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center">
+                            <div class="ship-container mb-2">
+                                <i class="fas fa-ship text-4xl text-sky-400"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-200">The Storm</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">God's Pursuit</p>
+                        </div>
+                        <div class="bg-slate-800/80 border border-slate-600 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center">
+                            <i class="fas fa-dice text-3xl text-rose-400 mb-2"></i>
+                            <h3 class="font-bold text-lg text-slate-200">The Lot</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">No Accidents</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 border-b border-slate-800 pb-2">Key Themes</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-[#1e293b]/60 p-5 rounded-xl border border-slate-700 shadow-sm hover:border-sky-900 transition group backdrop-blur-sm">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:scale-110 transition"></i>
+                                        <h4 class="font-bold text-slate-200">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-slate-400 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-200 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-sky-600 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-slate-700 pb-2">
+                            <div class="w-8 h-8 rounded bg-slate-800 text-slate-400 flex items-center justify-center text-xs mr-3 font-bold border border-slate-600">
+                                <i class="fas fa-map-signs"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-200">${section.title}</h3>
+                                <p class="text-xs text-slate-500 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-slate-800/50 border-b border-slate-700 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-slate-500 bg-slate-900 border border-slate-700 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-slate-200 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-slate-500 text-sm italic en-text pl-3 border-l-2 border-slate-600">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-700">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center mr-2 text-sky-500 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">经文含义 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-slate-300 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-slate-600 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-rose-900/10">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-rose-900/30 flex items-center justify-center mr-2 text-rose-500 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-rose-500 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-rose-300 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-rose-800/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-200 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-slate-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-slate-800/50 p-6 rounded-2xl shadow-sm border-t-4 border-sky-600">
+                            <div class="mb-4 text-sky-500 text-2xl"><i class="fas fa-book-reader"></i></div>
+                            <h3 class="font-bold text-slate-200 mb-2">叙事反讽 (Narrative Irony)</h3>
+                            <p class="text-sm text-slate-400 mb-3 text-justify">
+                                约拿书是叙事神学的杰作。解经时必须捕捉作者刻意安排的对比：外邦人敬畏神 vs 希伯来先知悖逆神。这种文学上的反讽（Irony）是揭示真理的关键工具，打破读者的宗教优越感。
+                            </p>
+                            <div class="bg-slate-900 p-2 rounded text-xs text-slate-500 italic">
+                                <strong>Tool:</strong> Look for the unexpected. Who is acting more 'Christian', the pagan or the prophet?
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-slate-800/50 p-6 rounded-2xl shadow-sm border-t-4 border-rose-600">
+                            <div class="mb-4 text-rose-500 text-2xl"><i class="fas fa-user-astronaut"></i></div>
+                            <h3 class="font-bold text-slate-200 mb-2">存在主义式代入 (Existential Identification)</h3>
+                            <p class="text-sm text-slate-400 mb-3 text-justify">
+                                在灵修时，不要急于批判约拿。要将自己代入约拿的角色：我的“他施”在哪里？我的“底舱”是什么？承认我们内心的“约拿情结”（讨厌神的怜悯临到我不喜欢的人），才能真正读懂这本书。
+                            </p>
+                            <div class="bg-slate-900 p-2 rounded text-xs text-slate-500 italic">
+                                <strong>Practice:</strong> Say "I am Jonah" before judging him.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

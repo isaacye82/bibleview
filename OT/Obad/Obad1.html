@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obadiah: Pride & Judgment | 俄巴底亚书</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Petra Red - Edom's Rock */
+            --theme-primary: #7f1d1d; /* Red 900 */
+            /* Rock Stone - Stability/Judgment */
+            --theme-secondary: #44403c; /* Stone 700 */
+            /* Zion Gold - Restoration */
+            --theme-accent: #d97706; /* Amber 600 */
+            /* Background */
+            --theme-bg: #fff1f2; /* Rose 50 */
+            /* Text */
+            --theme-text: #450a0a; /* Red 950 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #fecaca;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(127, 29, 29, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        .exegesis-box {
+            background-color: #fef2f2; /* Red 50 */
+            border-top: 3px solid #991b1b; /* Red 800 */
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-top: 3px solid #d97706; /* Amber 600 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Pride Fall Visualizer CSS --- */
+        .scene-container {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: linear-gradient(to bottom, #78350f 0%, #292524 100%); /* Earthy Sky */
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.6);
+        }
+
+        .cliff {
+            position: absolute;
+            bottom: 0;
+            left: 10%;
+            width: 100px;
+            height: 250px;
+            background: linear-gradient(to right, #7f1d1d, #991b1b);
+            border-radius: 5px 5px 0 0;
+            transition: all 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 10;
+        }
+        
+        .cliff-text {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            text-align: center;
+            color: #fca5a5;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .eagle-nest {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #fbbf24;
+            transition: all 1.5s ease;
+        }
+
+        .zion-mount {
+            position: absolute;
+            bottom: -100px; /* Hidden initially */
+            right: 15%;
+            width: 120px;
+            height: 150px;
+            background: linear-gradient(to top, #d97706, #fbbf24);
+            border-radius: 50% 50% 0 0;
+            opacity: 0.5;
+            transition: all 2s ease-out;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 20px;
+        }
+        
+        .hand-of-god {
+            position: absolute;
+            top: -100px;
+            left: 13%;
+            font-size: 60px;
+            color: rgba(255,255,255,0.8);
+            transition: top 0.5s ease-in;
+            z-index: 20;
+        }
+
+        .rubble {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 150px;
+            height: 40px;
+            background-color: #450a0a;
+            border-radius: 10px 10px 0 0;
+            opacity: 0;
+            transition: opacity 1s delay 1s;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-red-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-red-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-mountain mr-2 text-red-700"></i> 俄巴底亚书</span>
+                        <span class="text-[10px] sm:text-xs text-red-800/60 en-text font-normal ml-8">Obadiah</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-red-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-red-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#450a0a] text-red-200 mt-auto border-t-4 border-amber-600">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-amber-100 mb-1">"必有拯救者上到锡安山，审判以扫山..."</p>
+            <p class="text-xs sm:text-sm italic text-red-400 mb-4 en-text">"Saviors shall go up to Mount Zion to rule Mount Esau, and the kingdom shall be the LORD's."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">俄巴底亚书研经报告 | Pride & Restoration</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "以东的判决：骄傲必致败落",
+                title_en: "Verdict on Edom: Pride Comes Before a Fall",
+                summary_zh: "《俄巴底亚书》是旧约最短的书卷，专门针对以东（以扫的后代）发出预言。以东人居住在险峻的红色岩石城市（佩特拉），因地势险要而狂傲。当兄弟雅各（犹大）遭难时，他们不仅袖手旁观，甚至趁火打劫。本书宣告了神对“狂傲人”的审判，以及对受苦百姓的最终伸冤。",
+                summary_en: "Obadiah is the shortest OT book, prophesying against Edom (descendants of Esau). Living in the secure red rock city (Petra), Edom was arrogant. When their brother Jacob (Judah) suffered, they stood aloof and even looted. The book declares God's judgment on the proud and ultimate vindication for His suffering people.",
+                concepts: [
+                    { 
+                        title: "岩穴中的骄傲", 
+                        title_en: "Pride in the Clefts", 
+                        icon: "fa-mountain",
+                        color: "text-red-800", 
+                        bg: "bg-red-100", 
+                        desc_zh: "以东依仗险要地势（佩特拉）产生的虚假安全感。神说：你虽高飞如鹰，我必将你拉下。", 
+                        desc_en: "False security from geography (Petra). God says: Though you soar like an eagle, I will bring you down." 
+                    },
+                    { 
+                        title: "兄弟的背叛", 
+                        title_en: "Betrayal of Brotherhood", 
+                        icon: "fa-user-injured",
+                        color: "text-stone-700", 
+                        bg: "bg-stone-200", 
+                        desc_zh: "罪的核心不在于政治敌对，而在于破坏了亲族关系（以扫与雅各）。冷漠也是一种暴力。", 
+                        desc_en: "The core sin is not political but relational (Esau & Jacob). Indifference is a form of violence." 
+                    },
+                    { 
+                        title: "报应法则", 
+                        title_en: "Lex Talionis", 
+                        icon: "fa-balance-scale",
+                        color: "text-amber-700", 
+                        bg: "bg-amber-100", 
+                        desc_zh: "“你怎样行，他也必照样向你行。”这是神公义审判的基础原则。", 
+                        desc_en: "'As you have done, it shall be done to you.' The foundational principle of divine justice." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "pride",
+                    title: "对狂傲的控诉 (1-4节)",
+                    title_en: "Indictment of Arrogance (v1-4)",
+                    verses: [
+                        {
+                            ref: "1:3-4",
+                            text_zh: "你心里狂傲，欺哄了你自己。住在岩穴中、居高处的啊，你心里说：‘谁能将我拉下地去呢？’ 你虽如大鹰高飞，在星宿之间搭窝，我必从那里拉下你来...",
+                            text_en: "The pride of your heart has deceived you, you who live in the clefts of the rock, in your lofty dwelling, who say in your heart, 'Who will bring me down to the ground?' Though you soar like the eagle... I will bring you down...",
+                            exegesis: {
+                                title: "虚假的安全感 (False Security)",
+                                content_zh: "以东的首都Sela（即后来的佩特拉）位于难以攻破的砂岩峡谷中。这种地理优势使他们产生了属灵上的盲目——“狂傲欺哄了自己”。经文含义在于：任何建立在物质、地位或能力上的安全感，若没有神，最终都是自欺。神亲自成为狂傲人的对手（“我必...拉下你来”）。",
+                                content_en: "Edom's capital Sela (Petra) was in impregnable sandstone canyons. This geographic advantage bred spiritual blindness—'pride deceived you.' The meaning: Any security built on material, status, or ability without God is self-deception. God Himself becomes the adversary of the proud."
+                            },
+                            devotional: {
+                                title: "你的‘佩特拉’是什么？ (What is Your 'Petra'?)",
+                                content_zh: "我们每个人都有自己的“岩穴”——那个让我们觉得“我很安全，不需要神，也没人能动我”的地方。它可能是你的存款、专业技能、社会地位或人脉。当这些东西让你对人傲慢、对神独立时，小心了。神不仅能在此处拉下以东，也能为了拯救我们而拆毁我们虚假的依靠。",
+                                content_en: "We all have our 'clefts of the rock'—places where we feel safe, independent of God, and untouchable. It might be savings, skills, status, or network. When these make you arrogant or independent of God, beware. God tears down false securities to save us."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "violence",
+                    title: "对弟兄的暴行 (10-14节)",
+                    title_en: "Violence Against a Brother (v10-14)",
+                    verses: [
+                        {
+                            ref: "1:11-12",
+                            text_zh: "当外人掳掠雅各的财物... 你竟站在一旁，像与他们同伙。你兄弟遭难的日子，你不当瞪眼看着...",
+                            text_en: "On the day that you stood aloof, on the day that strangers carried off his wealth... you were like one of them. But do not gloat over the day of your brother in the day of his misfortune...",
+                            exegesis: {
+                                title: "旁观者的罪 (Sin of the Bystander)",
+                                content_zh: "以东的罪不仅仅是直接的攻击，更是“站在一旁”（Stood Aloof）。在希伯来文化中，看到亲族受难而不援助，等同于与凶手“同伙”。经文用了一连串的“不当”（Do not...），谴责了他们在兄弟遭难时的幸灾乐祸（Gloat）。这揭示了罪的递进：冷漠 -> 幸灾乐祸 -> 趁火打劫。",
+                                content_en: "Edom's sin wasn't just attack, but 'standing aloof'. In Hebrew culture, failing to help a suffering kin is equating oneself with the attacker. The series of 'Do nots' condemns their gloating. It reveals the progression of sin: Indifference -> Gloating -> Looting."
+                            },
+                            devotional: {
+                                title: "冷漠是无声的暴力 (Indifference is Silent Violence)",
+                                content_zh: "当我们看到身边的人（特别是主内的弟兄姐妹或家人）受苦时，我们的反应是什么？是心里暗自觉得“他活该”？还是冷漠地走开？神在看我们的心。没有行动的同情是虚伪的，而幸灾乐祸更是神所憎恶的。爱是主动的介入，而非冷漠的旁观。",
+                                content_en: "When we see others suffer (especially family or believers), what's our reaction? 'They deserved it'? Or walking away? God looks at the heart. Sympathy without action is hypocrisy; gloating is an abomination. Love is active intervention, not detached observation."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "justice",
+                    title: "耶和华的日子与复兴 (15-21节)",
+                    title_en: "The Day of the LORD & Restoration (v15-21)",
+                    verses: [
+                        {
+                            ref: "1:15, 21",
+                            text_zh: "耶和华降罚的日子临近万国。你怎样行，他也必照样向你行... 必有拯救者上到锡安山，审判以扫山，国度就归耶和华了。",
+                            text_en: "For the day of the LORD is near upon all the nations. As you have done, it shall be done to you... Saviors shall go up to Mount Zion to rule Mount Esau, and the kingdom shall be the LORD's.",
+                            exegesis: {
+                                title: "神圣的逆转 (Divine Reversal)",
+                                content_zh: "全书以“国度归耶和华”作为高潮。审判不仅针对以东，更针对“万国”。原则是“你怎样行，他也必照样向你行”（Lex Talionis）。结局是完全的逆转：曾经高傲的“以扫山”将受审判，而受苦的“锡安山”将成为掌权者的宝座。这是神公义的最终得胜。",
+                                content_en: "The climax is 'the kingdom shall be the LORD's'. Judgment is for all nations. The principle is Lex Talionis ('As you have done...'). The outcome is total reversal: the proud 'Mount Esau' judged, the suffering 'Mount Zion' ruling. This is the ultimate triumph of God's justice."
+                            },
+                            devotional: {
+                                title: "种什么收什么 (Reaping What You Sow)",
+                                content_zh: "这是一个严肃的属灵法则：我们对待他人的方式，最终会回到我们自己身上。这不应让我们感到恐惧，而应让我们警醒。如果你渴望神的怜悯，就多怜悯人；如果你渴望神的宽恕，就多宽恕人。最终，所有的权柄都属于神，我们要在祂的国度里交账。",
+                                content_en: "A solemn spiritual law: How we treat others eventually comes back to us. This shouldn't cause fear but vigilance. If you desire mercy, show mercy. If forgiveness, forgive. Ultimately, all authority belongs to God, and we will give an account in His Kingdom."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-red-100 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-red-100 text-red-900 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-red-950">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-red-800 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: The Fall of Edom -->
+                    <div class="lg:col-span-5 bg-stone-900 text-white p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden">
+                        <div class="z-10 w-full mb-2 flex justify-between items-center">
+                             <h3 class="text-lg font-bold text-amber-400">
+                                骄傲坠落 <span class="text-xs font-normal opacity-60 ml-2 en-text text-white">Pridefall</span>
+                             </h3>
+                             <button onclick="triggerFall()" id="judge-btn" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-xs rounded shadow transition border border-red-500">
+                                <i class="fas fa-gavel mr-1"></i> 施行审判 Judge
+                             </button>
+                        </div>
+
+                        <!-- Scene Canvas -->
+                        <div class="scene-container mt-2" id="scene-canvas">
+                             <!-- High Rock (Edom) -->
+                             <div class="cliff" id="cliff">
+                                <div class="cliff-text">以扫山 Mount Esau</div>
+                             </div>
+                             
+                             <!-- Eagle Nest -->
+                             <div class="eagle-nest" id="eagle">
+                                <i class="fas fa-feather-alt"></i>
+                             </div>
+
+                             <!-- Hand of God (Hidden) -->
+                             <div class="hand-of-god" id="hand">
+                                <i class="fas fa-hand-point-down"></i>
+                             </div>
+
+                             <!-- Rubble (Hidden) -->
+                             <div class="rubble" id="rubble"></div>
+
+                             <!-- Mount Zion (Hidden) -->
+                             <div class="zion-mount" id="zion">
+                                <span class="text-white text-xs font-bold mb-2">锡安山 Zion</span>
+                             </div>
+                             
+                             <div id="viz-msg" class="absolute bottom-4 left-4 text-xs italic text-stone-400 opacity-100 transition-opacity duration-500 pointer-events-none w-full">
+                                "Though you soar like the eagle..."
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-red-100 text-red-900 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-red-800">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 sm:p-6 border-b border-red-100 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-red-900 text-red-50 text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-red-100 flex-grow mx-4"></div>
+                            <i class="fas fa-scroll text-red-200 text-xl"></i>
+                        </div>
+                        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 font-medium">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-red-900 opacity-80">
+                                <i class="fas fa-search mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-red-950 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-red-900/10">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-amber-800 opacity-80">
+                                <i class="fas fa-church mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-900 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-amber-800/10">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Methodology Summary</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-red-800">
+                            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-900 text-xl mb-4">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 经文原意 (Contextual Exegesis)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Historical & Cultural</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于理解以东的地理环境（佩特拉/Sela）与他们的心理状态（狂傲）之间的联系。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-red-700 mt-1 mr-2 text-xs"></i> <span><strong>地理背景：</strong> 解释“岩穴”和“高处”不仅是诗意描写，更是真实的军事要塞（佩特拉）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-red-700 mt-1 mr-2 text-xs"></i> <span><strong>族群关系：</strong> 强调以扫与雅各的兄弟关系，凸显背叛的严重性。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-red-700 mt-1 mr-2 text-xs"></i> <span><strong>报应神学：</strong> “你怎样行，他也必照样向你行”是贯穿全书的公义原则。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-amber-600">
+                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-800 text-xl mb-4">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 灵修应用 (Devotional Application)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Humility & Empathy</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                将以东的罪映射到现代人的骄傲与冷漠中。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>反省骄傲：</strong> 我们的安全感建立在物质（岩穴）上，还是建立在神身上？</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>拒绝冷漠：</strong> 挑战“旁观者心态”，呼召主动的爱与介入。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>终极盼望：</strong> 确信神是历史的主宰，祂必为受苦者伸冤，国度终归于祂。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Animation Logic ---
+        function triggerFall() {
+            const cliff = document.getElementById('cliff');
+            const eagle = document.getElementById('eagle');
+            const hand = document.getElementById('hand');
+            const rubble = document.getElementById('rubble');
+            const zion = document.getElementById('zion');
+            const msg = document.getElementById('viz-msg');
+            const btn = document.getElementById('judge-btn');
+
+            if(!cliff) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Judging...';
+
+            // 1. Hand Appears
+            hand.style.top = '10px';
+            msg.innerText = '"I will bring you down!" says the LORD.';
+            
+            setTimeout(() => {
+                // 2. Cliff Sinks
+                cliff.style.transform = 'translateY(300px)';
+                
+                // 3. Eagle Falls
+                eagle.style.top = '280px';
+                eagle.style.transform = 'translateX(-50%) rotate(180deg)';
+                eagle.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // 4. Rubble Appears
+                    rubble.style.opacity = '1';
+                    
+                    // 5. Zion Rises
+                    zion.style.bottom = '0';
+                    msg.innerHTML = '<span class="text-amber-400 font-bold">The Kingdom shall be the LORD\'s</span>';
+                    
+                    // Reset Hand
+                    hand.style.top = '-100px';
+
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i> Justice Done';
+                    btn.classList.remove('bg-red-700', 'hover:bg-red-600');
+                    btn.classList.add('bg-amber-600');
+                }, 1000);
+
+            }, 800);
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonah 2: The Ascent | 约拿书第二章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Deep Ocean */
+            --theme-abyss: #001e3c; /* Midnight Blue */
+            /* Mid Water */
+            --theme-water: #0e7490; /* Cyan 700 */
+            /* Hope / Temple */
+            --theme-hope: #fbbf24; /* Amber 400 */
+            /* Dry Land */
+            --theme-land: #d6d3d1; /* Stone 300 */
+            /* Text */
+            --theme-text: #f0f9ff; /* Sky 50 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-abyss);
+            color: var(--theme-text);
+            /* Radial gradient representing light filtering down */
+            background-image: radial-gradient(circle at 50% 0%, #164e63 0%, #083344 40%, #020617 100%);
+            min-height: 100vh;
+        }
+
+        .en-title { font-family: 'Cinzel', serif; }
+        .en-text { font-family: 'Lato', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif SC', serif; }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+            opacity: 0.6;
+            color: #bae6fd;
+        }
+        
+        .nav-btn:hover {
+            opacity: 1;
+            color: var(--theme-hope);
+        }
+
+        .active-tab {
+            opacity: 1;
+            color: var(--theme-hope);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-hope);
+            box-shadow: 0 0 10px var(--theme-hope);
+            border-radius: 2px;
+        }
+
+        /* Card Styling - Glassmorphism */
+        .verse-card {
+            background-color: rgba(15, 23, 42, 0.6);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(251, 191, 36, 0.3);
+            box-shadow: 0 10px 40px -10px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Rising Bubbles Animation */
+        .bubble-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .bubble {
+            position: absolute;
+            bottom: -20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: rise 8s infinite ease-in;
+        }
+        .bubble:nth-child(1) { width: 10px; height: 10px; left: 10%; animation-duration: 6s; }
+        .bubble:nth-child(2) { width: 20px; height: 20px; left: 20%; animation-duration: 9s; animation-delay: 1s; }
+        .bubble:nth-child(3) { width: 15px; height: 15px; left: 80%; animation-duration: 7s; animation-delay: 2s; }
+        .bubble:nth-child(4) { width: 8px; height: 8px; left: 50%; animation-duration: 11s; animation-delay: 0s; }
+
+        @keyframes rise {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+
+        /* Depth Meter Animation */
+        .depth-meter {
+            height: 200px;
+            width: 4px;
+            background: linear-gradient(to bottom, #0ea5e9, #020617);
+            position: relative;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+        .depth-marker {
+            position: absolute;
+            left: -6px;
+            width: 16px;
+            height: 16px;
+            background: var(--theme-hope);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--theme-hope);
+            animation: ascend 4s infinite ease-in-out;
+        }
+        @keyframes ascend {
+            0% { bottom: 10%; transform: scale(1); opacity: 0.5; }
+            50% { bottom: 90%; transform: scale(1.2); opacity: 1; }
+            100% { bottom: 90%; transform: scale(1.2); opacity: 0; }
+        }
+
+        /* Fish Icon Pulse */
+        .fish-pulse {
+            animation: fishSwim 6s infinite ease-in-out;
+        }
+        @keyframes fishSwim {
+            0% { transform: translateX(-5px) rotate(0deg); }
+            50% { transform: translateX(5px) rotate(2deg); }
+            100% { transform: translateX(-5px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen relative overflow-x-hidden">
+
+    <!-- Ambient Bubbles -->
+    <div class="bubble-container">
+        <div class="bubble"></div><div class="bubble"></div><div class="bubble"></div><div class="bubble"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="bg-[#020617]/80 backdrop-blur-md sticky top-0 z-50 border-b border-cyan-900/50 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-cyan-900/50 flex items-center justify-center mr-3 text-cyan-400 border border-cyan-700">
+                        <i class="fas fa-fish fish-pulse"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-slate-100 serif flex flex-col leading-none">
+                        <span>约拿书 <span class="text-amber-400">2章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-cyan-400 en-title tracking-widest mt-1">THE PRAYER FROM THE DEEP</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium">
+                        <i class="fas fa-chart-area block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium">
+                        <i class="fas fa-search-plus block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium">
+                        <i class="fas fa-book block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full z-10">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#020617] text-slate-500 mt-auto border-t-4 border-amber-500">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-slate-300 mb-1">"我必用感谢的声音献祭与你。"</p>
+            <p class="text-xs italic opacity-60 en-text">"But I with the voice of thanksgiving will sacrifice to you." (Jonah 2:9)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "深渊中的诗篇",
+                title_en: "A Psalm from the Depths",
+                summary_zh: "约拿书第二章是一首独特的诗篇。当约拿在鱼腹中时，他并没有发出绝望的尖叫，而是献上了一首结构严谨的感恩诗。这似乎违反直觉，但经文揭示了一个真理：约拿认为，从溺水的海中被大鱼吞下，已经是神的拯救（免于溺死）。鱼腹既是监狱，也是避难所。本章记录了灵魂在物理环境最低谷时，灵性却开始向高处攀升的过程。",
+                summary_en: "Jonah 2 is a unique psalm. Inside the fish, Jonah offers not a scream of despair, but a structured hymn of thanksgiving. Counter-intuitively, Jonah sees the fish swallowing him as salvation from drowning. The belly is both a prison and a sanctuary. This chapter records the soul's ascent while physically at the lowest point.",
+                concepts: [
+                    {
+                        title: "阴间的深处", title_en: "Belly of Sheol", hebrew: "Beten Sheol",
+                        icon: "fa-skull", color: "text-rose-400",
+                        desc_zh: "约拿形容他在“阴间的肚子”里。Sheol不仅指坟墓，也指死人之地。在深海的黑暗与挤压中，他感到自己已经被死亡吞噬，与活人之地隔绝。",
+                        desc_en: "Jonah describes being in the 'belly of Sheol'. Sheol implies the realm of the dead. In the crushing darkness, he felt swallowed by death itself."
+                    },
+                    {
+                        title: "仰望圣殿", title_en: "Look to Temple", hebrew: "Nabat",
+                        icon: "fa-place-of-worship", color: "text-amber-400",
+                        desc_zh: "在绝对的黑暗中，约拿的“指南针”重新校准。他虽然身体向下降落到“山的根基”，但他的灵却向上“仰望你的圣殿”。这是回转的关键时刻。",
+                        desc_en: "In absolute darkness, Jonah's compass recalibrates. Though sinking to the 'roots of mountains', his spirit 'looks again' toward the Temple. The pivotal turn."
+                    },
+                    {
+                        title: "救恩", title_en: "Salvation", hebrew: "Yeshuah",
+                        icon: "fa-life-ring", color: "text-cyan-400",
+                        desc_zh: "本章的高潮宣言：“救恩出于耶和华”。这是整卷书的神学核心。无论在外邦人（水手、尼尼微）身上，还是悖逆的先知身上，拯救完全是神的主权工作。",
+                        desc_en: "The climax: 'Salvation belongs to the LORD'. The theological core. Whether for pagans or rebellious prophets, rescue is entirely God's sovereign work."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "死亡的缠绕：绝境中的呼求 (2:1-6a)",
+                    title_en: "Entangled by Death: The Cry",
+                    verses: [
+                        {
+                            ref: "2:2, 5-6",
+                            text_zh: "我遭遇患难求告耶和华...深渊围住我，海草缠绕我的头。我下到山界（山的根基），地的门将我永远关住。",
+                            text_en: "I called out to the LORD, out of my distress... The deep surrounded me; weeds were wrapped about my head at the roots of the mountains. I went down to the land whose bars closed upon me forever.",
+                            exegesis: {
+                                title: "溺水的生理与心理体验 (Physical & Spiritual Drowning)",
+                                content_zh: "这段经文充满了令人窒息的细节：水流洪涛、深渊、海草缠头。‘山的根基’是古希伯来宇宙观中支撑大地的柱子，位于深海底部。‘地的门将我永远关住’形容他感觉自己像囚犯一样被锁在死亡之地。这不仅仅是比喻，更是约拿真实的濒死体验（Near-death experience）。在此绝境中，他唯一的动作是‘求告’。",
+                                content_en: "Suffocating details: floods, deep, weeds wrapped around head. 'Roots of mountains' are the pillars of the earth in the deep. 'Bars closed forever' depicts being locked in the land of the dead. A literal near-death experience where his only action was to 'call out'."
+                            },
+                            devotional: {
+                                title: "当你在最低谷时 (When you hit rock bottom)",
+                                content_zh: "有时神允许我们下沉到‘海底’，甚至让‘海草’（生活的琐事、债务、恐惧）缠住我们的头，使我们无法呼吸。为什么？因为只有那里，我们才不再依靠自己的游泳技巧，而开始真正‘求告’。如果今天你感觉被生活‘永远关住’了，请记住，那里正是约拿遇见神的地方。",
+                                content_en: "God sometimes lets us sink until 'weeds' (debts, fears) wrap our heads. Why? So we stop relying on our swimming skills and start 'calling out'. If you feel barred in forever, remember: that's exactly where Jonah met God."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "记忆与誓言：信心的转折 (2:6b-9)",
+                    title_en: "Memory & Vow: The Turn of Faith",
+                    verses: [
+                        {
+                            ref: "2:7, 9",
+                            text_zh: "我心在我里面发昏的时候，我就想念耶和华...那信奉虚无之神的人，离弃怜爱他们的主...我必用感谢的声音献祭与你。",
+                            text_en: "When my life was fainting away, I remembered the LORD... Those who pay regard to vain idols forsake their hope of steadfast love... But I with the voice of thanksgiving will sacrifice to you.",
+                            exegesis: {
+                                title: "想念作为一种行动 (Remembering as Action)",
+                                content_zh: "‘发昏’（Fainting）指生命力流失。转折点在于‘我就想念（Remembered）耶和华’。在圣经中，想念不是脑海中的闪回，而是意志的转向。约拿对比了‘虚无之神’（Vanity/Idols）与神的‘怜爱’（Hesed）。他在此刻许愿（Vow），承诺若得救必献祭。这是一首在获救之前就唱出的感恩之歌（Prophetic Thanksgiving）。",
+                                content_en: "'Fainting' means ebbing away. The pivot: 'I remembered Yahweh.' Biblical remembering is an act of will. He contrasts 'vain idols' with God's 'Hesed' (Steadfast Love). He makes a vow before being vomited out—a song of thanksgiving sung *before* full rescue."
+                            },
+                            devotional: {
+                                title: "在黑暗中歌唱 (Singing in the Dark)",
+                                content_zh: "信心的最高境界不是在阳光下赞美，而是在鱼腹中——在问题尚未解决、环境依然黑暗、海草依然缠头时——就‘用感谢的声音’献祭。如果你在等待环境变好才感谢神，那你可能要等很久。现在的感谢，就是开启拯救之门的钥匙。",
+                                content_en: "Highest faith isn't praising in the sun, but in the fish belly—when the problem isn't solved and weeds still wrap your head. Don't wait for rescue to give thanks. Thanksgiving *now* is the key that unlocks the door."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "复活与使命：新的开始 (2:10)",
+                    title_en: "Resurrection & Mission: New Beginning",
+                    verses: [
+                        {
+                            ref: "2:10",
+                            text_zh: "耶和华吩咐鱼，鱼就把约拿吐在旱地上。",
+                            text_en: "And the LORD spoke to the fish, and it vomited Jonah out upon the dry land.",
+                            exegesis: {
+                                title: "听命的鱼与复活的预表 (Obedient Fish & Sign of Resurrection)",
+                                content_zh: "经文含义中有一个强烈的对比：先知不听话，但鱼听话（神一吩咐，鱼就照做）。耶稣在马太福音12:40明确指出，这是祂死里复活的预表（Sign of Jonah）。三天三夜在深渊，然后重回旱地，象征着经过死亡的洗礼后的新生。约拿身上带着‘死’的气味，被带回了‘生’的使命。",
+                                content_en: "Contrast: Prophet disobeyed; Fish obeyed immediately. Jesus calls this the 'Sign of Jonah' (Matt 12:40)—a type of resurrection. Three days in the deep, then dry land. Jonah carries the scent of death but is returned to the land of the living for a mission."
+                            },
+                            devotional: {
+                                title: "被吐出的恩典 (Grace that Vomits)",
+                                content_zh: "被鱼吐出来肯定不是一种优雅的体验——浑身粘液、酸臭、狼狈。但这就是复活的真实样子：它不一定漂亮，但它是生命。有时神给我们的第二次机会也是‘狼狈’的（失败后的重建、破碎后的修复），但只要是在‘旱地’（神的旨意）上，就是最大的恩典。",
+                                content_en: "Being vomited isn't elegant—slime, stench, mess. But that's resurrection: not always pretty, but alive. Your second chance might feel messy (post-failure rebuilding), but if it lands you on 'dry land' (God's will), it is sheer grace."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-300');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-300');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-[#0f172a]/60 border border-cyan-900 rounded-2xl p-6 sm:p-8 shadow-lg relative overflow-hidden backdrop-blur-md">
+                        
+                        <div class="flex flex-col sm:flex-row items-start justify-between relative z-10">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 bg-cyan-900/30 text-cyan-400 text-xs font-bold rounded-full mb-3 uppercase tracking-wider border border-cyan-800">Chapter Theme</span>
+                                <h1 class="text-3xl sm:text-4xl font-bold text-slate-100 serif mb-2">${chapterData.intro.title}</h1>
+                                <h2 class="text-lg text-cyan-200/60 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                                <p class="text-sm text-slate-300 leading-relaxed border-l-4 border-amber-500 pl-4 text-justify mb-6">
+                                    ${chapterData.intro.summary_zh}
+                                </p>
+                            </div>
+                            
+                            <!-- Visual: Depth Meter -->
+                            <div class="mt-8 sm:mt-0 sm:ml-8 flex-shrink-0 text-center w-full sm:w-auto">
+                                <div class="bg-slate-900/50 p-4 rounded-xl border border-cyan-900 relative">
+                                    <div class="depth-meter">
+                                        <div class="depth-marker"></div>
+                                    </div>
+                                    <div class="absolute top-0 right-[-60px] text-[10px] text-cyan-400">Dry Land</div>
+                                    <div class="absolute bottom-0 right-[-60px] text-[10px] text-cyan-800">Root of Mtns</div>
+                                    <p class="text-[10px] text-slate-500 mt-3 font-mono">FROM THE DEEP</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <div class="bg-cyan-900/20 border border-cyan-800 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center backdrop-blur-sm">
+                            <i class="fas fa-church text-3xl text-amber-400 mb-2"></i>
+                            <h3 class="font-bold text-lg text-slate-200">The Temple</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Focus Point</p>
+                        </div>
+                        <div class="bg-cyan-900/20 border border-cyan-800 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center backdrop-blur-sm">
+                            <i class="fas fa-hand-holding-heart text-3xl text-cyan-400 mb-2"></i>
+                            <h3 class="font-bold text-lg text-slate-200">Thanksgiving</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Before Rescue</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-cyan-600 uppercase tracking-widest mb-4 border-b border-cyan-900 pb-2">Key Themes</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-[#0f172a]/60 p-5 rounded-xl border border-cyan-900/50 shadow-sm hover:border-amber-500/50 transition group backdrop-blur-sm">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:scale-110 transition"></i>
+                                        <h4 class="font-bold text-slate-200">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-slate-400 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-200 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-cyan-900 pb-2">
+                            <div class="w-8 h-8 rounded bg-cyan-900/30 text-cyan-400 flex items-center justify-center text-xs mr-3 font-bold border border-cyan-800">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-200">${section.title}</h3>
+                                <p class="text-xs text-slate-500 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-slate-900/50 border-b border-cyan-900/30 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-cyan-200 bg-cyan-900/50 border border-cyan-800 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-slate-100 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-cyan-200/60 text-sm italic en-text pl-3 border-l-2 border-cyan-700">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-cyan-900/30">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center mr-2 text-cyan-400 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-cyan-500 uppercase tracking-widest">经文含义 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-slate-300 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-slate-600 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-amber-900/10">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-amber-900/30 flex items-center justify-center mr-2 text-amber-500 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-amber-500 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-amber-200/80 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-400 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-amber-800/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-200 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-slate-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-slate-800/50 p-6 rounded-2xl shadow-sm border-t-4 border-cyan-600">
+                            <div class="mb-4 text-cyan-500 text-2xl"><i class="fas fa-feather-alt"></i></div>
+                            <h3 class="font-bold text-slate-200 mb-2">诗歌文体分析 (Poetic Analysis)</h3>
+                            <p class="text-sm text-slate-400 mb-3 text-justify">
+                                约拿书第2章是诗歌体裁（Psalm）。解经时要关注其意象（深渊、海草）和结构（从绝望到立约）。注意其中的时态：约拿用过去式描述患难，用现在式/将来式描述救恩。这表明这是一首在信心中“预支”救恩的诗。
+                            </p>
+                            <div class="bg-slate-900 p-2 rounded text-xs text-slate-500 italic">
+                                <strong>Tool:</strong> Look for the "pivot" verse (v7) where despair turns to prayer.
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-slate-800/50 p-6 rounded-2xl shadow-sm border-t-4 border-amber-500">
+                            <div class="mb-4 text-amber-500 text-2xl"><i class="fas fa-cross"></i></div>
+                            <h3 class="font-bold text-slate-200 mb-2">基督论预表 (Christological Typology)</h3>
+                            <p class="text-sm text-slate-400 mb-3 text-justify">
+                                耶稣亲自将约拿在鱼腹中的经历定义为“约拿的神迹”（太12:40）。灵修时，不仅要看约拿的悔改，更要看到基督的死里复活。约拿的“下去”是为了自己的罪，基督的“下去”是为了我们的罪。
+                            </p>
+                            <div class="bg-slate-900 p-2 rounded text-xs text-slate-500 italic">
+                                <strong>Focus:</strong> See the empty tomb in the empty fish.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

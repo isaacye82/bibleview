@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 10: The Table of Nations | 创世记第十章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Terracotta - Earth, Nations, Adam */
+            --theme-primary: #c2410c; 
+            /* Chart Blue - Japheth, Coastlands */
+            --theme-secondary: #0f766e;
+            /* Brick Red - Nimrod, Babel */
+            --theme-accent: #7f1d1d;
+            /* Parchment Background */
+            --theme-bg: #fff7ed;
+            /* Text */
+            --theme-text: #431407;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Old Map Grid Pattern */
+            background-image: 
+                linear-gradient(#e7e5e4 1px, transparent 1px),
+                linear-gradient(90deg, #e7e5e4 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation Styling */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px -1px rgba(194, 65, 12, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #fed7aa;
+            border-left: 4px solid var(--theme-primary);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px -5px rgba(194, 65, 12, 0.2);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Genealogy Tree Animation */
+        .tree-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+            background: #fffbeb;
+            border: 2px solid #fdba74;
+            border-radius: 8px;
+        }
+        
+        .trunk {
+            width: 10px;
+            height: 0;
+            background: #78350f;
+            position: absolute;
+            bottom: 0;
+            animation: growTrunk 1s forwards;
+        }
+        
+        .branch {
+            position: absolute;
+            height: 4px;
+            background: #92400e;
+            transform-origin: left;
+            width: 0;
+            animation: growBranch 1s forwards 1s;
+        }
+        
+        /* Japheth Branch */
+        .b-japheth { bottom: 80px; left: 50%; transform: rotate(-45deg); }
+        /* Ham Branch */
+        .b-ham { bottom: 80px; left: 50%; transform: rotate(0deg); animation-delay: 1.5s; }
+        /* Shem Branch */
+        .b-shem { bottom: 80px; left: 50%; transform: rotate(45deg); animation-delay: 2s; }
+
+        .leaf {
+            position: absolute;
+            font-size: 10px;
+            opacity: 0;
+            animation: popLeaf 0.5s forwards;
+            font-weight: bold;
+        }
+        .l-j { top: 40px; left: 20%; color: #0f766e; animation-delay: 2.2s; }
+        .l-h { top: 40px; left: 50%; transform: translateX(-50%); color: #7f1d1d; animation-delay: 2.5s; }
+        .l-s { top: 40px; right: 20%; color: #b45309; animation-delay: 2.8s; }
+
+        @keyframes growTrunk {
+            to { height: 80px; }
+        }
+        @keyframes growBranch {
+            to { width: 60px; }
+        }
+        @keyframes popLeaf {
+            to { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Nimrod's Tower Animation */
+        .tower-container {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: 10px;
+        }
+        .brick {
+            width: 30px;
+            height: 15px;
+            background: #7f1d1d;
+            border: 1px solid #fee2e2;
+            position: absolute;
+            opacity: 0;
+            animation: stackBrick 0.5s forwards;
+        }
+        
+        /* Stacking logic in CSS is tedious, using simplified blocks */
+        .brick-1 { bottom: 0; left: 40%; animation-delay: 0s; }
+        .brick-2 { bottom: 0; left: 50%; animation-delay: 0.2s; }
+        .brick-3 { bottom: 15px; left: 45%; animation-delay: 0.4s; }
+        .brick-4 { bottom: 30px; left: 45%; width: 20px; animation-delay: 0.6s; }
+        
+        .crown-icon {
+            position: absolute;
+            bottom: 50px;
+            font-size: 20px;
+            color: #d97706;
+            opacity: 0;
+            animation: crownAppear 1s forwards 1s;
+        }
+
+        @keyframes stackBrick {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes crownAppear {
+            to { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Section Badge */
+        .section-badge {
+            background-color: var(--theme-primary);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+            box-shadow: 0 2px 4px rgba(194, 65, 12, 0.3);
+            margin-right: 1rem;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-orange-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-orange-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-globe-africa mr-2 text-orange-600"></i> 创世记 10章</span>
+                        <span class="text-[10px] sm:text-xs text-orange-700 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 10</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-orange-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-orange-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full relative">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#431407] text-orange-100 mt-auto border-t-4 border-orange-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-orange-200 mb-1">"这些都是挪亚三个儿子的宗族，各随他们的支派立国。"</p>
+            <p class="text-xs sm:text-sm italic text-orange-400/60 mb-2 en-text">"These are the clans of the sons of Noah... and from these the nations spread abroad on the earth."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世记第十章中英对照研经报告 | The Table of Nations</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "万国表：合一与分化",
+                title_en: "The Table of Nations: Unity & Division",
+                summary_zh: "创世记第10章被称为‘万国表’（Table of Nations），记录了挪亚三个儿子（闪、含、雅弗）的后代如何繁衍并散布在全地。这章经文列出了70个民族（在犹太传统中象征‘万国’）。它不仅是枯燥的家谱，更是神学声明：全人类同宗同源，都在神的计划之中。本章也引入了第一个帝国建立者——宁录，为第11章巴别塔事件埋下伏笔。",
+                summary_en: "Genesis 10, the 'Table of Nations', records how the descendants of Noah's three sons (Shem, Ham, Japheth) multiplied and spread. Listing 70 nations (symbolizing 'all nations' in Jewish tradition), it is a theological statement: all humanity shares one origin and is under God's plan. It also introduces Nimrod, the first empire builder, foreshadowing the Tower of Babel in Chapter 11.",
+                concepts: [
+                    { title: "分地", title_en: "Divided", hebrew: "Palag", color: "text-orange-700", bg: "bg-orange-50", desc_zh: "法勒的名字意为‘分裂’。这可能指地理上的变迁，或更可能指巴别塔之后语言和族群的分散。", desc_en: "Peleg means 'division'. Refers to linguistic/ethnic dispersion (Babel) or geological shifts." },
+                    { title: "英勇/强悍", title_en: "Mighty One", hebrew: "Gibbor", color: "text-red-800", bg: "bg-red-50", desc_zh: "宁录被称为‘世上英雄之首’。在希伯来语境中，这往往带有暴力、自我尊大和反叛的意味。", desc_en: "Nimrod was the first 'Gibbor'. Often implies violence, tyranny, and rebellion against God." },
+                    { title: "海岛", title_en: "Coastlands", hebrew: "Iyyim", color: "text-teal-700", bg: "bg-teal-50", desc_zh: "雅弗的后代向海岛和沿海地区扩散。这预示了福音将来要传到地极。", desc_en: "Japheth's line spread to coastlands. Foreshadows the Gospel reaching the ends of the earth." }
+                ]
+            },
+            sections: [
+                {
+                    id: "japheth",
+                    title: "雅弗的后代：扩张与海岛 (10:1-5)",
+                    title_en: "Descendants of Japheth: Expansion",
+                    verses: [
+                        {
+                            ref: "10:2, 5",
+                            text_zh: "雅弗的儿子是歌篾、玛各...这些人的后裔，将各国的地土、海岛分开居住，各随各的方言、宗族立国。",
+                            text_en: "The sons of Japheth: Gomer, Magog... From these the coastland peoples spread in their lands, each with his own language, by their clans, in their nations.",
+                            exegesis: {
+                                title: "向外延伸 (Outward Bound)",
+                                content_zh: "雅弗（Japheth）的名字意为‘扩张’。他的后代主要分布在黑海、里海以北及地中海沿岸（印欧语系民族的祖先）。‘海岛’（Coastlands）在圣经中通常指遥远的西方外邦世界。虽然篇幅较短，但这表明神对遥远民族的关注。这应验了9:27‘愿神使雅弗扩张’的预言。",
+                                content_en: "Japheth means 'Expansion'. His descendants settled north (Indo-Europeans) and in Mediterranean 'coastlands'. Though brief, it shows God's awareness of distant nations. Fulfills the prophecy 'May God enlarge Japheth' (9:27)."
+                            },
+                            devotional: {
+                                title: "宣教的视野 (Missionary Vision)",
+                                content_zh: "当我们在读这些陌生的名字（歌篾、雅完等）时，不要觉得无聊。每一个名字代表一个族群，神知道他们，并计划在末后将救恩带给‘众海岛’。这提醒我们不仅要关注身边的人（闪族/闪的帐棚），也要有宽广的国度视野，关注远方的未得之民。",
+                                content_en: "Don't be bored by names like Gomer or Javan. Each represents a people God knows and plans to redeem. It reminds us to have a Kingdom vision, caring not just for the 'tents of Shem' (believers) but for distant, unreached 'coastlands'."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "ham",
+                    title: "含的后代：帝国与冲突 (10:6-20)",
+                    title_en: "Descendants of Ham: Empire & Conflict",
+                    verses: [
+                        {
+                            ref: "10:8-10",
+                            text_zh: "古实又生宁录，他为世上英雄之首...他国的起头是巴别...在示拿地。",
+                            text_en: "Cush fathered Nimrod; he was the first on earth to be a mighty man... The beginning of his kingdom was Babel... in the land of Shinar.",
+                            exegesis: {
+                                title: "宁录与巴别 (Nimrod & Babel)",
+                                content_zh: "含的后代（包括埃及、迦南、巴比伦）在早期文明中占据主导地位。宁录（Nimrod，名字意为‘我们要反叛’）建立了人类历史上第一个‘国’（Kingdom）。他建造了巴别、尼尼微等大城。这里的描述暗示了集权、城市化和对神治的抵挡。含系子孙后来多成为以色列的主要敌人（埃及、迦南、巴比伦、亚述）。",
+                                content_en: "Ham's line dominated early civilization (Egypt, Canaan, Babylon). Nimrod (meaning 'Let us rebel') founded the first 'Kingdom' (Babel, Nineveh). This implies centralization, urbanization, and resistance to God's rule. Hamites later became Israel's main adversaries."
+                            },
+                            devotional: {
+                                title: "英雄还是猎户？ (Hero or Hunter?)",
+                                content_zh: "宁录在人眼中是‘英雄之首’，但在神眼中可能是‘强暴的猎户’（Hunter before the Lord，有‘敌对耶和华’之意）。我们推崇什么样的成功？是建立自己的巴别塔（名声、帝国），还是在神面前谦卑同行？世界推崇能力的巨人，神寻找顺服的仆人。",
+                                content_en: "Nimrod was a 'hero' to men but likely a 'rebel hunter' before God. What success do we admire? Building our own Babel (fame/empire) or walking humbly? The world exalts mighty giants; God seeks obedient servants."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "shem",
+                    title: "闪的后代：选民的线索 (10:21-31)",
+                    title_en: "Descendants of Shem: The Chosen Line",
+                    verses: [
+                        {
+                            ref: "10:21, 25",
+                            text_zh: "雅弗的哥哥闪，是希伯子孙之祖...希伯生了两个儿子，一个名叫法勒（就是分的意思），因为那时人就分地居住...",
+                            text_en: "To Shem also... the father of all the children of Eber... children were born. To Eber were born two sons: the name of the one was Peleg, for in his days the earth was divided...",
+                            exegesis: {
+                                title: "通往亚伯拉罕的路 (Road to Abraham)",
+                                content_zh: "经文特别标注闪是‘希伯（Eber）子孙之祖’，‘希伯来人’（Hebrew）一词即源于此。这是通往亚伯拉罕和弥赛亚的谱系。在法勒（Peleg）的日子‘地分了’，这通常被理解为巴别塔事件导致的族群分散。这条线索虽然在政治上不如含系辉煌（没有大帝国），但在救赎历史上却是核心。",
+                                content_en: "Shem is highlighted as father of 'Eber' (origin of 'Hebrew'). This line leads to Abraham and Messiah. 'In Peleg's days the earth was divided' refers to the Babel dispersion. Though politically less glorious than Ham's empires, this line is central to redemptive history."
+                            },
+                            devotional: {
+                                title: "隐藏的主线 (The Hidden Thread)",
+                                content_zh: "在纷繁复杂的万国历史中，神埋藏了一条‘隐藏的主线’（闪-希伯-亚伯拉罕）。这条线看起来并不起眼，却承载着全人类的救赎希望。你的生命也许在世人眼中微不足道，但如果你属于基督（亚伯拉罕的后裔），你就是神永恒计划核心的一部分。不要轻看自己神儿女的身份。",
+                                content_en: "Amidst complex history, God hides a thread (Shem-Eber-Abraham). It looks insignificant but carries salvation. You may seem small to the world, but if you belong to Christ, you are central to God's eternal plan. Don't underestimate your identity as God's child."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Fade effect
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded shadow-sm border border-orange-200 relative overflow-hidden">
+                        <div class="flex items-center mb-4 relative z-10">
+                            <span class="bg-orange-100 text-orange-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-900">${chapterData.intro.title}</h2>
+                        </div>
+                        <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text relative z-10">${chapterData.intro.title_en}</h3>
+                        <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base border-l-4 border-orange-600 pl-4 text-justify font-serif relative z-10">${chapterData.intro.summary_zh}</p>
+                        <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify relative z-10">${chapterData.intro.summary_en}</p>
+                        
+                        <!-- Concept Cards -->
+                        <div class="flex overflow-x-auto space-x-4 pb-4 mt-6 sm:grid sm:grid-cols-3 sm:space-x-0 sm:gap-4 sm:pb-0 scrollbar-hide relative z-10">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="${c.bg} p-4 rounded border border-stone-200 flex flex-col items-center text-center min-w-[200px] sm:min-w-0 transition hover:shadow-md hover:border-orange-300">
+                                    <h4 class="font-bold ${c.color} text-base mb-1 serif">${c.title}</h4>
+                                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">${c.title_en}</p>
+                                    <p class="text-[10px] text-stone-800 font-mono mb-2 px-2 py-0.5 bg-white/60 rounded border border-stone-200">${c.hebrew}</p>
+                                    <p class="text-xs text-stone-600 mb-1 leading-tight text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Visual Sidebar: The Tree & The Tower -->
+                    <div class="lg:col-span-5 flex flex-col gap-6">
+                        
+                        <!-- Animated Genealogy Tree -->
+                        <div class="bg-orange-50 p-4 rounded shadow-lg relative h-64 flex flex-col items-center justify-end group border border-orange-200 overflow-hidden">
+                            <h3 class="text-orange-900 font-bold uppercase tracking-widest text-xs mb-4 absolute top-4 left-4">One Blood, Many Nations</h3>
+                            
+                            <div class="tree-container shadow-inner">
+                                <div class="trunk"></div>
+                                <div class="branch b-japheth"></div>
+                                <div class="branch b-ham"></div>
+                                <div class="branch b-shem"></div>
+                                
+                                <div class="leaf l-j">Japheth</div>
+                                <div class="leaf l-h">Ham</div>
+                                <div class="leaf l-s">Shem</div>
+                            </div>
+                            
+                            <p class="text-[10px] text-stone-500 italic mt-2 text-center">"From these the nations spread"</p>
+                        </div>
+
+                        <!-- Nimrod's Tower Visualization -->
+                        <div class="bg-white p-6 rounded shadow-sm border border-stone-200 flex-grow relative overflow-hidden flex flex-col justify-center items-center">
+                             <div class="z-10 w-full mb-2 text-center">
+                                 <h4 class="text-sm font-bold text-red-900 mb-1">
+                                    帝国的崛起 (Rise of Empire)
+                                 </h4>
+                                 <p class="text-xs text-stone-600">
+                                    宁录：世上英雄之首 (First Mighty One)
+                                 </p>
+                             </div>
+                             
+                             <div class="tower-container">
+                                 <div class="brick brick-1"></div>
+                                 <div class="brick brick-2"></div>
+                                 <div class="brick brick-3"></div>
+                                 <div class="brick brick-4"></div>
+                                 <i class="fas fa-crown crown-icon"></i>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            // Header for Study View
+            const headerHTML = `
+                <div class="text-center mb-8 fade-in">
+                    <h2 class="text-2xl font-bold text-stone-800 serif">深入研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic">Exegesis & Devotional Journey</p>
+                    <div class="w-24 h-1 bg-orange-700 mx-auto mt-4 rounded-full"></div>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-12 fade-in" style="animation-delay: ${index * 0.1}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 border-b border-orange-200 pb-2">
+                            <div class="section-badge shadow-lg">${index + 1}</div>
+                            <div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-stone-800 serif">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 border-b border-stone-100 relative">
+                        <span class="inline-block px-2 py-1 bg-orange-50 text-orange-800 text-[10px] font-bold rounded mb-3 font-mono border border-orange-100">${verse.ref}</span>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3 relative z-10">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-stone-300">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Exegesis Block -->
+                        <div class="flex-1 p-5 bg-[#fff7ed] border-b md:border-b-0 md:border-r border-orange-100 relative">
+                            <div class="flex items-center mb-3 text-orange-800">
+                                <i class="fas fa-book-reader mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-orange-900/60 font-serif italic en-text mt-3">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="flex-1 p-5 bg-[#fef2f2] relative">
+                            <div class="flex items-center mb-3 text-red-800">
+                                <i class="fas fa-praying-hands mr-2 text-sm"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2 opacity-90">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-red-800/60 font-serif italic en-text mt-3">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Summary of Methodology</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Exegesis Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-orange-600">
+                            <div class="text-orange-600 text-3xl mb-4"><i class="fas fa-sitemap"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">家谱神学 (Genealogical Theology)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Unity & Selection</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-orange-500"></i> 人类一统 Unity of Mankind</div>
+                                    <div class="mb-1">家谱表明全人类同宗同源，打破了种族主义的根基。70个国的数字象征了普世性。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Genealogy proves one blood, refuting racism. 70 nations symbolize universality.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-orange-500"></i> 拣选 Selection</div>
+                                    <div class="mb-1">虽然列出万国，但重点逐渐收窄到闪-希伯-亚伯拉罕的线索，展示了神救赎计划的聚焦。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Focus narrows to Shem-Eber, tracing the Messianic line amidst nations.</div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Devotional Card -->
+                        <div class="bg-white p-6 sm:p-8 rounded shadow-md border-t-4 border-teal-600">
+                            <div class="text-teal-600 text-3xl mb-4"><i class="fas fa-eye"></i></div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-6 uppercase tracking-wider">Worldview & Identity</p>
+                            
+                            <ul class="space-y-4 text-sm text-stone-600">
+                                <li class="flex flex-col items-start">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-teal-500"></i> 普世胸怀 Global Heart</div>
+                                    <div class="mb-1">如果你看到"家谱"只感到厌烦，求神给你看万国的心。神在乎每一个族群。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">If genealogies bore you, ask for God's heart for nations. He cares for every clan.</div>
+                                </li>
+                                <li class="flex flex-col items-start border-t border-stone-100 pt-3">
+                                    <div class="flex items-center font-bold text-stone-800 mb-1"><i class="fas fa-check-circle mr-2 text-teal-500"></i> 属天的英雄 True Heroes</div>
+                                    <div class="mb-1">不要羡慕宁录式的成功（建造巴别、扬名）。在神国里，名字被记在生命册上比建大城更重要。</div>
+                                    <div class="text-xs italic text-stone-400 en-text">Don't envy Nimrod's fame. Being in the Book of Life is greater than building Babel.</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

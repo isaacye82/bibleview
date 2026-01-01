@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nahum 2: The Siege | 那鸿书第2章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Scarlet - The Soldiers & Blood */
+            --theme-primary: #9f1239; /* Rose 800 */
+            /* Lightning Gold - Chariots */
+            --theme-secondary: #f59e0b; /* Amber 500 */
+            /* Ruin Ash - Desolation */
+            --theme-accent: #57534e; /* Stone 600 */
+            /* Background */
+            --theme-bg: #fff1f2; /* Rose 50 */
+            /* Text */
+            --theme-text: #4c0519; /* Rose 950 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #fda4af;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(159, 18, 57, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        .exegesis-box {
+            background-color: #fff0f5; /* Lavender Blush */
+            border-top: 3px solid #be123c; /* Rose 700 */
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-top: 3px solid #b45309; /* Amber 700 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Siege Visualizer CSS --- */
+        .siege-container {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: linear-gradient(to bottom, #2a0a12 0%, #000000 100%);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 40px rgba(0,0,0,0.8);
+        }
+
+        .city-silhouette {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background-image: url('https://www.transparenttextures.com/patterns/black-scales.png'); /* Texture placeholder */
+            background-color: #1c1917;
+            clip-path: polygon(0% 100%, 0% 40%, 10% 40%, 10% 20%, 20% 20%, 20% 50%, 30% 50%, 30% 10%, 40% 10%, 40% 40%, 50% 40%, 50% 20%, 60% 20%, 60% 60%, 70% 60%, 70% 30%, 80% 30%, 80% 50%, 90% 50%, 90% 20%, 100% 20%, 100% 100%);
+            transition: transform 2s ease-in, opacity 2s ease-in;
+            z-index: 10;
+        }
+
+        .chariot-light {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #fbbf24, #f43f5e, transparent);
+            opacity: 0;
+            filter: blur(1px);
+            z-index: 20;
+        }
+
+        .water-flood {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(to top, #1e3a8a, #3b82f6);
+            opacity: 0.7;
+            transition: height 2s ease-out;
+            z-index: 15;
+        }
+
+        .flash {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-rose-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-rose-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-dungeon mr-2 text-rose-600"></i> 那鸿书 2章</span>
+                        <span class="text-[10px] sm:text-xs text-rose-800/60 en-text font-normal ml-8">Nahum Chapter 2</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-rose-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-rose-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#2a0a12] text-rose-200 mt-auto border-t-4 border-rose-600">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-rose-100 mb-1">"尼尼微自古以来充满人民，如同聚水的池子..."</p>
+            <p class="text-xs sm:text-sm italic text-rose-400 mb-4 en-text">"Nineveh is like a pool whose waters run away. 'Halt! Halt!' they cry, but none turns back."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">那鸿书第2章中英对照研经报告 | The Siege & The Fall</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "围攻与倾覆：狮子的结局",
+                title_en: "The Siege & The Fall: End of the Lion",
+                summary_zh: "如果说第1章是法庭上的判决，第2章就是刑罚的执行。那鸿用极其生动的、目击者般的视角，描述了尼尼微城的陷落。从城外红衣精兵的逼近，到街上战车如闪电奔腾，再到河闸开放导致的城墙崩塌。这一章宣告了那个曾如狮子般撕碎列国的强权，终将被彻底吞灭。",
+                summary_en: "If Chapter 1 is the courtroom verdict, Chapter 2 is the execution. Nahum describes the fall of Nineveh with vivid, eyewitness-like imagery. From the red-clad soldiers approaching, to chariots racing like lightning, to the river gates opening causing collapse. This chapter declares that the power which once tore nations like a lion will finally be devoured.",
+                concepts: [
+                    { 
+                        title: "朱红的精兵", 
+                        title_en: "Scarlet Soldiers", 
+                        icon: "fa-user-shield",
+                        color: "text-rose-700", 
+                        bg: "bg-rose-50", 
+                        desc_zh: "神的审判军队（可能是巴比伦和玛代联军）装备精良，视觉上的红色预示着血腥的杀戮。", 
+                        desc_en: "God's judgment army (likely Babylon/Medes) is well-equipped. The visual red foreshadows bloody slaughter." 
+                    },
+                    { 
+                        title: "奔腾的战车", 
+                        title_en: "Raging Chariots", 
+                        icon: "fa-bolt",
+                        color: "text-amber-600", 
+                        bg: "bg-amber-50", 
+                        desc_zh: "形容战车极其快速和混乱，“如火把”、“如闪电”，展现了战争的激烈与不可阻挡。", 
+                        desc_en: "Describing chariots as fast and chaotic, 'like torches', 'like lightning', showing the intensity and unstoppability of war." 
+                    },
+                    { 
+                        title: "狮子的洞穴", 
+                        title_en: "The Lion's Den", 
+                        icon: "fa-paw",
+                        color: "text-stone-700", 
+                        bg: "bg-stone-100", 
+                        desc_zh: "尼尼微曾是充满掠物的狮子洞，如今却被“万军之耶和华”亲自清理。", 
+                        desc_en: "Nineveh was a lion's den full of prey, but now the 'LORD of hosts' Himself clears it out." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "attack",
+                    title: "兵临城下：红盾与战车 (2:1-4)",
+                    title_en: "The Assault: Red Shields & Chariots",
+                    verses: [
+                        {
+                            ref: "2:3-4",
+                            text_zh: "他勇士的盾牌是红的，精兵都穿朱红衣服... 车辆在街上急行，在宽阔处奔来奔去，形状如火把，飞跑如闪电。",
+                            text_en: "The shield of his mighty men is red; his soldiers are clothed in scarlet... The chariots race madly through the streets; they rush to and fro through the squares; they look like torches; they dart like lightning.",
+                            exegesis: {
+                                title: "视觉的冲击 (Visual Impact)",
+                                content_zh: "那鸿的诗歌具有极强的画面感。红色（Red/Scarlet）可能指染色的皮革盾牌或铜盾在阳光下的反光，也象征流血。战车的描述（急行、奔来奔去）传达了一种令人窒息的恐慌和混乱。这不是一支普通的军队，而是神所召来执行毁灭任务的工具。",
+                                content_en: "Nahum's poetry is highly visual. Red/Scarlet likely refers to dyed leather shields or copper reflecting sun, symbolizing blood. The chariot description (racing madly, rushing to and fro) conveys suffocating panic and chaos. This is no ordinary army, but an instrument summoned by God for destruction."
+                            },
+                            devotional: {
+                                title: "当审判忽然临到 (When Judgment Comes Suddenly)",
+                                content_zh: "尼尼微人自以为坚不可摧，但神的审判临到时，如闪电般迅速，如战车般猛烈。这提醒我们，不要把现在的安逸当作永远的保障。如果我们在这个世界上建立了建立在剥削（如尼尼微）之上的“安全感”，当神动工时，这些防御瞬间就会崩溃。",
+                                content_en: "Nineveh felt invincible, but God's judgment came swift as lightning, fierce as chariots. This reminds us not to mistake current comfort for eternal security. If our 'security' is built on exploitation (like Nineveh), it will collapse instantly when God moves."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "breach",
+                    title: "城垣攻破：河闸与宫殿 (2:5-7)",
+                    title_en: "The Breach: River Gates & Palace",
+                    verses: [
+                        {
+                            ref: "2:6-7",
+                            text_zh: "河闸开放，宫殿冲没。王后赤身蒙羞，被掳去...",
+                            text_en: "The river gates are opened; the palace dissolves. It is decreed: she is stripped, she is carried off...",
+                            exegesis: {
+                                title: "自然作为武器 (Nature as Weapon)",
+                                content_zh: "尼尼微有护城河（底格里斯河的支流Khosr）作为天然屏障。历史记载，正是因为洪水泛滥冲垮了部分城墙，才让敌军攻入。经文中的“河闸开放”精准预言了这一点。坚固的物理防御（宫殿）在神掌管的自然力量面前不堪一击。",
+                                content_en: "Nineveh had a moat (Khosr River) as a natural barrier. History records a flood washed away part of the wall, allowing enemies in. 'River gates opened' accurately predicts this. Strong physical defenses (palace) are fragile before nature controlled by God."
+                            },
+                            devotional: {
+                                title: "你依赖的“河闸”可靠吗？ (Are Your 'Gates' Reliable?)",
+                                content_zh: "尼尼微人引以为傲的水利防御系统，最终成了他们的坟墓。我们是否也过分依赖某种系统、制度或财富来保护自己？当神决定要动摇一个生命或国家时，原本保护你的东西可能会反过来成为攻击你的破口。唯有神是真正稳固的磐石。",
+                                content_en: "Nineveh's proud water defense system became their grave. Do we overly rely on systems, institutions, or wealth for protection? When God decides to shake a life or nation, what protected you can turn into a breach. Only God is the truly solid Rock."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "desolation",
+                    title: "内心的崩溃 (2:8-10)",
+                    title_en: "Internal Collapse",
+                    verses: [
+                        {
+                            ref: "2:10",
+                            text_zh: "尼尼微现在空虚荒凉，人心消化，双膝相碰，腰都疼痛，脸都变色。",
+                            text_en: "Desolation, desolation, and ruin! Hearts melt and knees tremble; anguish is in all loins; all faces grow pale!",
+                            exegesis: {
+                                title: "恐惧的生理反应 (Physiology of Fear)",
+                                content_zh: "先知用极细腻的笔触描写了这种终极的恐惧：心消化（失去勇气）、双膝相碰（无法站立）、脸变色（失去血色）。这与他们曾经作为征服者带给他人的恐惧形成了完美的对偶报应（Lex Talionis）。曾经让人脸变色的，现在自己脸变色。",
+                                content_en: "The prophet describes ultimate fear with fine detail: melting hearts (loss of courage), knocking knees (instability), pale faces. This is perfect poetic justice (Lex Talionis) mirroring the fear they once inflicted. Those who made faces pale now turn pale themselves."
+                            },
+                            devotional: {
+                                title: "恐惧是良心的回声 (Fear as Echo of Conscience)",
+                                content_zh: "那些依靠恐吓和暴力建立威权的人，内心深处往往是最恐惧的。当一切外在的伪装被剥去，面对公义的审判时，剩下的只有“双膝相碰”的战栗。真正的平安只属于那些行在公义中、无愧于神和人的人。",
+                                content_en: "Those who build authority on intimidation are often the most fearful inside. When masks are stripped and judgment comes, only 'knocking knees' remain. True peace belongs only to those who walk in justice, with a clear conscience before God and man."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "lion",
+                    title: "狮子的结局 (2:11-13)",
+                    title_en: "The End of the Lion",
+                    verses: [
+                        {
+                            ref: "2:11, 13",
+                            text_zh: "狮子的洞和少壮狮子喂养之处在哪里呢？... 万军之耶和华说：我与你为敌... 必不再听见你使者的声音。",
+                            text_en: "Where is the lions' den, the feeding place of the young lions...? 'Behold, I am against you,' declares the LORD of hosts... 'the voice of your messengers shall no longer be heard.'",
+                            exegesis: {
+                                title: "掠夺者的终结 (End of the Predator)",
+                                content_zh: "亚述王常自比为狮子，以此炫耀力量。经文讽刺地问：“那个洞在哪里呢？”暗示它将完全消失。最可怕的判决是第13节：“万军之耶和华说：我与你为敌。”当全能的神宣布成为你的敌人时，没有任何地缘政治或军事力量可以挽回局面。",
+                                content_en: "Assyrian kings likened themselves to lions to boast of power. The text ironically asks, 'Where is that den?', implying total erasure. The most terrifying verdict is v13: 'I am against you,' declares the LORD. When the Almighty declares Himself your enemy, no geopolitical or military force can save you."
+                            },
+                            devotional: {
+                                title: "不要成为“掠食者” (Don't Be a Predator)",
+                                content_zh: "狮子的特性是“撕碎”猎物来喂养自己和幼狮。这象征着建立在剥削他人基础上的成功。你是否为了让家人（幼狮）过得好，而不惜在生意或职场上“撕碎”他人？神说祂与这样的掠食者“为敌”。神祝福勤劳的手，但审判掠夺的牙齿。",
+                                content_en: "Lions 'tear' prey to feed themselves and cubs. This symbolizes success built on exploiting others. Do you 'tear' others in business to feed your family (cubs)? God says He is 'against' such predators. God blesses diligent hands, but judges predatory teeth."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            isRaging: true,
+            isBreached: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+            initSiegeVisual();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') {
+                    renderDashboard();
+                    setTimeout(initSiegeVisual, 100);
+                }
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-rose-100 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-rose-100 text-rose-900 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-rose-950">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-rose-800 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: The Siege Simulator -->
+                    <div class="lg:col-span-5 bg-stone-900 text-white p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden">
+                        <div class="z-10 w-full mb-2 flex justify-between items-center">
+                             <h3 class="text-lg font-bold text-amber-400">
+                                战车奔腾 <span class="text-xs font-normal opacity-60 ml-2 en-text text-white">Raging Chariots</span>
+                             </h3>
+                             <button onclick="triggerBreach()" id="breach-btn" class="px-3 py-1 bg-rose-700 hover:bg-rose-600 text-xs rounded shadow transition border border-rose-500">
+                                <i class="fas fa-water mr-1"></i> 开启河闸 Open Gates
+                             </button>
+                        </div>
+
+                        <!-- Siege Canvas -->
+                        <div class="siege-container mt-2" id="siege-canvas">
+                             <!-- Background City -->
+                             <div class="city-silhouette" id="city"></div>
+                             
+                             <!-- Chariots Container -->
+                             <div id="chariots-layer" class="absolute inset-0 z-20"></div>
+
+                             <!-- Flood -->
+                             <div class="water-flood" id="flood"></div>
+
+                             <!-- Flash -->
+                             <div class="flash" id="flash"></div>
+
+                             <div id="viz-msg" class="absolute bottom-4 left-0 text-center w-full text-xs italic text-rose-200 opacity-100 transition-opacity duration-500 pointer-events-none drop-shadow-md">
+                                "The chariots race madly through the streets..."
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-rose-100 text-rose-900 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-rose-800">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 sm:p-6 border-b border-rose-100 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-rose-900 text-rose-50 text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-rose-100 flex-grow mx-4"></div>
+                            <i class="fas fa-scroll text-rose-200 text-xl"></i>
+                        </div>
+                        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 font-medium">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-rose-900 opacity-80">
+                                <i class="fas fa-search mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-rose-950 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-rose-900/10">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-amber-800 opacity-80">
+                                <i class="fas fa-church mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-900 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-amber-800/10">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Methodology Summary</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-rose-800">
+                            <div class="w-12 h-12 bg-rose-100 rounded-full flex items-center justify-center text-rose-900 text-xl mb-4">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 经文原意 (Contextual Exegesis)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Warfare & History</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于解析经文中的军事术语和历史地理背景（如底格里斯河的泛滥）。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-rose-700 mt-1 mr-2 text-xs"></i> <span><strong>视觉修辞：</strong> 分析“红盾”、“火把战车”如何营造恐慌的氛围。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-rose-700 mt-1 mr-2 text-xs"></i> <span><strong>反讽：</strong> 曾经的“狮子”如今被吞灭，是报应神学（Lex Talionis）的体现。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-rose-700 mt-1 mr-2 text-xs"></i> <span><strong>地理验证：</strong> “河闸开放”对应历史上底格里斯河冲毁城墙的记载。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-amber-600">
+                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-800 text-xl mb-4">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 灵修应用 (Devotional Application)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Justice & Integrity</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                将神对掠夺者的审判应用到个人生活中的公义与正直。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>安全感的检视：</strong> 我们的安全感是否建立在会崩溃的“物理防御”上？</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>拒绝掠夺：</strong> 警惕在竞争中成为“撕碎猎物”的狮子，避免招致神的敌对。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>敬畏神：</strong> 认识到神是历史的主宰，没有任何强权能抵挡祂的旨意。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Visualizer Logic ---
+        
+        let animationId;
+        const chariots = [];
+
+        function initSiegeVisual() {
+            const container = document.getElementById('chariots-layer');
+            if(!container) return;
+            
+            // Clear
+            container.innerHTML = '';
+            
+            // Create Chariots
+            for(let i=0; i<15; i++) {
+                const c = document.createElement('div');
+                c.className = 'chariot-light';
+                // Random width
+                c.style.width = (Math.random() * 50 + 30) + 'px';
+                c.style.top = (Math.random() * 100) + '%';
+                container.appendChild(c);
+                
+                chariots.push({
+                    el: c,
+                    x: Math.random() * 100, // percentage
+                    speed: (Math.random() * 1.5 + 0.5) * (Math.random() > 0.5 ? 1 : -1) // random direction
+                });
+            }
+            
+            if(!animationId) {
+                animateChariots();
+            }
+        }
+
+        function animateChariots() {
+            if(appState.view !== 'dashboard') return;
+
+            chariots.forEach(c => {
+                c.x += c.speed;
+                
+                // Wrap around
+                if(c.x > 110) c.x = -10;
+                if(c.x < -10) c.x = 110;
+                
+                c.el.style.left = c.x + '%';
+                
+                // Random flicker opacity
+                if(Math.random() > 0.8) {
+                    c.el.style.opacity = Math.random();
+                }
+            });
+
+            // Random lightning flash
+            if(Math.random() > 0.98) {
+                const flash = document.getElementById('flash');
+                if(flash) {
+                    flash.style.opacity = 0.3;
+                    setTimeout(() => flash.style.opacity = 0, 50);
+                }
+            }
+
+            animationId = requestAnimationFrame(animateChariots);
+        }
+
+        function triggerBreach() {
+            const city = document.getElementById('city');
+            const flood = document.getElementById('flood');
+            const msg = document.getElementById('viz-msg');
+            const btn = document.getElementById('breach-btn');
+
+            if(!city) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-exclamation-triangle fa-spin mr-1"></i> Breaching...';
+
+            // 1. Flood Rises
+            flood.style.height = '100%';
+            
+            setTimeout(() => {
+                // 2. City Collapses (Sink & Fade)
+                city.style.transform = 'translateY(100px) scaleY(0.5)';
+                city.style.opacity = '0.2';
+                
+                msg.innerHTML = '<span class="text-amber-400 font-bold">The Palace Dissolves!</span>';
+                
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-skull-crossbones mr-1"></i> Nineveh Fallen';
+                    btn.classList.replace('bg-rose-700', 'bg-stone-700');
+                    btn.classList.replace('border-rose-500', 'border-stone-500');
+                }, 1000);
+
+            }, 1000);
+        }
+
+    </script>
+</body>
+</html>

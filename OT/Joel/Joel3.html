@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joel 3: The Valley of Decision | 约珥书第3章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Judgment Indigo - The Valley at Night */
+            --theme-primary: #312e81; /* Indigo 900 */
+            /* Harvest Gold - The Sickle & Sweet Wine */
+            --theme-secondary: #b45309; /* Amber 700 */
+            /* Accent Red - The Winepress */
+            --theme-accent: #9f1239; /* Rose 800 */
+            /* Background */
+            --theme-bg: #f5f3ff; /* Violet 50 */
+            /* Text */
+            --theme-text: #1e1b4b; /* Indigo 950 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background-color: var(--theme-secondary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e7ff;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(49, 46, 129, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        .exegesis-box {
+            background-color: #eef2ff; /* Indigo 50 */
+            border-top: 3px solid #4338ca; /* Indigo 600 */
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-top: 3px solid #d97706; /* Amber 600 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Valley Visualizer CSS --- */
+        .valley-container {
+            position: relative;
+            width: 100%;
+            height: 340px;
+            background: linear-gradient(to bottom, #0f172a, #1e1b4b);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .multitude-particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #6366f1; /* Indigo 500 */
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: swarm 3s infinite ease-in-out;
+        }
+
+        @keyframes swarm {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(10px, -10px); }
+        }
+
+        .sickle-swipe {
+            position: absolute;
+            top: 50%;
+            left: -100%;
+            width: 200%;
+            height: 20px;
+            background: linear-gradient(90deg, transparent, #fbbf24, #fff, #fbbf24, transparent);
+            transform: rotate(-20deg);
+            opacity: 0;
+            filter: blur(5px);
+            z-index: 20;
+        }
+
+        .river-flow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            background: linear-gradient(to top, #3b82f6, #93c5fd);
+            opacity: 0;
+            transition: all 2s ease-out;
+            border-radius: 50% 50% 0 0;
+            filter: blur(10px);
+        }
+
+        .flash-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-indigo-100">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-indigo-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-gavel mr-2 text-amber-600"></i> 约珥书 3章</span>
+                        <span class="text-[10px] sm:text-xs text-indigo-400 en-text font-normal ml-8">Joel Chapter 3</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-indigo-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-indigo-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1e1b4b] text-indigo-200 mt-auto border-t-4 border-amber-600">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-amber-100 mb-1">"断定谷！断定谷！因为耶和华的日子临近..."</p>
+            <p class="text-xs sm:text-sm italic text-indigo-400 mb-4 en-text">"Multitudes, multitudes, in the valley of decision! For the day of the LORD is near..."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">约珥书第3章中英对照研经报告 | The Valley of Decision</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "断定谷：历史的终局与审判",
+                title_en: "The Valley of Decision: History's Finale & Judgment",
+                summary_zh: "第3章是神对历史的最后裁决。场景从以色列的悔改（第2章）转向对列国的审判。神将万国召集到“约沙法谷”（意为耶和华审判），在那里进行公义的清算。本章充满了强烈的视觉意象：打成刀剑的犁头、挥动的镰刀、涌流的酒榨。这一切最终指向神百姓的得赎与大地的复兴。",
+                summary_en: "Chapter 3 is God's final verdict on history. The scene shifts from Israel's repentance (Ch 2) to the judgment of nations. God summons all nations to the 'Valley of Jehoshaphat' (Yahweh Judges) for righteous reckoning. The chapter abounds with intense imagery: plowshares beaten into swords, swinging sickles, and overflowing winepresses, ultimately pointing to the redemption of God's people and the restoration of the land.",
+                concepts: [
+                    { 
+                        title: "约沙法谷", 
+                        title_en: "Valley of Jehoshaphat", 
+                        icon: "fa-map-signs",
+                        color: "text-indigo-800", 
+                        bg: "bg-indigo-100", 
+                        desc_zh: "并非特定地理位置，而是神学象征。意为“耶和华必审判”，是神主权彰显之地。", 
+                        desc_en: "Not a specific geography but a theological symbol meaning 'Yahweh Judges', the place where God's sovereignty is manifest." 
+                    },
+                    { 
+                        title: "镰刀与收割", 
+                        title_en: "Sickle & Harvest", 
+                        icon: "fa-sickle",
+                        color: "text-amber-700", 
+                        bg: "bg-amber-100", 
+                        desc_zh: "罪恶满盈之时，就是神挥动镰刀之日。收割既指审判（对恶人），也指分别（对义人）。", 
+                        desc_en: "When sin is ripe, God swings the sickle. Harvest implies both judgment (for the wicked) and separation (for the righteous)." 
+                    },
+                    { 
+                        title: "圣殿的泉源", 
+                        title_en: "Fountain from the House", 
+                        icon: "fa-water",
+                        color: "text-blue-700", 
+                        bg: "bg-blue-100", 
+                        desc_zh: "审判之后，生命之水从圣殿流出，滋润什亭谷（干旱之地），象征终末的复兴。", 
+                        desc_en: "After judgment, living water flows from the Temple, watering the Valley of Shittim (dry land), symbolizing eschatological renewal." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "gathering",
+                    title: "万国的聚集与控诉 (3:1-8)",
+                    title_en: "Gathering & Indictment of Nations",
+                    verses: [
+                        {
+                            ref: "3:2",
+                            text_zh: "我要聚集万民，带他们下到约沙法谷，在那里施行审判；因为他们将我的百姓... 分散在列国中，又分取我的地。",
+                            text_en: "I will gather all the nations and bring them down to the Valley of Jehoshaphat. And I will enter into judgment with them there, on behalf of my people... because they have scattered them among the nations and have divided up my land.",
+                            exegesis: {
+                                title: "神记得每一个细节 (God Remembers Details)",
+                                content_zh: "神在这里像一位公诉人，列举了列国的罪状：贩卖人口（将犹大儿童卖给希腊人）、掠夺财物、瓜分土地。这表明神对历史并非不闻不问。虽然祂允许百姓受管教，但祂也必追讨那些过度残暴对待祂子民之人的罪。'约沙法谷'象征着神介入历史，纠正一切不公。",
+                                content_en: "God acts as a prosecutor here, listing the crimes of nations: human trafficking (selling children to Greeks), looting, and dividing the land. This shows God is not indifferent to history. While He allowed discipline, He holds accountable those who treated His people with excessive cruelty. The 'Valley of Jehoshaphat' symbolizes God stepping in to right every wrong."
+                            },
+                            devotional: {
+                                title: "公义虽迟但到 (Justice Delayed is Not Denied)",
+                                content_zh: "当我们看到世界上的不公义——人口贩卖、战争掠夺、弱者受欺——常常会问：'神在哪里？' 约珥书告诉我们，神有一本账簿。祂记得每一个被卖的男孩女孩（3:3）。不要因为正义尚未彰显而灰心，要确信在'约沙法谷'，所有的账目都将被清算。你的委屈，神都记在册子上。",
+                                content_en: "When we see injustice—trafficking, war looting, oppression—we ask, 'Where is God?' Joel tells us God has a ledger. He remembers every boy and girl sold (3:3). Do not despair because justice tarries; be assured that in the 'Valley of Jehoshaphat', all accounts will be settled. Your grievances are recorded."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "war",
+                    title: "备战：将犁头打成刀剑 (3:9-12)",
+                    title_en: "Prepare for War: Plowshares into Swords",
+                    verses: [
+                        {
+                            ref: "3:9-10",
+                            text_zh: "当在万民中宣告说：要预备打仗... 要将犁头打成刀剑，将镰刀打成戈矛；软弱的要说：我有勇力。",
+                            text_en: "Proclaim this among the nations: Consecrate for war... Beat your plowshares into swords, and your pruning hooks into spears; let the weak say, 'I am a warrior.'",
+                            exegesis: {
+                                title: "最后的反讽 (The Final Irony)",
+                                content_zh: "以赛亚书（2:4）预言和平时说'将刀剑打成犁头'，而约珥这里却相反。这不是神在煽动战争，而是一种**反讽的挑战**。神对那些敌挡祂的列国说：'尽你们所能来武装自己吧！哪怕把农具都变成武器，把弱者都武装起来，来与全能者对抗吧！' 这凸显了人类反叛神的徒劳——即便全体总动员，在神的审判面前也是以卵击石。",
+                                content_en: "Isaiah (2:4) prophesies peace: 'swords into plowshares'. Joel reverses it. This isn't God inciting war, but an **ironic challenge**. God tells hostile nations: 'Arm yourselves to the teeth! Turn farm tools to weapons, mobilize the weak, come fight the Almighty!' It highlights the futility of human rebellion—even total mobilization is futile against God's judgment."
+                            },
+                            devotional: {
+                                title: "你把资源用在哪里？ (Where Are Your Resources?)",
+                                content_zh: "列国为了抵挡神，不惜牺牲生产工具（犁头）来制造杀人武器（刀剑），这是毁灭性的投入。反思我们自己：我们是否也曾为了维护自己的骄傲、甚至为了与神摔跤，而耗尽了本该用于建设生命（耕种）的资源？顺服神是建设，抵挡神是消耗。",
+                                content_en: "Nations sacrificed productive tools (plowshares) for destructive weapons (swords) to resist God. Reflect: Do we exhaust resources meant for building life (farming) just to defend our pride or wrestle with God? Submitting to God builds; resisting Him consumes."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "valley",
+                    title: "断定谷与收割 (3:13-16)",
+                    title_en: "Valley of Decision & The Harvest",
+                    verses: [
+                        {
+                            ref: "3:13-14",
+                            text_zh: "开镰吧！因为庄稼熟了... 酒榨满了... 许多许多的人在断定谷，因为耶和华的日子临近断定谷。",
+                            text_en: "Put in the sickle, for the harvest is ripe... the winepresses are full... Multitudes, multitudes, in the valley of decision! For the day of the LORD is near in the valley of decision.",
+                            exegesis: {
+                                title: "收割的双重含义 (Dual Meaning of Harvest)",
+                                content_zh: "'庄稼熟了'既可以指罪恶满盈（需要审判），也可以指选民得赎的时机成熟。'断定谷'（Valley of Decision）中的Decision并非指人们在那里'做决定'信主，而是指神对他们**下判决**（Verdict）。这是最高法院的宣判时刻，没有任何上诉的机会。",
+                                content_en: "'Harvest is ripe' implies sin is fully grown (needs judgment) or the elect are ready. 'Valley of Decision' doesn't mean people decide for God there, but God issues His **Verdict** on them. It's the Supreme Court's pronouncement, with no chance for appeal."
+                            },
+                            devotional: {
+                                title: "在判决下达之前 (Before the Gavel Falls)",
+                                content_zh: "虽然经文中的'断定'是指神的判决，但对于今天的读者来说，我们仍处在'宽容期'。神还在等待庄稼成熟。不要等到站在那个谷中等待判决时才后悔。今天就是你做决定的日子——在神下达最终判决（Verdict）之前，你先做出悔改的决定（Decision）。",
+                                content_en: "While 'decision' in the text means God's verdict, we are currently in a grace period. God waits. Don't wait until you stand in that valley to regret. Today is your day of decision—make your choice to repent before God issues His final Verdict."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "restoration",
+                    title: "终极复兴：大山滴甜酒 (3:17-21)",
+                    title_en: "Ultimate Restoration: Sweet Wine",
+                    verses: [
+                        {
+                            ref: "3:18",
+                            text_zh: "到那日，大山要滴甜酒，小山要流奶... 必有泉源从耶和华的殿中流出来，滋润什亭谷。",
+                            text_en: "And in that day the mountains shall drip sweet wine, and the hills shall flow with milk... A fountain shall flow from the house of the LORD and water the Valley of Shittim.",
+                            exegesis: {
+                                title: "超自然的丰盛 (Supernatural Abundance)",
+                                content_zh: "审判之后是彻底的复兴。'大山滴甜酒'描绘了一幅极其丰盛的画面，甚至超越了伊甸园。关键在于'泉源从耶和华的殿中流出来'。这不仅是农业的恢复，更是属灵生命的涌流（参以西结书47章）。'什亭谷'原本是干旱之地，现在的滋润象征神恩典的覆盖力。",
+                                content_en: "After judgment comes radical restoration. 'Mountains drip sweet wine' depicts abundance surpassing Eden. The key is 'A fountain from the house of the LORD'. This isn't just agricultural, but a flow of spiritual life (cf. Ezek 47). Shittim, a dry acacia valley, being watered symbolizes the reaching power of God's grace."
+                            },
+                            devotional: {
+                                title: "苦难后的甘甜 (Sweetness After Suffering)",
+                                content_zh: "基督徒的盼望不是虚无的。约珥书以蝗灾开始，以甜酒结束。你生命中的干旱（什亭谷）不会是结局。只要有神的殿（神的同在）作为泉源，最贫瘠的地方也能流出奶与蜜。坚持住，神的复兴往往就在最黑暗的'断定谷'之后。",
+                                content_en: "Christian hope is substantial. Joel starts with locusts and ends with sweet wine. Your dry valley (Shittim) is not the end. With God's presence as the source, even the barrenest place can flow with milk. Hold on; God's restoration often follows the darkest 'Valley of Decision'."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-indigo-100 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-indigo-100 text-indigo-900 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-indigo-950">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-indigo-800 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: Valley of Decision -->
+                    <div class="lg:col-span-5 bg-indigo-950 text-white p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden">
+                        <div class="z-10 w-full mb-2 flex justify-between items-center">
+                             <h3 class="text-lg font-bold text-amber-400">
+                                断定谷 <span class="text-xs font-normal opacity-60 ml-2 en-text text-white">The Valley</span>
+                             </h3>
+                             <button onclick="runValleyVisual()" id="sickle-btn" class="px-3 py-1 bg-amber-700 hover:bg-amber-600 text-xs rounded shadow transition border border-amber-500">
+                                <i class="fas fa-sickle mr-1"></i> 伸出镰刀 The Sickle
+                             </button>
+                        </div>
+
+                        <!-- Visualizer Canvas -->
+                        <div class="valley-container mt-2" id="valley-canvas">
+                             <div id="particles-container" class="absolute inset-0"></div>
+                             
+                             <!-- Sickle Effect -->
+                             <div class="sickle-swipe" id="sickle"></div>
+
+                             <!-- Flash -->
+                             <div class="flash-overlay" id="flash"></div>
+
+                             <!-- River (Hidden Initially) -->
+                             <div class="river-flow" id="river"></div>
+                             
+                             <div id="viz-msg" class="absolute bottom-10 text-center z-30 opacity-100 transition-opacity duration-500 pointer-events-none w-full">
+                                <h4 class="text-sm font-bold text-indigo-200 uppercase tracking-widest">Multitudes, Multitudes...</h4>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Init Particles
+            initParticles();
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-indigo-100 text-indigo-900 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-indigo-800">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 sm:p-6 border-b border-indigo-100 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-indigo-900 text-indigo-50 text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-indigo-100 flex-grow mx-4"></div>
+                            <i class="fas fa-scroll text-indigo-200 text-xl"></i>
+                        </div>
+                        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 font-medium">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-indigo-900 opacity-80">
+                                <i class="fas fa-search mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-indigo-950 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-indigo-900/10">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-amber-800 opacity-80">
+                                <i class="fas fa-church mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-amber-900 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-amber-800/10">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Methodology Summary</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-indigo-800">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-900 text-xl mb-4">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 经文原意 (Contextual Exegesis)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Symbolic & Legal</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于解析本章的法庭审判意象和反讽修辞。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-indigo-700 mt-1 mr-2 text-xs"></i> <span><strong>地理象征：</strong> 解释“约沙法谷”和“什亭谷”的神学意义而非地理位置。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-indigo-700 mt-1 mr-2 text-xs"></i> <span><strong>反讽修辞：</strong> 分析“犁头打成刀剑”如何反讽人类对抗神的徒劳。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-indigo-700 mt-1 mr-2 text-xs"></i> <span><strong>神作为控方：</strong> 强调神对历史细节（如贩卖儿童）的记忆与追责。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-amber-600">
+                            <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-amber-800 text-xl mb-4">
+                                <i class="fas fa-seedling"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 灵修应用 (Devotional Application)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Hope & Justice</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                将终末的审判转化为今日的安慰与警醒。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>公义的盼望：</strong> 安慰受苦者，神必在“断定谷”为一切不公伸冤。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>决定的紧迫：</strong> 提醒信徒在神下达判决（Verdict）前，先做出悔改的决定（Decision）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-amber-700 mt-1 mr-2 text-xs"></i> <span><strong>复兴的应许：</strong> 鼓励信徒，苦难（干旱）之后必有从神殿流出的泉源。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Animation Logic ---
+        
+        function initParticles() {
+            const container = document.getElementById('particles-container');
+            if(!container) return;
+            container.innerHTML = '';
+            
+            for(let i=0; i<60; i++) {
+                const p = document.createElement('div');
+                p.className = 'multitude-particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = Math.random() * 100 + '%';
+                p.style.animationDelay = Math.random() * 2 + 's';
+                p.style.backgroundColor = Math.random() > 0.5 ? '#6366f1' : '#4338ca';
+                container.appendChild(p);
+            }
+        }
+
+        function runValleyVisual() {
+            const sickle = document.getElementById('sickle');
+            const flash = document.getElementById('flash');
+            const particles = document.getElementById('particles-container');
+            const river = document.getElementById('river');
+            const msg = document.getElementById('viz-msg');
+            const btn = document.getElementById('sickle-btn');
+
+            if(!sickle) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-hourglass-half fa-spin mr-1"></i> Judging...';
+            
+            // 1. Sickle Swipe
+            sickle.style.transition = 'all 1s ease-in-out';
+            sickle.style.opacity = '1';
+            sickle.style.left = '100%';
+            
+            setTimeout(() => {
+                // 2. Flash (The Roar from Zion)
+                flash.style.transition = 'opacity 0.2s';
+                flash.style.opacity = '0.8';
+                
+                // Clear Particles
+                particles.innerHTML = '';
+                msg.innerHTML = '<h4 class="text-xl font-bold text-amber-300 drop-shadow-md">The Harvest is Reaped</h4>';
+
+                setTimeout(() => {
+                    flash.style.opacity = '0';
+                    
+                    // 3. River Flow
+                    river.style.width = '100px';
+                    river.style.height = '100%';
+                    river.style.opacity = '0.8';
+                    msg.innerHTML = '<h4 class="text-xl font-bold text-blue-300 drop-shadow-md">Fountain from the House</h4>';
+                    
+                    btn.innerHTML = '<i class="fas fa-check mr-1"></i> Restored';
+                    btn.classList.remove('bg-amber-700', 'hover:bg-amber-600');
+                    btn.classList.add('bg-blue-700');
+
+                }, 500);
+            }, 800);
+        }
+
+    </script>
+</body>
+</html>

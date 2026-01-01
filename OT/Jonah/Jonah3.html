@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jonah 3: The Great Turn | 约拿书第三章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Sackcloth / Dust / Humility */
+            --theme-sackcloth: #a8a29e; /* Stone 400 */
+            --theme-earth: #44403c; /* Stone 700 */
+            /* Warning / Royal / Urgency */
+            --theme-royal: #9f1239; /* Rose 800 */
+            /* Mercy / Second Chance */
+            --theme-mercy: #d97706; /* Amber 600 */
+            /* Background */
+            --theme-bg: #fafaf9; /* Stone 50 */
+            /* Text */
+            --theme-text: #292524; /* Stone 800 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Texture representing sackcloth */
+            background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 3h1v1H1V3zm2-2h1v1H3V1z' fill='%23a8a29e' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .en-title { font-family: 'Cinzel', serif; }
+        .en-text { font-family: 'Lato', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif SC', serif; }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-royal);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-royal);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            overflow: hidden;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(159, 18, 57, 0.1);
+            border-color: var(--theme-royal);
+        }
+        .verse-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--theme-sackcloth);
+            opacity: 0.5;
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Countdown Animation */
+        .countdown-circle {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: conic-gradient(var(--theme-royal) 0% 0%, #e7e5e4 0% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: timer 4s ease-out forwards;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .countdown-inner {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        @keyframes timer {
+            0% { background: conic-gradient(var(--theme-royal) 0% 0%, #e7e5e4 0% 100%); }
+            100% { background: conic-gradient(var(--theme-royal) 0% 70%, #e7e5e4 70% 100%); } /* Stop at 40 days visually */
+        }
+
+        /* Walking Animation */
+        .walking-path {
+            width: 100%;
+            height: 4px;
+            background: #e7e5e4;
+            position: relative;
+            border-radius: 2px;
+            margin-top: 20px;
+        }
+        .walker {
+            position: absolute;
+            top: -14px;
+            left: 0;
+            font-size: 20px;
+            color: var(--theme-earth);
+            animation: walk 6s infinite linear;
+        }
+        @keyframes walk {
+            0% { left: 0; transform: translateX(0); }
+            50% { left: 50%; transform: translateX(-50%); }
+            100% { left: 100%; transform: translateX(-100%); }
+        }
+
+        /* Turn/Flip Animation for Repentance */
+        .turn-icon {
+            display: inline-block;
+            transition: transform 0.6s;
+        }
+        .turn-icon:hover {
+            transform: rotateY(180deg);
+        }
+
+        /* Second Chance Pulse */
+        .pulse-gold {
+            animation: pulseGold 2s infinite;
+        }
+        @keyframes pulseGold {
+            0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 119, 6, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-stone-100 flex items-center justify-center mr-3 text-stone-600 border border-stone-300">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-stone-800 serif flex flex-col leading-none">
+                        <span>约拿书 <span class="text-rose-800">3章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-stone-500 en-title tracking-widest mt-1">THE GREAT REPENTANCE</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium text-stone-600">
+                        <i class="fas fa-map-marked-alt block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-scroll block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-search block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1c1917] text-stone-400 mt-auto border-t-4 border-stone-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-stone-300 mb-1">"神察看他们的行为，见他们离开恶道..."</p>
+            <p class="text-xs italic opacity-60 en-text">"When God saw what they did, how they turned from their evil way..." (Jonah 3:10)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "第二次的话：全城悔改",
+                title_en: "The Second Word: Citywide Repentance",
+                summary_zh: "约拿书第三章是关于“第二次机会”和“最大规模悔改”的故事。神的话第二次临到约拿，这次他顺服了。他进入那座“极大的城”尼尼微，传讲了一篇只有五个希伯来词的审判信息。结果令人震惊：从国王到牲畜，全城披麻蒙灰，切切求告神。这一章展示了神话语的大能，以及即便在外邦最黑暗的角落，悔改也能带来神的怜悯。",
+                summary_en: "Jonah 3 is a story of 'Second Chances' and 'Massive Repentance'. The word of the Lord came a second time; this time, Jonah obeyed. He entered the 'great city' Nineveh with a 5-word sermon of judgment. The result was shocking: from king to beast, the entire city fasted in sackcloth. It showcases the power of God's Word and how repentance triggers mercy even in the darkest pagan corners.",
+                concepts: [
+                    {
+                        title: "第二次", title_en: "The Second Time", hebrew: "Shenit",
+                        icon: "fa-redo", color: "text-amber-600",
+                        desc_zh: "整卷书最宝贵的词之一。神没有因为约拿的第一次背叛而弃绝他，而是再次呼召。这显示了神对仆人顽强的忍耐和恩典。",
+                        desc_en: "One of the most precious phrases. God didn't discard Jonah for his first rebellion but called him again. Shows God's tenacious patience."
+                    },
+                    {
+                        title: "极大的城", title_en: "Great City to God", hebrew: "Gadol l'Elohim",
+                        icon: "fa-city", color: "text-rose-800",
+                        desc_zh: "原文作“在神面前是极大的城”。神不仅看重城市的规模（三日的路程），更看重其中无数迷失的灵魂。神对大城市有独特的负担。",
+                        desc_en: "Lit. 'Great to God'. God values not just the size (3 days' walk) but the countless lost souls within. God has a burden for great cities."
+                    },
+                    {
+                        title: "倾覆/翻转", title_en: "Overthrown/Turned", hebrew: "Haphak",
+                        icon: "fa-exchange-alt", color: "text-stone-600",
+                        desc_zh: "约拿预言的词“倾覆”（Haphak）是一个双关语。它既可以指毁灭性的“推翻”（如所多玛），也可以指道德上的“翻转”（改变）。尼尼微选择了后者。",
+                        desc_en: "Jonah's word 'Overthrow' (Haphak) is a pun. It can mean destructive 'demolition' (like Sodom) or moral 'transformation'. Nineveh chose the latter."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "第二次的呼召与顺服 (3:1-4)",
+                    title_en: "The Second Call & Obedience",
+                    verses: [
+                        {
+                            ref: "3:1-2",
+                            text_zh: "耶和华的话二次临到约拿说：你起来！往尼尼微大城去，向其中的居民宣告我所吩咐你的话。",
+                            text_en: "Then the word of the LORD came to Jonah the second time, saying, 'Arise, go to Nineveh, that great city, and call out against it the message that I tell you.'",
+                            exegesis: {
+                                title: "神不改变的旨意 (Unchanging Will)",
+                                content_zh: "神对约拿的命令（起来，去，宣告）与第一章完全相同。尽管约拿经历了风暴和鱼腹，神的计划并未改变。这表明：1. 我们的失败不能废掉神的呼召；2. 神不仅要救尼尼微，也要恢复约拿作为先知的职分。这次约拿“照耶和华的话”去了，虽然心情可能依旧复杂，但行为上顺服了。",
+                                content_en: "The command (Arise, Go, Preach) is identical to Ch 1. Despite the storm and fish, God's plan stands. It shows: 1. Our failure doesn't cancel God's call; 2. God restores Jonah's office. Jonah went 'according to the word', obeying in action if not fully in heart."
+                            },
+                            devotional: {
+                                title: "给失败者的第二次机会 (The God of Re-takes)",
+                                content_zh: "你是否觉得自己搞砸了神给的某个机会？也许是一次未完成的服事，或是一段破裂的关系。约拿书3:1是给你的好消息。神是赐予“第二次机会”的神。祂没有寻找新的先知来替代约拿，而是等待约拿准备好。如果神再次呼召你，不要因为过去的失败而羞愧退缩，起来，去吧。",
+                                content_en: "Feel like you blew your chance? A failed ministry or broken vow? Jonah 3:1 is your Good News. God is the God of the 'Second Time'. He didn't replace Jonah; He waited for him. If He calls again, don't let shame hold you back. Arise and go."
+                            }
+                        },
+                        {
+                            ref: "3:4",
+                            text_zh: "约拿进城走了一日，宣告说：再等四十日，尼尼微必倾覆了！",
+                            text_en: "Jonah began to go into the city, going a day's journey. And he called out, 'Yet forty days, and Nineveh shall be overthrown!'",
+                            exegesis: {
+                                title: "五个字的审判 (Five-Word Sermon)",
+                                content_zh: "在希伯来原文中，这篇讲章只有五个词（Od arbaim yom Nineveh nehpachet）。没有呼吁悔改，没有提到神的恩典，甚至没有提到神的名字，只有冷酷的倒计时和审判。这可能是因为约拿并不希望他们悔改。但其中的“倾覆”（nehpachet/haphak）一词蕴含了神的主权——要么被毁灭“推翻”，要么生命“翻转”。",
+                                content_en: "In Hebrew, only 5 words. No call to repent, no mention of grace, barely a mention of God. Just a cold countdown. Jonah likely didn't want them to repent. Yet the word 'overthrown' (haphak) contains a divine ambiguity: be destroyed or be transformed."
+                            },
+                            devotional: {
+                                title: "不完美的器皿 (Imperfect Vessel)",
+                                content_zh: "约拿的讲道可能缺乏爱心，甚至动机不纯（希望他们被灭），但神依然使用这并不完美的顺服带来了巨大的复兴。这提醒我们，神话语的大能不依赖于传讲者的完美。只要你愿意开口，哪怕是结结巴巴的真理，神也能用它震动人心。",
+                                content_en: "Jonah's sermon lacked love, perhaps even had bad motives. Yet God used this imperfect obedience for great revival. God's Word doesn't depend on the messenger's perfection. Speak the truth, however haltingly, and God can shake hearts."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "从王到牲畜的悔改 (3:5-9)",
+                    title_en: "Repentance from King to Beast",
+                    verses: [
+                        {
+                            ref: "3:5, 8",
+                            text_zh: "尼尼微人信服神，便宣告禁食...人与牲畜都当披麻...各人回头离开所行的恶道，丢弃手中的强暴。",
+                            text_en: "And the people of Nineveh believed God. They called for a fast... let man and beast be covered with sackcloth... let them turn every one from his evil way and from the violence that is in his hands.",
+                            exegesis: {
+                                title: "信服神 vs 信约拿 (Believing God vs Jonah)",
+                                content_zh: "经文说尼尼微人“信服神”（Believed God），而不是信服约拿。这是圣灵超自然的工作。悔改是极其彻底的：1. **公开**（从最大的到至小的）；2. **身体**（禁食、披麻）；3. **行为**（离开恶道、丢弃强暴）。连牲畜都要披麻，这是波斯/亚述习俗中极度悲哀的表现。这反衬了以色列人对先知警告的麻木。",
+                                content_en: "They 'believed God', not just Jonah. A supernatural work. Repentance was total: 1. Public (greatest to least); 2. Physical (fast, sackcloth); 3. Moral (turn from evil/violence). Even animals in sackcloth highlights the extremity of their plea, contrasting Israel's apathy."
+                            },
+                            devotional: {
+                                title: "悔改不仅是后悔 (Repentance is Action)",
+                                content_zh: "尼尼微王不仅是感到难过（后悔），他是“下了宝座，脱了朝服，披上麻布”（行动）。真正的悔改涉及地位的降卑和行为的改变。如果你只是为罪感到难过却不愿“丢弃手中的强暴”（具体的罪行），那只是情绪的宣泄。神看重的是那个“回头离开”的动作。",
+                                content_en: "The King didn't just feel bad; he 'arose from his throne and stripped his robe'. True repentance involves stepping down and changing action. Feeling sorry without 'turning from violence' is just emotional venting. God looks for the U-turn."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "神的后悔与转意 (3:10)",
+                    title_en: "God Relents",
+                    verses: [
+                        {
+                            ref: "3:10",
+                            text_zh: "于是神察看他们的行为，见他们离开恶道，他就后悔，不把所说的灾祸降与他们了。",
+                            text_en: "When God saw what they did, how they turned from their evil way, God relented of the disaster that he had said he would do to them, and he did not do it.",
+                            exegesis: {
+                                title: "神视角的互动性 (Divine Responsiveness)",
+                                content_zh: "“神后悔”（Nacham）并不意味着神犯了错或意志不坚定，而是指神对人类道德状态改变的**回应性**。这是一种“立约的连贯性”：神一贯的原则是“若悔改，则免灾”（耶利米书18:7-8）。当尼尼微人改变（Turn）时，神也改变（Turn）了对待他们的方式。这显示神不是机械的程序，而是活泼的位格。",
+                                content_en: "'God relented' (Nacham) doesn't mean He made a mistake. It means **Divine Responsiveness**. It's covenantal consistency: 'If you repent, I relent' (Jer 18:7-8). When Nineveh turned, God turned His disposition toward them. God is a living Person, not a static program."
+                            },
+                            devotional: {
+                                title: "怜悯胜过审判 (Mercy Triumphs)",
+                                content_zh: "这节经文是整本圣经最充满希望的经文之一。无论宣告的审判多么严厉（“再等四十日！”），只要人真心悔改，神总是乐意收回怒气。我们事奉的神，是一位极度渴望“后悔”不降灾的神。不要因为你的过去太糟糕而绝望，因为你的悔改可以触动全能神的心。",
+                                content_en: "One of the most hopeful verses. No matter how severe the decree ('40 days!'), sincere repentance unlocks mercy. We serve a God who is *eager* to relent. Don't despair over your past; your repentance moves the heart of the Almighty."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-600');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-600');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+                        <div class="absolute right-0 top-0 p-6 opacity-5">
+                            <i class="fas fa-bullhorn text-9xl"></i>
+                        </div>
+
+                        <div class="relative z-10 flex flex-col sm:flex-row items-start justify-between">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Chapter Theme</span>
+                                <h1 class="text-3xl sm:text-4xl font-bold text-stone-800 serif mb-2">${chapterData.intro.title}</h1>
+                                <h2 class="text-lg text-stone-500 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                                <p class="text-sm text-stone-600 leading-relaxed border-l-4 border-stone-400 pl-4 text-justify mb-6">
+                                    ${chapterData.intro.summary_zh}
+                                </p>
+                            </div>
+
+                            <!-- Visualization: 40 Days Countdown -->
+                            <div class="mt-6 sm:mt-0 sm:ml-8 flex flex-col items-center">
+                                <div class="countdown-circle">
+                                    <div class="countdown-inner">
+                                        <span class="text-2xl font-bold text-rose-800">40</span>
+                                        <span class="text-[10px] text-stone-500 uppercase">Days</span>
+                                    </div>
+                                </div>
+                                <p class="text-[10px] text-stone-400 mt-2 font-mono uppercase">Judgment Pending</p>
+                            </div>
+                        </div>
+
+                        <!-- Walking Animation -->
+                        <div class="mt-4 relative">
+                            <div class="flex justify-between text-[10px] text-stone-400 font-mono mb-1">
+                                <span>GATE</span>
+                                <span>CITY CENTER</span>
+                                <span>END</span>
+                            </div>
+                            <div class="walking-path">
+                                <div class="walker"><i class="fas fa-walking"></i></div>
+                            </div>
+                            <p class="text-xs text-stone-500 mt-2 italic">Jonah's 1-day journey into a 3-day city</p>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-6 shadow-sm flex-1 flex flex-col justify-center items-center text-center pulse-gold">
+                            <i class="fas fa-redo text-3xl text-amber-600 mb-2"></i>
+                            <h3 class="font-bold text-lg text-stone-700">Second Chance</h3>
+                            <p class="text-xs text-amber-600 uppercase tracking-widest">Grace Reloaded</p>
+                        </div>
+                        <div class="bg-stone-800 text-stone-200 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center">
+                            <i class="fas fa-tshirt text-3xl text-stone-400 mb-2"></i>
+                            <h3 class="font-bold text-lg">Sackcloth</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-widest">Universal Mourning</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">Key Themes</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition group">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:rotate-180 transition duration-700"></i>
+                                        <h4 class="font-bold text-stone-700">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-stone-400 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-stone-600 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-rose-800 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-stone-200 pb-2">
+                            <div class="w-8 h-8 rounded bg-stone-100 text-stone-600 flex items-center justify-center text-xs mr-3 font-bold border border-stone-300">
+                                <i class="fas fa-book-open"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs text-stone-500 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-stone-50 border-b border-stone-100 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-stone-500 bg-white border border-stone-200 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-stone-800 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-stone-500 text-sm italic en-text pl-3 border-l-2 border-amber-600">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-stone-100 flex items-center justify-center mr-2 text-stone-500 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-stone-500 uppercase tracking-widest">经文深意 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-stone-800 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-stone-400 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-rose-50/50">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-rose-100 flex items-center justify-center mr-2 text-rose-600 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-rose-600 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-rose-800 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-rose-800/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-stone-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-stone-500">
+                            <div class="mb-4 text-stone-600 text-2xl"><i class="fas fa-language"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">双关语分析 (Ambiguity & Puns)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                约拿书第3章使用了精妙的希伯来文双关语（如 Haphak - 倾覆/翻转）。解经时要捕捉这种**神圣的模糊性**（Divine Ambiguity）：神的话语既是审判的雷声，也暗藏恩典的后门。真正的预言往往给人留下悔改的空间，而非单纯的宿命论。
+                            </p>
+                            <div class="bg-stone-50 p-2 rounded text-xs text-stone-500 italic">
+                                <strong>Insight:</strong> Judgment warnings are often invitations in disguise.
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-rose-800">
+                            <div class="mb-4 text-rose-800 text-2xl"><i class="fas fa-globe"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">宣教视角 (Missional Lens)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                本章是宣教神学的核心。它挑战了“我们 vs 他们”的狭隘观念。解经时要强调：**神对外邦大城的怜悯远超教会的想象**。灵修应用要打破我们对自己不喜欢的群体（如约拿不喜欢的尼尼微人）的偏见。
+                            </p>
+                            <div class="bg-rose-50 p-2 rounded text-xs text-rose-800 italic">
+                                <strong>Challenge:</strong> Who is your 'Nineveh' that you think doesn't deserve grace?
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

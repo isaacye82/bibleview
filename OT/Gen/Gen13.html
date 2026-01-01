@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 13: The Choice | 创世记第13章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Promise Gold - Faith & Future */
+            --theme-primary: #a16207; /* Yellow 700 */
+            /* Deceptive Green - Worldly Appeal */
+            --theme-secondary: #15803d; /* Green 700 */
+            /* Text Color */
+            --theme-text: #292524; /* Stone 800 */
+            /* Background */
+            --theme-bg: #f5f5f4; /* Stone 100 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden;
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(161, 98, 7, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        /* Specific Styling for Contrast */
+        .lot-choice {
+            background-color: #f0fdf4; /* Green 50 */
+            border-left: 4px solid #15803d;
+        }
+        .abram-choice {
+            background-color: #fefce8; /* Yellow 50 */
+            border-left: 4px solid #a16207;
+        }
+
+        .exegesis-box {
+            background-color: #fafaf9; /* Stone 50 */
+            border-top: 3px solid #78716c; /* Stone 500 */
+        }
+        
+        .devotional-box {
+            background-color: #fffbeb; /* Amber 50 */
+            border-top: 3px solid #d97706; /* Amber 600 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Split Path Visualization CSS --- */
+        .split-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            background: linear-gradient(135deg, #1c1917 0%, #292524 100%);
+            border-radius: 1rem;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .path-line {
+            position: absolute;
+            height: 4px;
+            background-color: #57534e;
+            transform-origin: left center;
+            border-radius: 2px;
+            width: 0; 
+            transition: width 1s linear;
+        }
+
+        .node {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+
+        .label-tag {
+            position: absolute;
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transform: translate(-50%, 15px);
+            transition: opacity 0.5s ease;
+            white-space: nowrap;
+            pointer-events: none;
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Left Path (Lot) */
+        .path-green { background-color: #22c55e; box-shadow: 0 0 10px rgba(34, 197, 94, 0.3); }
+        .node-green { background-color: #22c55e; }
+        .bg-green-tag { background-color: rgba(21, 128, 61, 0.8); }
+
+        /* Right Path (Abram) */
+        .path-gold { background-color: #eab308; box-shadow: 0 0 10px rgba(234, 179, 8, 0.3); }
+        .node-gold { background-color: #eab308; }
+        .bg-gold-tag { background-color: rgba(161, 98, 7, 0.8); }
+
+        /* Effects */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 1.5s infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-arrows-split mr-2 text-yellow-700"></i> 创世记 13章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-8">Genesis Chapter 13</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-yellow-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-yellow-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-stone-400 mt-auto border-t-4 border-yellow-700">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-yellow-100 mb-1">"遍地不都在你面前吗？请你离开我..."</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-4 en-text">"Is not the whole land before you? Separate yourself from me."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">创世记第13章中英对照研经报告 | Vision & The Choice</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "抉择时刻：眼见与信心",
+                title_en: "The Moment of Choice: Sight vs. Faith",
+                summary_zh: "第13章是关于‘恢复’与‘选择’的一章。亚伯兰从埃及失败归来，回到了最初的祭坛。然而，财富的增加导致了与罗得的冲突。这一章鲜明地对比了两种人生观：罗得‘举目观看’，选择了充满诱惑的平原；亚伯兰凭信心礼让，最终领受了神更广阔的应许。",
+                summary_en: "Chapter 13 is about 'Restoration' and 'Choice'. Abram returns from Egypt to his first altar. However, wealth brings conflict with Lot. The chapter vividly contrasts two worldviews: Lot 'lifted up his eyes' to choose the seductive plain; Abram yielded in faith, receiving a vast promise from God.",
+                concepts: [
+                    { 
+                        title: "回到伯特利", 
+                        title_en: "Return to Bethel", 
+                        icon: "fa-undo-alt",
+                        color: "text-stone-700", 
+                        bg: "bg-stone-200", 
+                        desc_zh: "悔改就是回到起初顺服神的地方。无论走偏多远，神的祭坛始终在等待。", 
+                        desc_en: "Repentance is returning to the place of first obedience. God's altar always waits." 
+                    },
+                    { 
+                        title: "凭眼见 vs 凭信心", 
+                        title_en: "Sight vs. Faith", 
+                        icon: "fa-eye",
+                        color: "text-green-700", 
+                        bg: "bg-green-100", 
+                        desc_zh: "罗得选择了眼睛看来美好的（像伊甸园），却不知那是毁灭的前奏（所多玛）。", 
+                        desc_en: "Lot chose what looked good (like Eden), unaware it was a prelude to destruction (Sodom)." 
+                    },
+                    { 
+                        title: "失去即获得", 
+                        title_en: "Gain through Loss", 
+                        icon: "fa-hand-holding-heart",
+                        color: "text-yellow-700", 
+                        bg: "bg-yellow-100", 
+                        desc_zh: "亚伯兰放弃了优先选择权，神却在此刻向他显现，赐给他纵横走遍的应许地。", 
+                        desc_en: "Abram gave up his right to choose; God then appeared, granting him the entire land." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "return",
+                    title: "回归与冲突 (13:1-7)",
+                    title_en: "Return & Conflict",
+                    verses: [
+                        {
+                            ref: "13:3-4",
+                            text_zh: "他从南地渐渐往伯特利去，到了伯特利和艾的中间，就是他起先支搭帐棚的地方，也是他起先筑坛的地方；他又在那里求告耶和华的名。",
+                            text_en: "He journeyed on from the Negeb as far as Bethel to the place where his tent had been at the beginning... to the place of the altar... and there Abram called upon the name of the LORD.",
+                            exegesis: {
+                                title: "属灵的复位 (Spiritual Reset)",
+                                content_zh: "‘起先’（At the beginning）被重复提及，强调了悔改的本质——回到原点。亚伯兰在埃及（12章）经历了信心的失败，现在他通过物理上的回归（回到迦南山地）表达了属灵上的回归。‘求告耶和华的名’标志着关系的恢复。",
+                                content_en: "The repetition of 'at the beginning' highlights the essence of repentance—returning to the source. After failing in Egypt, Abram expresses spiritual return through physical return. 'Calling on the name of the LORD' marks relational restoration."
+                            },
+                            devotional: {
+                                title: "你也能重新开始 (You Can Start Again)",
+                                content_zh: "我们都会像亚伯兰一样，因软弱而下埃及（依靠世界的方法）。但神的恩典允许我们要U型回转。不要因为过去的失败而停滞不前。回到你当初立志跟随神的地方，那个‘起初的祭坛’，重新求告祂。神不看你的过去，看你的回归。",
+                                content_en: "We all 'go down to Egypt' in weakness. But grace allows a U-turn. Don't let past failures paralyze you. Go back to your 'first altar' where you committed to God. He looks not at your past, but at your return."
+                            }
+                        },
+                        {
+                            ref: "13:7",
+                            text_zh: "亚伯兰的牧人和罗得的牧人相争... 当时迦南人与比利洗人在那地居住。",
+                            text_en: "And there was strife between the herdsmen of Abram's livestock and the herdsmen of Lot's livestock... At that time the Canaanites and the Perizzites were dwelling in the land.",
+                            exegesis: {
+                                title: "财富的试探与见证 (Wealth & Witness)",
+                                content_zh: "财富（牛群羊群）不仅带来了祝福，也带来了‘相争’。经文特意注明‘当时迦南人...在那地居住’，暗示这不仅是家庭纠纷，更是一场公开的见证危机。外邦人在看着：这两个信奉耶和华的人，会像世人一样为利益撕破脸吗？",
+                                content_en: "Wealth brought strife. The note about Canaanites dwelling there implies a witness crisis. The pagans were watching: Will these worshippers of Yahweh fight over money like everyone else?"
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "choice",
+                    title: "分道扬镳：谁在掌权？ (13:8-13)",
+                    title_en: "The Separation: Who is in Control?",
+                    verses: [
+                        {
+                            ref: "13:9",
+                            text_zh: "遍地不都在你面前吗？请你离开我：你向左，我就向右；你向右，我就向左。",
+                            text_en: "Is not the whole land before you? Separate yourself from me. If you take the left hand, then I will go to the right, or if you take the right hand, then I will go to the left.",
+                            exegesis: {
+                                title: "放弃权利的力量 (Power of Surrender)",
+                                content_zh: "作为长辈和族长，亚伯兰有绝对的优先选择权。但他主动放弃了权利，以维护和平（Shalom）。这显示了他的信心已从埃及的失败中恢复：他不再抓取（像在埃及时那样自保），因为他深信神的供应不需要靠‘争夺’来获得。",
+                                content_en: "Abram, the elder, had the right to choose first. He surrendered it for Shalom. This shows his faith restored: he no longer grasps (as in Egypt), trusting that God's provision doesn't require fighting."
+                            },
+                            devotional: {
+                                title: "你敢吃亏吗？ (Dare to Lose?)",
+                                content_zh: "在职场或家庭冲突中，当我们坚持‘这是我应得的’时，往往失去了平安和见证。信心使人宽宏大量。如果你相信神是你的牧者，你就不必担心草场被别人抢走。试着做一个‘让步’的人，看看神如何为你预备更好的。",
+                                content_en: "Fighting for 'my rights' often costs us peace and witness. Faith generates generosity. If God is your Shepherd, you needn't fear losing green pastures. Try yielding, and watch how God prepares something better."
+                            }
+                        },
+                        {
+                            ref: "13:10-12",
+                            text_zh: "罗得举目看见约旦河的全平原，直到琐珥，都是滋润的... 如同耶和华的园子，也像埃及地... 罗得渐渐挪移帐棚，直到所多玛。",
+                            text_en: "Lot lifted up his eyes and saw that the Jordan Valley was well watered everywhere like the garden of the LORD, like the land of Egypt... Lot moved his tent as far as Sodom.",
+                            exegesis: {
+                                title: "眼目的欺骗 (Deception of Sight)",
+                                content_zh: "罗得‘举目’（靠自己看）。他看到了‘滋润’和‘像伊甸园’，但他没看到潜伏的罪恶。‘像埃及地’是一个不祥的描述，暗示这是物质丰富但属灵堕落的地方。‘渐渐挪移’表明堕落是一个过程，从选择靠近罪，到最终住在罪中。",
+                                content_en: "Lot 'lifted his eyes' (self-reliance). He saw 'water' and 'Eden', but missed the hidden sin. 'Like Egypt' is an ominous marker—materially rich but spiritually corrupt. 'Moved his tent' shows a gradual slide into compromise."
+                            },
+                            devotional: {
+                                title: "职业与居住地的选择 (Choosing Career & Home)",
+                                content_zh: "在选择工作或搬家时，你的首要标准是什么？是薪水、学区、环境（滋润的平原）？还是那里的属灵氛围和对家庭信仰的影响？罗得做了一个极佳的经济决定，却是一个毁灭性的属灵决定。不要只看‘滋润’，要看‘结局’。",
+                                content_en: "When choosing a job or home, what's your priority? Salary, environment (watered plains)? Or spiritual atmosphere? Lot made a brilliant economic decision but a fatal spiritual one. Don't just look at the profit; look at the outcome."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "promise",
+                    title: "神的应许：纵横走遍 (13:14-18)",
+                    title_en: "God's Promise: Arise and Walk",
+                    verses: [
+                        {
+                            ref: "13:14-15",
+                            text_zh: "罗得离别亚伯兰以后，耶和华对亚伯兰说：“从你所在的地方，你举目向东西南北观看... 我都要赐给你和你的后裔...”",
+                            text_en: "The LORD said to Abram, after Lot had separated from him, 'Lift up your eyes and look from the place where you are, northward and southward and eastward and westward...'",
+                            exegesis: {
+                                title: "神视角的开启 (Divine Perspective)",
+                                content_zh: "注意时机：‘罗得离别以后’。分离虽然痛苦，但往往是神赐下新异象的前提。神邀请亚伯兰‘举目’（对比罗得之前的自己举目）。罗得只看到了约旦河平原，神却让亚伯兰看到了东西南北全地。你放弃的一小块，神用全世界来补偿。",
+                                content_en: "Timing: 'After Lot separated'. Separation clears the way for vision. God invites Abram to 'lift up eyes' (unlike Lot lifting his own). Lot saw one valley; God showed Abram all directions. What you give up, God compensates with the whole world."
+                            },
+                            devotional: {
+                                title: "分别是为了更深的祝福 (Separation for Blessing)",
+                                content_zh: "有些关系或事物的离开虽然令人心碎，但那可能是神在以此扩展你的境界。不要盯着罗得带走的那块地（失去的利益），要听神对你说的话。神给那些不争抢、单单信靠祂的人，预备了不可测度的丰盛。",
+                                content_en: "Heartbreaking separations may be God expanding your territory. Don't stare at what Lot took (the loss); listen to what God says. For those who trust and don't fight, God prepares immeasurable abundance."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard',
+            animationPlayed: false
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-stone-100 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-yellow-100 text-yellow-800 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-800">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-yellow-300 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: The Choice Simulator -->
+                    <div class="lg:col-span-5 bg-stone-900 text-white p-6 rounded-2xl shadow-lg flex flex-col relative overflow-hidden">
+                        <div class="z-10 w-full mb-2 flex justify-between items-center">
+                             <h3 class="text-lg font-bold text-yellow-300">
+                                分道扬镳 <span class="text-xs font-normal opacity-60 ml-2 en-text text-white">The Separation</span>
+                             </h3>
+                             <button onclick="playChoiceAnimation()" class="px-3 py-1 bg-yellow-700 hover:bg-yellow-600 text-xs rounded shadow transition">
+                                <i class="fas fa-play mr-1"></i> 重演抉择 Replay
+                             </button>
+                        </div>
+
+                        <!-- Split Path Canvas -->
+                        <div id="split-container" class="split-container w-full flex-grow relative mt-2 border border-stone-700">
+                             <!-- Nodes will be injected here -->
+                             <div class="absolute text-stone-500 text-xs text-center" style="top:50%; left:50%; transform:translate(-50%, -50%);" id="start-msg">
+                                点击播放以查看<br>Click Replay
+                             </div>
+                        </div>
+                        
+                        <div class="mt-3 text-center h-6">
+                            <p id="anim-status" class="text-xs text-stone-400 italic transition-all duration-300">Conflict arises...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-yellow-100 text-yellow-800 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-yellow-600">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            // Check if it's the specific verse about Lot's choice to apply special styling
+            let extraClass = '';
+            if (verse.ref.includes("13:10")) extraClass = 'lot-choice';
+            else if (verse.ref.includes("13:9")) extraClass = 'abram-choice';
+
+            return `
+                <div class="verse-card group ${extraClass}">
+                    <!-- Scripture Area -->
+                    <div class="bg-white/60 p-5 sm:p-6 border-b border-stone-200 relative">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-stone-700 text-white text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-stone-200 flex-grow mx-4"></div>
+                            <i class="fas fa-scroll text-stone-300 text-xl"></i>
+                        </div>
+                        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 font-medium">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-stone-600 opacity-80">
+                                <i class="fas fa-search mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文含义 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-stone-300/30">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-yellow-800 opacity-80">
+                                <i class="fas fa-church mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-yellow-900 mb-2 text-sm sm:text-base">${verse.devotional ? verse.devotional.title : 'Application'}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional ? verse.devotional.content_zh : ''}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-yellow-300/30">${verse.devotional ? verse.devotional.content_en : ''}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则总结</h2>
+                        <p class="text-stone-500 en-text">Methodology Summary</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-stone-600">
+                            <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center text-stone-700 text-xl mb-4">
+                                <i class="fas fa-glasses"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 经文原意 (Contextual Meaning)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Historical & Textual</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于分析经文中的地理、动作对比和关键词汇。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2 text-xs"></i> <span><strong>地理象征：</strong> 区分“下埃及/约旦平原”（世界）与“上伯特利/希伯伦”（应许地）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2 text-xs"></i> <span><strong>动作对比：</strong> 对比罗得的“举目”（Human Sight）与神的“叫亚伯拉罕举目”（Divine Vision）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-stone-500 mt-1 mr-2 text-xs"></i> <span><strong>原文细节：</strong> “挪移帐棚”表明堕落是渐进的过程。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-yellow-600">
+                            <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 text-xl mb-4">
+                                <i class="fas fa-praying-hands"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 灵修应用 (Spiritual Application)</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Personal & Practical</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                将经文中的选择场景投射到现代信徒的生活抉择中。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-yellow-600 mt-1 mr-2 text-xs"></i> <span><strong>价值观挑战：</strong> 在利益（约旦平原）与信仰（祭坛）冲突时，我们如何选择？</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-yellow-600 mt-1 mr-2 text-xs"></i> <span><strong>人际关系：</strong> 学习亚伯兰为了和平而放弃权利的胸怀。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-yellow-600 mt-1 mr-2 text-xs"></i> <span><strong>信心的回报：</strong> 相信看似吃亏的顺服，终将带来神更丰盛的赏赐。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Animation Logic ---
+        function playChoiceAnimation() {
+            const container = document.getElementById('split-container');
+            const status = document.getElementById('anim-status');
+            
+            // Clear previous
+            container.innerHTML = '';
+            
+            // Setup Elements
+            // Center Start Point
+            const startX = 50; 
+            const startY = 50; 
+
+            // Create Lines
+            // Line Left (Lot) - Goes to top left
+            const lineLeft = document.createElement('div');
+            lineLeft.className = 'path-line path-green';
+            lineLeft.style.left = '50%';
+            lineLeft.style.top = '50%';
+            lineLeft.style.transform = 'translateY(-50%) rotate(-150deg)'; // Angle towards top-left
+            container.appendChild(lineLeft);
+
+            // Line Right (Abram) - Goes to bottom right/straight
+            const lineRight = document.createElement('div');
+            lineRight.className = 'path-line path-gold';
+            lineRight.style.left = '50%';
+            lineRight.style.top = '50%';
+            lineRight.style.transform = 'translateY(-50%) rotate(30deg)'; // Angle towards right
+            container.appendChild(lineRight);
+
+            // Create Nodes
+            const nodeLeft = document.createElement('div');
+            nodeLeft.className = 'node node-green';
+            nodeLeft.style.left = '50%';
+            nodeLeft.style.top = '50%';
+            container.appendChild(nodeLeft);
+
+            const nodeRight = document.createElement('div');
+            nodeRight.className = 'node node-gold';
+            nodeRight.style.left = '50%';
+            nodeRight.style.top = '50%';
+            container.appendChild(nodeRight);
+
+            // Animation Sequence
+            status.innerText = "Conflict arises over land...";
+            
+            setTimeout(() => {
+                status.innerText = "Abram offers the choice...";
+            }, 1000);
+
+            setTimeout(() => {
+                status.innerText = "Lot chooses the lush plain (Sight)...";
+                lineLeft.style.width = '140px';
+                nodeLeft.style.opacity = '1';
+                // Animate node movement manually or via CSS transition associated with left/top change? 
+                // Using transform is smoother for lines, but for nodes let's just use simple transition if we calculate coords.
+                // Simplified: Just use transition on left/top is tricky with rotation.
+                // Let's keep it simple: Expand line, and place a node at the end.
+                
+                // Hack for visual simplicity: just place destination nodes and fade them in
+                const destLeft = document.createElement('div');
+                destLeft.className = 'node node-green';
+                destLeft.style.left = '15%'; // Adjusted based on rotation visual
+                destLeft.style.top = '20%';
+                destLeft.style.opacity = '0';
+                container.appendChild(destLeft);
+                
+                // Label Lot
+                const labelLeft = document.createElement('div');
+                labelLeft.className = 'label-tag bg-green-tag';
+                labelLeft.innerHTML = 'Lot: Sodom<br><span style="font-size:8px; font-weight:normal">Looks like Eden</span>';
+                labelLeft.style.left = '15%';
+                labelLeft.style.top = '20%';
+                container.appendChild(labelLeft);
+
+                setTimeout(() => {
+                    destLeft.style.opacity = '1';
+                    labelLeft.style.opacity = '1';
+                    // Sparkles on Green
+                    for(let i=0; i<5; i++) {
+                        let s = document.createElement('div');
+                        s.className = 'sparkle';
+                        s.style.left = (15 + (Math.random()*10 - 5)) + '%';
+                        s.style.top = (20 + (Math.random()*10 - 5)) + '%';
+                        container.appendChild(s);
+                    }
+                }, 1000);
+
+            }, 2000);
+
+            setTimeout(() => {
+                status.innerText = "Abram stays in Canaan (Faith)...";
+                lineRight.style.width = '140px';
+                
+                const destRight = document.createElement('div');
+                destRight.className = 'node node-gold';
+                destRight.style.left = '85%'; 
+                destRight.style.top = '80%';
+                destRight.style.opacity = '0';
+                container.appendChild(destRight);
+
+                // Label Abram
+                const labelRight = document.createElement('div');
+                labelRight.className = 'label-tag bg-gold-tag';
+                labelRight.innerHTML = 'Abram: Hebron<br><span style="font-size:8px; font-weight:normal">God\'s Promise</span>';
+                labelRight.style.left = '85%';
+                labelRight.style.top = '80%';
+                container.appendChild(labelRight);
+
+                setTimeout(() => {
+                    destRight.style.opacity = '1';
+                    labelRight.style.opacity = '1';
+                    status.innerText = "God speaks: 'Lift up your eyes...'";
+                    
+                    // Expansion Ring
+                    const ring = document.createElement('div');
+                    ring.style.position = 'absolute';
+                    ring.style.left = '85%';
+                    ring.style.top = '80%';
+                    ring.style.width = '10px';
+                    ring.style.height = '10px';
+                    ring.style.border = '2px solid #fde047';
+                    ring.style.borderRadius = '50%';
+                    ring.style.transform = 'translate(-50%, -50%)';
+                    ring.style.transition = 'all 1s ease-out';
+                    ring.style.opacity = '1';
+                    container.appendChild(ring);
+                    
+                    setTimeout(() => {
+                        ring.style.width = '300px';
+                        ring.style.height = '300px';
+                        ring.style.opacity = '0';
+                    }, 100);
+
+                }, 1000);
+
+            }, 4000);
+        }
+
+    </script>
+</body>
+</html>

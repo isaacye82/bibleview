@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haggai 2: Shaking & Glory | 哈该书第二章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Silver & Gold (v8) */
+            --theme-gold: #d97706; /* Amber 600 */
+            --theme-gold-light: #fef3c7; /* Amber 100 */
+            /* Royal / Signet Ring (v23) */
+            --theme-royal: #581c87; /* Purple 900 */
+            /* Shaking / Dust */
+            --theme-shake: #475569; /* Slate 600 */
+            --theme-bg: #f8fafc; /* Slate 50 */
+            /* Text */
+            --theme-text: #1e293b; /* Slate 800 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Subtle marble texture for temple feel */
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .en-title {
+            font-family: 'Cinzel', serif;
+        }
+
+        .en-text {
+            font-family: 'Lato', sans-serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-royal);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-gold);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(88, 28, 135, 0.1);
+            border-color: var(--theme-gold);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Shaking Animation */
+        .shake-element {
+            animation: shake 3s infinite ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+            20%, 40%, 60%, 80% { transform: translateX(2px); }
+        }
+
+        /* Glow Animation for Glory */
+        .glory-pulse {
+            animation: glory 3s infinite alternate;
+        }
+        @keyframes glory {
+            from { box-shadow: 0 0 10px rgba(217, 119, 6, 0.2); }
+            to { box-shadow: 0 0 25px rgba(217, 119, 6, 0.6); }
+        }
+
+        /* Ring Stamp Animation */
+        .stamp-anim {
+            animation: stamp 1s ease-out forwards;
+            opacity: 0;
+            transform: scale(3);
+        }
+        @keyframes stamp {
+            0% { opacity: 0; transform: scale(3); }
+            50% { opacity: 1; transform: scale(1); }
+            60% { transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center mr-3 text-amber-700 border border-amber-200">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-slate-800 serif flex flex-col leading-none">
+                        <span>哈该书 <span class="text-purple-800">2章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-slate-500 en-title tracking-widest mt-1">GLORY & THE SEAL</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium text-slate-600">
+                        <i class="fas fa-globe-americas block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium text-slate-600">
+                        <i class="fas fa-book-reader block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium text-slate-600">
+                        <i class="fas fa-lightbulb block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1e1b4b] text-slate-400 mt-auto border-t-4 border-amber-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-amber-100 mb-1">"这殿后来的荣耀必大过先前的荣耀。"</p>
+            <p class="text-xs italic opacity-60 en-text">"The latter glory of this house shall be greater than the former." (Haggai 2:9)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "震动天地与后来的荣耀",
+                title_en: "Shaking Heavens & Latter Glory",
+                summary_zh: "哈该书第2章处理了重建过程中三个核心危机：1. **失望**（新殿不如旧殿辉煌）；2. **污秽**（百姓不洁的手是否会玷污圣工）；3. **动荡**（国际局势的震动）。神通过哈该回应：不要看外表的辉煌，因为神将震动万国，运来万国的珍宝填满这殿。本章以“印戒”（Signet Ring）的应许结束，预示了弥赛亚君王的坚立。",
+                summary_en: "Haggai 2 addresses three crises in rebuilding: 1. **Discouragement** (New temple seemed inferior); 2. **Defilement** (Does uncleanness spread?); 3. **Instability** (Shaking of nations). God answers: Look not at outer appearance; I will shake nations and fill this house with glory. It concludes with the promise of the 'Signet Ring', foretelling the Messianic King.",
+                concepts: [
+                    {
+                        title: "刚强", title_en: "Be Strong", hebrew: "Chazaq",
+                        icon: "fa-fist-raised", color: "text-amber-700",
+                        desc_zh: "在第4节出现了三次“当刚强”。这不是心理暗示，而是基于“我与你们同在”的命令。当神同在时，软弱的人也能刚强做工。",
+                        desc_en: "Used 3 times in v4. Not positive thinking, but a command based on 'I am with you.' With God's presence, the weak can work strongly."
+                    },
+                    {
+                        title: "震动", title_en: "Shake", hebrew: "Ra'ash",
+                        icon: "fa-earth-americas", color: "text-slate-600",
+                        desc_zh: "神不仅是建造者，也是震动者。祂震动自然界和政治局势（万国），目的是使那些不被震动的（神的国）显露出来，并将万国的珍宝运来。",
+                        desc_en: "God is also the Shaker. He shakes nature and nations to reveal the unshakable Kingdom and bring in the treasures of the nations."
+                    },
+                    {
+                        title: "印戒", title_en: "Signet Ring", hebrew: "Chotam",
+                        icon: "fa-ring", color: "text-purple-800",
+                        desc_zh: "古代君王权柄的象征。神曾拔出哥尼雅（耶哥尼雅）这印戒（耶22），如今却透过所罗巴伯重新戴上。这是对大卫之约的恢复。",
+                        desc_en: "Symbol of royal authority. God once pulled off Coniah (Jer 22) but now reinstates the line through Zerubbabel. Restoration of the Davidic Covenant."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "荣耀的对比：不要轻看微小的开始 (2:1-9)",
+                    title_en: "Comparison of Glories: Do Not Despise",
+                    verses: [
+                        {
+                            ref: "2:3, 9",
+                            text_zh: "你们中间...见过这殿从前的荣耀...如今在你们眼中岂不是如无有吗？...这殿后来的荣耀必大过先前的荣耀。",
+                            text_en: "Who is left among you who saw this house in its former glory? How do you see it now? Is it not as nothing in your eyes?... The latter glory of this house shall be greater than the former.",
+                            exegesis: {
+                                title: "神视角的价值 (God's Valuation)",
+                                content_zh: "老一代人因为见过所罗门圣殿的宏伟，看到眼前寒酸的地基就哭了（拉3:12）。在他们眼中这是“无有”（Nothing）。但神更正了他们的价值观：圣殿的荣耀不在于金银（因为金银本来就是神的，v8），而在于神的同在与平安（Shalom）。“后来的荣耀”最终指向耶稣基督——道成肉身亲自进入这殿。",
+                                content_en: "Elders wept comparing the new foundation to Solomon's temple; it looked like 'nothing'. God corrects them: Glory isn't gold/silver (He owns them anyway, v8), but His Presence and Peace (Shalom). The 'latter glory' points ultimately to Christ entering the temple."
+                            },
+                            devotional: {
+                                title: "克服“比较”带来的瘫痪 (Paralysis by Comparison)",
+                                content_zh: "你是否常觉得现在的服事、工作或生活“不如从前”或“不如别人”？这种比较会让你瘫痪。神说：“当刚强！不要怕！”不要轻看微小的开始。神看重的是顺服，而不是规模。只要有神的同在，看似“无有”的工作也能承载极大的荣耀。",
+                                content_en: "Do you feel your current work/life is 'nothing' compared to the past or others? Comparison paralyzes. God says: 'Be strong!' Don't despise small beginnings. God values obedience, not scale. With His presence, 'nothing' can carry weight of glory."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "圣洁律法：罪的传染性 (2:10-19)",
+                    title_en: "Law of Holiness: Contagion of Sin",
+                    verses: [
+                        {
+                            ref: "2:12-14",
+                            text_zh: "若有人...挨了...算为圣吗？祭司说：不算为圣...若有人...挨了死尸...算为污秽吗？祭司说：必算为污秽。",
+                            text_en: "'If one carries holy meat... does it become holy?' The priests answered, 'No.' ... 'If one who is unclean touches any of these, does it become unclean?' The priests answered, 'It does become unclean.'",
+                            exegesis: {
+                                title: "不对称的传递 (Asymmetric Transfer)",
+                                content_zh: "这是一段精彩的律法问答。结论是：**圣洁不会传染，但污秽会传染。** 把圣肉放在衣服里，衣服不会变圣；但污秽的人摸了圣物，圣物就脏了。经文含义：百姓之前的劳碌之所以无效，是因为他们带着不顺服（污秽）的心去工作。如果不先解决“心”的问题，再多的宗教活动（祭祀）也是污秽的。",
+                                content_en: "Key legal principle: **Holiness is not contagious, but defilement is.** Carrying holy meat doesn't sanitize your pocket; but a dirty hand dirties the meat. Meaning: Their work was futile because their hearts were disobedient. Religious activity without a clean heart is just 'piling up uncleanness'."
+                            },
+                            devotional: {
+                                title: "别指望“蹭”出来的圣洁 (Holiness by Association)",
+                                content_zh: "我们常误以为只要常去教会、常和基督徒在一起，自己就会自动变好（被传染圣洁）。但哈该提醒我们：坏习惯和罪的传染力远比好习惯强。除非你的心被神亲自触摸并回转，否则环境救不了你。好消息是，第19节神说“从今日起，我必赐福”，只要回转，恩典立即开始。",
+                                content_en: "We think hanging out at church makes us holy by osmosis. Haggai warns: sin spreads faster than virtue. Environment won't save you unless your heart turns. The Good News: 'From this day on I will bless you' (v19)—grace starts the moment you turn."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "终极应许：不可震动的印戒 (2:20-23)",
+                    title_en: "Final Promise: The Unshakable Signet Ring",
+                    verses: [
+                        {
+                            ref: "2:21, 23",
+                            text_zh: "我必震动天地...我必以你为印戒；因我拣选了你。这是万军之耶和华说的。",
+                            text_en: "I am about to shake the heavens and the earth... I will make you like a signet ring, for I have chosen you, declares the LORD of hosts.",
+                            exegesis: {
+                                title: "恢复大卫的约 (Restoring the Covenant)",
+                                content_zh: "在万国被震动（政治动荡）的背景下，神给所罗巴伯一个极其个人的应许。“印戒”代表君王的权柄和私人所有权。耶利米书22:24曾记载神因罪把约雅敬像印戒一样“摘下来”，现在神通过所罗巴伯逆转了这个咒诅。这最终指向耶稣基督——那位在此世动荡中掌权的大卫后裔。",
+                                content_en: "Against the backdrop of shaking nations, a personal promise to Zerubbabel. 'Signet Ring' = authority/ownership. Reverses the curse of Jer 22:24 (where God pulled off Coniah). Typologically points to Christ, the Davidic King who reigns amidst cosmic shaking."
+                            },
+                            devotional: {
+                                title: "在震动中被神“戴上” (Worn by God)",
+                                content_zh: "世界正在震动（经济危机、战争、疫情），看似没有任何安全的地方。但神对属祂的人说：“我以你为印戒。”这意味着你被神像戒指一样戴在手上——被祂贴身保护，代表祂的权柄，且被祂视若珍宝。当世界分崩离析时，你是被那位掌管震动的主所抓住的。",
+                                content_en: "The world is shaking (economy, war). Where is safety? God says: 'I make you like a signet ring.' You are worn by God—kept close, representing His authority, cherished. When the world falls apart, you are held by the Hand that shakes the universe."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-slate-600');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-slate-600');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+                        <!-- Shaking Background Effect -->
+                        <div class="absolute inset-0 opacity-10 pointer-events-none">
+                            <i class="fas fa-mountain absolute top-10 left-10 text-9xl text-slate-400 shake-element"></i>
+                            <i class="fas fa-water absolute bottom-10 right-10 text-8xl text-slate-400 shake-element" style="animation-delay: 1s"></i>
+                        </div>
+
+                        <div class="relative z-10">
+                            <span class="inline-block px-3 py-1 bg-amber-100 text-amber-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Chapter Theme</span>
+                            <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 serif mb-2">${chapterData.intro.title}</h1>
+                            <h2 class="text-lg text-slate-500 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                            <p class="text-sm text-slate-600 leading-relaxed border-l-4 border-amber-500 pl-4 text-justify mb-6">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+
+                            <!-- Interactive Ring -->
+                            <div class="flex items-center justify-center sm:justify-start mt-8">
+                                <div class="relative w-24 h-24 sm:w-32 sm:h-32 bg-purple-900 rounded-full flex items-center justify-center text-amber-400 shadow-xl cursor-pointer group hover:scale-105 transition duration-500" onclick="this.querySelector('.stamp').classList.add('stamp-anim')">
+                                    <div class="absolute inset-0 border-4 border-amber-500 rounded-full opacity-50"></div>
+                                    <i class="fas fa-fingerprint text-4xl sm:text-5xl group-hover:opacity-0 transition"></i>
+                                    <div class="stamp absolute text-xs font-bold text-amber-100 opacity-0 border-2 border-amber-100 p-2 rounded rotate-[-15deg]">ZERUBBABEL<br>CHOSEN</div>
+                                    <p class="absolute -bottom-8 text-[10px] text-slate-400 font-mono">CLICK THE SEAL</p>
+                                </div>
+                                <div class="ml-6">
+                                    <h4 class="font-bold text-purple-900">The Signet Ring</h4>
+                                    <p class="text-xs text-slate-500 max-w-xs">God's guarantee of personal security amidst global shaking.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <div class="bg-slate-800 text-slate-200 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center glory-pulse">
+                            <i class="fas fa-star text-3xl text-amber-400 mb-2"></i>
+                            <h3 class="font-bold text-lg text-amber-100">Greater Glory</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">In this place, Peace</p>
+                        </div>
+                        <div class="bg-white border border-slate-200 text-slate-600 rounded-xl p-6 shadow-sm flex-1 flex flex-col justify-center items-center text-center">
+                            <i class="fas fa-hand-sparkles text-3xl text-slate-400 mb-2"></i>
+                            <h3 class="font-bold text-lg">Clean Hands</h3>
+                            <p class="text-xs text-slate-400 uppercase tracking-widest">Holiness > Ritual</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Key Keywords</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition group">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:scale-110 transition"></i>
+                                        <h4 class="font-bold text-slate-700">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-slate-600 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-amber-500 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-slate-200 pb-2">
+                            <div class="w-8 h-8 rounded bg-slate-100 text-slate-600 flex items-center justify-center text-xs mr-3 font-bold"><i class="fas fa-scroll"></i></div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">${section.title}</h3>
+                                <p class="text-xs text-slate-400 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-slate-50 border-b border-slate-100 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-slate-500 bg-white border border-slate-200 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-slate-800 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-slate-500 text-sm italic en-text pl-3 border-l-2 border-amber-300">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-slate-100 flex items-center justify-center mr-2 text-slate-500 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-widest">经文含义 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-slate-800 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-slate-400 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-amber-50/30">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-amber-100 flex items-center justify-center mr-2 text-amber-600 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-amber-600 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-amber-800 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-amber-700/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-slate-800 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-slate-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-slate-500">
+                            <div class="mb-4 text-slate-600 text-2xl"><i class="fas fa-balance-scale-right"></i></div>
+                            <h3 class="font-bold text-slate-800 mb-2">律法原则引申 (Legal Principles)</h3>
+                            <p class="text-sm text-slate-600 mb-3 text-justify">
+                                哈该书第2章使用了祭司律法（洁净的传递性）来解释属灵现实。解经时要准确理解律法背景（利未记），然后将其原则化：**外在的接触不能解决内在的污秽**。
+                            </p>
+                            <div class="bg-slate-50 p-2 rounded text-xs text-slate-500 italic">
+                                <strong>Rule:</strong> Defilement spreads; Holiness does not.
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-800">
+                            <div class="mb-4 text-purple-900 text-2xl"><i class="fas fa-history"></i></div>
+                            <h3 class="font-bold text-slate-800 mb-2">救赎历史的逆转 (Redemptive Reversal)</h3>
+                            <p class="text-sm text-slate-600 mb-3 text-justify">
+                                灵修不仅是个人感受，更要看到神宏大的救赎计划。通过“印戒”的比喻，神逆转了耶利米书中的咒诅。我们要教导信徒看到：**神是逆转咒诅、恢复位份的神**。
+                            </p>
+                            <div class="bg-purple-50 p-2 rounded text-xs text-purple-800 italic">
+                                <strong>Hope:</strong> God restores what sin has discarded.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

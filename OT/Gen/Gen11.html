@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis 11: Babel & Dispersion | 创世记第11章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* Typography */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Burnt Brick - Human Ambition */
+            --theme-primary: #9a3412; /* Orange 800 */
+            /* Bitumen/Mortar - Materialism */
+            --theme-secondary: #44403c; /* Stone 700 */
+            /* Heaven/Dispersion - Divine Intervention */
+            --theme-accent: #e0f2fe; /* Sky 100 */
+            /* Sandy Background */
+            --theme-bg: #fffbf5;
+            /* Text Color */
+            --theme-text: #292524;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            overflow-x: hidden; /* Prevent horizontal scroll from animations */
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* --- Navigation --- */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* --- Components --- */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #fed7aa;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        .verse-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -5px rgba(154, 52, 18, 0.15);
+            border-color: var(--theme-primary);
+        }
+
+        .exegesis-box {
+            background-color: #fff7ed; /* Orange 50 */
+            border-left: 4px solid #c2410c; /* Orange 700 */
+        }
+        
+        .devotional-box {
+            background-color: #f8fafc; /* Slate 50 */
+            border-left: 4px solid #475569; /* Slate 600 */
+        }
+
+        /* --- Animations --- */
+        .fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tower Animation CSS */
+        .tower-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+        
+        .brick {
+            width: 40px;
+            height: 20px;
+            background-color: #9a3412;
+            border: 1px solid #7c2d12;
+            position: absolute;
+            opacity: 0;
+            border-radius: 2px;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+        }
+
+        /* Animation Keyframes defined in JS for dynamic control */
+
+        .scatter-text {
+            display: inline-block;
+            transition: transform 1s ease, opacity 1s ease;
+        }
+        .scattered .scatter-text {
+            opacity: 0.5;
+            /* transform set via inline style in JS */
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-orange-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-orange-900 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-layer-group mr-2 text-stone-600"></i> 创世记 11章</span>
+                        <span class="text-[10px] sm:text-xs text-orange-800/80 en-text font-normal ml-8">Genesis Chapter 11</span>
+                    </span>
+                </div>
+                <div class="flex space-x-2 sm:space-x-8 items-center">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-3 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-orange-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn px-3 py-2 text-xs sm:text-sm text-stone-500 hover:text-orange-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        <!-- Injected via JS -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#292524] text-stone-400 mt-auto border-t-4 border-orange-800">
+        <div class="max-w-6xl mx-auto py-10 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-orange-100 mb-1">"耶和华在那里变乱天下人的言语。"</p>
+            <p class="text-xs sm:text-sm italic text-stone-500 mb-4 en-text">"Therefore its name was called Babel, because there the LORD confused the language of all the earth."</p>
+            <p class="text-[10px] sm:text-xs opacity-60">创世记第11章中英对照研经报告 | Babel & The Seed of Hope</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data Store ---
+        const chapterData = {
+            intro: {
+                title: "巴别塔：人类的傲慢与神的护理",
+                title_en: "Babel: Human Pride and Divine Providence",
+                summary_zh: "第11章是圣经太古史（1-11章）的终局，也是救赎历史的转折点。它描述了人类试图通过技术（烧砖）和集体力量（建塔）来“传扬我们的名”，但这导致了分散。然而，本章并非以绝望结束，而是以闪的家谱结束，静静地指向亚伯拉罕——神对巴别塔问题的最终解答。",
+                summary_en: "Chapter 11 is the finale of the Primeval History (Ch 1-11) and the pivot of redemptive history. It depicts humanity attempting to 'make a name' through technology (bricks) and collective power (the tower), resulting in dispersion. Yet, it ends not in despair but with Shem's genealogy, quietly pointing to Abraham—God's answer to Babel.",
+                concepts: [
+                    { 
+                        title: "聚拢 vs 分散", 
+                        title_en: "Gathering vs Scattering", 
+                        icon: "fa-compress-arrows-alt",
+                        color: "text-orange-700", 
+                        bg: "bg-orange-50", 
+                        desc_zh: "人想违背神“遍满地面”的命令强行聚拢，结果却被神强行分散。", 
+                        desc_en: "Man tried to gather in defiance of God's command to fill the earth; God scattered them." 
+                    },
+                    { 
+                        title: "传名 vs 赐名", 
+                        title_en: "Make a Name vs Given Name", 
+                        icon: "fa-signature",
+                        color: "text-stone-700", 
+                        bg: "bg-stone-100", 
+                        desc_zh: "巴别塔是人想要“为自己立名”；而紧接的第12章，是神承诺要“叫亚伯拉罕的名为大”。", 
+                        desc_en: "Babel is man trying to 'make a name'; Chapter 12 is God promising to 'make Abraham's name great'." 
+                    },
+                    { 
+                        title: "砖头 vs 石头", 
+                        title_en: "Brick vs Stone", 
+                        icon: "fa-cubes",
+                        color: "text-red-800", 
+                        bg: "bg-red-50", 
+                        desc_zh: "烧砖代表了人类技术的巅峰与人造的替代品，试图取代神所造的石头。", 
+                        desc_en: "Bricks represent the peak of human tech and man-made substitutes for God-given stone." 
+                    }
+                ]
+            },
+            sections: [
+                {
+                    id: "project",
+                    title: "人类的计划：统一与傲慢 (11:1-4)",
+                    title_en: "The Human Project: Unity & Pride",
+                    verses: [
+                        {
+                            ref: "11:3-4",
+                            text_zh: "他们彼此商量说：“来吧！我们要作砖，把砖烧透了。”... “来吧！我们要建造一座城和一座塔，塔顶通天，为要传扬我们的名，免得我们分散在全地上。”",
+                            text_en: "They said to one another, 'Come, let us make bricks, and burn them thoroughly.' ... 'Come, let us build ourselves a city and a tower with its top in the heavens, and let us make a name for ourselves, lest we be dispersed over the face of the whole earth.'",
+                            exegesis: {
+                                title: "技术至上与人文主义 (Technocracy & Humanism)",
+                                content_zh: "“作砖”是人类技术的重大突破（美索不达米亚平原缺乏石头）。这里强调了双重的“来吧”（Haba）：第一次是为了技术（造砖），第二次是为了政治（建城/塔）。“塔顶通天”反映了古代近东的庙塔（Ziggurat）观念，意图跨越神人的界限。“传扬我们的名”是典型的人本主义宣言——寻找在神以外的安全感和永恒。",
+                                content_en: "'Make bricks' marks a technological leap. The double 'Come' signals technological then political ambition. 'Top in the heavens' reflects the Ziggurat mindset—breaching the divine-human boundary. 'Make a name' is the manifesto of humanism—seeking security and eternity apart from God."
+                            },
+                            devotional: {
+                                title: "你在建造什么塔？ (What Tower Are You Building?)",
+                                content_zh: "我们每个人心中都有一个“巴别塔”项目。它可能是你的事业成就、完美的家庭形象，或者是社交媒体上的关注度。我们试图通过这些来确立自己的“名声”和安全感。问问自己：我现在的努力是为了彰显神的荣耀，还是为了证明自己的价值？任何没有神参与的“统一”和“建造”，最终都难逃倒塌的命运。",
+                                content_en: "We all have a 'Babel project'—career success, a perfect family image, or social media fame. We try to establish our 'name' and security through them. Ask yourself: Is my effort to glorify God or prove my worth? Any unity or building without God is destined to fall."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "intervention",
+                    title: "神的介入：讽刺与审判 (11:5-9)",
+                    title_en: "Divine Intervention: Irony & Judgment",
+                    verses: [
+                        {
+                            ref: "11:5",
+                            text_zh: "耶和华降临，要看看世人所建造的城和塔。",
+                            text_en: "And the LORD came down to see the city and the tower, which the children of man had built.",
+                            exegesis: {
+                                title: "巨大的讽刺 (The Great Irony)",
+                                content_zh: "这是一处极具讽刺意味的拟人化描写。人类以为造了一座“通天”的高塔，但在至高的神眼里，这塔渺小到祂必须“降临”（弯腰下来）才能看见。这极其生动地对比了人类的狂妄与神的超越。作者在此嘲弄了古代近东帝国虚假的伟大。",
+                                content_en: "A massive irony. Humans thought they built a tower reaching heaven, but to the Most High, it was so tiny He had to 'come down' to see it. This vividly contrasts human hubris with God's transcendence, mocking the false gandeaur of ancient empires."
+                            },
+                            devotional: {
+                                title: "当计划受阻时 (When Plans Are Frustrated)",
+                                content_zh: "神变乱口音、阻挡建塔，表面是审判，实则是恩典。因为神知道，若任凭人类在罪恶中团结一致，将带来更大的毁灭（“以后他们所要做的事就没有不成就的了”）。当你的人生计划受阻、沟通出现障碍时，不要急着抱怨。也许是神“降临”在他的怜悯中，阻止你走向一条自我毁灭的成功之路。",
+                                content_en: "God confusing languages seems like judgment, but it's grace. He knew united sin leads to greater destruction. When your plans are blocked or communication fails, don't rush to complain. Perhaps God 'came down' in mercy to stop you from a self-destructive success."
+                            }
+                        },
+                        {
+                            ref: "11:9",
+                            text_zh: "因为耶和华在那里变乱天下人的言语... 所以那城名叫巴别（就是变乱的意思）。",
+                            text_en: "Therefore its name was called Babel, because there the LORD confused the language of all the earth.",
+                            exegesis: {
+                                title: "巴别的双重含义 (Double Meaning of Babel)",
+                                content_zh: "在巴比伦语中，Babilu 意为“神之门”（Gate of God）；但在希伯来语中，Babel 听起来像 Balal（变乱/混淆）。圣经作者用希伯来语的谐音双关，揭露了世界的真相：世界自以为是通向神的门，实际上却是混乱的源头。",
+                                content_en: "In Babylonian, *Babilu* means 'Gate of God'; in Hebrew, *Babel* sounds like *Balal* (confused). The biblical author uses this pun to expose the truth: what the world calls the gateway to divinity is actually the source of confusion."
+                            },
+                            devotional: {
+                                title: "只有一种语言能合一 (Only One Language Unites)",
+                                content_zh: "巴别塔导致了语言的分裂，但在新约的五旬节（使徒行传2章），圣灵赐下，虽然方言众多，人却能听懂福音。这告诉我们：通过政治或利益强行统一只会带来混乱；唯有在圣灵和真理中的合一，才是真正的恢复。在你的家庭或团队中，试着少用“权柄的语言”，多用“爱的语言”。",
+                                content_en: "Babel fractured language; Pentecost (Acts 2) healed it through the Spirit. Forced political unity brings chaos; only unity in Spirit and Truth restores. In your family or team, try using less 'language of power' and more 'language of love'."
+                            }
+                        }
+                    ]
+                },
+                {
+                    id: "genealogy",
+                    title: "希望的种子：闪的后代 (11:10-32)",
+                    title_en: "The Seed of Hope: Shem's Line",
+                    verses: [
+                        {
+                            ref: "11:27, 31",
+                            text_zh: "他拉的后代记在下面... 他拉带着他儿子亚伯兰... 出了迦勒底的吾珥，要往迦南地去。",
+                            text_en: "Now these are the generations of Terah... Terah took Abram his son... and they went forth together from Ur of the Chaldeans to go into the land of Canaan.",
+                            exegesis: {
+                                title: "从宏大叙事到微小恩典 (From Macro to Micro)",
+                                content_zh: "前11章关注全世界（万国），11章末尾镜头突然推近到一个不知名的家庭（他拉和亚伯兰）。这是圣经叙事的重大转折：神放弃了改良“大帝国”的模式，转而呼召“一个人”。救赎不是通过宏伟的塔，而是通过一个流浪的家庭来实现。吾珥是当时高度文明的月神崇拜中心，离开吾珥意味着切断与巴别文化的联系。",
+                                content_en: "The lens shifts from the whole world to one obscure family. This is the pivot: God stops trying to fix 'Empres' and calls 'One Man'. Redemption comes not through a grand tower, but a wandering family. Leaving Ur means cutting ties with the Babel culture."
+                            },
+                            devotional: {
+                                title: "你的平庸中有神的历史 (God's History in Your Mundane)",
+                                content_zh: "这段家谱读起来枯燥乏味，充满了生僻的名字和生卒年份。但正是在这些看似平庸的代代相传中，神保存了救赎的种子，直到亚伯拉罕，最终直到基督。不要轻看你平凡的日子和家庭责任。你对孩子的教导、你对信仰的持守，都是神宏大救赎历史中不可或缺的链条。",
+                                content_en: "Genealogies seem boring, but they hide the thread of grace. Through these mundane generations, God preserved the seed leading to Abraham and Christ. Don't despise your ordinary days. Your parenting and faithfulness are vital links in God's grand history."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = {
+            view: 'dashboard'
+        };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderDashboard();
+        });
+
+        // --- Navigation Logic ---
+        function navigate(view) {
+            appState.view = view;
+            
+            // Update Tab UI
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            const activeBtn = document.getElementById(`nav-${view}`);
+            activeBtn.classList.add('active-tab');
+            activeBtn.classList.remove('text-stone-500');
+
+            const container = document.getElementById('app-content');
+            
+            // Transition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(10px)';
+            container.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+            
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                
+                // Fade in
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+                window.scrollTo(0,0);
+            }, 300);
+        }
+
+        // --- Render Functions ---
+
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8 fade-in">
+                    <!-- Intro Section -->
+                    <div class="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-orange-100 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center mb-4">
+                                <span class="bg-stone-800 text-orange-50 text-[10px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide mr-3">Core Theme</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold serif text-stone-800">${chapterData.intro.title}</h2>
+                            </div>
+                            <h3 class="text-base sm:text-lg text-stone-500 font-serif italic mb-6 en-text">${chapterData.intro.title_en}</h3>
+                            <p class="text-stone-700 leading-relaxed mb-6 text-sm sm:text-base text-justify">
+                                ${chapterData.intro.summary_zh}
+                            </p>
+                            <p class="text-stone-500 leading-relaxed text-xs sm:text-sm italic en-text border-l-4 border-stone-300 pl-4 text-justify">
+                                ${chapterData.intro.summary_en}
+                            </p>
+                        </div>
+                        <!-- Background Texture -->
+                        <div class="absolute right-0 bottom-0 opacity-5 text-9xl text-orange-900 pointer-events-none">
+                            <i class="fas fa-gopuram"></i>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Visual: The Tower & Dispersion -->
+                    <div class="lg:col-span-5 bg-gradient-to-b from-[#292524] to-[#1c1917] text-white p-6 rounded-2xl shadow-lg flex flex-col items-center justify-between relative overflow-hidden h-[400px]">
+                        <!-- Title Area -->
+                        <div class="z-10 text-center w-full">
+                             <h3 class="text-lg font-bold text-orange-200 border-b border-orange-900/50 pb-2 inline-block">
+                                建造与变乱 <span class="text-xs font-normal opacity-60 ml-2 en-text">Building & Confusion</span>
+                             </h3>
+                        </div>
+
+                        <!-- Animation Container -->
+                        <div id="tower-scene" class="tower-container z-0">
+                            <!-- Bricks will be injected here -->
+                        </div>
+                        
+                        <!-- Overlay Text -->
+                        <div id="babel-text" class="z-10 text-center mt-4 h-16 flex items-center justify-center">
+                            <span class="scatter-text text-2xl font-bold text-orange-500 mx-1">统</span>
+                            <span class="scatter-text text-2xl font-bold text-orange-500 mx-1">一</span>
+                            <span class="scatter-text text-xs text-stone-500 mx-2 en-text">UNITY</span>
+                        </div>
+
+                        <div class="z-10 w-full mt-4">
+                             <button onclick="toggleTowerAnimation()" class="w-full py-2 bg-orange-900/50 hover:bg-orange-800/80 border border-orange-700 rounded text-xs text-orange-200 transition">
+                                <i class="fas fa-play mr-2"></i> 重演历史 Replay History
+                             </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Concept Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-in" style="animation-delay: 0.2s">
+                    ${chapterData.intro.concepts.map((c, i) => `
+                        <div class="${c.bg} p-5 rounded-xl border border-white/50 flex flex-col items-start transition hover:shadow-md group h-full">
+                            <div class="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm mb-3 text-lg ${c.color}">
+                                <i class="fas ${c.icon}"></i>
+                            </div>
+                            <h4 class="font-bold ${c.color} text-base mb-1 group-hover:translate-x-1 transition-transform">${c.title}</h4>
+                            <p class="text-[10px] sm:text-xs text-stone-500 font-serif mb-2 en-text italic">${c.title_en}</p>
+                            <div class="w-full h-px bg-current opacity-10 mb-2"></div>
+                            <p class="text-xs text-stone-700 leading-snug mb-1">${c.desc_zh}</p>
+                            <p class="text-[10px] text-stone-500 leading-snug opacity-80 en-text mt-auto pt-2">${c.desc_en}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Start animation after render
+            setTimeout(startTowerAnimation, 500);
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            const headerHTML = `
+                <div class="text-center mb-10 fade-in">
+                    <span class="inline-block p-3 rounded-full bg-orange-100 text-orange-800 text-xl mb-3 shadow-sm"><i class="fas fa-book-open"></i></span>
+                    <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读与灵修</h2>
+                    <p class="text-sm text-stone-500 en-text italic mt-1">Verse-by-Verse Exegesis & Devotion</p>
+                </div>
+            `;
+
+            let sectionsHTML = '';
+            chapterData.sections.forEach((section, index) => {
+                sectionsHTML += `
+                    <div class="max-w-4xl mx-auto mb-16 fade-in" style="animation-delay: ${index * 0.15}s">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-6 pl-2 border-l-4 border-orange-300">
+                            <div>
+                                <h3 class="text-lg sm:text-xl font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs sm:text-sm text-stone-500 font-serif italic en-text">${section.title_en}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Cards Stack -->
+                        <div class="space-y-6">
+                            ${section.verses.map(verse => createVerseCard(verse)).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = headerHTML + sectionsHTML;
+        }
+
+        function createVerseCard(verse) {
+            return `
+                <div class="verse-card group">
+                    <!-- Scripture Area -->
+                    <div class="bg-white p-5 sm:p-6 border-b border-orange-100">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2 py-1 bg-stone-800 text-orange-50 text-[10px] font-bold rounded font-mono">${verse.ref}</span>
+                            <div class="h-px bg-orange-100 flex-grow mx-4"></div>
+                            <i class="fas fa-quote-right text-orange-200 text-xl"></i>
+                        </div>
+                        <p class="text-stone-800 font-serif text-lg leading-relaxed mb-3">
+                            ${verse.text_zh}
+                        </p>
+                        <p class="text-stone-500 font-serif text-sm italic en-text">
+                            ${verse.text_en}
+                        </p>
+                    </div>
+
+                    <!-- Interpretation Area -->
+                    <div class="grid grid-cols-1 md:grid-cols-2">
+                        <!-- Exegesis Block -->
+                        <div class="exegesis-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-orange-800 opacity-80">
+                                <i class="fas fa-glasses mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">经文原意 Meaning</h4>
+                            </div>
+                            <h5 class="font-bold text-orange-900 mb-2 text-sm sm:text-base">${verse.exegesis.title}</h5>
+                            <p class="text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                            <p class="text-xs text-stone-500 font-serif italic en-text mt-3 pt-3 border-t border-orange-200/50">${verse.exegesis.content_en}</p>
+                        </div>
+
+                        <!-- Devotional Block -->
+                        <div class="devotional-box p-5 sm:p-6 text-stone-800">
+                            <div class="flex items-center mb-3 text-slate-600 opacity-80">
+                                <i class="fas fa-heart mr-2 text-xs"></i>
+                                <h4 class="text-xs font-bold uppercase tracking-widest">灵修应用 Devotional</h4>
+                            </div>
+                            <h5 class="font-bold text-slate-800 mb-2 text-sm sm:text-base">${verse.devotional.title}</h5>
+                            <p class="text-sm text-slate-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                            <p class="text-xs text-slate-500 font-serif italic en-text mt-3 pt-3 border-t border-slate-200/50">${verse.devotional.content_en}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl sm:text-3xl font-bold mb-2 serif text-stone-800">解经原则与方法</h2>
+                        <p class="text-stone-500 en-text">Principles of Interpretation</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Method 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-orange-700">
+                            <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 text-xl mb-4">
+                                <i class="fas fa-university"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">1. 权威/正统解经</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Authoritative Exegesis</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                侧重于挖掘经文在当时历史、文化和语言背景下的原意。它不仅关注“神学”，更关注作者意图。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-orange-500 mt-1 mr-2 text-xs"></i> <span><strong>历史背景：</strong> 如巴别塔与美索不达米亚的神庙塔（Ziggurat）的关联。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-orange-500 mt-1 mr-2 text-xs"></i> <span><strong>原文修辞：</strong> 如“巴别”的双关语（神之门 vs 变乱）。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-orange-500 mt-1 mr-2 text-xs"></i> <span><strong>上下文脉络：</strong> 将第11章视为从普世历史向救赎历史（第12章）的过渡。</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Method 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-slate-600">
+                            <div class="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center text-slate-700 text-xl mb-4">
+                                <i class="fas fa-user-edit"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-stone-800 mb-2">2. 个人灵修应用</h3>
+                            <p class="text-xs text-stone-400 mb-4 uppercase tracking-wider">Devotional Application</p>
+                            <p class="text-sm text-stone-600 mb-4 leading-relaxed">
+                                在理解原意的基础上，依靠圣灵的光照，将真理“内化”到个人的生命处境中。
+                            </p>
+                            <ul class="space-y-3 text-sm text-stone-700">
+                                <li class="flex items-start"><i class="fas fa-check text-slate-500 mt-1 mr-2 text-xs"></i> <span><strong>普世人性：</strong> 巴别人不仅仅是古人，也是我们。我们在哪里试图“为自己立名”？</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-slate-500 mt-1 mr-2 text-xs"></i> <span><strong>今日处境：</strong> 将“变乱言语”的原则应用到现代职场沟通或家庭矛盾中。</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-slate-500 mt-1 mr-2 text-xs"></i> <span><strong>指向基督：</strong> 思考基督如何逆转了巴别的咒诅（如五旬节）。</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- Animation Logic ---
+        let animationInterval;
+        
+        function startTowerAnimation() {
+            const container = document.getElementById('tower-scene');
+            const textContainer = document.getElementById('babel-text');
+            if(!container) return;
+            
+            // Reset
+            container.innerHTML = '';
+            textContainer.innerHTML = `
+                <span class="scatter-text text-2xl font-bold text-orange-500 mx-1">统</span>
+                <span class="scatter-text text-2xl font-bold text-orange-500 mx-1">一</span>
+                <span class="scatter-text text-xs text-stone-500 mx-2 en-text">UNITY</span>
+            `;
+            
+            const layers = 6;
+            const brickWidth = 40;
+            const brickHeight = 20;
+            let bricks = [];
+
+            // Generate Bricks Grid
+            for (let l = 0; l < layers; l++) {
+                let bricksInLayer = 8 - l; // Pyramid shape
+                let startX = (container.offsetWidth / 2) - (bricksInLayer * brickWidth / 2);
+                
+                for (let b = 0; b < bricksInLayer; b++) {
+                    const brick = document.createElement('div');
+                    brick.className = 'brick';
+                    brick.style.left = `${startX + (b * brickWidth)}px`;
+                    brick.style.bottom = `${l * brickHeight}px`;
+                    container.appendChild(brick);
+                    bricks.push(brick);
+                }
+            }
+
+            // Animate Build Up
+            bricks.forEach((brick, index) => {
+                setTimeout(() => {
+                    brick.style.transition = 'all 0.3s ease-out';
+                    brick.style.opacity = '1';
+                    brick.style.transform = 'scale(1)';
+                }, index * 100);
+            });
+
+            // Trigger Confusion/Scatter
+            setTimeout(() => {
+                // Change Text
+                textContainer.innerHTML = `
+                    <span class="scatter-text text-2xl font-bold text-blue-300 mx-1" style="display:inline-block">混</span>
+                    <span class="scatter-text text-2xl font-bold text-blue-300 mx-1" style="display:inline-block">乱</span>
+                    <span class="scatter-text text-xs text-stone-500 mx-2 en-text" style="display:inline-block">CONFUSION</span>
+                `;
+                
+                const texts = document.querySelectorAll('.scatter-text');
+                texts.forEach(t => {
+                     const rX = (Math.random() - 0.5) * 50;
+                     const rY = (Math.random() - 0.5) * 50;
+                     const rR = (Math.random() - 0.5) * 90;
+                     t.style.transform = `translate(${rX}px, ${rY}px) rotate(${rR}deg)`;
+                });
+
+                // Scatter Bricks
+                bricks.forEach((brick) => {
+                    const randomX = (Math.random() - 0.5) * 600;
+                    const randomY = (Math.random() * 300);
+                    const randomRot = (Math.random() - 0.5) * 720;
+                    
+                    brick.style.transition = 'all 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                    brick.style.transform = `translate(${randomX}px, -${randomY}px) rotate(${randomRot}deg)`;
+                    brick.style.opacity = '0.4';
+                    brick.style.backgroundColor = '#44403c'; // Turn to grey/stone color
+                });
+
+            }, bricks.length * 100 + 1000);
+        }
+
+        function toggleTowerAnimation() {
+            startTowerAnimation();
+        }
+
+    </script>
+</body>
+</html>
