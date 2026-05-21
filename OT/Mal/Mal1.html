@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malachi 1: Honor & Apathy | 玛拉基书第一章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Royal / The Great King */
+            --theme-royal: #581c87; /* Purple 900 */
+            --theme-royal-light: #f3e8ff; /* Purple 100 */
+            /* Stale / Dust / Apathy */
+            --theme-stale: #57534e; /* Stone 600 */
+            /* Warning / Blemished Sacrifice */
+            --theme-warn: #be123c; /* Rose 700 */
+            /* Background */
+            --theme-bg: #fafaf9; /* Stone 50 */
+            /* Text */
+            --theme-text: #292524; /* Stone 800 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Texture: Cold Stone */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23a8a29e' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .en-title { font-family: 'Cinzel', serif; }
+        .en-text { font-family: 'Lato', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif SC', serif; }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-royal);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-royal);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #e7e5e4;
+            overflow: hidden;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(88, 28, 135, 0.1);
+            border-color: var(--theme-royal);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Scales Animation */
+        .scales-container {
+            width: 100px;
+            height: 80px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .scale-beam {
+            width: 80px;
+            height: 4px;
+            background: #444;
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            transform-origin: center;
+            animation: weigh 4s infinite ease-in-out;
+        }
+        .scale-plate-left, .scale-plate-right {
+            width: 24px;
+            height: 24px;
+            background: #d6d3d1;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px; /* hang distance */
+        }
+        .scale-plate-left { left: 0; }
+        .scale-plate-right { right: 0; }
+        
+        /* The beam tilts: Right side (God's offering) goes UP because it's light/cheap */
+        @keyframes weigh {
+            0% { transform: rotate(0deg); }
+            50% { transform: rotate(-15deg); } /* Right goes UP (Lighter) */
+            100% { transform: rotate(0deg); }
+        }
+
+        /* Door Shutting Animation */
+        .door-container {
+            width: 60px;
+            height: 80px;
+            border: 2px solid #444;
+            position: relative;
+            perspective: 200px;
+            display: flex;
+            justify-content: center;
+        }
+        .door {
+            width: 50%;
+            height: 100%;
+            background: var(--theme-warn);
+            position: absolute;
+            transition: transform 1s;
+            opacity: 0.8;
+        }
+        .door-left { left: 0; transform-origin: left; animation: shutLeft 3s infinite alternate; }
+        .door-right { right: 0; transform-origin: right; animation: shutRight 3s infinite alternate; }
+
+        @keyframes shutLeft { 0% { transform: rotateY(0deg); } 40% { transform: rotateY(0deg); } 60% { transform: rotateY(80deg); } 100% { transform: rotateY(80deg); } } /* Actually 0 is shut in this visual */
+        @keyframes shutRight { 0% { transform: rotateY(0deg); } 40% { transform: rotateY(0deg); } 60% { transform: rotateY(-80deg); } 100% { transform: rotateY(-80deg); } }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-stone-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-3 text-purple-800 border border-purple-200">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-stone-800 serif flex flex-col leading-none">
+                        <span>玛拉基书 <span class="text-purple-800">1章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-stone-500 en-title tracking-widest mt-1">THE GREAT KING</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium text-stone-600">
+                        <i class="fas fa-columns block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-book-open block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-lightbulb block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#2e1065] text-purple-200 mt-auto border-t-4 border-purple-500">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-purple-50 mb-1">"我的名在外邦中必尊为大。"</p>
+            <p class="text-xs italic opacity-60 en-text">"My name will be great among the nations." (Malachi 1:11)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "冷漠与威严的对峙",
+                title_en: "Confronting Spiritual Apathy",
+                summary_zh: "玛拉基书第1章是对一群“属灵疲惫者”的审判。虽然圣殿已经重建，但百姓对神的爱产生了怀疑（2节），对事奉神感到厌烦（13节）。他们保留最好的给省长，却把瞎眼瘸腿的次品献给神。本章的核心冲突在于：神宣告祂是全地的大君王，而祂的子民却仅仅在维持一种毫无敬畏之心的宗教仪式。",
+                summary_en: "Malachi 1 confronts a people suffering from 'spiritual fatigue'. The Temple is rebuilt, but the people doubt God's love (v2) and find worship 'wearisome' (v13). They give their best to the governor but offer blind, lame scraps to God. The core conflict: God declares He is a Great King, while His people maintain a religion devoid of fear or honor.",
+                concepts: [
+                    {
+                        title: "大君王", title_en: "Great King", hebrew: "Melech Gadol",
+                        icon: "fa-chess-king", color: "text-purple-800",
+                        desc_zh: "这是本章的神学锚点（1:14）。神不仅仅是以色列的部落神，而是掌管万国的君王。既然是君王，就当受极大的敬畏。",
+                        desc_en: "The theological anchor (v14). God is not just a tribal deity but the Cosmic King over nations. As King, He demands supreme reverence."
+                    },
+                    {
+                        title: "厌烦", title_en: "Weariness", hebrew: "Mattelaah",
+                        icon: "fa-face-tired", color: "text-stone-500",
+                        desc_zh: "祭司们在事奉时叹气说：“何等厌烦！”（1:13）。这反映了当关系破裂时，所有的礼仪都变成了难以忍受的重担。",
+                        desc_en: "Priests sniffed, 'What a weariness!' (v13). Shows that when relationship dies, ritual becomes an unbearable burden."
+                    },
+                    {
+                        title: "残疾的", title_en: "Blemished", hebrew: "Gazul",
+                        icon: "fa-ban", color: "text-rose-700",
+                        desc_zh: "指抢夺来的、瞎眼的、瘸腿的祭物。这就是“剩下的东西”。人把这一类次品献给神，显示了对神的蔑视。",
+                        desc_en: "Stolen, blind, lame. The 'leftovers'. Offering these defects to God demonstrates contempt for His value."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "爱的质疑：拣选的奥秘 (1:1-5)",
+                    title_en: "Questioning Love: The Mystery of Election",
+                    verses: [
+                        {
+                            ref: "1:2-3",
+                            text_zh: "耶和华说：我曾爱你们。你们却说：你在何事上爱我们呢？...我爱雅各，恶以扫...",
+                            text_en: "'I have loved you,' says the LORD. But you say, 'How have you loved us?' ... 'I have loved Jacob but Esau I have hated...'",
+                            exegesis: {
+                                title: "爱在历史中的证明 (Love Proven in History)",
+                                content_zh: "百姓根据当前的艰难处境（经济萧条）质疑神的爱。神没有用这种感觉来回答，而是指向历史性的拣选（Covenant Election）。“恶以扫”是希伯来惯用语，意为“拣选雅各而未拣选以扫”（比较级）。证据在于：以东（以扫）虽想重建却必被拆毁，而以色列（雅各）虽经管教却被存留。神的爱体现于祂不仅没有灭绝这群悖逆的子民，反而与之立约。",
+                                content_en: "People judged God's love by current hardships. God points to Covenant Election. 'Hated Esau' is an idiom for 'choosing Jacob over Esau'. The proof: Edom will be destroyed despite rebuilding; Israel is preserved. God's love is proven by the fact He hasn't wiped them out but keeps His covenant."
+                            },
+                            devotional: {
+                                title: "不要用环境来衡量神的爱 (Measure Love by the Cross, not Circumstance)",
+                                content_zh: "我们也常像以色列人一样问：“神啊，如果你爱我，为什么我现在这么穷/病/苦？”神的回应是让我们看祂所做的拣选。对于基督徒而言，不要盯着你钱包的厚度来判断神的爱，要盯着十字架。神拣选了你，没有按你的罪过待你，这就是最大的爱。",
+                                content_en: "We ask, 'If You love me, why am I struggling?' God points to Election. Don't measure God's love by your wallet, but by the Cross. He chose you and hasn't treated you as your sins deserve. That is the ultimate proof."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "轻视主桌：献上次品 (1:6-9)",
+                    title_en: "Despising the Table: Offering Leftovers",
+                    verses: [
+                        {
+                            ref: "1:8",
+                            text_zh: "你们将瞎眼的献为祭物，这不为恶吗？...你献给你的省长，他岂喜悦你...？",
+                            text_en: "When you offer blind animals in sacrifice, is that not evil? ... Present that to your governor; will he accept you...?",
+                            exegesis: {
+                                title: "政治与宗教的对比 (Political vs Religious Value)",
+                                content_zh: "这是极其尖锐的讽刺。百姓不敢把瞎眼的羊送给波斯委任的省长（Governor），因为怕得罪人；却敢送给创造宇宙的神。这暴露了他们的神学：他们实际上认为省长比神更真实、更有权柄。他们是在“欺哄”神，以为神看不见或不在乎。祭坛上的食物被视为“污秽的”（可轻视的）。",
+                                content_en: "Sharp irony. They wouldn't dare gift a blind sheep to the Persian Governor, yet they dump it on God. It exposes their theology: they fear the Governor more than God. They are 'cheating' God, treating His altar as a trash can for unmarketable livestock."
+                            },
+                            devotional: {
+                                title: "你把最好的给了谁？ (Who gets your best?)",
+                                content_zh: "检查我们的生活：我们把最黄金的时间给了工作，把最充沛的精力给了娱乐，然后把“剩下”的几分钟疲惫时间给神祷告。如果我们在职场上像对待神那样迟到、敷衍，我们早就被解雇了。神在挑战我们：如果我是父亲，尊敬在哪里？不要给神你都不会接受的次品。",
+                                content_en: "We give our prime time to work/hobbies and our exhausted leftovers to God. If we treated our boss like we treat God (late, sloppy, half-hearted), we'd be fired. God asks: 'If I am a Father, where is my honor?' Don't give God what you wouldn't accept yourself."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "关上殿门：神对虚假的拒绝 (1:10-14)",
+                    title_en: "Shut the Doors: Rejection of Ritual",
+                    verses: [
+                        {
+                            ref: "1:10, 13",
+                            text_zh: "甚愿你们中间有一人关上殿门，免得你们徒然在我坛上烧火...你们又说：这些事何等厌烦！",
+                            text_en: "Oh that there were one among you who would shut the doors, that you might not kindle fire on my altar in vain!... You say, 'What a weariness this is!'",
+                            exegesis: {
+                                title: "与其虚假，不如没有 (Better Nothing than Fake)",
+                                content_zh: "神发出了一个令人震惊的愿望：把教会/圣殿的门关上！神宁可没有敬拜，也不要这种“徒然”（Useless/Vain）的表演。这对那些认为“有总比没有好”的人是当头棒喝。第11节预言了神将转向外邦人（万国），因为以色列人视事奉为重担（Weariness）和嗤之以鼻（Sniff at it），而外邦人将尊主名为大。",
+                                content_en: "God's shocking wish: Lock the church doors! He prefers *no* worship to *fake* worship. It shatters the 'better than nothing' myth. V11 predicts the shift to Gentiles; while Israel sniffs at worship as a burden, the nations will honor His name."
+                            },
+                            devotional: {
+                                title: "你的事奉是重担还是荣耀？ (Burden or Delight?)",
+                                content_zh: "当你去教会或服事时，内心是否在叹气：“唉，又是这套程序，真累”？这就是“何等厌烦”。这表明我们失去了对神“大君王”身份的敬畏。神不需要我们勉为其难的施舍。如果我们不以神为乐，神也不以我们的祭物为乐。求神恢复我们初爱的热情。",
+                                content_en: "Do you sigh at church, 'What a weariness'? That's the spirit of Malachi's priests. It shows we've lost awe of the 'Great King'. God doesn't need our reluctant charity. If we don't delight in Him, He doesn't delight in our offering. Ask God to rekindle the awe."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-600');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-600');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+                        <div class="absolute right-0 top-0 p-6 opacity-5 text-stone-800">
+                            <i class="fas fa-gavel text-9xl"></i>
+                        </div>
+
+                        <div class="relative z-10 flex flex-col sm:flex-row items-start justify-between">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 bg-purple-100 text-purple-800 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Chapter Theme</span>
+                                <h1 class="text-3xl sm:text-4xl font-bold text-stone-800 serif mb-2">${chapterData.intro.title}</h1>
+                                <h2 class="text-lg text-stone-500 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                                <p class="text-sm text-stone-600 leading-relaxed border-l-4 border-purple-800 pl-4 text-justify mb-6">
+                                    ${chapterData.intro.summary_zh}
+                                </p>
+                            </div>
+
+                            <!-- Visualization: The Scales -->
+                            <div class="mt-6 sm:mt-0 sm:ml-8 flex flex-col items-center">
+                                <div class="scales-container">
+                                    <div class="scale-beam">
+                                        <div class="scale-plate-left flex items-center justify-center text-[10px] text-stone-600 font-bold">GOV</div>
+                                        <div class="scale-plate-right flex items-center justify-center text-[10px] text-stone-600 font-bold">GOD</div>
+                                    </div>
+                                    <!-- Base -->
+                                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-2 h-20 bg-stone-700"></div>
+                                    <div class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-2 bg-stone-700 rounded"></div>
+                                </div>
+                                <p class="text-[10px] text-stone-400 mt-2 font-mono uppercase text-center">Value Comparison</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <!-- Shut Door Visual -->
+                        <div class="bg-stone-800 border border-stone-700 rounded-xl p-6 shadow-sm flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                            <div class="door-container mb-2">
+                                <div class="door door-left"></div>
+                                <div class="door door-right"></div>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-200">Shut the Doors!</h3>
+                            <p class="text-xs text-stone-400 uppercase tracking-widest">Verse 10</p>
+                        </div>
+                        
+                        <div class="bg-purple-900 text-purple-100 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center">
+                            <i class="fas fa-globe text-3xl text-purple-300 mb-2"></i>
+                            <h3 class="font-bold text-lg">Great King</h3>
+                            <p class="text-xs text-purple-300/70 uppercase tracking-widest">From Rising Sun to Setting</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">Key Themes</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition group">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:scale-110 transition duration-300"></i>
+                                        <h4 class="font-bold text-stone-700">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-stone-400 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-stone-600 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-purple-800 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-stone-200 pb-2">
+                            <div class="w-8 h-8 rounded bg-stone-100 text-stone-600 flex items-center justify-center text-xs mr-3 font-bold border border-stone-300">
+                                <i class="fas fa-scroll"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs text-stone-500 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-stone-50 border-b border-stone-100 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-stone-500 bg-white border border-stone-200 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-stone-800 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-stone-500 text-sm italic en-text pl-3 border-l-2 border-purple-300">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-stone-100 flex items-center justify-center mr-2 text-stone-500 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-stone-500 uppercase tracking-widest">经文原意 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-stone-800 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-stone-400 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-purple-50/50">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-purple-100 flex items-center justify-center mr-2 text-purple-600 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-purple-600 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-purple-800 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-purple-800/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-stone-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-stone-500">
+                            <div class="mb-4 text-stone-600 text-2xl"><i class="fas fa-comments"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">辩论结构分析 (Disputation Form)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                玛拉基书的特征是“神说...你们却说...”的辩论。解经时，要关注这种**对话的张力**。它揭示了神与百姓之间认知的巨大鸿沟——百姓以为自己没问题，神却看透了他们内心的冷漠。
+                            </p>
+                            <div class="bg-stone-50 p-2 rounded text-xs text-stone-500 italic">
+                                <strong>Tip:</strong> Look for the "But you say" phrases to find the heart of the sin.
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-purple-800">
+                            <div class="mb-4 text-purple-800 text-2xl"><i class="fas fa-balance-scale"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">价值观的重置 (Value Recalibration)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                灵修应用不仅仅是“我不该献瞎眼的羊”，而是要挖掘其背后的价值观。玛拉基书挑战我们将“给神的”与“给人的（省长/老板）”做对比。真正的灵修是发现我们**实际**尊荣的是谁，而不仅仅是我们**口头**尊荣的是谁。
+                            </p>
+                            <div class="bg-purple-50 p-2 rounded text-xs text-purple-800 italic">
+                                <strong>Practice:</strong> Compare your effort at work vs. your effort in worship.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

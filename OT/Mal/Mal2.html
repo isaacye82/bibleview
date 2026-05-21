@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malachi 2: Covenants & Tears | 玛拉基书第二章</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* Tears / Emotional worship without obedience */
+            --theme-tear: #3b82f6; /* Blue 500 */
+            --theme-tear-light: #eff6ff; /* Blue 50 */
+            /* Dung / Shame / Corruption */
+            --theme-shame: #713f12; /* Yellow 900 (Brownish) */
+            /* Covenant / Life & Peace */
+            --theme-covenant: #b45309; /* Amber 700 */
+            /* Background */
+            --theme-bg: #fdfbf7; /* Stone 50 */
+            /* Text */
+            --theme-text: #1c1917; /* Stone 900 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+            /* Texture: Tear stains */
+            background-image: radial-gradient(circle at 20% 20%, #e0f2fe 0%, transparent 10%), radial-gradient(circle at 80% 80%, #f0f9ff 0%, transparent 10%);
+            background-size: 100px 100px;
+        }
+
+        .en-title { font-family: 'Cinzel', serif; }
+        .en-text { font-family: 'Lato', sans-serif; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif SC', serif; }
+
+        /* Navigation */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-covenant);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background-color: var(--theme-covenant);
+            border-radius: 2px;
+        }
+
+        /* Card Styling */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #fed7aa;
+            overflow: hidden;
+            position: relative;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(180, 83, 9, 0.1);
+            border-color: var(--theme-covenant);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tear Drop Animation */
+        .tear-container {
+            width: 60px;
+            height: 100px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .tear {
+            width: 15px;
+            height: 15px;
+            background: var(--theme-tear);
+            border-radius: 0 50% 50% 50%;
+            transform: rotate(45deg);
+            position: absolute;
+            top: 0;
+            left: 22px;
+            opacity: 0;
+            animation: dropTear 2.5s infinite ease-in;
+        }
+        .altar-surface {
+            width: 60px;
+            height: 4px;
+            background: #a8a29e;
+            position: absolute;
+            bottom: 20px;
+            border-radius: 2px;
+        }
+        .splash {
+            width: 20px;
+            height: 4px;
+            background: var(--theme-tear);
+            position: absolute;
+            bottom: 22px;
+            left: 20px;
+            border-radius: 50%;
+            opacity: 0;
+            transform: scale(0);
+            animation: splashTear 2.5s infinite ease-out;
+        }
+
+        @keyframes dropTear {
+            0% { top: 0; opacity: 0; transform: rotate(45deg) scale(0.5); }
+            20% { opacity: 1; transform: rotate(45deg) scale(1); }
+            80% { top: 75px; opacity: 1; transform: rotate(45deg) scale(1); }
+            90% { top: 75px; opacity: 0; transform: rotate(45deg) scale(0.5); }
+            100% { top: 75px; opacity: 0; }
+        }
+        @keyframes splashTear {
+            0%, 80% { opacity: 0; transform: scale(0); }
+            85% { opacity: 0.8; transform: scale(1.5); }
+            100% { opacity: 0; transform: scale(2); }
+        }
+
+        /* Broken Ring Animation */
+        .ring-container {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            margin: 0 auto;
+        }
+        .ring-half {
+            width: 40px;
+            height: 20px;
+            border: 4px solid var(--theme-covenant);
+            position: absolute;
+            left: 10px;
+        }
+        .ring-top {
+            top: 10px;
+            border-bottom: none;
+            border-radius: 40px 40px 0 0;
+            transform-origin: bottom center;
+            animation: breakTop 4s infinite ease-in-out;
+        }
+        .ring-bottom {
+            bottom: 10px;
+            border-top: none;
+            border-radius: 0 0 40px 40px;
+            transform-origin: top center;
+            animation: breakBottom 4s infinite ease-in-out;
+        }
+        
+        @keyframes breakTop {
+            0%, 10%, 90%, 100% { transform: rotate(0deg) translateY(0); }
+            40%, 60% { transform: rotate(-15deg) translateY(-5px); border-color: #78350f; }
+        }
+        @keyframes breakBottom {
+            0%, 10%, 90%, 100% { transform: rotate(0deg) translateY(0); }
+            40%, 60% { transform: rotate(15deg) translateY(5px); border-color: #78350f; }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white/95 backdrop-blur-md sticky top-0 z-50 border-b border-orange-200 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-3 text-orange-800 border border-orange-200">
+                        <i class="fas fa-handshake-slash"></i>
+                    </div>
+                    <span class="text-lg sm:text-xl font-bold text-stone-800 serif flex flex-col leading-none">
+                        <span>玛拉基书 <span class="text-orange-700">2章</span></span>
+                        <span class="text-[9px] sm:text-[10px] text-stone-500 en-title tracking-widest mt-1">BROKEN COVENANTS</span>
+                    </span>
+                </div>
+                <div class="flex space-x-6">
+                    <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-btn active-tab text-sm font-medium text-stone-600">
+                        <i class="fas fa-chart-pie block sm:hidden"></i>
+                        <span class="hidden sm:block">全景 Overview</span>
+                    </button>
+                    <button onclick="navigate('study')" id="nav-study" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-book-open block sm:hidden"></i>
+                        <span class="hidden sm:block">研读 Study</span>
+                    </button>
+                    <button onclick="navigate('methodology')" id="nav-methodology" class="nav-btn text-sm font-medium text-stone-600">
+                        <i class="fas fa-cogs block sm:hidden"></i>
+                        <span class="hidden sm:block">原则 Method</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="app-content" class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 w-full">
+        <!-- JS Injected Content -->
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#451a03] text-orange-200 mt-auto border-t-4 border-orange-600">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base font-serif italic text-orange-50 mb-1">"虽然神有灵的余力能造多人，他不是单造一人吗？..."</p>
+            <p class="text-xs italic opacity-60 en-text">"Did he not make them one, with a portion of the Spirit in their union?" (Malachi 2:15)</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- Data ---
+        const chapterData = {
+            intro: {
+                title: "被玷污的祭坛与婚约",
+                title_en: "Defiled Altars & Broken Marriage",
+                summary_zh: "玛拉基书第2章是对以色列社会两大支柱的审判：**宗教领袖（祭司）**和**家庭（婚姻）**。神首先斥责祭司背弃了“利未的约”，导致真理失落，神甚至要将粪便抹在他们脸上。接着，神转向百姓，斥责他们对妻子不忠，同时还试图用眼泪遮盖祭坛。本章核心在于：神不接受一个道德破产者的敬拜，无论他的情感多么投入。",
+                summary_en: "Malachi 2 judges the two pillars of society: **Priesthood** and **Family**. God first rebukes the priests for corrupting the 'Covenant of Levi', threatening to spread dung on their faces. Then, He turns to the people, condemning their faithlessness in marriage while they try to cover the altar with tears. The core message: God rejects the worship of the morally bankrupt, no matter how emotional.",
+                concepts: [
+                    {
+                        title: "粪便", title_en: "Dung/Refuse", hebrew: "Peresh",
+                        icon: "fa-trash-alt", color: "text-stone-700",
+                        desc_zh: "这是极具羞辱性的意象。指节期祭牲的排泄物。神说若不悔改，就要把这污秽抹在祭司脸上，使他们被当作垃圾丢弃。",
+                        desc_en: "A graphic image of shame. Refers to the offal of sacrificial animals. God threatens to smear this on priests' faces, discarding them as trash."
+                    },
+                    {
+                        title: "眼泪", title_en: "Tears", hebrew: "Dimah",
+                        icon: "fa-tint", color: "text-blue-500",
+                        desc_zh: "百姓“使眼泪遮盖耶和华的坛”。这代表一种宗教狂热或情感宣泄，试图以此贿赂神，来掩盖他们在家庭中对妻子的背叛。",
+                        desc_en: "Covering the altar with tears. Represents religious emotionalism used to bribe God or mask domestic treachery against their wives."
+                    },
+                    {
+                        title: "盟约", title_en: "Covenant", hebrew: "Berit",
+                        icon: "fa-handshake", color: "text-orange-700",
+                        desc_zh: "本章出现了三次关键盟约：利未的约（事奉）、列祖的约（身份）、配偶的盟约（婚姻）。罪的本质就是背约（Treacherous）。",
+                        desc_en: "Three covenants appear: Levi (Ministry), Fathers (Identity), and Marriage. Sin is defined as being 'treacherous' to these bonds."
+                    }
+                ]
+            },
+            sections: [
+                {
+                    title: "祭司的堕落：脸上抹粪 (2:1-9)",
+                    title_en: "Corruption of Priesthood: Dung on Faces",
+                    verses: [
+                        {
+                            ref: "2:3, 7",
+                            text_zh: "我必斥责你们的种子...把你们节期祭牲的粪抹在你们脸上...祭司的嘴里当存知识，人也当由他口中寻求律法...",
+                            text_en: "Behold, I will rebuke your offspring, and spread dung on your faces... For the lips of a priest should guard knowledge, and people should seek instruction from his mouth...",
+                            exegesis: {
+                                title: "属灵引导者的标准 (Standard for Leaders)",
+                                content_zh: "神对属灵领袖有极高的标准。利未之约的本质是“生命和平安”（v5），目的是让人敬畏神。但当祭司在律法上瞻徇情面（偏心），导致许多人跌倒时，神就使他们在百姓面前“被藐视，看为下贱”。“抹粪”意味着彻底的取消资格（Disqualification）。经文含义表明：职份的尊荣来自对真理的忠诚，一旦背离真理，职份就成了羞耻。",
+                                content_en: "High standard for leaders. The Covenant of Levi was for 'life and peace' to foster fear of God. But partiality in the law caused many to stumble. God makes them 'despised'. 'Spreading dung' means total disqualification. Dignity comes from fidelity to truth; without it, office is shame."
+                            },
+                            devotional: {
+                                title: "你的嘴里存着什么？ (What is on your lips?)",
+                                content_zh: "作为“君尊的祭司”（新约信徒），我们的嘴唇不仅是用来唱诗的，更是用来“存留知识”的。当别人向你寻求建议时，你能给出合乎圣经真理的引导吗？还是你只会给出“心灵鸡汤”或顺着人情说好话？不要让神的话语在你口中变得廉价。",
+                                content_en: "As 'royal priests', our lips shouldn't just sing but 'guard knowledge'. When asked for advice, do you offer biblical truth or just 'chicken soup' and people-pleasing words? Don't cheapen God's word in your mouth."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "家庭的背叛：休妻与强暴 (2:10-16)",
+                    title_en: "Family Betrayal: Divorce & Violence",
+                    verses: [
+                        {
+                            ref: "2:13-14",
+                            text_zh: "你们又行了一件这样的事，使前妻叹息哭泣的眼泪遮盖耶和华的坛...因耶和华在你和你幼年所娶的妻中间作见证...",
+                            text_en: "And this second thing you do. You cover the LORD's altar with tears... Because the LORD was witness between you and the wife of your youth...",
+                            exegesis: {
+                                title: "神是婚姻的第三方 (The Divine Third Party)",
+                                content_zh: "百姓想知道为什么神不收纳他们的供物（v13）。答案是：家庭问题。他们背弃了“幼年所娶的妻”。这里提到“盟约的妻”，强调婚姻不是契约，而是神作为见证人的盟约。第16节“休妻的事和以强暴待妻的人都是我所恨恶的”，将离婚与暴力（Violence）联系起来。这表明在神眼中，无故撕毁婚约等同于对配偶施暴。",
+                                content_en: "Why does God reject offerings? Family sin. They betrayed the 'wife of youth'. Marriage is a covenant with God as witness. Verse 16 connects divorce with 'covering one's garment with violence'. Tearing a marriage covenant without cause is moral violence in God's eyes."
+                            },
+                            devotional: {
+                                title: "眼泪不能代替忠诚 (Tears can't replace Loyalty)",
+                                content_zh: "这是一个可怕的景象：一个人在教会流泪敬拜神，回到家却冷漠地对待配偶。玛拉基警告我们：不要以为宗教激情可以弥补道德缺陷。神看重你如何对待你的妻子/丈夫，过于你如何对待祭坛。如果你的家庭祭坛是破碎的，教堂的祭坛对你也毫无益处。",
+                                content_en: "A scary scene: weeping in worship at church, icy betrayal at home. Malachi warns: Religious passion cannot cover moral failure. God values how you treat your spouse more than your altar offerings. If your home altar is broken, the church altar won't help you."
+                            }
+                        }
+                    ]
+                },
+                {
+                    title: "对公义的厌烦 (2:17)",
+                    title_en: "Wearying God with Words",
+                    verses: [
+                        {
+                            ref: "2:17",
+                            text_zh: "你们用言语使耶和华厌烦...你们还说：我们在何事上使他厌烦呢？因为你们说：凡行恶的，耶和华眼看为善...公义的神在哪里呢？",
+                            text_en: "You have wearied the LORD with your words... You say, 'Everyone who does evil is good in the sight of the LORD'... or 'Where is the God of justice?'",
+                            exegesis: {
+                                title: "道德相对主义的疲劳 (Fatigue of Relativism)",
+                                content_zh: "百姓因为看到恶人亨通，就开始颠倒是非，说“行恶的神看为善”。这种道德相对主义和愤世嫉俗的态度“使神厌烦”（Wearied）。这不是神体力上的疲惫，而是情感上的耗尽与愤怒。他们不仅自己犯罪，还通过神学上的诡辩来合理化罪恶，这是对神公义属性的直接挑战。",
+                                content_en: "Seeing the wicked prosper, people flipped morality: 'Evil is good to God.' This cynicism 'wearied' God—not physical fatigue, but emotional exhaustion/anger. They didn't just sin; they theologically justified sin. This challenges God's very nature of justice."
+                            },
+                            devotional: {
+                                title: "不要让神“心累” (Don't Weary God)",
+                                content_zh: "当我们开始说“反正神是爱，我怎么做祂都会原谅”或者“那些不信主的人过得比我还好，信神有什么用”时，我们就是在用言语使神厌烦。这是一种属灵的抱怨和试探。与其质疑神的公义，不如省察自己的忠诚。神是公义的，祂必审判（第3章将紧接着谈到主的忽然临到）。",
+                                content_en: "When we say 'God is love, He'll forgive anyway' or 'Why do sinners prosper?', we weary God. It's spiritual whining. Instead of questioning God's justice, check your loyalty. God IS just, and He will come (as Ch 3 will show)."
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // --- State ---
+        let appState = { view: 'dashboard' };
+
+        // --- Init ---
+        document.addEventListener('DOMContentLoaded', () => renderDashboard());
+
+        // --- Navigation ---
+        function navigate(view) {
+            appState.view = view;
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-600');
+            });
+            document.getElementById(`nav-${view}`).classList.add('active-tab');
+            document.getElementById(`nav-${view}`).classList.remove('text-stone-600');
+
+            const container = document.getElementById('app-content');
+            container.style.opacity = '0';
+            setTimeout(() => {
+                if (view === 'dashboard') renderDashboard();
+                if (view === 'study') renderStudy();
+                if (view === 'methodology') renderMethodology();
+                container.style.opacity = '1';
+                window.scrollTo(0,0);
+            }, 200);
+        }
+
+        // --- Renders ---
+        function renderDashboard() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 fade-in">
+                    <!-- Title & Visual -->
+                    <div class="md:col-span-8 bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm relative overflow-hidden">
+                        <div class="absolute right-0 top-0 p-6 opacity-5 text-stone-800">
+                            <i class="fas fa-heart-broken text-9xl"></i>
+                        </div>
+
+                        <div class="relative z-10 flex flex-col sm:flex-row items-start justify-between">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 bg-orange-100 text-orange-800 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">Chapter Theme</span>
+                                <h1 class="text-3xl sm:text-4xl font-bold text-stone-800 serif mb-2">${chapterData.intro.title}</h1>
+                                <h2 class="text-lg text-stone-500 en-title mb-6 italic">${chapterData.intro.title_en}</h2>
+                                <p class="text-sm text-stone-600 leading-relaxed border-l-4 border-orange-700 pl-4 text-justify mb-6">
+                                    ${chapterData.intro.summary_zh}
+                                </p>
+                            </div>
+
+                            <!-- Visualization: Tears on Altar -->
+                            <div class="mt-6 sm:mt-0 sm:ml-8 flex flex-col items-center">
+                                <div class="tear-container">
+                                    <div class="tear"></div>
+                                    <div class="altar-surface"></div>
+                                    <div class="splash"></div>
+                                </div>
+                                <p class="text-[10px] text-stone-400 mt-2 font-mono uppercase text-center">Tears on the Altar</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mood / Stats -->
+                    <div class="md:col-span-4 flex flex-col gap-4">
+                        <!-- Broken Ring Visual -->
+                        <div class="bg-stone-50 border border-stone-200 rounded-xl p-6 shadow-sm flex-1 flex flex-col justify-center items-center text-center relative overflow-hidden">
+                            <div class="ring-container mb-2">
+                                <div class="ring-half ring-top"></div>
+                                <div class="ring-half ring-bottom"></div>
+                            </div>
+                            <h3 class="font-bold text-lg text-stone-700">Broken Covenant</h3>
+                            <p class="text-xs text-stone-400 uppercase tracking-widest">Marriage (v14)</p>
+                        </div>
+                        
+                        <div class="bg-stone-800 text-stone-200 rounded-xl p-6 shadow-md flex-1 flex flex-col justify-center items-center text-center">
+                            <i class="fas fa-book-dead text-3xl text-stone-400 mb-2"></i>
+                            <h3 class="font-bold text-lg">No Knowledge</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-widest">Priests Failed (v7)</p>
+                        </div>
+                    </div>
+
+                    <!-- Concepts -->
+                    <div class="md:col-span-12">
+                        <h3 class="text-sm font-bold text-stone-400 uppercase tracking-widest mb-4">Key Themes</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            ${chapterData.intro.concepts.map(c => `
+                                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm hover:shadow-md transition group">
+                                    <div class="flex items-center mb-2">
+                                        <i class="fas ${c.icon} ${c.color} mr-2 group-hover:scale-110 transition duration-300"></i>
+                                        <h4 class="font-bold text-stone-700">${c.title}</h4>
+                                    </div>
+                                    <p class="text-[10px] text-stone-400 font-mono mb-2">${c.hebrew} <span class="mx-1">|</span> ${c.title_en}</p>
+                                    <p class="text-xs text-stone-600 leading-relaxed text-justify">${c.desc_zh}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStudy() {
+            const container = document.getElementById('app-content');
+            
+            let html = `
+                <div class="max-w-3xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">逐节研读</h2>
+                        <div class="w-16 h-1 bg-orange-700 mx-auto mt-3 rounded-full"></div>
+                    </div>
+            `;
+
+            chapterData.sections.forEach(section => {
+                html += `
+                    <div class="mb-12">
+                        <!-- Section Header -->
+                        <div class="flex items-center mb-4 border-b border-stone-200 pb-2">
+                            <div class="w-8 h-8 rounded bg-stone-100 text-stone-600 flex items-center justify-center text-xs mr-3 font-bold border border-stone-300">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-stone-800">${section.title}</h3>
+                                <p class="text-xs text-stone-500 en-text italic">${section.title_en}</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-8">
+                            ${section.verses.map(verse => `
+                                <div class="verse-card">
+                                    <!-- Scripture -->
+                                    <div class="p-6 bg-stone-50 border-b border-stone-100 relative">
+                                        <span class="absolute top-4 right-4 text-[10px] font-bold text-stone-500 bg-white border border-stone-200 px-2 py-0.5 rounded">${verse.ref}</span>
+                                        <p class="text-stone-800 text-lg font-serif mb-3 leading-relaxed relative z-10">
+                                            ${verse.text_zh}
+                                        </p>
+                                        <p class="text-stone-500 text-sm italic en-text pl-3 border-l-2 border-orange-300">
+                                            ${verse.text_en}
+                                        </p>
+                                    </div>
+                                    
+                                    <!-- Analysis Grid -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-stone-100">
+                                        <!-- Meaning -->
+                                        <div class="p-6">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-stone-100 flex items-center justify-center mr-2 text-stone-500 text-xs"><i class="fas fa-glasses"></i></div>
+                                                <h4 class="text-xs font-bold text-stone-500 uppercase tracking-widest">经文含义 Meaning</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-stone-800 mb-2">${verse.exegesis.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-600 leading-relaxed text-justify mb-2">${verse.exegesis.content_zh}</p>
+                                            <p class="text-[10px] text-stone-400 italic en-text">${verse.exegesis.content_en}</p>
+                                        </div>
+
+                                        <!-- Devotional -->
+                                        <div class="p-6 bg-orange-50/50">
+                                            <div class="flex items-center mb-3">
+                                                <div class="w-6 h-6 rounded bg-orange-100 flex items-center justify-center mr-2 text-orange-600 text-xs"><i class="fas fa-heart"></i></div>
+                                                <h4 class="text-xs font-bold text-orange-600 uppercase tracking-widest">灵修应用 Devotional</h4>
+                                            </div>
+                                            <h5 class="text-sm font-bold text-orange-800 mb-2">${verse.devotional.title}</h5>
+                                            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed text-justify mb-2">${verse.devotional.content_zh}</p>
+                                            <p class="text-[10px] text-orange-800/60 italic en-text">${verse.devotional.content_en}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function renderMethodology() {
+            const container = document.getElementById('app-content');
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto fade-in">
+                    <div class="text-center mb-10">
+                        <h2 class="text-2xl font-bold text-stone-800 serif">解经与灵修的整合</h2>
+                        <p class="text-xs text-stone-500 en-text uppercase tracking-widest">Integrating Exegesis & Application</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Principle 1 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-stone-500">
+                            <div class="mb-4 text-stone-600 text-2xl"><i class="fas fa-scroll"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">盟约神学视角 (Covenant Theology)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                解读玛拉基书第2章的关键在于理解“盟约”（Covenant）。无论是祭司的职分还是婚姻关系，在神眼中都不是简单的合同（Contract），而是神圣的盟约。解经时要抓住“神作为盟约见证人”这一核心。
+                            </p>
+                            <div class="bg-stone-50 p-2 rounded text-xs text-stone-500 italic">
+                                <strong>Insight:</strong> Broken covenants break the heart of God.
+                            </div>
+                        </div>
+
+                        <!-- Principle 2 -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border-t-4 border-orange-700">
+                            <div class="mb-4 text-orange-700 text-2xl"><i class="fas fa-sync-alt"></i></div>
+                            <h3 class="font-bold text-stone-800 mb-2">敬拜与道德的整合 (Moral Integration)</h3>
+                            <p class="text-sm text-stone-600 mb-3 text-justify">
+                                灵修应用要挑战“二元论”（在教堂属灵，在家里属肉体）。玛拉基书强力主张：**你怎么对待妻子，就是怎么对待神**。真实的敬拜必须以道德的整全性为基础，特别是家庭关系的圣洁。
+                            </p>
+                            <div class="bg-orange-50 p-2 rounded text-xs text-orange-800 italic">
+                                <strong>Practice:</strong> Connect your Sunday worship to your Monday marriage.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
