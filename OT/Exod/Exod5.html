@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 5 | 出埃及记 5章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7f1d1d;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #854d0e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffaf0;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #3f1d12;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brick-stage {
+            background: radial-gradient(circle at 20% 10%, rgba(254,243,199,.9), transparent 36%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 48%, #fee2e2 100%);
+            min-height: 100%;
+        }
+        .pressure-block { animation: pressureDrop 4.8s ease-in-out infinite; transform-origin: center; }
+        .brick { animation: brickStrain 4.8s ease-in-out infinite; transform-origin: center; }
+        .brick.b2, .brick.b6 { animation-delay: .18s; }
+        .brick.b3, .brick.b7 { animation-delay: .32s; }
+        .brick.b4, .brick.b8 { animation-delay: .46s; }
+        .straw { animation: strawDrift 5.2s ease-in-out infinite; transform-origin: center; }
+        .straw.s2 { animation-delay: .8s; }
+        .straw.s3 { animation-delay: 1.4s; }
+        .straw.s4 { animation-delay: 2s; }
+        .quota-mark { animation: quotaPulse 3.8s ease-in-out infinite; }
+        @keyframes pressureDrop {
+            0%, 100% { transform: translateY(-6px); opacity: .72; }
+            50% { transform: translateY(14px); opacity: 1; }
+        }
+        @keyframes brickStrain {
+            0%, 100% { transform: translateY(0); filter: drop-shadow(0 0 0 rgba(127,29,29,0)); }
+            50% { transform: translateY(3px); filter: drop-shadow(0 7px 5px rgba(127,29,29,.18)); }
+        }
+        @keyframes strawDrift {
+            0%, 100% { transform: translate(0,0) rotate(0deg); opacity: .46; }
+            45% { transform: translate(10px,18px) rotate(10deg); opacity: 1; }
+            75% { transform: translate(-5px,25px) rotate(-8deg); opacity: .62; }
+        }
+        @keyframes quotaPulse {
+            0%, 100% { opacity: .38; transform: translateY(0); }
+            50% { opacity: .82; transform: translateY(-4px); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hammer mr-2 text-stone-600"></i> 出埃及记 5章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 5</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">压迫加重时，神的拯救仍在推进</h1>
+    <p class="en-text text-stone-500 italic mb-5">When Oppression Deepens, Deliverance Is Still Moving</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 5 章把摩西的呼召带进埃及权力中心。神的命令是让祂的百姓去旷野事奉祂；法老的回应却是拒绝认识耶和华，并用更重的工役压碎百姓的盼望。本章没有立刻出现神迹胜利，反而显出真实信仰常会先经过更深压力：假神权势暴露其残酷，百姓的苦情被说出，摩西也学会把困惑带到神面前。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 5 brings Moses' call into the center of Egyptian power. The Lord commands freedom for worship, but Pharaoh refuses to acknowledge Him and increases Israel's labor. The chapter does not give an immediate visible victory; it shows that faithful obedience may first expose deeper oppression, reveal the cruelty of false power, and drive God's servant to honest prayer.</p>
+  </div>
+  <aside class="brick-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">无草作砖，重担加压</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以砖墙、散落秸秆和压下的阴影表现本章张力：人的权势加重负担，神却开始揭露奴役的本质。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Bricks, scattered straw, and descending pressure picture bondage being exposed before deliverance unfolds.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated bricks and straw from Exodus 5" class="w-full mt-4">
+      <defs>
+        <linearGradient id="brickGrad" x1="0" x2="1">
+          <stop offset="0%" stop-color="#7f1d1d"/>
+          <stop offset="100%" stop-color="#b45309"/>
+        </linearGradient>
+        <linearGradient id="shadowGrad" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#1f2937" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#1f2937" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <rect x="34" y="188" width="352" height="18" rx="9" fill="#78350f" opacity=".18"/>
+      <g class="pressure-block">
+        <path d="M86 34 H334 L306 88 H114 Z" fill="url(#shadowGrad)"/>
+        <path d="M118 38 H302" stroke="#7f1d1d" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+      </g>
+      <g class="straw-lines" stroke="#ca8a04" stroke-width="4" stroke-linecap="round" opacity=".82">
+        <line class="straw s1" x1="85" y1="103" x2="126" y2="83"/>
+        <line class="straw s2" x1="286" y1="92" x2="342" y2="112"/>
+        <line class="straw s3" x1="172" y1="72" x2="221" y2="55"/>
+        <line class="straw s4" x1="236" y1="125" x2="282" y2="105"/>
+      </g>
+      <g class="brick-wall" fill="url(#brickGrad)" stroke="#fff7ed" stroke-width="4">
+        <rect class="brick b1" x="70" y="132" width="78" height="38" rx="5"/>
+        <rect class="brick b2" x="148" y="132" width="78" height="38" rx="5"/>
+        <rect class="brick b3" x="226" y="132" width="78" height="38" rx="5"/>
+        <rect class="brick b4" x="304" y="132" width="46" height="38" rx="5"/>
+        <rect class="brick b5" x="46" y="170" width="78" height="38" rx="5"/>
+        <rect class="brick b6" x="124" y="170" width="78" height="38" rx="5"/>
+        <rect class="brick b7" x="202" y="170" width="78" height="38" rx="5"/>
+        <rect class="brick b8" x="280" y="170" width="94" height="38" rx="5"/>
+      </g>
+      <g class="quota-mark" fill="none" stroke="#431407" stroke-width="3" stroke-linecap="round" opacity=".65">
+        <path d="M104 221 h212"/>
+        <path d="M104 221 l12 -10"/>
+        <path d="M316 221 l-12 -10"/>
+      </g>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 5 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">容我的百姓去</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Let My People Go</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shalach / send, release</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">这句话不是单纯政治口号，而是敬拜呼召。以色列被释放的目的，是脱离奴役性生产，重新归向创造主并事奉祂。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">法老的无知</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Pharaoh's Defiance</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mi YHWH / Who is the LORD?</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">法老问“耶和华是谁”，显明冲突的核心是主权归属。埃及王以为自己定义现实，但本卷书将证明真正的主是耶和华。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">无草作砖</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Bricks without Straw</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">teben u-lebenim / straw and bricks</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">不给草却不减砖数，是制度化压迫的图像。它揭露罪恶权势会用效率、产量和惧怕来辖制人。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">诚实哀诉</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Honest Lament</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">lamah / why?</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西没有把困惑压下，而是带到神面前。稳健的信心并非没有问题，而是在不明白时仍向神说话。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 5 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">每个单元先观察经文在叙事中的意思，再把古代处境与今日压力、工作、权力关系和祷告生活连接起来。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">Each unit moves from contextual meaning to devotional application for work, pressure, power, and prayer today.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Confronting Pharaoh in the Lord's Name</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">奉神之名面对法老 (5:1-5)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西和亚伦去见法老，说：“耶和华以色列的神这样说：容我的百姓去，在旷野向我守节。”法老回答：“耶和华是谁，使我听祂的话，让以色列去呢？我不认识耶和华，也不容以色列去。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses and Aaron came to Pharaoh and said that the LORD, the God of Israel, commanded him to let His people go to hold a feast in the wilderness. Pharaoh answered, “Who is the LORD, that I should obey His voice? I do not know the LORD, and I will not let Israel go.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">真正的冲突是主权归属</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西的信息先称神为“以色列的神”，说明以色列的身份不由埃及经济制度决定，而由耶和华的约定决定。法老的反问不是求知，而是抗拒：他拒绝承认有一位比他更高的主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The issue is not merely labor policy but lordship. Israel belongs to the LORD, while Pharaoh rejects any authority above his own command.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在权势面前保持敬拜身份</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人也会被工作指标、家庭期待或他人评价重新命名。本段提醒我们，顺服神常从承认“我首先属于主”开始。即使环境还未改变，身份已经被神的话重新定位。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Work pressure and public opinion can try to rename us. This passage calls us to begin with worshipful identity: before we serve any system, we belong to God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:3-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他们又说，希伯来人的神遇见了我们，请容我们往旷野去，走三天路程献祭，免得祂用瘟疫或刀兵临到我们。法老却说他们叫百姓歇工，又责备这地的百姓已经众多。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            They asked to go a three days' journey into the wilderness to sacrifice to the LORD, lest judgment fall. Pharaoh accused them of making the people rest from their burdens and complained that the people were already many.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬拜被压迫者看成偷懒</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西提出的是献祭与顺服的需要，法老却只听见“歇工”。这显出奴役体系无法理解敬拜，因为它只按产量衡量人的价值。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh hears worship as lost productivity. Oppressive systems often reduce people to output and cannot understand holy rest or covenant obedience.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神定义休息与事奉</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当我们把安息、礼拜和祷告看成低效率时，心里可能已经接受了法老式逻辑。灵修操练不是逃避责任，而是让生命重新接受神的秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When prayer and worship feel inefficient, Pharaoh's logic may already be shaping us. Devotion restores God's order to our responsibilities.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Labor Intensified: Bricks without Straw</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">苦工加重：无草仍要交砖 (5:6-14)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:6-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            当天法老吩咐督工和官长，不再把草给百姓作砖，叫他们自己去捡草，但每日作砖的数目仍不可减少。他说他们是懒惰，所以才喊着要去献祭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            That same day Pharaoh commanded the taskmasters and foremen not to give the people straw for bricks. They had to gather straw for themselves, yet the daily quota remained unchanged. Pharaoh called them idle for wanting to sacrifice.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">权势用更重负担压制盼望</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“当天”显示法老反应迅速而冷酷。他不是单纯拒绝请求，而是制造更严苛的现实，使百姓把痛苦归咎于摩西，进而放弃神的应许。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh immediately weaponizes workload. The goal is to make hope costly enough that Israel will blame the messengers and abandon the promise.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">顺服后压力增加并非神缺席</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有时我们刚开始按真理行事，关系或工作反而更紧张。本段帮助我们分辨：压力加重不一定说明方向错了，也可能是旧辖制不愿放手。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Obedience can initially increase tension. Greater pressure does not always mean the direction is wrong; it may reveal an old bondage resisting release.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:10-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            督工和官长出去对百姓宣布，法老不再给草；他们要自己找草，工作却一点不可减少。百姓散在埃及遍地捡碎秸，督工催逼他们完成每日的砖数，以色列人的官长也被责打。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The taskmasters and foremen told the people that Pharaoh would give no straw. They scattered through Egypt to gather stubble, while the taskmasters pressed them to meet the same quota, and the Israelite foremen were beaten.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">压迫通过中层传递痛苦</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">叙事提到埃及督工和以色列官长，显示压迫不只来自最高层，也会借组织结构层层传递。以色列官长被夹在法老命令与百姓无力之间，成为痛苦的承受者。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Oppression travels through layers of administration. The Israelite foremen stand between Pharaoh's impossible demands and the people's exhausted bodies.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在夹层压力中拒绝转嫁伤害</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">职场或家庭里，很多人也处在“上有压力、下有人等候”的位置。经文邀请我们在压力链条中向神求智慧，不把自己承受的焦虑继续转嫁给更弱的人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many people live in middle-pressure roles. This passage invites us to seek wisdom so we do not pass anxiety and harm down to those with less power.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Foremen Appeal and Hope Fractures</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">官长申诉与盼望破裂 (5:15-21)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:15-19</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            以色列人的官长哀求法老，问为什么这样待仆人；草没有给，砖却仍被要求，挨打的是他们。法老仍说他们懒惰，命令他们去作工，草不给，砖数不可少。官长看见自己遭遇祸患。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The Israelite foremen appealed to Pharaoh, asking why he treated his servants this way: no straw was given, yet bricks were demanded and they were beaten. Pharaoh still called them idle and refused to reduce the quota. The foremen saw that they were in trouble.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">向法老求公平却得不到怜悯</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">官长称自己为“仆人”，仍按埃及权力语言求情；但法老的判词没有改变。叙事让读者看见，奴役者不会自然成为拯救者，真正的出路必须来自耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The foremen appeal within Pharaoh's system, but Pharaoh offers no mercy. The narrative shows that the enslaver cannot become the savior.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不把终极盼望放在错误对象上</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们可以使用正当申诉渠道，却不能把终极安全感交给人的制度或某个掌权者。当合理沟通失败时，信心学习把眼光从法老转向主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may use proper channels for appeal, but ultimate hope cannot rest in human systems. When appeals fail, faith turns from Pharaoh to the Lord.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:20-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            官长离开法老出来，遇见摩西和亚伦，就说：“愿耶和华鉴察你们，施行判断；因为你们使我们在法老和臣仆面前有了臭名，把刀递在他们手中杀我们。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            As they left Pharaoh, the foremen met Moses and Aaron and accused them: “May the LORD look on you and judge, because you have made us offensive to Pharaoh and his servants and have put a sword in their hand to kill us.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">受苦群体内部出现裂痕</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">官长的控诉反映真实痛苦。他们提到耶和华，却把摩西看成灾祸源头。压迫的可怕之处，是它不仅伤害身体，也破坏信任，使受苦者彼此相责。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Their accusation is born from real pain. Oppression not only harms bodies; it fractures trust and turns sufferers against one another.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">痛苦中谨慎解释他人动机</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">压力大时，我们容易把最近的人当成问题本身。本节提醒我们在受伤时放慢判断：可以表达痛苦，但也要求神保守我们不把同路人变成敌人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Under pressure, we may treat nearby people as the real problem. This passage teaches honest speech with restraint, asking God to guard trust.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Moses Brings His Confusion Back to God</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">摩西把困惑带回神面前 (5:22-23)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">5:22-23</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西回到耶和华那里，说：“主啊，你为什么苦待这百姓呢？为什么打发我去呢？自从我去见法老，奉你的名说话，他就苦待这百姓，你一点也没有拯救他们。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses returned to the LORD and asked why He had brought trouble on the people and why He had sent him. Since Moses spoke to Pharaoh in the Lord's name, Pharaoh had done evil to the people, and deliverance had not yet appeared.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">哀诉仍是面向神的信心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西的问题尖锐，却有一个关键动作：“回到耶和华那里”。他没有放弃使命，也没有改投法老，而是把眼前事实与神的应许放在神面前求解释。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses asks hard questions, but he returns to the LORD. Lament keeps painful facts and divine promises together before God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把“为什么”带进祷告</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">成熟灵修不是只说正确句子，也是在困惑中继续来到神面前。我们可以向神陈明看不懂的现实，同时让祷告防止苦毒封闭心灵。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Mature devotion does not avoid hard questions. We bring our “why” to God so confusion becomes prayer rather than bitterness.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">从经文含义走向灵修应用</h1>
+  <p class="text-stone-700 leading-8 text-justify">本章的研读采用双轨方法：先按出埃及记的叙事上下文理解人物、权势与冲突，再把经文原则谨慎连接到今日处境。这样既避免把现代感受直接塞进经文，也避免停留在知识层面而不回应神。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-3">This chapter uses a two-track method: first reading the narrative in context, then applying its principles carefully to present life. This guards against both forced modern meanings and detached information.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-primary)]">观察上下文：</span>第 5 章接续第 3-4 章的呼召，也预备第 6 章神再次宣告祂的名与应许。<span class="en-text text-stone-500 italic block">Read Exodus 5 between Moses' call and the Lord's renewed promise in Exodus 6.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">尊重叙事张力：</span>本章没有急于解决痛苦，而是让压迫、误解和哀诉充分显明。<span class="en-text text-stone-500 italic block">The chapter lets oppression, misunderstanding, and lament stand before resolution.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">抓住核心冲突：</span>问题不是摩西技巧不足，而是法老拒绝耶和华的主权。<span class="en-text text-stone-500 italic block">The central conflict is Pharaoh's refusal of the Lord's authority.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/30 rounded-xl border border-amber-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>法老式压力今天可表现为用产量定义价值、用惧怕维持控制。<span class="en-text text-stone-500 italic block">Pharaoh-like pressure appears when output defines worth and fear maintains control.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">个人回应：</span>在压力加重时，先辨认自己属于神，再决定如何说话、申诉、休息与服事。<span class="en-text text-stone-500 italic block">Under pressure, remember belonging to God before deciding how to speak, appeal, rest, and serve.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">祷告落地：</span>把“为什么”带到神面前，使困惑成为哀诉，而不是苦毒或互相责备。<span class="en-text text-stone-500 italic block">Bring “why” to God so confusion becomes lament rather than bitterness or blame.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"主啊，我为什么打发我去呢？然而摩西回到耶和华那里。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Moses returned to the LORD with his question, and lament became prayer."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 5章 / Exodus Chapter 5</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

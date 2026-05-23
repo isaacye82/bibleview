@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 6 | 出埃及记 6章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #1d4ed8;     /* 主色：神启示圣名与约的坚定 */
+            --theme-secondary: #0f766e; /* 次色：救赎、领出与归属 */
+            --theme-accent: #dbeafe;       /* 提亮色：应许之光 */
+            --theme-bg: #f8fafc;               /* 网页底色 */
+            --theme-text: #172554;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .covenant-stage {
+            background: radial-gradient(circle at 18% 12%, rgba(219,234,254,.95), transparent 32%), linear-gradient(135deg, #eff6ff 0%, #ccfbf1 52%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .name-light { animation: namePulse 4.8s ease-in-out infinite; transform-origin: center; }
+        .arm-path { stroke-dasharray: 430; stroke-dashoffset: 430; animation: armReach 5.4s ease-in-out infinite; }
+        .chain-link { animation: linkBreak 5.4s ease-in-out infinite; transform-origin: center; }
+        .chain-link.l2 { animation-delay: .18s; }
+        .chain-link.l3 { animation-delay: .36s; }
+        .promise-dot { animation: dotRise 4.6s ease-in-out infinite; }
+        .promise-dot.d2 { animation-delay: .7s; }
+        .promise-dot.d3 { animation-delay: 1.2s; }
+        .promise-dot.d4 { animation-delay: 1.8s; }
+        @keyframes namePulse {
+            0%, 100% { opacity: .68; transform: scale(.96); filter: drop-shadow(0 0 0 rgba(29,78,216,0)); }
+            50% { opacity: 1; transform: scale(1.04); filter: drop-shadow(0 0 12px rgba(29,78,216,.28)); }
+        }
+        @keyframes armReach {
+            0% { stroke-dashoffset: 430; opacity: .45; }
+            45%, 70% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -430; opacity: .45; }
+        }
+        @keyframes linkBreak {
+            0%, 38% { transform: translate(0,0) rotate(0deg); opacity: 1; }
+            62%, 100% { transform: translate(10px,-8px) rotate(14deg); opacity: .42; }
+        }
+        @keyframes dotRise {
+            0%, 100% { transform: translateY(10px); opacity: .35; }
+            50% { transform: translateY(-10px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hand-holding-heart mr-2 text-stone-600"></i> 出埃及记 6章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 6</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">神记念祂的约，并以大能伸手救赎</h1>
+    <p class="en-text text-stone-500 italic mb-5">God Remembers His Covenant and Redeems with an Outstretched Arm</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 6 章回应第 5 章的挫败。摩西看见的是法老更重的压迫，神却重新启示祂的名，宣告“我是耶和华”，并用一连串“我要”确认救赎行动：领出、救赎、收纳、作神、带入应许之地。本章也诚实记录百姓因苦工愁烦而听不进去，以及摩西再次承认自己的软弱。神的计划不是建立在人的情绪稳定或领袖口才上，而是建立在祂自己的圣名与约上。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 6 answers the frustration of chapter 5. Moses sees increased oppression, but the Lord reveals His name again and anchors deliverance in repeated promises: He will bring out, deliver, redeem, take Israel as His people, be their God, and bring them into the promised land. The chapter honestly records discouraged hearers and a hesitant servant, showing that redemption rests on God's covenant name rather than human strength.</p>
+  </div>
+  <aside class="covenant-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">圣名发光，锁链松开</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以发光圣名、伸出的膀臂和断开的链环表现本章重点：神亲自记念约，用大能把百姓从重担下领出来。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A glowing name, an outstretched arm, and breaking links picture covenant remembrance becoming redemption.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated covenant name, outstretched arm, and broken chains from Exodus 6" class="w-full mt-4">
+      <defs>
+        <linearGradient id="armGrad6" x1="0" x2="1">
+          <stop offset="0%" stop-color="#1d4ed8"/>
+          <stop offset="100%" stop-color="#0f766e"/>
+        </linearGradient>
+        <radialGradient id="nameGlow6" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#dbeafe"/>
+          <stop offset="62%" stop-color="#60a5fa" stop-opacity=".68"/>
+          <stop offset="100%" stop-color="#1d4ed8" stop-opacity=".12"/>
+        </radialGradient>
+      </defs>
+      <circle class="name-light" cx="210" cy="70" r="46" fill="url(#nameGlow6)"/>
+      <text class="name-light" x="210" y="78" text-anchor="middle" font-size="28" font-family="serif" font-weight="700" fill="#1e3a8a">יהוה</text>
+      <path class="arm-path" d="M78 151 C135 119, 185 118, 225 141 C252 156, 281 156, 333 128" fill="none" stroke="url(#armGrad6)" stroke-width="14" stroke-linecap="round"/>
+      <g fill="none" stroke="#334155" stroke-width="8" stroke-linecap="round" opacity=".78">
+        <path class="chain-link l1" d="M74 182 C101 157, 128 157, 155 182"/>
+        <path class="chain-link l2" d="M150 182 C177 157, 204 157, 231 182"/>
+        <path class="chain-link l3" d="M226 182 C253 157, 280 157, 307 182"/>
+      </g>
+      <g fill="#0f766e">
+        <circle class="promise-dot d1" cx="116" cy="112" r="6"/>
+        <circle class="promise-dot d2" cx="168" cy="133" r="5"/>
+        <circle class="promise-dot d3" cx="252" cy="118" r="6"/>
+        <circle class="promise-dot d4" cx="309" cy="92" r="5"/>
+      </g>
+      <path d="M62 212 H358" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round" opacity=".32"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 6 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">我是耶和华</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">I Am the LORD</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">ani YHWH</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">神三次重复“我是耶和华”，不是抽象神学公式，而是把祂的身份、信实和行动连在一起。祂是谁，决定祂必要成就什么。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">记念约</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Remembering Covenant</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">zakar berit</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“记念”不是神曾经忘记，而是祂按所立的约采取行动。亚伯拉罕、以撒、雅各的应许，如今进入历史拯救阶段。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">伸出来的膀臂</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Outstretched Arm</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">zeroa netuyah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">神的救赎不是只给安慰话语，也包括公开、有能力的介入。祂要在法老的强权面前显出更高的主权。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">心里愁烦</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Broken Spirit</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qotser ruach</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">百姓听不进去，不是因为应许不真实，而是长期苦工压缩了盼望的空间。经文温柔承认受压者的疲惫。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 6 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章先听神如何解释祂自己，再观察百姓与摩西的疲惫反应。每个单元都从上下文经文含义走向今日的信心、压力与呼召应用。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter first listens to how God identifies Himself, then observes Israel's and Moses' weary responses. Each unit moves from contextual meaning to present application.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The LORD Reaffirms His Covenant Name</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">耶和华重申祂的圣名与约 (6:1-8)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:1-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“现在你必看见我向法老所行的事，使他因我大能的手容以色列人去。……我是耶和华。我与亚伯拉罕、以撒、雅各坚定所立的约，要把迦南地赐给他们；我也听见以色列人在埃及为奴的哀声，我也记念我的约。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses that he would now see what God would do to Pharaoh: by a strong hand Pharaoh would let Israel go. God said, “I am the LORD,” recalled His covenant with Abraham, Isaac, and Jacob, heard Israel's groaning, and remembered His covenant.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神用自己的名解释历史</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">第 5 章以摩西的“为什么”结束，第 6 章不先解释每个细节，而是让摩西重新认识说话的神。“我是耶和华”把神的身份、应许和即将行动的能力连在一起。祂记念约，意思是祂要按约介入，不让法老成为历史的最终解释者。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Lord answers Moses' “why” by revealing Himself. “I am the LORD” joins God's identity, promise, and action; covenant remembrance means active intervention, not mere recollection.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神的名大过眼前局面</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当工作压力、关系僵局或长期等待让我们只看见“法老仍在”时，本段邀请我们先回到神是谁。信心不是否认痛苦，而是把痛苦放在神的圣名和信实之约下面重新观看。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When pressure makes Pharaoh seem final, devotion returns to who God is. Faith does not deny pain; it places pain beneath God's covenant name.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:6-8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神吩咐摩西告诉以色列人：“我是耶和华；我要用伸出来的膀臂重重地刑罚埃及人，救赎你们脱离重担和苦工。我要以你们为我的百姓，我也要作你们的神；我要把你们领到我起誓应许之地，赐给你们为业。我是耶和华。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            God told Israel, “I am the LORD.” He would bring them out from Egypt's burdens, deliver them from slavery, redeem them with an outstretched arm and great judgments, take them as His people, be their God, and bring them into the land promised to the fathers.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">救赎包含释放、归属与产业</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这些“我要”构成本章的救赎蓝图。神不只是让以色列离开埃及，更要把他们收纳为自己的百姓，并带入应许之地。因此出埃及不是漫无目的的逃离，而是从奴役进入与神立约的生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The repeated “I will” statements form a redemption map: release from burdens, belonging to God, and inheritance in the promised land. Exodus is not aimless escape but covenant life.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从“逃离压力”走向“归属于神”</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常只求神挪去重担，但神的心意更深：祂要我们在释放中重新属于祂。面对成瘾、焦虑或职场奴役感时，不只问“我怎样脱身”，也问“神要把我带向怎样的归属与使命”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often ask only for burdens to be removed, but God moves us toward belonging. In anxiety or bondage-like patterns, ask not only how to escape but where God is leading you.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Discouraged Hearers and a Hesitant Messenger</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">愁烦的百姓与迟疑的使者 (6:9-13)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:9-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西将这些话告诉以色列人，只是他们因苦工愁烦，不肯听他的话。耶和华又吩咐摩西去告诉法老容以色列人出他的地。摩西说：“以色列人尚且不听我，法老怎肯听我这拙口笨舌的人呢？”耶和华却吩咐摩西、亚伦往以色列人和法老那里去，把以色列人从埃及地领出来。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses spoke God's promises to Israel, but they would not listen because of their broken spirit and harsh slavery. The LORD sent Moses again to Pharaoh, yet Moses objected that Israel had not listened, so Pharaoh surely would not listen to a man of uncircumcised lips. The LORD still commanded Moses and Aaron concerning Israel and Pharaoh.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">苦工会压缩人听见盼望的能力</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文没有责备百姓“信心太小”，而是说明原因：心里愁烦、苦工沉重。摩西也再次把自己的口才缺陷当作使命障碍。但神的命令继续推进，因为救赎的根基不在人的接受度或摩西的表达能力。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text names the people's condition rather than mocking them: crushed spirit and harsh slavery. Moses' weakness remains real, but God's command moves forward because redemption rests on God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">温柔对待听不进去的人，也诚实面对自己</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">长期压力下，人可能听见好消息也没有力气回应。今天的牧养、家庭沟通和职场陪伴，都需要这种怜悯。同时，当我们像摩西一样只看见自己的不足时，可以把软弱带到神面前，却不要让软弱决定是否顺服。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">People under long pressure may lack strength to receive hope. We respond with compassion, and we bring our own weakness to God without letting weakness decide obedience.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Genealogy Anchors the Mission in History</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">族谱把使命锚定在真实历史中 (6:14-27)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:14-27</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文列出以色列家长的名字，特别追溯流便、西缅和利未的后代，直到暗兰、约基别、亚伦和摩西，并提到亚伦的子孙。结尾说明：这亚伦和摩西，就是耶和华吩咐把以色列人按着军队从埃及领出来的；对埃及王法老说话的，也是这摩西和亚伦。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The genealogy names the heads of Israel's families, especially tracing Reuben, Simeon, and Levi down to Amram, Jochebed, Aaron, and Moses, and then Aaron's descendants. It concludes that this was the Aaron and Moses whom the LORD commanded to bring Israel out of Egypt, and who spoke to Pharaoh.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">救赎不是神话，而是进入家族与代际</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">族谱看似打断叙事，实际是在确认摩西和亚伦的身份，也把出埃及事件放回以色列十二支派的历史中。神的应许不是空泛理念，而是临到具体家庭、名字、代际和软弱的人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The genealogy confirms Moses and Aaron within Israel's history. Redemption is not mythic abstraction; it reaches concrete families, names, generations, and flawed servants.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">相信神也在平凡名字中工作</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们容易只关注戏剧性的神迹，却忽略神也借家庭、传承、普通履历和长期预备工作。你的背景不必完美才可被神使用；神常在看似普通的代际故事中预备使命。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may look only for dramatic signs, but God also works through families, history, and long preparation. An ordinary background can become part of God's mission.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Call Repeated after the Genealogy</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">族谱之后，呼召再次临到 (6:28-30)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:28-30</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            当耶和华在埃及地对摩西说话的日子，耶和华说：“我是耶和华；我对你说的一切话，你都要告诉埃及王法老。”摩西在耶和华面前说：“看哪，我是拙口笨舌的人，法老怎肯听我呢？”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the day the LORD spoke to Moses in Egypt, He said, “I am the LORD; tell Pharaoh king of Egypt all that I say to you.” Moses replied before the LORD, “Behold, I am of uncircumcised lips. How will Pharaoh listen to me?”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">同样的软弱，遇见同一位主</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章以神的自我宣告开始，也以摩西的迟疑结束。叙事没有把摩西包装成自信英雄，而是让读者看见：真正推动故事的是“我是耶和华”的神，而不是摩西终于觉得自己够格。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter begins with God's self-revelation and ends with Moses' hesitation. Moses is not portrayed as a self-made hero; the Lord's identity drives the story.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">顺服不等于不再害怕</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们可能多次回到同一个软弱：不会说话、害怕冲突、担心失败。神没有要求摩西先制造完美自信，而是呼召他带着真实限制去传达神的话。今天的顺服也常是带着颤抖迈出下一步。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may revisit the same fear repeatedly. God does not require manufactured confidence before obedience; He calls us to carry His word with honest limits.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">从圣名与约进入实际灵修</h1>
+  <p class="text-stone-700 leading-8 text-justify">本章的研读采用双轨方法：先在出埃及记叙事脉络中理解神的自我启示、约的记念、百姓的愁烦和摩西的迟疑；再把这些原则谨慎连接到今日压力、身份、呼召和盼望。这样既避免把现代情绪直接读进经文，也避免只停留在历史资料而不回应神。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-3">This chapter uses a two-track method: first reading God's self-revelation, covenant remembrance, Israel's discouragement, and Moses' hesitation within Exodus; then applying those principles carefully to pressure, identity, calling, and hope today.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-primary)]">观察上下文：</span>第 6 章回应第 5 章的哀诉，也预备第 7 章开始的审判神迹。<span class="en-text text-stone-500 italic block">Read Exodus 6 as the answer to chapter 5's lament and the preparation for chapter 7's judgments.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">抓住重复词：</span>“我是耶和华”和多个“我要”是本章骨架，显示救赎由神主动发起并成就。<span class="en-text text-stone-500 italic block">The repeated “I am the LORD” and “I will” statements form the chapter's structure.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">尊重族谱功能：</span>族谱不是可跳过的插曲，而是确认摩西、亚伦和以色列群体的历史位置。<span class="en-text text-stone-500 italic block">The genealogy confirms the historical identity of Moses, Aaron, and Israel.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/30 rounded-xl border border-blue-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>被重担压缩的心今天可表现为焦虑、倦怠、听不进盼望；神仍以祂的名和约重新托住人。<span class="en-text text-stone-500 italic block">A crushed spirit today may look like anxiety, burnout, or inability to receive hope; God's name still steadies His people.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">个人回应：</span>先默想神是谁，再处理压力是什么；先确认归属，再回应任务。<span class="en-text text-stone-500 italic block">Meditate first on who God is, then face what the pressure is; receive belonging before responding to tasks.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">祷告落地：</span>把同一个软弱反复带到神前，并求祂使下一步顺服不被惧怕决定。<span class="en-text text-stone-500 italic block">Bring recurring weakness to God repeatedly, asking Him to keep fear from deciding the next act of obedience.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"我要以你们为我的百姓，我也要作你们的神。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"I will take you to me for a people, and I will be to you a God."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 6章 / Exodus Chapter 6</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

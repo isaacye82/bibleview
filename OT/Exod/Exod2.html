@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 2 | 出埃及记 2章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #25637a;     /* 尼罗河深蓝：保存、隐藏、护理 */
+            --theme-secondary: #b45309;   /* 旷野铜色：逃亡、磨炼、预备 */
+            --theme-accent: #ecfeff;      /* 水光浅青：生命被托住 */
+            --theme-bg: #f8f5ed;          /* 暖沙底色：埃及与米甸之间的旅程 */
+            --theme-text: #17313a;        /* 深青墨色：稳重阅读 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .moses-panorama {
+            position: relative;
+            min-height: 330px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(252, 211, 77, 0.34), transparent 30%),
+                linear-gradient(180deg, #d9b77d 0%, #b7793c 39%, #25637a 40%, #0f3e50 100%);
+            box-shadow: inset 0 0 85px rgba(15, 62, 80, 0.42);
+        }
+        .m_reed { animation: mReed 4.3s ease-in-out infinite; transform-origin: bottom; }
+        .m_reed.alt { animation-delay: -1.6s; }
+        .m_wave { stroke-dasharray: 18 24; animation: mRiver 9s linear infinite; }
+        .m_wave.alt { animation-duration: 12s; opacity: 0.55; }
+        .m_basket { animation: mBasket 6.5s ease-in-out infinite; }
+        .m_glow { animation: mGlow 3s ease-in-out infinite; transform-origin: center; }
+        .m_path { stroke-dasharray: 6 12; animation: mPath 8s linear infinite; }
+        @keyframes mReed { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(4deg); } }
+        @keyframes mRiver { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -180; } }
+        @keyframes mBasket { 0%,100% { transform: translate(0,0); } 50% { transform: translate(24px,-7px); } }
+        @keyframes mGlow { 0%,100% { opacity: 0.35; transform: scale(0.96); } 50% { opacity: 0.88; transform: scale(1.08); } }
+        @keyframes mPath { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -144; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-water mr-2 text-stone-600"></i> 出埃及记 2章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 2</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_0.92fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">隐藏中的拯救与旷野中的预备</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">Deliverance Hidden in the River, Formation Prepared in the Wilderness</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">出埃及记第二章把压迫之下的哭声，转向神隐秘的预备。婴孩摩西被母亲藏匿，又被放在蒲草箱中，竟在法老女儿手中得保存；成年后的摩西凭血气伸张公义，却因此逃往米甸，在旷野成为寄居者。章末说神听见、记念、看顾、知道，说明拯救尚未公开展开，但盟约之神已经介入历史。</p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">Exodus 2 turns the cry of oppression toward God's hidden preparation. The infant Moses is concealed, placed in a basket, and preserved through Pharaoh's daughter. As an adult, Moses acts with zeal but flees to Midian, where he becomes a sojourner. The chapter closes with God hearing, remembering, seeing, and knowing; deliverance has not yet become public, but the covenant God is already entering the story.</p>
+                </div>
+                <aside class="m_panorama_wrap">
+                    <div class="m_panorama_label sr-only">蒲草箱、水波、芦苇与通往旷野的路，象征神在隐藏中保存生命并预备仆人。</div>
+                    <div class="moses-panorama border border-stone-700/20">
+                        <svg viewBox="0 0 720 430" role="img" aria-label="尼罗河上的蒲草箱与通往旷野的虚线路径">
+                            <defs>
+                                <linearGradient id="exo2River" x1="0" x2="1" y1="0" y2="1">
+                                    <stop offset="0%" stop-color="#2f8197"/>
+                                    <stop offset="100%" stop-color="#0f3e50"/>
+                                </linearGradient>
+                                <radialGradient id="exo2Glow" cx="50%" cy="50%" r="50%">
+                                    <stop offset="0%" stop-color="#fff7cc" stop-opacity="0.95"/>
+                                    <stop offset="65%" stop-color="#fde68a" stop-opacity="0.34"/>
+                                    <stop offset="100%" stop-color="#fde68a" stop-opacity="0"/>
+                                </radialGradient>
+                            </defs>
+                            <rect x="0" y="174" width="720" height="256" fill="url(#exo2River)" opacity="0.98"/>
+                            <path d="M0 176 L92 132 L168 158 L260 104 L354 162 L458 96 L552 152 L720 88 L720 186 L0 186 Z" fill="#8b5e34" opacity="0.74"/>
+                            <path class="m_path" d="M512 96 C460 132 444 172 394 202 C328 240 300 282 270 332" fill="none" stroke="#fef3c7" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+                            <path class="m_wave" d="M-30 248 C82 218 146 282 254 248 C360 216 436 282 542 248 C620 224 674 232 752 248" fill="none" stroke="#c9f4ef" stroke-width="6" stroke-linecap="round" opacity="0.76"/>
+                            <path class="m_wave alt" d="M-20 324 C86 294 154 350 258 324 C366 292 446 350 546 322 C632 298 682 304 744 322" fill="none" stroke="#a9d8d2" stroke-width="5" stroke-linecap="round"/>
+                            <g transform="translate(74 105)">
+                                <path class="m_reed" d="M18 290 C8 210 26 130 12 38" fill="none" stroke="#e7c76c" stroke-width="7" stroke-linecap="round"/>
+                                <path class="m_reed alt" d="M56 292 C38 198 72 108 44 22" fill="none" stroke="#f1d88e" stroke-width="7" stroke-linecap="round"/>
+                                <path class="m_reed" d="M96 292 C82 206 106 132 90 48" fill="none" stroke="#d7b65d" stroke-width="7" stroke-linecap="round"/>
+                            </g>
+                            <g transform="translate(560 128)">
+                                <path class="m_reed alt" d="M18 276 C4 196 28 110 10 34" fill="none" stroke="#e7c76c" stroke-width="7" stroke-linecap="round"/>
+                                <path class="m_reed" d="M56 278 C40 204 72 124 50 46" fill="none" stroke="#f1d88e" stroke-width="7" stroke-linecap="round"/>
+                            </g>
+                            <g class="m_basket" transform="translate(310 246)">
+                                <circle class="m_glow" cx="82" cy="48" r="88" fill="url(#exo2Glow)"/>
+                                <path d="M14 68 C30 20 134 20 150 68 C126 108 40 108 14 68 Z" fill="#8a5b2f" stroke="#f4d79b" stroke-width="5"/>
+                                <path d="M38 52 C58 38 106 38 126 52" fill="none" stroke="#f8e9bd" stroke-width="8" stroke-linecap="round"/>
+                                <path d="M62 67 C78 80 96 80 112 67" fill="none" stroke="#3f2a1a" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+                            </g>
+                            <circle cx="536" cy="92" r="16" fill="#fef3c7" opacity="0.74"/>
+                            <path d="M528 92 L545 92 M536 84 L536 101" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity="0.76"/>
+                        </svg>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="flex items-end justify-between mb-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-[var(--theme-secondary)] font-bold">神学概念卡片 · Key Concepts</p>
+                        <h2 class="serif text-2xl font-bold text-stone-900 mt-1">本章的四个核心观察</h2>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">蒲草箱中的护理</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Providence in the Basket</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">tevah / ark-like vessel</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西的箱子使人想起挪亚方舟：审判与死亡的水域中，神用微小器皿保存生命，并把拯救计划隐藏在母亲的信心行动里。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">被拉出来的人</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Drawn Out</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Mosheh / Moses</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西名字与“拉出来”相连；他的生命先从水中被拉出，日后也要成为神手中带领百姓从奴役中被拉出的人。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">血气与呼召的距离</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Zeal Before Calling</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">justice & formation</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西看见苦情并愿意介入，但他的方式仍未被神塑造。米甸旷野成为他学习谦卑、等候和牧养的学校。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神听见并记念</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Heard and Remembered</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shama / zakar</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">“记念”不是神曾忘记，而是神按盟约采取行动。百姓的叹息进入神的面前，成为拯救历史公开展开的前奏。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-6 bg-white/80 border border-stone-200 rounded-xl p-5">
+                <p class="text-xs uppercase tracking-[0.2em] text-[var(--theme-primary)] font-bold mb-2">研读视图 · Study View</p>
+                <h2 class="serif text-2xl font-bold text-stone-900">出埃及记 2章分段研读</h2>
+                <p class="en-text text-sm text-stone-500 italic mt-1">A bilingual exegesis and devotional reading of Exodus 2.</p>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">出 2:1-10</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">有一个利未家的人娶了一个利未女子为妻。女子怀孕生了一个儿子，见他俊美，就藏了他三个月。后来不能再藏，便取蒲草箱，抹上石漆和石油，把孩子放在里面，搁在河边芦荻中。孩子的姐姐远远站着，要知道他究竟怎样。法老的女儿下河洗澡，看见箱子，打开就见孩子哭了，便怜悯他说：“这是希伯来人的一个孩子。”孩子的姐姐建议找希伯来妇人乳养，孩子的母亲因此领回孩子。孩子渐长，法老的女儿收他作儿子，给他起名叫摩西，说：“因我把他从水里拉出来。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">A Levite man married a Levite woman. She bore a son, saw that he was beautiful, and hid him three months. When she could hide him no longer, she placed him in a papyrus basket coated with pitch and set it among the reeds by the river. His sister watched from a distance. Pharaoh's daughter saw the basket, opened it, and had compassion on the crying child, recognizing him as a Hebrew baby. Through the sister's proposal, the child's own mother nursed him. When he grew, Pharaoh's daughter adopted him and named him Moses, saying that she had drawn him out of the water.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在死亡命令中保存生命</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">法老在上一章命令把男孩丢入河中；本段却显示同一条河成为神保存拯救者的地方。“蒲草箱”与挪亚方舟使用相似意象，强调神能在威胁生命的水域中开出保护之路。摩西被埃及王室收养，并非偶然的宫廷奇遇，而是神把将来的带领者放在埃及知识、希伯来身份和母亲信仰之间预备。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The river that Pharaoh intended for death becomes the place where God preserves life. The basket echoes ark imagery: God protects a life through the very waters that threaten it. Moses' adoption is not a random court story but a hidden preparation between Egyptian learning, Hebrew identity, and a mother's faith.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把无法掌控的交在神手中</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西的母亲不是消极放弃，而是在有限处境里尽忠，然后把孩子交给神能掌管的水流。今天我们面对家庭压力、职场不确定或孩子前途时，也常走到“不能再藏”的边界。信心不是保证我们掌控结果，而是在尽上责任后，把最宝贵的交给神，并相信他能在我们看不见的路径中工作。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses' mother does not surrender passively; she acts faithfully within her limits and entrusts the child to God's providence. In family strain, career uncertainty, or concern for children, faith often begins where control ends. We do what is ours to do, then entrust the outcome to the God who works through hidden channels.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">出 2:11-15</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">后来摩西长大，出去到他弟兄那里，看见他们担重担；又看见一个埃及人打一个希伯来人。摩西左右观看，见没有人，就把埃及人打死，藏在沙土里。第二天他出去，看见两个希伯来人争斗，便劝那欺负人的说：“你为什么打你同族的人呢？”那人回答：“谁立你作我们的首领和审判官呢？难道你要杀我，像杀那埃及人吗？”摩西惧怕，知道事情被人知道了。法老听见这事，想杀摩西，摩西便逃往米甸，坐在井旁。</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">When Moses had grown up, he went out to his brothers and saw their burdens. He saw an Egyptian striking a Hebrew, looked this way and that, killed the Egyptian, and hid him in the sand. The next day he tried to confront a Hebrew who was wronging another, but the man challenged him: "Who made you a ruler and judge over us? Will you kill me as you killed the Egyptian?" Moses became afraid, Pharaoh heard of it and sought to kill him, so Moses fled to Midian and sat by a well.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">看见苦情，却未学会神的方式</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西没有忘记自己的希伯来弟兄，这显示他的身份意识与公义感已经被唤醒。然而经文也指出他的行动带着隐藏、暴力与恐惧：他“左右观看”，杀人后“藏在沙土里”。他渴望作调停者，却还不是神所差遣的拯救者。米甸逃亡不是呼召失败的终点，而是神继续塑造器皿的起点。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses sees the suffering of his Hebrew brothers and desires justice, but his method is marked by secrecy, violence, and fear. He wants to mediate, yet he has not been sent by God. Flight to Midian is not the end of his calling; it becomes the beginning of deeper formation.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">热心需要被神塑造</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们也可能看见不公、误解或团队中的伤害，便急于用自己的力量处理。经文提醒我们：正确的负担若脱离神的时间和方式，可能带来新的破碎。灵修的桥梁原则是，让神先治理我们的怒气、恐惧和自我证明，再差遣我们成为能医治而不是加重伤口的人。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may see injustice or relational harm and rush to fix it by our own force. A right burden, separated from God's timing and way, can create fresh wounds. Let God govern anger, fear, and the need to prove ourselves before we act as agents of healing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">出 2:16-22</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">米甸祭司有七个女儿，她们来打水，要打满槽饮父亲的群羊。有牧羊人来赶走她们，摩西却起来帮助她们，又饮了她们的羊群。她们回到父亲流珥那里，父亲问为何今日回来得这么快。她们说有一个埃及人救她们脱离牧羊人的手，并且为她们打水饮羊群。流珥请摩西同住，后来把女儿西坡拉给他为妻。西坡拉生了一个儿子，摩西给他起名叫革舜，因为他说：“我在外邦作了寄居的。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">The priest of Midian had seven daughters who came to draw water for their father's flock. Shepherds drove them away, but Moses rose to help them and watered their flock. When they returned quickly, their father Reuel asked why, and they said that an Egyptian had rescued them and drawn water for the flock. Reuel welcomed Moses, gave him Zipporah as wife, and she bore a son whom Moses named Gershom, saying, "I have been a sojourner in a foreign land."</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">井旁的保护者成为寄居者</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西在井旁保护受欺压者，与前段形成呼应：他仍然关心弱者，但这里不再以隐藏的暴力行事，而是公开帮助、供应水源。米甸家庭接纳他，婚姻和儿子的出生给他新的身份；“革舜”表达他作为寄居者的自我认识。神把未来领袖带进普通牧羊生活，使他学习在边缘之地忠心。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">At the well, Moses again protects the vulnerable, but this time through open help rather than hidden violence. Midian gives him household, marriage, and a son, while the name Gershom acknowledges his sojourner status. God places a future leader in ordinary shepherd life to form faithfulness in the margins.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">边缘季节也能成为训练场</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西从王宫到旷野，外在看像降级，属灵上却是深层训练。我们被调离熟悉岗位、进入照顾家庭的季节、或经历计划被迫延迟时，容易只看见失落。经文邀请我们问：神是否正在用不起眼的责任，训练我谦卑、忍耐、照顾弱者，并预备我将来承担更合宜的托付？</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses' move from palace to wilderness looks like loss, yet it becomes formation. When work shifts, family duties grow, or plans are delayed, God may be using ordinary responsibilities to teach humility, patience, care for the vulnerable, and readiness for future trust.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">出 2:23-25</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">过了多年，埃及王死了。以色列人因作苦工，就叹息哀求；他们的哀声达于神。神听见他们的哀声，就记念他与亚伯拉罕、以撒、雅各所立的约。神看顾以色列人，也知道他们的苦情。</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">After many days, the king of Egypt died. The people of Israel groaned because of their slavery and cried out, and their cry for help rose up to God. God heard their groaning, remembered his covenant with Abraham, Isaac, and Jacob, saw the people of Israel, and knew.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神按盟约回应叹息</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这几节以四个动词收束全章：神听见、记念、看顾、知道。“记念”不是信息恢复，而是盟约行动的开始。亚伯拉罕、以撒、雅各的约把以色列的苦难放在神应许的历史中；百姓可能只感到长久沉默，但叙事让读者看见神已经转向他们。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter closes with four divine actions: God heard, remembered, saw, and knew. Remembering is not recovering forgotten information; it signals covenant action. Israel's suffering is held within God's promise to Abraham, Isaac, and Jacob, even when the people experience long silence.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">叹息没有落空</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些祷告不像清楚的句子，只像压力下的叹息。出埃及记提醒我们，神不是只听整理好的语言；他也听见被劳苦压碎的呼声。现代生活里，当我们在病痛、经济压力或关系拉扯中难以表达，仍可把叹息带到神面前，因为他看见、知道，并按他的信实推进拯救。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some prayers are not polished sentences but groans under pressure. God hears more than organized language; he hears burdened cries. In illness, financial strain, or relational pain, we may bring even our sighs to him, trusting that he sees, knows, and moves according to his faithfulness.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">方法论 · Methodology</p>
+                <h2 class="serif text-3xl font-bold text-stone-900 mb-3">双轨阅读：先进入经文，再带入生活</h2>
+                <p class="en-text text-stone-500 italic mb-6">A two-track reading: enter the text first, then bring its truth into daily life.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="border border-stone-200 rounded-xl p-5 bg-slate-50/60">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">正统解经原则</h3>
+                        <p class="en-text text-xs text-stone-500 italic mb-3">Sound Exegetical Principles</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">本章先观察叙事结构：婴孩被保存、成年摩西失败逃亡、米甸井旁受接纳、神听见百姓叹息。解释时避免把每个细节任意象征化，而是把它们放在出埃及记的救赎主线和创世记盟约应许中理解。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic">The reading begins with narrative structure: the child preserved, the adult Moses fleeing, the Midian well scene, and God hearing Israel's groaning. Details are not forced into private symbolism but read within Exodus' deliverance arc and the covenant promises from Genesis.</p>
+                    </div>
+                    <div class="border border-stone-200 rounded-xl p-5 bg-[var(--theme-accent)]/20">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修应用路径</h3>
+                        <p class="en-text text-xs text-stone-500 italic mb-3">Devotional Application Path</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">应用不是跳过原意寻找个人感受，而是以“桥梁原则”连接古代处境与今日生命：神在隐藏中护理、热心需要被塑造、边缘季节能成为训练、叹息被神听见。这些原则可以进入家庭、职场、服事和人际关系。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic">Application does not bypass meaning for private feeling. It bridges the ancient setting to present life: God provides hidden care, zeal must be formed, marginal seasons can train us, and groans are heard by God. These truths speak into family, work, service, and relationships.</p>
+                    </div>
+                </div>
+                <div class="mt-6 border-l-4 border-[var(--theme-secondary)] pl-4 py-2">
+                    <h3 class="serif font-bold text-stone-900 mb-2">实际落地指南 · Practical Guide</h3>
+                    <p class="text-sm leading-7 text-stone-700 text-justify">阅读出埃及记 2 章时，先问“经文如何推动神拯救以色列的故事？”再问“这段如何纠正我对掌控、公义、等待和祷告的理解？”最后把回应化为具体行动：今天在一个不能掌控的领域交托神，在一个愤怒的处境中暂停祷告，在一个平凡责任中忠心服事，并把说不清的叹息带到神面前。</p>
+                    <p class="en-text text-xs leading-6 text-stone-500 italic mt-2">When reading Exodus 2, ask first how the passage advances God's deliverance story, then how it corrects our view of control, justice, waiting, and prayer. Respond concretely: entrust one uncontrollable area to God, pause and pray in one angry situation, serve faithfully in one ordinary duty, and bring wordless groans before him.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"神听见他们的哀声，就记念他与亚伯拉罕、以撒、雅各所立的约。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"God heard their groaning, and God remembered his covenant with Abraham, with Isaac, and with Jacob."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 2章 · Exodus Chapter 2</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

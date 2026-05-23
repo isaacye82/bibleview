@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 30 | 出埃及记 30章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：香坛、圣膏与分别为圣 */
+            --theme-secondary: #0f766e; /* 次色：铜盆洁净与生命秩序 */
+            --theme-accent: #fff7ed;       /* 提亮色：圣所暖光 */
+            --theme-bg: #fffbf5;               /* 网页底色 */
+            --theme-text: #3c2415;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .sanctuary-stage {
+            background:
+                radial-gradient(circle at 50% 8%, rgba(255, 247, 237, .98), transparent 35%),
+                linear-gradient(145deg, #fff7ed 0%, #fef3c7 42%, #ccfbf1 100%);
+            min-height: 100%;
+        }
+        .smoke-path {
+            stroke-dasharray: 72;
+            stroke-dashoffset: 72;
+            animation: smokeRise 4.8s ease-in-out infinite;
+        }
+        .smoke-path.s2 { animation-delay: .55s; }
+        .smoke-path.s3 { animation-delay: 1.1s; }
+        .altar-glow { animation: altarGlow 3.6s ease-in-out infinite; transform-origin: center; }
+        .water-wave { animation: waveMove 4s ease-in-out infinite; }
+        .coin { animation: coinPulse 4.2s ease-in-out infinite; transform-origin: center; }
+        .coin.c2 { animation-delay: .45s; }
+        .coin.c3 { animation-delay: .9s; }
+        @keyframes smokeRise {
+            0% { stroke-dashoffset: 72; opacity: .1; transform: translateY(10px); }
+            45%, 70% { stroke-dashoffset: 0; opacity: .92; transform: translateY(-8px); }
+            100% { stroke-dashoffset: -72; opacity: .05; transform: translateY(-24px); }
+        }
+        @keyframes altarGlow {
+            0%, 100% { opacity: .65; filter: drop-shadow(0 0 0 rgba(124,45,18,0)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 14px rgba(124,45,18,.28)); }
+        }
+        @keyframes waveMove {
+            0%, 100% { transform: translateX(-8px); opacity: .55; }
+            50% { transform: translateX(8px); opacity: 1; }
+        }
+        @keyframes coinPulse {
+            0%, 100% { transform: scale(.94); opacity: .55; }
+            50% { transform: scale(1.06); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-flame-curved mr-2 text-stone-600"></i> 出埃及记 30章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 30</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">圣所中的代求、洁净与分别为圣</h1>
+    <p class="en-text text-stone-500 italic mb-5">Intercession, Cleansing, and Holiness in the Sanctuary</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 30 章把会幕的日常敬拜推向内在秩序：金香坛使祭司每日在神面前烧香，赎命银提醒百姓生命属于神，铜盆要求事奉者先洗净，圣膏油与圣香则把一切圣所器具分别出来。本章不是机械地列出礼仪，而是显明亲近神需要赎价、洁净、代求与圣洁边界。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 30 turns attention to the inner rhythm of sanctuary worship. The incense altar marks daily intercession, the ransom silver teaches that life belongs to God, the bronze basin calls servants to cleansing, and the holy oil and incense set apart what belongs to the LORD. The chapter shows that drawing near to God requires ransom, purity, prayer, and holy boundaries.</p>
+  </div>
+  <aside class="sanctuary-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">香烟上升，水波洁净</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效用金香坛的香烟、铜盆的水波与赎命银的光点，表现敬拜中的代求、洁净和生命归属。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Rising incense, rippling water, and ransom silver picture prayer, cleansing, and life held before God.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated incense altar, bronze basin, and ransom silver from Exodus 30" class="w-full mt-4">
+      <defs>
+        <linearGradient id="gold30" x1="0" x2="1">
+          <stop offset="0%" stop-color="#92400e"/>
+          <stop offset="52%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#7c2d12"/>
+        </linearGradient>
+        <linearGradient id="water30" x1="0" x2="1">
+          <stop offset="0%" stop-color="#0f766e"/>
+          <stop offset="100%" stop-color="#67e8f9"/>
+        </linearGradient>
+      </defs>
+      <path class="smoke-path s1" d="M194 118 C172 91, 206 74, 185 45" fill="none" stroke="#7c2d12" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+      <path class="smoke-path s2" d="M214 118 C241 90, 203 72, 230 42" fill="none" stroke="#b45309" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <path class="smoke-path s3" d="M207 122 C199 95, 227 82, 211 55" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" opacity=".6"/>
+      <rect class="altar-glow" x="157" y="126" width="104" height="76" rx="7" fill="url(#gold30)"/>
+      <rect x="147" y="113" width="124" height="22" rx="6" fill="#78350f"/>
+      <path d="M165 202 L144 232 M253 202 L274 232" stroke="#78350f" stroke-width="8" stroke-linecap="round"/>
+      <ellipse cx="95" cy="198" rx="56" ry="18" fill="#134e4a" opacity=".95"/>
+      <path class="water-wave" d="M50 198 C68 188, 86 208, 104 198 C122 188, 140 208, 158 198" fill="none" stroke="url(#water30)" stroke-width="4" stroke-linecap="round"/>
+      <g fill="#fbbf24" stroke="#92400e" stroke-width="3">
+        <circle class="coin c1" cx="313" cy="184" r="17"/>
+        <circle class="coin c2" cx="347" cy="166" r="14"/>
+        <circle class="coin c3" cx="365" cy="204" r="16"/>
+      </g>
+      <path d="M54 238 H376" stroke="#7c2d12" stroke-width="3" stroke-linecap="round" opacity=".32"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 30 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">香坛</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Altar of Incense</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mizbach qetoret</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">香坛靠近幔子，早晚与灯台一起被照管，表明祷告与代求是神子民每日亲近神的节奏。<span class="en-text italic text-stone-400">The incense altar marks daily prayer before the veil.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">赎命银</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Ransom Silver</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kopher nephesh</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">数点百姓时，每个人都交半舍客勒，富足与贫穷同价，提醒生命在神面前不是由身份或财富衡量。<span class="en-text italic text-stone-400">Each life stands equally before God.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">铜盆洗濯</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Bronze Basin</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kiyyor nechoshet</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">祭司进入会幕或靠近坛前必须洗手洗脚，说明事奉神不是只凭热心，也要接受持续的洁净。<span class="en-text italic text-stone-400">Service requires ongoing cleansing.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">圣膏与圣香</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Holy Oil & Incense</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shemen qodesh</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">膏油和香不可随意复制，强调归神之物不可被普通化。圣洁不是装饰，而是分别归主的边界。<span class="en-text italic text-stone-400">Holiness means being set apart to the LORD.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 30 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章围绕会幕敬拜的细节展开：香坛把祷告放在圣所中心，赎命银守住生命归属，铜盆提醒事奉前的洁净，膏油与香料划出圣洁边界。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter studies the sanctuary's worship rhythm: incense at the center, ransom for life, cleansing before service, and holy oil and incense that mark what belongs to God.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Altar of Incense</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">金香坛与每日代求 (30:1-10)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">30:1-10</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神吩咐摩西用皂荚木作一座包金的香坛，放在法柜前的幔子外。亚伦要在早晨整理灯时烧香，黄昏点灯时也烧香；坛上不可献凡香、燔祭或素祭，每年一次要用赎罪祭牲的血为坛赎罪，使它成为至圣。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD commands a gold-covered incense altar before the veil. Aaron is to burn fragrant incense morning and evening as he tends the lamps. No unauthorized incense or offerings belong there, and once a year the altar is cleansed with atoning blood, making it most holy.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">靠近幔子的香</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">香坛的位置非常关键：它不在外院，而在圣所内，紧邻至圣所的幔子。经文把烧香与修灯连在一起，说明祷告、敬拜与神同在的光不可分离。坛上禁止凡香，显明敬拜不能任意发明；每年以血洁净，也说明连最亲近的敬拜器具都需要赎罪遮盖。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The altar's location near the veil shows prayer brought close to God's presence. Its daily rhythm with the lamps joins intercession and worship, while the ban on strange incense and the yearly atonement teach that nearness to God is ordered by His holiness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把祷告放回日常节奏</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">香不是偶尔燃起，而是早晚持续升起。今天的应用不是把祷告变成表演，而是在工作开始、一天结束、关系紧张和压力堆积时，重新把生命带到神面前。桥梁原则是：亲近神需要规律，也需要按神所喜悦的方式，而不是只按自己的情绪。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Incense rose as a daily rhythm. In modern life, prayer can frame work, evening weariness, tense relationships, and accumulated pressure. Nearness to God grows through ordered, humble dependence, not spiritual performance.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Ransom Money</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">赎命银与生命归属 (30:11-16)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">30:11-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            当数点以色列人时，每个被数的人要为自己的生命献给耶和华赎价，免得灾殃临到。凡二十岁以上的都献半舍客勒，富足的不多出，贫穷的不少出；这银子用于会幕的事奉，作为以色列人在耶和华面前被记念的赎价。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Israel is counted, each person gives a ransom for his life to the LORD so that no plague comes upon them. Everyone twenty and older gives the same half shekel, rich and poor alike, and the money supports the service of the tent of meeting as a memorial before the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">被数点，也被赎回</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">数点人口容易让人把安全感放在数量、兵力或国力上。神要求赎命银，使被数点这件事回到敬拜之中：人不是统计资源，而是蒙神保守的生命。富人与穷人同献半舍客勒，强调赎价不按社会地位分层。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Counting can tempt a community to trust in numbers. The ransom payment reframes the census as worship: people are not mere resources but lives preserved before God. The equal amount levels rich and poor before the LORD.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不让数字定义生命</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常被绩效、薪资、粉丝数、成绩和报表定义。赎命银提醒我们：生命的价值不是由数据评估，而是在神面前被记念。桥梁原则是：当我们必须面对统计和评估时，要把身份感从数字里收回来，承认生命属于神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern life often measures people by metrics, income, scores, or reports. The ransom silver reminds us that our value is remembered before God. When numbers are necessary, identity must still rest in belonging to Him.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Bronze Basin</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">铜盆洗濯与事奉洁净 (30:17-21)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">30:17-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神吩咐摩西作铜盆和铜盆座，放在会幕与坛之间，盆中盛水。亚伦和他的儿子进入会幕或靠近坛供职时，要洗手洗脚，免得死亡。这成为他们世世代代要守的定例。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD commands a bronze basin with water between the tent and the altar. Aaron and his sons must wash their hands and feet when entering the tent or serving at the altar, lest they die. This becomes a lasting statute for the priestly line.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">事奉前的水</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">铜盆位于坛和会幕之间，祭司即使已经属于圣职，仍需反复洗濯。经文不是说水本身有魔力，而是用可见动作表明：接近神和服事人都不能忽略洁净。手与脚分别代表工作和行走，提醒事奉包括行为与道路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The basin stands between altar and tent, showing that even consecrated priests need repeated cleansing. Hands and feet point to work and walk; service before God involves both actions and ways.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">忙碌之前先被洁净</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们容易用忙碌替代清洁，用成果掩盖心里的怒气、比较和疲惫。铜盆提醒：服事、带领家庭、进入职场或处理冲突前，先让神洁净自己的动机与道路。桥梁原则是：真正的效率不是跳过省察，而是在神面前被整理后再行动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Busyness can hide anger, comparison, and weariness. The basin calls us to bring motives and habits before God before serving, leading at home, working, or resolving conflict. True effectiveness does not bypass cleansing.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Holy Anointing Oil</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">圣膏油与分别归主 (30:22-33)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">30:22-33</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神指定上等香料调成圣膏油，用来膏会幕、法柜、桌子、灯台、香坛、燔祭坛、铜盆和祭司，使这些成为至圣。膏油不可倒在普通人的身上，也不可照样复制；凡调制类似之物或用在外人身上的，都要从民中剪除。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD appoints precious spices for a holy anointing oil. It is used to consecrate the tabernacle, its furnishings, and the priests, making them most holy. The oil is not for ordinary use, and copying it or applying it outside God's command brings severe judgment.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁不是可复制的气味</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">圣膏油的香料珍贵，但重点不在奢华，而在分别。被膏的器具和祭司因神的命令归给神，不能被普通用途吞没。禁止复制也防止人把神圣标记变成私人品味、权力工具或宗教装饰。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The precious oil is not about luxury but consecration. What God marks as holy belongs to Him. The ban on imitation prevents holy signs from becoming private style, religious decoration, or a tool for status.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">守住归神的边界</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">信仰生活最容易被普通化：敬拜变成习惯，服事变成身份，恩赐变成自我展示。圣膏油提醒我们，凡归给神的时间、身体、能力和关系，都不能随意拿来满足虚荣。桥梁原则是：分别为圣不是远离生活，而是在生活中承认主权属于神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faith can become ordinary habit, status, or self-display. The anointing oil reminds us that time, body, gifts, and relationships offered to God must not be used for vanity. Holiness recognizes God's ownership within daily life.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Holy Incense</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">圣香与敬拜的专一 (30:34-38)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">30:34-38</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神指定拿他弗、施喜列、喜利比拿和净乳香，按作香之法调和，成为纯净圣洁的香。摩西要把香捣细，放在会幕内法柜前，就是神与他相会之处。这香归耶和华为至圣，不可为自己照样制作。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD appoints specific spices and pure frankincense to make a holy incense. It is beaten fine and placed before the testimony in the tent, where God meets with Moses. This incense is most holy to the LORD and must not be made for personal enjoyment.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">相会之处的香</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">圣香被放在法柜前，是神与摩西相会之处。香料被捣细，显明敬拜不是粗糙地凑合，而是按神指示预备。不可复制的命令再次强调：敬拜中最美的气味也不是为了人的享受，而是归给耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The incense belongs at the meeting place before the testimony. Being beaten fine suggests careful preparation, and the command not to copy it shows that even beauty in worship is directed to the LORD, not private consumption.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让敬拜不被自我消费</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天我们也可能把属灵经历变成个人享受、社交标签或情绪产品。圣香提醒我们，敬拜的中心不是我感觉如何，而是神配得什么。桥梁原则是：当音乐、聚会、安静或服事带来美好感受时，我们要把那份美重新献回给神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual experiences can become personal consumption, social identity, or emotional products. The holy incense redirects worship from how we feel to what God is due. When worship feels beautiful, that beauty should be offered back to Him.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何阅读出埃及记 30 章</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">正统解经路径先问：这些器具放在哪里、由谁使用、何时使用、禁止什么、为何需要赎罪或洁净。这样可以避免把香、油、水和银子直接变成任意象征，而是尊重会幕上下文中的敬拜秩序。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">A responsible reading first asks where each object belongs, who uses it, when it is used, what is forbidden, and why atonement or cleansing is required. This keeps incense, oil, water, and silver within the tabernacle's worship order instead of turning them into arbitrary symbols.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">释经轨道：从文本到含义</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">本章的重复词包括“至圣”“赎罪”“洗濯”“不可”。这些词显示亲近神既有恩典，也有边界。经文含义的重点不是制造神秘感，而是说明神如何规定敬拜、保护生命，并使事奉者分别为圣。</p>
+    <p class="en-text text-sm text-stone-500 italic leading-6">The exegesis track follows repeated words such as most holy, atonement, washing, and prohibition. The passage teaches ordered worship, protected life, and consecrated service rather than vague mystery.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修轨道：从含义到生活</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">灵修应用不是把每个物件随意比喻成个人感受，而是抓住桥梁原则：祷告需要节奏，生命属于神，事奉需要洁净，归神之物要守住边界。这些原则能进入职场压力、家庭责任、人际冲突和个人敬拜。</p>
+    <p class="en-text text-sm text-stone-500 italic leading-6">The devotional track applies bridge principles: prayer needs rhythm, life belongs to God, service needs cleansing, and holy things require boundaries. These truths speak into work pressure, family responsibility, conflict, and personal worship.</p>
+  </div>
+</section>
+
+<section class="bg-[var(--theme-accent)] rounded-xl border border-orange-100 shadow-sm p-6 sm:p-8">
+  <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900 mb-3">实际落地指南 / Practice Guide</h3>
+  <p class="text-stone-700 leading-8 text-justify mb-3">读本章时，可以用四个问题默想：我是否让祷告有早晚的节奏？我是否让数字决定自己的价值？我是否在忙碌事奉前接受神的洁净？我是否把属于神的恩赐、时间和敬拜重新献给神？</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Use four questions for meditation: Do I give prayer a daily rhythm? Do I let numbers define my worth? Do I receive God's cleansing before busy service? Do I offer back to God the gifts, time, and worship that belong to Him?</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"这要在耶和华面前作以色列人的记念，为你们的生命赎罪。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"It shall be a memorial for the people of Israel before the LORD, to make atonement for your lives."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus Chapter 30 双轨研读报告</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

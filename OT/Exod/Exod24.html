@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 24 | 出埃及记 24章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #6d4c1d;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #b45309; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #f8fafc;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #1e293b;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .sinai-stage { background: linear-gradient(160deg, #f8fafc 0%, #fef3c7 48%, #e2e8f0 100%); min-height: 100%; }
+        .cloud-ring { animation: cloudDrift 7s ease-in-out infinite; transform-origin: center; }
+        .glory-fire { animation: gloryPulse 3.8s ease-in-out infinite; transform-origin: center bottom; }
+        .blood-line { stroke-dasharray: 180; stroke-dashoffset: 180; animation: covenantTrace 5.8s ease-in-out infinite; }
+        .tablet-mark { animation: tabletGlow 4.6s ease-in-out infinite; }
+        .tablet-mark.m2 { animation-delay: .55s; }
+        .elder-dot { animation: elderRise 4.8s ease-in-out infinite; }
+        .elder-dot.e2 { animation-delay: .4s; }
+        .elder-dot.e3 { animation-delay: .8s; }
+        .elder-dot.e4 { animation-delay: 1.2s; }
+        @keyframes cloudDrift { 0%,100% { transform: translateX(-8px); opacity: .58; } 50% { transform: translateX(8px); opacity: .92; } }
+        @keyframes gloryPulse { 0%,100% { transform: scaleY(.92); opacity: .72; filter: drop-shadow(0 0 0 rgba(180,83,9,0)); } 50% { transform: scaleY(1.08); opacity: 1; filter: drop-shadow(0 0 16px rgba(180,83,9,.36)); } }
+        @keyframes covenantTrace { 0% { stroke-dashoffset: 180; opacity: .38; } 45%,70% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: -180; opacity: .38; } }
+        @keyframes tabletGlow { 0%,100% { opacity: .48; } 50% { opacity: 1; } }
+        @keyframes elderRise { 0%,100% { transform: translateY(5px); opacity: .45; } 50% { transform: translateY(-6px); opacity: 1; } }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-mountain-sun mr-2 text-stone-600"></i> 出埃及记 24章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 24</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">约在山上被确认：血、话语与同在</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Covenant Confirmed on the Mountain: Blood, Words, and Presence</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 24 章是西奈之约的庄严确认。百姓听见耶和华的一切话和典章，回应“我们都要遵行”；摩西将约书念给百姓听，并用血洒在坛和百姓身上，表明这约既是神主动设立，也呼召百姓以顺服回应。随后，以色列的代表上山，在神面前吃喝，却因神的怜悯得以存活。最后，摩西进入云中四十昼夜，预备领受会幕和敬拜的启示。本章把敬拜、盟约、顺服、代赎和神圣同在连在一起。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 24 solemnly confirms the Sinai covenant. Israel hears the words and ordinances of the LORD and answers, “We will do them.” Moses reads the book of the covenant and sprinkles blood on the altar and the people, showing that the covenant is established by God and calls for obedient response. Israel’s representatives then ascend, eat and drink before God, and live by His mercy. Finally, Moses enters the cloud for forty days and nights to receive further instruction for worship. The chapter joins worship, covenant, obedience, atonement, and holy presence.</p>
+  </div>
+  <aside class="sinai-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">山被云遮盖，约以血确认</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以云、烈火、血线和石版表现本章：神的荣耀临到山上，百姓在约血之下被分别，摩西进入云中领受启示。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Cloud, fire, covenant blood, and tablets picture holy presence and obedient response.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated Sinai mountain with cloud, fire, covenant blood, and tablets from Exodus 24" class="w-full mt-4">
+      <defs>
+        <linearGradient id="mountainGrad24" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/></linearGradient>
+        <linearGradient id="fireGrad24" x1="0" x2="0" y1="1" y2="0"><stop offset="0%" stop-color="#b45309"/><stop offset="55%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#fff7ed"/></linearGradient>
+      </defs>
+      <g class="cloud-ring" fill="#e2e8f0" opacity=".88"><ellipse cx="168" cy="58" rx="55" ry="18"/><ellipse cx="218" cy="50" rx="72" ry="22"/><ellipse cx="270" cy="62" rx="54" ry="17"/></g>
+      <path d="M42 224 L178 84 L238 148 L278 98 L382 224 Z" fill="url(#mountainGrad24)" opacity=".94"/>
+      <path class="glory-fire" d="M205 87 C186 115, 221 125, 198 151 C238 128, 227 107, 241 83 C229 93, 222 77, 205 87 Z" fill="url(#fireGrad24)"/>
+      <path class="blood-line" d="M84 219 C133 189, 173 199, 211 218 C252 239, 302 227, 344 202" fill="none" stroke="#b91c1c" stroke-width="5" stroke-linecap="round"/>
+      <g transform="translate(183 159)" fill="#f8fafc" stroke="#6d4c1d" stroke-width="3"><rect x="0" y="0" width="26" height="38" rx="3"/><rect x="32" y="0" width="26" height="38" rx="3"/><path class="tablet-mark m1" d="M8 10 H19 M8 19 H18 M8 28 H19"/><path class="tablet-mark m2" d="M40 10 H51 M40 19 H50 M40 28 H51"/></g>
+      <g fill="#6d4c1d"><circle class="elder-dot e1" cx="118" cy="207" r="5"/><circle class="elder-dot e2" cx="142" cy="199" r="5"/><circle class="elder-dot e3" cx="294" cy="207" r="5"/><circle class="elder-dot e4" cx="318" cy="198" r="5"/></g>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div><h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2><p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 24 faithfully</p></div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">约书与回应</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Book and Response</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">sefer habberit</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西写下并宣读“约书”，让百姓的回应建立在听见神话语之上。信心不是模糊热情，而是对神已启示旨意的清楚承诺。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">血立的约</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Covenant Blood</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">dam habberit</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">血一半洒在坛上，一半洒在百姓身上，显明神与百姓在约中相连，也提醒罪人亲近圣洁之神需要代赎和洁净。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">在神面前吃喝</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Eating Before God</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">akhal veshatah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">长老们看见神的荣耀表现，却没有被击杀，并在祂面前吃喝。这是恩典中的相交，预示敬拜不是恐惧逃离，而是在圣洁中与神同席。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">云与荣耀</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Cloud and Glory</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">anan kavod</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">云遮盖山，荣耀如烈火。神既真实临近，又保持圣洁距离；摩西进入云中，表明启示必须由神主动赐下。</p>
+</div></div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 24 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按约的确认、血的仪式、圣洁相交与云中启示分段阅读。每个单元都从上下文经文含义走向今日的顺服、敬拜和等候。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study follows covenant confirmation, the blood rite, holy fellowship, and revelation in the cloud, moving from contextual meaning to present obedience, worship, and waiting.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The People Promise to Obey the Covenant Words</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">百姓承诺遵行约言 (24:1-3)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“你和亚伦、拿答、亚比户，并以色列长老中的七十人，都要上到耶和华这里来，远远地下拜。惟独你可以亲近耶和华；他们却不可亲近，百姓也不可和你一同上来。”摩西下山，将耶和华的命令、典章都述说与百姓听。众百姓齐声说：“耶和华所吩咐的，我们都必遵行。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD called Moses, Aaron, Nadab, Abihu, and seventy elders to come up and worship from afar. Moses alone would draw near, while the others and the people would not. Moses told the people all the LORD’s words and ordinances, and they answered with one voice that they would do all the LORD had spoken.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">听见之后才承诺</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段清楚区分神圣临近的层次：百姓在山下，领袖远远敬拜，摩西独自亲近。这样的安排不是贬低百姓，而是保护他们在圣洁神面前不轻率越界。百姓的回应发生在摩西“述说”神的话之后，说明约的顺服不是自我设计的宗教热情，而是对神启示的回应。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The passage distinguishes levels of holy approach: the people remain below, the leaders worship from afar, and Moses alone draws near. Israel’s pledge follows the hearing of God’s words, so covenant obedience is a response to revelation rather than self-made religious enthusiasm.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">先聆听，再许诺</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天我们也容易先承诺、后了解，或用情绪替代顺服。本段提醒我们，工作、家庭和服事中的忠心，要从认真聆听神的话开始。真正成熟的“我愿意”，不是冲动地证明自己，而是在明白神心意后，让日常决定被祂的话调整。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often promise before listening or let emotion replace obedience. This scene calls us to begin with attentive hearing. A mature “yes” to God is not impulsive self-proving but a daily willingness to let His word reshape decisions at work, home, and in service.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Book, the Altar, and the Blood</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">约书、祭坛与血 (24:4-8)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:4-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西将耶和华的命令都写上。清早起来，在山下筑一座坛，按以色列十二支派立十二根柱子，又打发少年人献燔祭和平安祭。摩西将血一半盛在盆中，一半洒在坛上。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses wrote down all the words of the LORD. Early in the morning he built an altar at the foot of the mountain and set up twelve pillars for the twelve tribes of Israel. Young men offered burnt offerings and peace offerings, and Moses put half the blood in basins and half on the altar.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">写下的话与代表全体的柱子</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西把话写下，表示神的约不是随意变动的口头印象，而有可听、可读、可传承的内容。坛代表神面前的敬拜，十二柱代表以色列全体。祭牲的血先洒在坛上，强调这约首先归向神，百姓能站在约中，是因祭物生命被献上。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Writing the words gives the covenant stable and transmissible content. The altar represents worship before God, and the twelve pillars represent all Israel. Blood placed at the altar first shows that the covenant is oriented toward God and that access is mediated through sacrificed life.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让信仰有可记念的形状</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵生活若只停留在感觉，很快会被压力冲散。摩西写下约言、筑坛、立柱，提醒我们也需要具体的记念：固定读经、诚实记录神的带领、在家庭中设立敬拜节奏。这些不是形式主义，而是帮助软弱的人持续回应神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">If faith remains only a feeling, pressure quickly scatters it. Written words, altar, and pillars invite us to concrete remembrance: regular Scripture, honest records of God’s guidance, and household rhythms of worship. These practices help weak people keep responding to God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:7-8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西将约书念给百姓听。他们说：“耶和华所吩咐的，我们都必遵行。”摩西将血洒在百姓身上，说：“你看，这是立约的血，是耶和华按这一切话与你们立约的凭据。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses read the book of the covenant to the people, and they again said that they would do and obey all the LORD had spoken. Moses sprinkled the blood on the people and said that this was the blood of the covenant the LORD had made with them according to all these words.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">血把话语与百姓连接</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">百姓第二次回应，并且“遵行”与“听从”连在一起。约血洒在百姓身上，不是装饰性的仪式，而是严肃地说明他们属于这约，也受这约约束。血同时指向恩典和责任：罪人得以进入关系，但不能把神的话当作可有可无。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The people answer a second time, joining doing and obeying. The sprinkled blood is not decorative ritual; it marks the people as belonging to and bound by the covenant. Blood speaks both grace and responsibility: sinners are brought into relationship, yet God’s words cannot be treated as optional.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恩典不是降低认真程度</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常把“被接纳”理解成“不需要改变”。本节给出更深的桥梁原则：神先以恩典把人带进关系，然后在关系中呼召人认真顺服。我们面对冲突、欲望和选择时，不是靠恐惧维持体面，而是因被神买赎而学习忠诚。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern people often turn acceptance into “no change required.” This verse gives a deeper bridge: God graciously brings His people into relationship and then calls them to serious obedience within that relationship. In conflict, desire, and choices, we pursue faithfulness because we belong to Him.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Representatives Eat and Drink Before God</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">代表们在神面前吃喝 (24:9-11)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:9-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西、亚伦、拿答、亚比户，并以色列长老中的七十人，都上了山。他们看见以色列的神；祂脚下仿佛有平铺的蓝宝石，如同天色明净。祂的手不加害在以色列的尊者身上；他们观看神，他们又吃又喝。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses, Aaron, Nadab, Abihu, and seventy elders went up and saw the God of Israel. Under His feet was something like a pavement of sapphire, clear as the heavens. God did not lay His hand on the nobles of Israel; they beheld God and ate and drank.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁中的相交</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文谨慎描述他们所见的是神荣耀的表现，特别提到祂脚下如蓝宝石的铺路，避免把神缩小为可掌控的形象。重点在于“祂的手不加害”：人在圣洁神面前仍得存活，是恩典。吃喝则表明约已确认，敬拜进入相交和筵席的喜乐。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text carefully describes the manifestation of God’s glory, especially the sapphire-like pavement under His feet, without reducing God to a controllable image. The emphasis is that God did not strike them. Life before the Holy One is grace, and eating and drinking signal covenant fellowship and joy.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬畏不排斥亲近</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">很多人把神想成只能远观的威严，或只把祂当作满足需要的朋友。本段把两者放在一起：神圣洁到必须敬畏，神又施恩使人能在祂面前相交。今天的祷告也应如此，既不轻慢，也不退缩，带着谦卑和信任亲近祂。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some imagine God only as distant majesty; others reduce Him to a helper for needs. This passage holds both together: God is holy and must be revered, yet He graciously grants fellowship. Prayer today should neither be casual nor fearful withdrawal, but humble and trusting approach.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Moses Enters the Cloud to Receive Revelation</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">摩西进入云中领受启示 (24:12-18)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:12-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“你上山到我这里来，住在这里，我要将石版并我所写的律法和诫命赐给你，使你可以教训百姓。”摩西和他的帮手约书亚起来，上了神的山。摩西对长老说：“你们在这里等着，等到我们再回来；亚伦、户珥与你们同在，凡有争讼的，都可以就近他们去。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to come up and stay on the mountain, where He would give tablets of stone with the law and commandment written for Israel’s instruction. Moses and Joshua rose to go up the mountain of God, while the elders were told to wait, with Aaron and Hur available for disputes.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">启示为了教导群体</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神赐石版不是为了制造神秘感，而是“使你可以教训百姓”。摩西上山，同时安排亚伦和户珥处理争讼，显示属灵带领既需要等候神，也需要对群体秩序负责。约书亚同上山，暗示下一代领袖在神启示的环境中被塑造。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The tablets are given not to create mystique but so Moses can teach the people. Moses ascends while arranging Aaron and Hur to handle disputes, showing that spiritual leadership combines waiting on God with responsibility for communal order. Joshua’s presence hints at formation for future leadership.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">等候神，也安排责任</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在职场、教会或家庭里，属灵追求不应成为逃避责任的理由。摩西进入神面前之前，先交代群体事务。今天我们也需要学习：把时间分别给神，同时把该沟通、该交接、该处理的事清楚安排，使等候不是混乱，而是信靠中的秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual pursuit should not become an excuse to escape responsibility at work, church, or home. Before entering God’s presence, Moses delegates community matters. We likewise set apart time for God while communicating, handing off, and arranging duties clearly, so waiting becomes ordered trust.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">24:15-18</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西上山，有云彩把山遮盖。耶和华的荣耀停于西奈山；云彩遮盖山六天，第七天祂从云中召摩西。耶和华的荣耀在山顶上，在以色列人眼前，形状如烈火。摩西进入云中上山，在山上四十昼夜。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Moses went up, the cloud covered the mountain. The glory of the LORD settled on Sinai, and the cloud covered it for six days. On the seventh day God called Moses from the cloud. To Israel the glory of the LORD appeared like a consuming fire on the mountain top, and Moses entered the cloud for forty days and nights.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神临近，也隐藏</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">云彩和烈火同时出现，表达神的临近与不可轻慢。云遮盖，说明神不是人可以随意解析的对象；火显明，说明祂的荣耀真实可见、令人敬畏。摩西等候六天，第七天被召，提醒我们启示按神的时间赐下，不受人的急躁驱动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Cloud and fire together express God’s nearness and His unapproachable holiness. The cloud hides what humans cannot control; the fire reveals real and awe-inspiring glory. Moses waits six days and is called on the seventh, showing that revelation comes by God’s timing, not human urgency.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在云中学习信靠</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多信心旅程不像明亮地图，更像进入云中：看不清全部，却听见神呼召下一步。出埃及记 24 章鼓励我们，在不确定的季节不急着制造答案，而是守住神已经说过的话，接受必要的等待，并相信祂的同在比清楚掌控更可靠。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many journeys of faith feel less like a bright map and more like entering a cloud: the whole path is unclear, yet God calls the next step. Exodus 24 encourages us not to manufacture answers in uncertainty, but to hold what God has spoken, accept needed waiting, and trust His presence more than control.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从正统解经到灵修应用</h1>
+  <p class="text-stone-700 leading-8 text-justify mb-3">阅读出埃及记 24 章时，第一步不是直接把西奈山套用到个人经历，而是先看上下文：第 19-23 章已经颁布约言和典章，第 24 章则是正式确认这约。因此，“约书、血、吃喝、云彩”都应放在神主动立约与百姓回应顺服的脉络中理解。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">When reading Exodus 24, the first step is not to immediately turn Sinai into private experience, but to follow the context. Chapters 19-23 give covenant words and ordinances; chapter 24 confirms the covenant. The book, blood, meal, and cloud must be understood within God’s covenant initiative and Israel’s obedient response.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-3">正统解经原则</h2>
+    <p class="en-text text-sm text-stone-500 italic mb-4">Principles for faithful interpretation</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><strong>上下文：</strong>把本章视为西奈之约的确认，而不是孤立的神秘登山故事。<span class="en-text text-stone-500 italic"> Read the chapter as covenant confirmation, not an isolated mystical ascent.</span></li>
+      <li><strong>原意：</strong>血、坛、柱子和筵席都服务于“神立约、百姓归属”的主题。<span class="en-text text-stone-500 italic"> Blood, altar, pillars, and meal serve the theme of covenant belonging.</span></li>
+      <li><strong>渐进启示：</strong>约血最终让读者看见神如何以代赎开启亲近祂的道路。<span class="en-text text-stone-500 italic"> Covenant blood points forward to the larger biblical pattern of atoning access to God.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/30 rounded-xl border border-amber-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用路径</h2>
+    <p class="en-text text-sm text-stone-500 italic mb-4">A bridge into daily devotion</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><strong>听见再回应：</strong>在重大承诺前，先让神的话校正动机和边界。<span class="en-text text-stone-500 italic"> Hear before responding; let God’s word shape motives and boundaries.</span></li>
+      <li><strong>恩典中顺服：</strong>顺服不是换取接纳，而是被约中恩典接纳后的忠诚。<span class="en-text text-stone-500 italic"> Obedience does not purchase acceptance; it expresses covenant loyalty after grace.</span></li>
+      <li><strong>云中等候：</strong>当未来不清楚时，持守已领受的话，并在责任中安静等候。<span class="en-text text-stone-500 italic"> When the future is unclear, hold what God has spoken and wait faithfully within responsibility.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"摩西将血洒在百姓身上，说：“你看，这是立约的血，是耶和华按这一切话与你们立约的凭据。”"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Moses sprinkled the blood on the people and said, “Behold the blood of the covenant that the LORD has made with you in accordance with all these words.”"</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus 24 双轨研读报告 / Dual-Track Study Report</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

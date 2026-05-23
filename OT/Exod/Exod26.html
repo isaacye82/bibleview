@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 26 | 出埃及记 26章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffaf0;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #292524;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+
+        .tabernacle-stage {
+            background: radial-gradient(circle at 50% 28%, rgba(254,243,199,.9), transparent 34%), linear-gradient(135deg, #fff7ed 0%, #ecfeff 56%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .holy-glow { animation: sanctuaryGlow 4.8s ease-in-out infinite; transform-origin: center; }
+        .top-cover { animation: coverBreathe 5.8s ease-in-out infinite; transform-origin: center top; }
+        .frame-bars path { animation: frameShine 3.6s ease-in-out infinite; }
+        .frame-bars path:nth-child(2), .frame-bars path:nth-child(5) { animation-delay: .4s; }
+        .frame-bars path:nth-child(3), .frame-bars path:nth-child(4) { animation-delay: .8s; }
+        .left-veil { animation: veilLeft 6s ease-in-out infinite; transform-origin: 210px 78px; }
+        .right-veil { animation: veilRight 6s ease-in-out infinite; transform-origin: 210px 78px; }
+        .curtain-folds { animation: foldDrift 5s ease-in-out infinite; }
+        @keyframes sanctuaryGlow {
+            0%, 100% { opacity: .52; transform: scale(.92); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+        @keyframes coverBreathe {
+            0%, 100% { transform: translateY(0); opacity: .78; }
+            50% { transform: translateY(5px); opacity: .96; }
+        }
+        @keyframes frameShine {
+            0%, 100% { opacity: .45; }
+            50% { opacity: .95; }
+        }
+        @keyframes veilLeft {
+            0%, 35%, 100% { transform: skewX(0deg) translateX(0); opacity: .78; }
+            58%, 72% { transform: skewX(-4deg) translateX(-12px); opacity: .62; }
+        }
+        @keyframes veilRight {
+            0%, 35%, 100% { transform: skewX(0deg) translateX(0); opacity: .74; }
+            58%, 72% { transform: skewX(4deg) translateX(12px); opacity: .58; }
+        }
+        @keyframes foldDrift {
+            0%, 100% { transform: translateY(0); opacity: .62; }
+            50% { transform: translateY(4px); opacity: .88; }
+        }
+        @media (max-width: 640px) {
+            .tabernacle-stage svg { min-height: 220px; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-archway mr-2 text-stone-600"></i> 出埃及记 26章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 26</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">照着山上的样式，建立神同在的居所</h1>
+    <p class="en-text text-stone-500 italic mb-5">Building the Dwelling of God According to the Mountain Pattern</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 26 章详细说明会幕本体的建造：内层幔子、外层罩棚、竖板、横闩、内幔和入口门帘。经文看似充满尺寸与材料，却在叙事中表达一个核心真理：神愿意住在祂百姓中间，但祂的同在必须按祂启示的样式、圣洁的边界和合一的结构来承载。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 26 describes the body of the tabernacle: inner curtains, protective coverings, frames, bars, veil, and entrance screen. The details teach that God graciously dwells among His people, yet His presence is received through His revealed pattern, holy boundaries, and ordered unity.</p>
+  </div>
+  <aside class="tabernacle-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">幔子展开，荣光居中</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以层层幔子、竖板光线与缓慢开启的入口表现本章主题：神的居所既美丽可见，也以圣洁秩序保护亲近的道路。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Layered curtains, shining frames, and an opening screen picture ordered nearness to a holy God.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated tabernacle curtains, frames, and holy veil from Exodus 26" class="w-full mt-4">
+      <defs>
+        <linearGradient id="curtainGrad26" x1="0" x2="1">
+          <stop offset="0%" stop-color="#0f766e"/>
+          <stop offset="50%" stop-color="#7c3aed"/>
+          <stop offset="100%" stop-color="#b91c1c"/>
+        </linearGradient>
+        <radialGradient id="glow26" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="#fef3c7" stop-opacity=".95"/>
+          <stop offset="60%" stop-color="#d97706" stop-opacity=".28"/>
+          <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect x="60" y="65" width="300" height="150" rx="10" fill="#fff7ed" opacity=".75"/>
+      <circle class="holy-glow" cx="210" cy="138" r="78" fill="url(#glow26)"/>
+      <g class="frame-bars" stroke="#92400e" stroke-width="8" stroke-linecap="round">
+        <path d="M92 76 V212"/><path d="M132 76 V212"/><path d="M172 76 V212"/><path d="M248 76 V212"/><path d="M288 76 V212"/><path d="M328 76 V212"/>
+      </g>
+      <path class="top-cover" d="M52 70 C118 38, 302 38, 368 70 L348 96 C292 74, 128 74, 72 96 Z" fill="url(#curtainGrad26)" opacity=".86"/>
+      <g class="curtain-folds" fill="none" stroke="#f8fafc" stroke-width="3" opacity=".72">
+        <path d="M95 76 C82 120, 82 160, 95 205"/><path d="M138 72 C126 118, 126 164, 138 210"/><path d="M282 72 C294 118, 294 164, 282 210"/><path d="M325 76 C338 120, 338 160, 325 205"/>
+      </g>
+      <g class="veil-part left-veil">
+        <path d="M190 78 C173 112, 173 178, 190 214 L210 214 L210 78 Z" fill="#7c3aed" opacity=".78"/>
+      </g>
+      <g class="veil-part right-veil">
+        <path d="M230 78 C247 112, 247 178, 230 214 L210 214 L210 78 Z" fill="#b91c1c" opacity=".74"/>
+      </g>
+      <path d="M70 224 H350" stroke="#0f766e" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 26 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">会幕的幔子</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Curtains of the Dwelling</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mishkan</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“帐幕”首先被称为神居住的所在，幔子以细麻和蓝紫朱红线织成，强调圣洁、荣美与秩序。<br><span class="en-text text-[11px] text-stone-500 italic">The curtains present the tabernacle as God's ordered dwelling, marked by holiness, beauty, and purposeful design.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">基路伯图案</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Cherubim Design</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">keruvim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">基路伯提醒人神同在不是随意进入的空间，而是圣洁君王的居所，需要神所设立的途径。<br><span class="en-text text-[11px] text-stone-500 italic">The cherubim mark the dwelling as royal and holy; access to God comes by His appointed way.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">相连成为一体</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Joined as One</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">echad</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">五幅与五幅幔子用钮扣和钩子连成一个整体，显明许多部分在神的设计中被合成完整见证。<br><span class="en-text text-[11px] text-stone-500 italic">Many panels are joined into one whole, picturing ordered unity within God's design.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">分别内外</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Holy Separation</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">parokhet</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">内幔把圣所与至圣所隔开，不是拒绝人亲近神，而是教导人以敬畏和神的方式亲近祂。<br><span class="en-text text-[11px] text-stone-500 italic">The veil teaches reverent approach: God is near, yet His nearness is holy.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-6">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-2">研读视图 / Study View</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 26章逐段研读</h2>
+  <p class="en-text text-sm text-stone-500 italic mt-2">A passage-by-passage reading of Exodus 26 with meaning and devotional application.</p>
+</section>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要用十幅幔子作帐幕；这些幔子要用捻的细麻和蓝色、紫色、朱红色线制造，并用巧匠的手工绣上基路伯。每幅长二十八肘，宽四肘；五幅相连，另五幅也相连，又用蓝色钮扣和金钩，使帐幕成为一个整体。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make the tabernacle with ten curtains of fine twined linen, blue, purple, and scarlet yarns, with cherubim skillfully worked into them. Five curtains are coupled to one another, and the other five likewise, with loops and clasps so that the tabernacle may be one whole.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">荣美不是装饰，而是敬拜秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章从最内层的细麻幔子开始，而不是从外部结构开始，说明会幕的核心不是建筑技术，而是神同在的圣洁空间。蓝、紫、朱红和细麻常与尊贵、洁净和祭司性服事相连；基路伯图案使读者想起伊甸园门口的守卫，也预备人明白亲近神需要神所指定的道路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter begins with the inner curtains, not the outer frame, because the tabernacle is first a holy dwelling before it is a structure. The colors, fine linen, and cherubim show royal holiness and guarded access to God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把最里面的空间交给神整理</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常先处理外表效率，最后才面对内心秩序。出埃及记 26 章提醒我们，神先看“里面”的居所：动机、敬拜、渴望和记忆。灵修不是给忙碌生活加一层宗教装饰，而是让神重新编织我们内心的优先次序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often manage outward productivity before inner order. This passage invites us to let God begin at the center: motives, worship, desires, and memory. Devotion is not decoration; it is reordered life before God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:7-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要用山羊毛织十一幅幔子作为帐幕以上的罩棚；又要用钮扣和铜钩相连。多余的半幅要垂在帐幕后头，罩棚两边所余的要垂下遮盖帐幕。你还要用染红的公羊皮作盖，再用海狗皮作顶盖。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make curtains of goats' hair for a tent over the tabernacle, eleven curtains in all, joined with loops and bronze clasps. The remaining length shall hang over the back and sides, and you shall make coverings of rams' skins dyed red and another outer covering above.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">外层遮盖保护内里的圣洁</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">山羊毛、染红公羊皮和外层皮革形成逐层保护。经文细致说明尺寸和垂下的余幅，显示神的圣洁同在不是脆弱的象征，而是在旷野风沙中被妥善遮盖。金钩用于内幔，铜钩用于外罩，也呈现从内到外的材质层次。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The layered coverings protect the inner holy space in wilderness conditions. The precise measurements and different metals show ordered care: what is most inward is most precious, yet the whole dwelling is responsibly sheltered.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">保护生命中需要被守护的事</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵生命需要边界。工作压力、资讯噪音和人际拉扯，会不断磨损我们里面的敬拜。像罩棚保护会幕一样，我们也需要安排安静、安息、诚实沟通和健康节奏，使神托付的生命不被消耗殆尽。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual life needs boundaries. Work pressure, noise, and relational demands can wear down worship. Like the coverings over the tabernacle, wise rhythms of rest, quiet, and honest limits protect what God is forming within us.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:15-25</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要用皂荚木作帐幕的竖板，每块长十肘，宽一肘半；每块有两榫相对。帐幕南面要作二十块板，板下有银座；北面也要二十块板，西面和拐角也要按数立板并安在银座上。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make upright frames for the tabernacle of acacia wood. Each frame shall have two tenons, and there shall be twenty frames for the south side, twenty for the north, and frames for the west with corner frames, all set in silver bases.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">可移动的居所，也有稳固根基</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">皂荚木适合旷野移动，银座则使竖板稳固站立。会幕不是永久石殿，却不是临时随便的棚子；它是可随百姓前行的圣所。神的同在进入旅途，同时仍要求清楚结构、准确位置和坚固承托。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Acacia wood suits a movable wilderness dwelling, while silver bases provide stability. The tabernacle is portable but not careless; God's presence travels with His people through an ordered and well-supported sanctuary.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在变动生活中建立稳定支点</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多人生活不断迁移：职业变化、家庭阶段、城市节奏都在改变。经文提醒我们，跟随神不等于失去结构。稳定的祷告时间、可信赖的群体、清楚的价值选择，就像银座托住竖板，使人在移动中仍能站稳。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Life changes through jobs, family seasons, and uncertain plans. Following God does not mean losing structure. Prayer, trustworthy community, and clear values become silver bases that help us stand while life keeps moving.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:26-30</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要用皂荚木作闩，为帐幕这面的板作五闩，那面的板也作五闩，后面的板也作五闩；中闩要从这一头通到那一头。板要包金，闩也要包金。帐幕要照着在山上指示你的样式立起。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make bars of acacia wood for the frames on each side, with the middle bar passing through from end to end. Overlay the frames and bars with gold, and set up the tabernacle according to the plan shown you on the mountain.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">合一需要看不见的连接</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">横闩把一块块竖板连成稳定整体，尤其“中闩”贯穿全长，是隐藏却关键的连接。神在山上所指示的样式不是建议，而是会幕合一和稳固的依据。经文把美观、结构和顺服连在一起。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The bars join individual frames into a stable whole, especially the middle bar running end to end. The mountain pattern is not a suggestion but the basis for unity, strength, beauty, and obedience.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让共同顺服成为关系的横闩</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">家庭、团队和教会的合一，不只靠相同兴趣，也靠共同顺服神的话。很多连接是看不见的：彼此饶恕、守约沟通、愿意承担责任。这些隐藏的横闩使关系在压力下不轻易散开。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Unity in families, teams, and churches is not built only on shared interests but on shared obedience. Forgiveness, truthful communication, and responsibility are hidden bars that keep relationships from falling apart under pressure.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:31-35</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要用蓝色、紫色、朱红色线和捻的细麻织幔子，以巧匠的手工绣上基路伯，挂在四根包金的皂荚木柱子上。要把约柜安放在幔子内；这幔子要将圣所和至圣所隔开。施恩座要安在至圣所内的约柜上，桌子和灯台要安在幔子外。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make a veil of blue, purple, and scarlet yarns and fine twined linen, with cherubim skillfully worked into it. Put the ark of the testimony inside the veil, and the veil shall separate the Holy Place from the Most Holy. The mercy seat shall be on the ark inside, with the table and lampstand outside the veil.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">亲近神与敬畏神同时成立</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">内幔是本章最重要的边界：神愿意住在百姓中间，但至圣所不是普通空间。约柜和施恩座在幔内，桌子与灯台在幔外，说明神同在有中心、有次序、有界线。圣洁不是冷漠距离，而是生命得以亲近神的真实条件。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The veil is the chapter's central boundary. God dwells among His people, yet the Most Holy Place is not common space. The ark, mercy seat, table, and lampstand are arranged to teach ordered nearness and reverent access.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要把亲密误认为随便</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们可以坦然向神祷告，却不能把神降低成满足愿望的工具。真正的亲密包含敬畏：愿意听、愿意悔改、愿意让神居首位。当生活重新按神的圣洁排序，恩典就不再廉价，亲近也更真实。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may pray honestly, but we must not reduce God to a tool for our preferences. True intimacy includes reverence: listening, repentance, and giving God first place. Ordered reverence makes grace deeper, not colder.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">26:36-37</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要拿蓝色、紫色、朱红色线和捻的细麻，用绣花的手工织帐幕的门帘；又要用皂荚木为帘子作五根柱子，包上金子，柱子有金钩，并为柱子铸造五个铜座。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall make a screen for the entrance of the tent, of blue, purple, and scarlet yarns and fine twined linen, embroidered with needlework. Make five pillars of acacia for the screen, overlay them with gold, and cast five bases of bronze for them.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">入口显明邀请，也显明道路</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">门帘位于帐幕入口，颜色与内幔呼应，却功能不同：它标出进入圣所的门。门不是由人任意开辟，而是按神的设计设立。铜座承托入口柱子，暗示亲近神的道路既真实开放，也必须按神所赐方式进入。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The entrance screen echoes the veil's colors but marks the way into the Holy Place. Access is real, yet not self-invented; the doorway stands by God's own design and support.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在每天的入口处选择神的道路</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">每天都有入口：打开手机、走进办公室、回到家、开始一次谈话。经文邀请我们在这些入口处先问：我正按自己的冲动进入，还是按神的道路进入？敬拜不是只发生在会堂，也发生在每一次选择如何进入生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Every day has entrances: the phone, the office, home, and conversations. This text invites us to ask whether we enter by impulse or by God's way. Worship happens in the daily thresholds of ordinary life.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">两条轨道：先听经文，再回应生活</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">正统解经路径首先观察上下文：本章位于西奈山启示之后，承接约柜、桌子、灯台的指示，进一步说明承载神同在的居所。读者应留意重复词、材料层次、空间边界和“照着样式”的命令，避免把每个尺寸随意寓意化。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 mb-5">The interpretive path begins with context. Exodus 26 follows the instructions for the ark, table, and lampstand, explaining the dwelling that hosts God's presence. Readers should observe repeated terms, materials, boundaries, and the command to follow the revealed pattern, without forcing arbitrary symbolism onto every measurement.</p>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="rounded-lg border border-stone-200 bg-slate-50 p-5">
+      <h3 class="serif font-bold text-stone-900 mb-2">经文含义轨道 / Meaning Track</h3>
+      <p class="text-sm text-stone-600 leading-7 text-justify">这一路径问：经文在摩西五经叙事中如何工作？它如何描述神的同在、圣洁、秩序和百姓的敬拜？重点是尊重文本结构，而不是先把现代问题放进去。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-3">This track asks how the text functions in the Pentateuch: what it says about presence, holiness, order, and worship before applying it to modern concerns.</p>
+    </div>
+    <div class="rounded-lg border border-stone-200 bg-[var(--theme-accent)]/25 p-5">
+      <h3 class="serif font-bold text-stone-900 mb-2">灵修应用轨道 / Devotional Track</h3>
+      <p class="text-sm text-stone-600 leading-7 text-justify">这一路径把古老真理带入今天：神仍按祂的话塑造人的内在居所；信徒需要边界、秩序、合一和敬畏。应用必须从经文含义过桥，不把经文变成随意的心情投射。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-3">This track brings the ancient truth into today: God still orders inner life by His word, calling believers to boundaries, unity, reverence, and faithful access.</p>
+    </div>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"要照着在山上指示你的样式立起帐幕。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"You shall erect the tabernacle according to the plan for it that you were shown on the mountain."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 Exodus 26 · 会幕的样式与神同在的秩序</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

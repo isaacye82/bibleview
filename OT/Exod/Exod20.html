@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 20 | 出埃及记 20章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #f8fafc;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #1f2937;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .sinai-stage { background: radial-gradient(circle at 50% 12%, rgba(254,243,199,.92), transparent 30%), linear-gradient(135deg, #f8fafc 0%, #e0f2fe 45%, #fef3c7 100%); min-height: 100%; }
+        .cloud { animation: cloudDrift 7s ease-in-out infinite; transform-origin: center; }
+        .lightning { stroke-dasharray: 150; animation: strike20 3.8s ease-in-out infinite; }
+        .wave { animation: wavePulse20 3.2s ease-in-out infinite; transform-origin: center; }
+        .tablets { animation: tabletGlow20 4.8s ease-in-out infinite; transform-origin: center; }
+        .smoke { stroke-dasharray: 90; animation: smokeRise20 5.2s ease-in-out infinite; }
+        @keyframes cloudDrift { 0%,100% { transform: translateX(-6px); opacity: .7; } 50% { transform: translateX(8px); opacity: .95; } }
+        @keyframes strike20 { 0%,65%,100% { stroke-dashoffset: 150; opacity: .15; } 72%,84% { stroke-dashoffset: 0; opacity: 1; } }
+        @keyframes wavePulse20 { 0%,100% { transform: scale(.94); opacity: .35; } 50% { transform: scale(1.05); opacity: .9; } }
+        @keyframes tabletGlow20 { 0%,100% { transform: translateY(2px); opacity: .88; filter: drop-shadow(0 4px 6px rgba(15,23,42,.18)); } 50% { transform: translateY(-4px); opacity: 1; filter: drop-shadow(0 0 16px rgba(245,158,11,.42)); } }
+        @keyframes smokeRise20 { 0% { stroke-dashoffset: 90; transform: translateY(8px); opacity: .22; } 50% { stroke-dashoffset: 0; opacity: .62; } 100% { stroke-dashoffset: -90; transform: translateY(-8px); opacity: .18; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-tablets mr-2 text-stone-600"></i> 出埃及记 20章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 20</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.05fr_.95fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">十言：被救赎之民的敬拜与生活</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Ten Words: Worship and Life for a Redeemed People</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 20 章把西奈之约推向核心：神亲自说出十诫。经文先提醒以色列，颁布诫命的是那位把他们从埃及为奴之家领出来的耶和华。因此，十诫不是冷冰冰的道德负担，而是救赎之后的生命秩序：先单单敬拜神，再在家庭、工作、婚姻、财物、言语和欲望中保护邻舍。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 20 brings the Sinai covenant to its center as God speaks the Ten Words. The commands begin with the LORD who delivered Israel from slavery; therefore they are not a cold moral burden but the order of life after redemption: exclusive worship of God and concrete love for the neighbor.</p>
+  </div>
+  <aside class="sinai-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">西奈云雷，两版发光</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以山峰、云雷、号角声波与两块法版表现本章：神在圣洁中说话，使被拯救的百姓学习敬拜与爱人。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A smoking mountain, pulsing trumpet waves, and luminous tablets picture holy speech shaping redeemed life.</p>
+    </div>
+    <svg viewBox="0 0 430 260" role="img" aria-label="Animated Sinai mountain, trumpet waves, and tablets for Exodus 20" class="w-full mt-4">
+      <defs>
+        <linearGradient id="mountGrad20" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#475569"/><stop offset="100%" stop-color="#1e293b"/></linearGradient>
+        <linearGradient id="tabletGrad20" x1="0" x2="1"><stop offset="0%" stop-color="#f8fafc"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient>
+      </defs>
+      <path class="cloud c1" d="M95 70 C130 35, 188 48, 206 78 C238 54, 298 66, 319 101 C266 115, 153 116, 95 70Z" fill="#e2e8f0" opacity=".78"/>
+      <path class="lightning" d="M217 82 L191 132 H219 L197 187" fill="none" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M50 224 L166 92 L228 164 L282 108 L383 224 Z" fill="url(#mountGrad20)"/>
+      <path d="M166 92 L201 132 L180 127 Z" fill="#f8fafc" opacity=".8"/>
+      <g class="wave" fill="none" stroke="#f59e0b" stroke-width="3" opacity=".7"><path d="M66 124 C42 105, 42 82, 66 63"/><path d="M359 124 C383 105, 383 82, 359 63"/></g>
+      <g class="tablets" filter="drop-shadow(0 10px 16px rgba(15,23,42,.24))">
+        <rect x="171" y="132" width="42" height="68" rx="14" fill="url(#tabletGrad20)" stroke="#334155" stroke-width="2"/>
+        <rect x="217" y="132" width="42" height="68" rx="14" fill="url(#tabletGrad20)" stroke="#334155" stroke-width="2"/>
+        <g stroke="#334155" stroke-width="2" stroke-linecap="round" opacity=".72"><path d="M184 154 H202"/><path d="M184 169 H202"/><path d="M184 184 H202"/><path d="M230 154 H248"/><path d="M230 169 H248"/><path d="M230 184 H248"/></g>
+      </g>
+      <path class="smoke" d="M146 105 C130 84, 153 67, 175 82 C192 93, 191 113, 174 122" fill="none" stroke="#94a3b8" stroke-width="5" stroke-linecap="round" opacity=".55"/>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div><h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2><p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 20 faithfully</p></div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">十言与约民生活</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Ten Words and Covenant Life</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">aseret hadevarim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章的诫命不是抽象道德清单，而是救赎之后的约民生活蓝图。<span class="en-text block text-[11px] text-stone-400 italic mt-2">The commands form a redeemed community's pattern of worship and neighbor-love.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">除我以外</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">No Other Gods</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">lo yihyeh lekha</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">第一条诫命把忠诚的中心固定在独一真神身上。<span class="en-text block text-[11px] text-stone-400 italic mt-2">Exclusive worship asks believers to identify what they truly trust.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">安息日</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Sabbath Rest</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shabbat</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">安息日把创造、救赎和人的有限性连在一起。<span class="en-text block text-[11px] text-stone-400 italic mt-2">Sabbath rest confesses that life is not defined by output.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">不可贪恋</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">You Shall Not Covet</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">lo tachmod</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">最后一条诫命触及内心欲望，说明外在伦理从内在敬拜开始。<span class="en-text block text-[11px] text-stone-400 italic mt-2">The final command searches desire and trains contentment before God.</span></p>
+</div></div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 20 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按十言与西奈敬畏的结构拆分。每个单元先说明上下文经文含义，再把古老诫命连接到今日敬拜、工作、家庭、人际关系与内心欲望的操练。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">The chapter is divided by the Ten Words and Sinai’s holy fear. Each unit moves from contextual meaning to worship, work, family, relationships, and desire today.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">God Speaks the Ten Words</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神亲自颁布十言 (20:1-2)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神吩咐这一切的话说：“我是耶和华你的神，曾将你从埃及地为奴之家领出来。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            God spoke all these words, saying, “I am the LORD your God, who brought you out of the land of Egypt, out of the house of slavery.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">诫命先从救赎身份开始</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">十诫以神的自我启示和救赎行动开场。经文先宣告“我是耶和华你的神”，再提到祂把以色列从为奴之家领出来。顺服不是换取拯救的条件，而是被拯救之民回应恩典的道路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The commandments begin with identity and deliverance. Obedience is not a price paid to earn rescue; it is the grateful covenant response of a people already brought out by the LORD.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从被释放的身份生活</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人容易把规则理解为压迫，也容易把自由理解为没有边界。本节邀请我们先记得自己属于谁。面对职场指标、家庭期待或自我证明的压力时，信徒可以从“神已领我出来”的身份出发，再决定如何生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When rules feel restrictive and freedom is confused with limitlessness, this opening word restores identity. In work pressure, family expectations, and self-justification, believers live from the truth that God has already brought them out.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Exclusive Worship of the LORD</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">敬拜独一真神 (20:3-7)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:3-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “除了我以外，你不可有别的神。不可为自己雕刻偶像……不可跪拜那些像，也不可侍奉它，因为我耶和华你的神是忌邪的神……爱我、守我诫命的，我必向他们发慈爱，直到千代。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “You shall have no other gods before me. You shall not make for yourself a carved image… You shall not bow down to them or serve them, for I the LORD your God am a jealous God… showing steadfast love to thousands of those who love me and keep my commandments.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">独一敬拜与拒绝偶像</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“不可有别的神”要求以色列单单忠于耶和华；“不可雕刻偶像”保护百姓不把神缩小成可控制、可利用的形象。神的“忌邪”不是任性占有，而是圣约关系中的专一爱，拒绝一切毁坏生命的假敬拜。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The first commands call Israel to exclusive loyalty. The ban on images prevents reducing God into something manageable. Divine jealousy is covenant love guarding the relationship from false worship that deforms life.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">辨认心中的替代救主</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的偶像未必是雕像，也可能是成功、认可、金钱、效率或一段关系。当这些事要求我们牺牲良心、安息和对人的爱时，它们已经越位。灵修应用不是轻看工作和关系，而是把它们放回神以下的位置。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern idols may be success, approval, money, efficiency, or relationships. When they demand conscience, rest, and love for others, they have become rival saviors. Faith reorders good gifts under God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “不可妄称耶和华你神的名；因为妄称耶和华名的，耶和华必不以他为无罪。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “You shall not take the name of the LORD your God in vain, for the LORD will not hold him guiltless who takes his name in vain.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">尊重神名所代表的真实</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神的名代表祂的性情、权柄与临在。“妄称”不只是口头粗俗，也包括用神的名包装私欲、操控他人或作虚假保证。约民被召用真实的生命尊荣所承认的神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God’s name represents His character, authority, and presence. Taking it in vain includes empty speech, manipulation, and using sacred language to cover selfish aims. Covenant people honor God with truthful lives.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让信仰语言保持诚实</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在教会、家庭或网络表达中，最需要警醒的是用属灵词汇逃避责任。说“神带领”时，要愿意接受圣经原则和群体分辨；说“为你好”时，要检验是否真有爱与诚实。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual language must remain truthful. Saying “God led me” should welcome Scripture-shaped discernment; saying “for your good” should be tested by love, humility, and honesty.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Sabbath and Household Order</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">安息与家庭秩序 (20:8-12)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:8-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “当记念安息日，守为圣日。六日要劳碌做你一切的工，但第七日是向耶和华你神当守的安息日……因为六日之内，耶和华造天、地、海和其中的万物，第七日便安息。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “Remember the Sabbath day, to keep it holy. Six days you shall labor and do all your work, but the seventh day is a Sabbath to the LORD your God… For in six days the LORD made heaven and earth, the sea, and all that is in them, and rested on the seventh day.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把时间分别给神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">安息日命令从创造秩序出发：神创造并安息，因此祂的百姓也要在时间中承认神的主权。命令特别包括儿女、仆婢、牲畜和寄居者，显示安息不是少数人的特权，而是共同体的怜悯秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Sabbath command is grounded in creation. God’s people acknowledge His rule in time. Its inclusion of children, servants, animals, and sojourners shows rest as communal mercy, not a private luxury.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">停止用忙碌证明自己</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在永远在线的生活中，安息需要主动守护。可以设定一段不被工作消息支配的时间，用敬拜、家庭陪伴和身体恢复重新承认：我不是机器，也不是自己的救主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In always-on life, rest must be protected. Setting time free from work messages, worshiping, sharing family presence, and restoring the body confess that we are not machines and not our own saviors.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:12</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “当孝敬父母，使你的日子在耶和华你神所赐你的地上得以长久。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “Honor your father and your mother, that your days may be long in the land that the LORD your God is giving you.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在代际关系中学习尊荣</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">孝敬父母连接神的权柄与家庭秩序。这里不是纵容罪恶或否认伤害，而是要求约民以尊重、照顾和感恩维护代际关系，使应许之地的生活不被轻慢和断裂吞噬。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Honoring parents connects divine authority with household order. It does not excuse harm, but calls covenant people to respect, care, and gratitude so communal life is not consumed by contempt and fragmentation.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">成熟地处理亲情责任</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代家庭可能有距离、误解甚至伤口。应用这条诫命，需要把尊荣与界限一起实践：能照顾就具体照顾，需要保护就诚实设限，避免用冷漠或愤怒定义整段关系。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Family relationships may include distance and wounds. This command is practiced with both honor and boundaries: give concrete care where possible, set truthful limits where needed, and refuse to let contempt define the relationship.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Protecting the Neighbor</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">保护邻舍生命与关系 (20:13-17)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:13-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “不可杀人。不可奸淫。不可偷盗。不可作假见证陷害人。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “You shall not murder. You shall not commit adultery. You shall not steal. You shall not bear false witness against your neighbor.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从行为上保护邻舍</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这些简短命令保护人的生命、婚约、财物和名誉。它们显明圣洁不只在敬拜场所，也在对邻舍的实际对待中。约民不能一边敬拜神，一边用暴力、背叛、占有和谎言伤害他人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">These concise commands protect life, marriage, property, and reputation. Holiness is not confined to worship spaces; it is shown in concrete treatment of neighbors, rejecting violence, betrayal, theft, and lies.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把人当作神所看重的人</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在职场竞争、婚姻压力、金钱往来和社交媒体表达中，这几条诫命极其实际。它们呼召我们不把人当工具、不用暧昧逃避忠诚、不用小便宜侵蚀正直，也不用半真半假的话毁坏别人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In workplace competition, marriage pressure, money matters, and social media speech, these commands remain concrete. They call us not to use people, evade faithfulness, erode integrity, or damage others with half-truths.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            “不可贪恋人的房屋；也不可贪恋人的妻子、仆婢、牛驴，并他一切所有的。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            “You shall not covet your neighbor’s house; you shall not covet your neighbor’s wife… or anything that is your neighbor’s.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从内心欲望上保护邻舍</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">第十条诫命转向内心，指出罪不只发生在手脚行动之后，也在欲望被错误对象支配时开始。贪恋把邻舍的恩典看成自己的缺失，把神的供应看成不够。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The final command turns inward. Sin is not only external action; it begins when desire is ruled by the wrong object. Coveting treats a neighbor’s gift as our deprivation and God’s provision as insufficient.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在比较中操练知足</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">比较会让手机里的别人的生活变成控告自己的证据。灵修操练可以从感恩清单、限制刺激欲望的内容、为邻舍的益处祷告开始。知足不是放弃成长，而是在神面前重新学习信任。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Comparison can turn others’ visible lives into accusations against our own. Practices of gratitude, limiting desire-shaping input, and praying for a neighbor’s good train contentment. Contentment is not passivity; it is renewed trust before God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Holy Fear at Sinai</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">百姓在雷轰中敬畏 (20:18-26)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:18-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            众百姓见雷轰、闪电、角声、山上冒烟，就都发颤，远远地站立，对摩西说：“求你和我们说话，我们必听；不要神和我们说话，恐怕我们死亡。”摩西对百姓说：“不要惧怕；因为神降临是要试验你们，叫你们时常敬畏他，不致犯罪。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The people saw the thunder, lightning, trumpet sound, and smoking mountain, and stood far off. They asked Moses to speak to them lest they die. Moses said, “Do not fear, for God has come to test you, that the fear of him may be before you, that you may not sin.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">惧怕与敬畏的区别</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">西奈山的显现使百姓意识到神的圣洁。摩西的话区分了两种反应：逃离神的恐惧，以及使人远离罪的敬畏。神不是要毁灭祂救出的百姓，而是要塑造他们在祂面前认真生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Sinai reveals God’s holiness. Moses distinguishes panic that flees from God from reverent fear that turns from sin. The LORD has not rescued His people to destroy them, but to form them for serious life before Him.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让敬畏医治轻浮</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当信仰只剩习惯或情绪安慰，人容易轻看罪，也轻看恩典。本段提醒我们：亲近神不是随便，敬畏神也不是绝望。健康的敬畏使人说话更谨慎、选择更清醒、悔改更真实。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When faith becomes mere habit or emotional comfort, sin and grace are both taken lightly. Reverent fear is not despair; it makes speech careful, choices sober, and repentance real.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">20:22-26</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“你要向以色列人这样说：你们自己看见我从天上和你们说话了。你们不可做什么神像与我相配……你要为我筑土坛……凡记下我名的地方，我必到那里赐福给你。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to say to Israel, “You have seen for yourselves that I have talked with you from heaven. You shall not make gods of silver to be with me… An altar of earth you shall make for me… In every place where I cause my name to be remembered I will come to you and bless you.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬拜必须按神启示的方式</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章结尾回到敬拜：以色列既听见神从天上说话，就不可把银金偶像与祂并列。土坛和未经雕琢的石头强调朴素、顺服和神主动赐福；敬拜不是人炫耀技术，而是回应神临在。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter closes with worship. Because Israel heard God speak from heaven, they must not place silver or gold gods beside Him. The simple altar stresses obedience and God’s initiative to bless, not human display.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">少一点炫耀，多一点顺服</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天敬拜和服事也可能被包装、表现和个人形象占据。本段把我们带回核心：神看重按祂话语而来的诚实回应。无论在聚会、家庭祭坛或个人祷告中，重点不是显得属灵，而是真实来到神面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Worship and ministry can be overtaken by presentation and personal image. This passage returns us to the center: God values honest response shaped by His word. The point is not appearing spiritual, but truly coming before Him.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从正统解经到日常操练</h2>
+  <p class="text-stone-700 leading-8 text-justify">阅读出埃及记 20 章时，第一步不是直接把每条诫命变成个人格言，而是放在救赎历史和西奈之约中理解：神先拯救，再呼召祂的百姓过分别为圣的生活。第二步才是通过桥梁原则，把敬拜独一真神、尊荣时间与家庭、保护邻舍、整理欲望等真理带入现代处境。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 mt-2">When reading Exodus 20, the first step is not turning each command into a private slogan, but locating it in redemption history and the Sinai covenant: God saves first, then calls His people to holy life. The second step uses a bridge principle to bring these truths into present contexts.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Responsible Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">看上下文：</span>十诫紧接神救赎以色列之后，因此命令建立在恩典与约的身份上。<span class="en-text block text-xs text-stone-400 italic">Read the commands after deliverance, not as a way to earn it.</span></li>
+      <li><span class="font-bold text-stone-800">看结构：</span>前半集中敬拜神，后半保护邻舍，显示爱神与爱人不可分割。<span class="en-text block text-xs text-stone-400 italic">The structure joins worship of God with protection of the neighbor.</span></li>
+      <li><span class="font-bold text-stone-800">看原意：</span>避免把诫命缩小为外在规条，也避免脱离经文任意发挥。<span class="en-text block text-xs text-stone-400 italic">Avoid reducing the text to externalism or detaching application from meaning.</span></li>
+    </ul>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Bridge</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">身份桥梁：</span>先问“我是被神救赎的人”，再问“我该怎样选择”。<span class="en-text block text-xs text-stone-400 italic">Begin with redeemed identity before deciding conduct.</span></li>
+      <li><span class="font-bold text-stone-800">关系桥梁：</span>把诫命带入工作诚信、家庭责任、婚姻忠诚、言语真实和社交媒体表达。<span class="en-text block text-xs text-stone-400 italic">Apply the commands to work, family, marriage, speech, and digital life.</span></li>
+      <li><span class="font-bold text-stone-800">内心桥梁：</span>第十条诫命提醒我们检查欲望，而不只检查行为。<span class="en-text block text-xs text-stone-400 italic">The final command searches desire, not only outward behavior.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"我是耶和华你的神，曾将你从埃及地为奴之家领出来。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"I am the LORD your God, who brought you out of the land of Egypt, out of the house of slavery."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus 20 Bilingual Devotional Study | 出埃及记 20章双语灵修综览</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

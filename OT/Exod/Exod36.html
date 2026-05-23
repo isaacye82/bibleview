@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 36 | 出埃及记 36章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbeb;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #422006;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .workshop-stage {
+            background: radial-gradient(circle at 18% 18%, rgba(254,243,199,.95), transparent 30%), linear-gradient(135deg, #fff7ed 0%, #ecfeff 54%, #fffbeb 100%);
+            min-height: 100%;
+        }
+        .gold-thread { stroke-dasharray: 360; stroke-dashoffset: 360; animation: weaveThread 6s ease-in-out infinite; }
+        .loom-bar { animation: loomPulse 3.6s ease-in-out infinite; transform-origin: center; }
+        .gift-dot { animation: giftRise 4.8s ease-in-out infinite; }
+        .gift-dot.d2 { animation-delay: .55s; }
+        .gift-dot.d3 { animation-delay: 1.1s; }
+        .gift-dot.d4 { animation-delay: 1.65s; }
+        .veil-panel { animation: veilGlow 5.4s ease-in-out infinite; transform-origin: center; }
+        @keyframes weaveThread { 0% { stroke-dashoffset: 360; opacity: .45; } 48%, 70% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: -360; opacity: .45; } }
+        @keyframes loomPulse { 0%,100% { transform: translateY(0); opacity: .72; } 50% { transform: translateY(-5px); opacity: 1; } }
+        @keyframes giftRise { 0%,100% { transform: translateY(12px); opacity: .35; } 50% { transform: translateY(-12px); opacity: 1; } }
+        @keyframes veilGlow { 0%,100% { filter: drop-shadow(0 0 0 rgba(180,83,9,0)); opacity: .78; } 50% { filter: drop-shadow(0 0 12px rgba(180,83,9,.28)); opacity: 1; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hammer mr-2 text-stone-600"></i> 出埃及记 36章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 36</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">甘心奉献与受托手艺使会幕成形</h1>
+    <p class="en-text text-stone-500 italic mb-5">Willing Gifts and Gifted Hands Shape the Tabernacle</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 36 章从神所赐的智慧开始，转向百姓甘心献上的充足，再细述会幕各部分的制作。经文重复“照耶和华所吩咐的”，强调敬拜不是即兴发挥，而是按神启示的样式把材料、技巧与顺服编织在一起。最醒目的场景是奉献多到必须停止：神同在的工程显出一种被恩典唤醒的慷慨，也需要忠心治理。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 36 begins with wisdom given by God, moves to abundant willing gifts, and then describes the tabernacle being made piece by piece. The repeated concern for the commanded pattern shows that worship is not improvisation but obedience shaped through material, skill, and generosity. The people give so much that Moses must stop them, revealing both grace-awakened generosity and faithful stewardship.</p>
+  </div>
+  <aside class="workshop-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">金线穿梭，会幕成帘</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以织机、升起的礼物和发光幔子表现本章重点：甘心献上的材料，在神所赐智慧的手中成为敬拜空间。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A moving thread, rising gifts, and a glowing veil picture willing offerings becoming a dwelling place.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated loom, offerings, and tabernacle veil from Exodus 36" class="w-full mt-4">
+      <defs><linearGradient id="threadGrad36" x1="0" x2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="58%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#0f766e"/></linearGradient><linearGradient id="veilGrad36" x1="0" x2="1"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="45%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs>
+      <g class="loom-bar" stroke="#78350f" stroke-width="8" stroke-linecap="round" opacity=".75"><path d="M72 52 H348"/><path d="M72 190 H348"/><path d="M92 52 V190"/><path d="M328 52 V190"/></g>
+      <path class="gold-thread" d="M88 88 C142 52, 178 132, 228 96 S306 66, 338 116" fill="none" stroke="url(#threadGrad36)" stroke-width="7" stroke-linecap="round"/>
+      <path class="gold-thread" style="animation-delay:.55s" d="M86 144 C142 183, 178 104, 228 142 S304 176, 340 126" fill="none" stroke="url(#threadGrad36)" stroke-width="5" stroke-linecap="round" opacity=".75"/>
+      <rect class="veil-panel" x="151" y="72" width="118" height="112" rx="6" fill="url(#veilGrad36)" opacity=".22" stroke="#b45309" stroke-width="3"/>
+      <g fill="#0f766e"><circle class="gift-dot d1" cx="104" cy="216" r="6"/><circle class="gift-dot d2" cx="170" cy="218" r="5"/><circle class="gift-dot d3" cx="252" cy="216" r="6"/><circle class="gift-dot d4" cx="318" cy="219" r="5"/></g><path d="M76 224 H344" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".32"/>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8"><div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4"><div><h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2><p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 36 faithfully</p></div></div><div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">心中有智慧</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Wise-hearted Craftsmanship</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">chokmat-lev</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“心中有智慧”说明会幕工程不只是技术项目，也是顺服的敬拜。神赐技能，使人的手能表达祂所启示的样式。<span class="block en-text italic text-stone-400 mt-2">Wise-hearted work joins skill with obedience; gifted hands serve the pattern God has revealed.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">甘心献上</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Willing Offering</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nedavah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">百姓持续带来礼物，直到摩西必须吩咐停止。真正的奉献不是被压力驱动，而是被神同在的盼望吸引。<span class="block en-text italic text-stone-400 mt-2">The people give until restraint is needed; generosity is drawn by the hope of God dwelling among them.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">有余而停</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Enough and More</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">dayam vehoter</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“够用有余”显明神的工作不靠操控维持。合宜的治理也包括知道何时说“够了”，保护奉献者与工人。<span class="block en-text italic text-stone-400 mt-2">Enough and more shows that sacred work needs faithful stewardship, not endless extraction.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">幔子与隔断</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Veil and Holy Boundary</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">paroket</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">幔子与门帘给空间设立次序：神亲近百姓，却不是被人随意占有。敬拜中的美与界限一同见证祂的圣洁。<span class="block en-text italic text-stone-400 mt-2">The veil teaches both nearness and reverence; beauty and boundary witness to God's holiness.</span></p>
+</div></div></section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8"><div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8"><p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p><h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 36 章经文双轨研读</h2><p class="text-stone-600 leading-7 mt-3">本章从工人的蒙召和百姓奉献开始，再进入会幕具体制作。每个单元先观察经文含义，再把古代圣所工程连接到今日工作、奉献、界限与群体生活。</p><p class="en-text text-sm text-stone-500 italic mt-2">The chapter moves from called workers and willing gifts into the making of the tabernacle. Each unit reads the text first, then connects the ancient sanctuary work to modern labor, generosity, boundaries, and community life.</p></div></section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Skilled Workers Receive the Charge</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">智慧工人领受托付 (36:1-2)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            比撒列、亚何利亚伯和一切心中有智慧的人，要照耶和华所吩咐的做圣所各样的工。凡心里受感、愿意前来作工的人，都被摩西召来。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Bezalel, Oholiab, and every wise-hearted person were to do the work of the sanctuary according to all that the LORD had commanded. Moses called those whose hearts were stirred to come and serve.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恩赐与顺服相连 / Gift Joined to Obedience</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段把“智慧”放在神的吩咐之下。工人的才能不是个人表现的舞台，而是为圣所服务的托付；“心里受感”也说明参与者不是被强迫，而是被神的旨意与同在吸引。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The workers’ wisdom is placed under the Lord’s command. Skill is not self-display but entrusted service, and stirred hearts show willing participation in God’s dwelling project.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把专业变成敬拜 / Turning Skill into Worship</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的工作技能、管理能力、设计能力或照顾能力，都可以在顺服中成为敬拜。关键不是把宗教标签贴在工作上，而是在动机、诚实和服务对象上让神居首位。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern skills in work, design, leadership, or care can become worship when offered in obedience. The issue is not a religious label but motive, integrity, and service before God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Offerings Become More Than Enough</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">奉献充足直到停止 (36:3-7)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:3-7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            百姓早晨仍不断把甘心礼带来。工匠告诉摩西：“百姓为耶和华吩咐使用之工所拿来的，富富有余。”于是摩西传令停止奉献；材料已经够做一切工作，而且有余。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The people kept bringing freewill offerings morning by morning. The craftsmen told Moses that the people were bringing more than enough for the work commanded by the LORD, so Moses ordered the giving to stop. The material was sufficient and more.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">慷慨也需要治理 / Generosity Needs Stewardship</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文罕见地记录“停止奉献”的命令。这不是轻看奉献，而是说明圣工不应靠无止境的索取维持。神唤起充足供应，领袖也要诚实判断需要与界限。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The unusual command to stop giving honors generosity by governing it truthfully. Sacred work should not be sustained by endless extraction; leaders must discern both need and limits.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在丰盛中学习节制 / Learning Restraint in Abundance</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当我们热心投入服事、家庭或公益时，也需要问：现在真正需要什么？是否已经足够？爱心若没有界限，可能变成消耗；忠心包括给，也包括适时停下。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In ministry, family, or public service we must ask what is truly needed and when enough has been reached. Love without boundaries can become depletion; faithfulness includes giving and stopping.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Fine Curtains Are Woven</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">帐幕幔子被精细编织 (36:8-13)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:8-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            心中有智慧的人用捻的细麻和蓝色、紫色、朱红色线制造帐幕的十幅幔子，并在幔子上绣基路伯。幅与幅彼此相连，金钩使帐幕成为一个整体。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The wise-hearted workers made ten curtains of fine linen with blue, purple, and scarlet yarn, with cherubim skillfully worked into them. The curtains were joined together with gold clasps so the tabernacle became one whole.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">美丽服务于同在 / Beauty Serves Presence</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">色彩、刺绣、尺寸和连接方式都被详细记录，表明美不是附属装饰。会幕的美见证神同在的尊贵；金钩把分散的幅连接成一体，也显出敬拜空间的秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The details of color, embroidery, measure, and joining show that beauty is not incidental. It witnesses to the dignity of God’s presence, and the clasps order many pieces into one dwelling.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把碎片连接成整体 / Joining Fragmented Pieces</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们的生活常被切成工作、家庭、信仰和休息的片段。本段提醒我们，让神的同在成为中心时，分散的责任能被重新连接，形成更整全的生活节奏。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Our lives are often fragmented into work, family, faith, and rest. When God’s presence becomes central, scattered responsibilities can be joined into a more whole rhythm.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Outer Coverings Protect the Sanctuary</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">外层遮盖保护圣所 (36:14-19)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:14-19</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他们又用山羊毛制造罩棚的幔子，并做羊皮、海狗皮等遮盖，使圣所外层得到保护。这些遮盖不像内层幔子那样华丽，却承担遮蔽与防护的功能。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            They made curtains of goats’ hair for the tent and additional coverings of skins to protect the sanctuary. These outer layers were less ornate than the inner curtains, yet they carried the vital work of shelter.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">隐藏的层也重要 / Hidden Layers Matter</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">外层材料提醒读者，圣所不仅有可见的美，也有不显眼的保护结构。神的居所需要华丽的幔子，也需要耐用的遮盖；两者都属于顺服的工作。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The outer materials show that the sanctuary includes visible beauty and unseen protection. God’s dwelling needs ornate curtains and durable coverings; both are obedient work.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">尊重不被看见的服事 / Honoring Unseen Service</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多重要劳动并不被人称赞：整理、维护、倾听、守时、承担细节。出埃及记 36 章帮助我们看见，神也悦纳那些保护群体、却很少被注意到的工作。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Much essential labor is rarely applauded: organizing, maintaining, listening, punctual care, and detail work. Exodus 36 teaches us to honor service that protects the community without public attention.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Frames, Bases, and Bars Form the Structure</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">板、卯座与闩形成结构 (36:20-34)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:20-30</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他们用皂荚木做帐幕的竖板，每块板有两榫相对，并用银卯座承托。南面、北面、西面都有规定数目的板与卯座，使帐幕有稳定结构。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            They made upright frames of acacia wood, each with two tenons, set in silver bases. The south, north, and west sides had their appointed number of frames and bases, giving the tabernacle a stable structure.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵热心需要结构 / Zeal Needs Structure</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段的数字和构件显得重复，却说明神同在的空间需要稳定、可承重的结构。敬拜不只靠感动，也需要按样式建造的秩序与可靠性。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The repeated numbers and parts show that the dwelling of God requires stable, weight-bearing structure. Worship involves feeling, but also ordered reliability according to the pattern.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">为呼召建立承重系统 / Building Load-bearing Rhythms</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">若没有结构，热心很快耗尽。规律的祷告、诚实的预算、清楚的责任分工、健康的休息，都是今天“卯座与竖板”式的操练，使呼召可以长期站立。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Without structure, zeal burns out. Prayer rhythms, honest budgets, clear responsibilities, and healthy rest function like frames and bases, allowing a calling to stand over time.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:31-34</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他们又用皂荚木做闩，穿过各面的板，并把板和闩包上金子，又为闩做金环，使整体彼此联结。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            They made bars of acacia wood to run through the frames on each side, overlaid the frames and bars with gold, and made gold rings so the structure held together.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">联结使整体坚固 / Connection Makes Strength</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">闩与金环的作用是把单独的板连成整体。会幕不是许多独立构件的堆放，而是彼此连接、共同承重的圣所结构。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Bars and rings connect individual frames into one structure. The tabernacle is not a pile of isolated parts but a joined sanctuary that bears weight together.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要单独承受重量 / Do Not Bear Weight Alone</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常把压力个人化，独自扛起家庭、事奉或职场重担。本段提醒我们，神的工程有连接机制；成熟的信心会寻求同行、问责与彼此扶持。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern life often isolates pressure. This passage reminds us that God’s work includes structures of connection; mature faith seeks companionship, accountability, and mutual support.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Veil and Screen Establish Worshipful Boundaries</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">幔子与门帘设立敬拜边界 (36:35-38)</h3></div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">36:35-38</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他们用蓝色、紫色、朱红色线和细麻织幔子，又绣上基路伯；并为会幕门口做帘子，配上柱子、钩子和座。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            They made the veil of blue, purple, and scarlet yarn with fine linen and cherubim, and they made the screen for the entrance of the tent with its pillars, hooks, and bases.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">亲近与敬畏并存 / Nearness with Reverence</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">幔子和门帘说明神愿意住在百姓中间，却也按圣洁次序设立边界。会幕欢迎人按神的方式亲近，而不是把神变成可随意支配的对象。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The veil and entrance screen show that God dwells among His people while establishing holy order. The tabernacle welcomes approach in God’s way, not casual control of God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">用边界保护亲密 / Boundaries Protect Intimacy</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">健康关系需要亲近，也需要界限。无论是与神、家人或同工相处，尊重边界不是冷漠，而是让爱不被占有欲、操控或混乱破坏。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Healthy relationships need both nearness and boundaries. With God, family, or coworkers, honoring limits is not coldness; it protects love from control, possession, and confusion.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8"><p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p><h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从经文原意走向今日操练</h2><p class="text-stone-600 leading-7 mb-2">本页采用双轨读经：先问经文在出埃及记整体叙事中的原意，再问这原意如何塑造今天的信心、工作与群体生活。</p><p class="en-text text-sm text-stone-500 italic">This page uses a two-track reading: first asking what the text means in Exodus, then asking how that meaning shapes present faith, work, and community.</p></section><section class="grid md:grid-cols-2 gap-5 mb-8"><div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6"><h3 class="serif text-xl font-bold text-stone-900 mb-3">正统解经原则 / Exegetical Principles</h3><p class="text-sm text-stone-600 leading-7 text-justify mb-3">读出埃及记 36 章时，先尊重上下文：它承接 35 章的奉献与工人呼召，并落实 25-31 章神启示的会幕样式。因此重点不是随意寓意化每个材料，而是看见神的吩咐如何通过受托工人和甘心百姓成为现实。</p><p class="en-text text-xs text-stone-400 italic leading-6">The interpretation begins with context: Exodus 36 follows the offerings and call of chapter 35 and implements the pattern revealed in chapters 25-31. The point is not uncontrolled symbolism but obedience embodied through workers and gifts.</p></div><div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6"><h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用路径 / Devotional Application</h3><p class="text-sm text-stone-600 leading-7 text-justify mb-3">灵修应用不跳过原意，而是用“桥梁原则”连接：神赐智慧给手、唤醒甘心奉献、也设立圣洁界限。今天可落实为专业中的忠心、慷慨中的节制、团队中的连接，以及关系中的健康边界。</p><p class="en-text text-xs text-stone-400 italic leading-6">Devotional use does not bypass meaning. It bridges from the text: God gives wisdom to hands, awakens willing generosity, and establishes holy boundaries. Today this becomes faithful skill, restrained generosity, connected teamwork, and healthy limits.</p></div></section><section class="bg-[var(--theme-accent)]/40 rounded-xl border border-amber-200 p-6 sm:p-8"><h3 class="serif text-xl font-bold text-stone-900 mb-3">落地指南 / Practical Guide</h3><div class="grid sm:grid-cols-3 gap-4 text-sm text-stone-600 leading-7"><p><span class="font-bold text-stone-800">观察 / Observe:</span><br>找出重复词，如“智慧”“甘心”“够用有余”“做”。<span class="block en-text text-xs italic text-stone-400 mt-1">Notice repeated words such as wisdom, willing, enough, and made.</span></p><p><span class="font-bold text-stone-800">解释 / Interpret:</span><br>把每段放在会幕建造命令与神同住主题中理解。<span class="block en-text text-xs italic text-stone-400 mt-1">Read each unit within the tabernacle pattern and God’s dwelling theme.</span></p><p><span class="font-bold text-stone-800">回应 / Respond:</span><br>选择一个具体领域，把技能、资源或界限重新交托给神。<span class="block en-text text-xs italic text-stone-400 mt-1">Choose one concrete area to entrust skill, resources, or boundaries to God.</span></p></div></section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"他们所有的材料够做一切当做的物，而且有余。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The material they had was sufficient to do all the work, and more."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus 36 Bilingual Devotional Study</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 31 | 出埃及记 31章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #4f46e5;     /* 主色：神的灵赐下智慧与巧工 */
+            --theme-secondary: #b45309; /* 次色：金器工艺与圣所荣耀 */
+            --theme-accent: #eef2ff;       /* 提亮色：安息日记号与清亮见证 */
+            --theme-bg: #f8fafc;               /* 网页底色 */
+            --theme-text: #1e1b4b;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .artisan-stage {
+            background:
+                radial-gradient(circle at 48% 18%, rgba(238, 242, 255, .98), transparent 34%),
+                linear-gradient(145deg, #eef2ff 0%, #fef3c7 48%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .spark {
+            animation: sparkRise 4.2s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .spark.s2 { animation-delay: .5s; }
+        .spark.s3 { animation-delay: 1s; }
+        .spark.s4 { animation-delay: 1.45s; }
+        .tool-line {
+            stroke-dasharray: 120;
+            stroke-dashoffset: 120;
+            animation: toolDraw 4.8s ease-in-out infinite;
+        }
+        .tablet-glow { animation: tabletGlow 4s ease-in-out infinite; transform-origin: center; }
+        .sabbath-ring { animation: ringPulse 5.2s ease-in-out infinite; transform-origin: center; }
+        @keyframes sparkRise {
+            0%, 100% { transform: translateY(12px) scale(.8); opacity: .2; }
+            48% { transform: translateY(-18px) scale(1.08); opacity: 1; }
+        }
+        @keyframes toolDraw {
+            0% { stroke-dashoffset: 120; opacity: .35; }
+            45%, 70% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -120; opacity: .35; }
+        }
+        @keyframes tabletGlow {
+            0%, 100% { filter: drop-shadow(0 0 0 rgba(79,70,229,0)); opacity: .74; }
+            50% { filter: drop-shadow(0 0 14px rgba(79,70,229,.35)); opacity: 1; }
+        }
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(.94); opacity: .35; }
+            50% { transform: scale(1.05); opacity: .9; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hammer mr-2 text-stone-600"></i> 出埃及记 31章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 31</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">神赐智慧建造圣所，并以安息日作约的记号</h1>
+    <p class="en-text text-stone-500 italic mb-5">God Gives Wisdom for the Sanctuary and the Sabbath as the Covenant Sign</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 31 章把会幕蓝图推向实际执行。神不只吩咐摩西建造，也按名呼召比撒列，并赐下神的灵、智慧、聪明、知识和各样技巧，使圣所的美不是人自我发挥，而是回应神启示的服事。随后，神再次强调安息日是祂与以色列之间世世代代的记号：圣工再重要，也不能吞没圣约中的安息。章末，两块法版由神亲手写成，说明圣所、工艺、时间和群体生活都要受神话语塑造。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 31 moves the tabernacle instructions toward execution. God not only commands the work; He names Bezalel, fills him with the Spirit, and grants wisdom, understanding, knowledge, and skill. Sacred beauty is therefore obedient service, not self-expression. The Sabbath is then reaffirmed as the covenant sign, teaching that even holy labor must not consume holy rest. The chapter ends with tablets written by God's own finger, placing sanctuary, craft, time, and community under His word.</p>
+  </div>
+  <aside class="artisan-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">巧工火花与安息光环</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以工具线条、升起火花、发光法版和安息圆环表现本章：神的灵装备人的手，也用安息日守住人的时间。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Animated lines, sparks, tablets, and a Sabbath ring picture Spirit-given skill held within covenant rest.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated Spirit-given craftsmanship, Sabbath ring, and tablets from Exodus 31" class="w-full mt-4">
+      <defs>
+        <linearGradient id="craftGrad31" x1="0" x2="1">
+          <stop offset="0%" stop-color="#4f46e5"/>
+          <stop offset="100%" stop-color="#b45309"/>
+        </linearGradient>
+      </defs>
+      <circle class="sabbath-ring" cx="210" cy="125" r="82" fill="none" stroke="#4f46e5" stroke-width="8" opacity=".45"/>
+      <path class="tool-line" d="M92 180 L172 100 M154 118 L188 84 M248 92 L326 174 M270 112 L240 82" stroke="url(#craftGrad31)" stroke-width="10" stroke-linecap="round"/>
+      <g class="tablet-glow">
+        <rect x="164" y="94" width="42" height="72" rx="13" fill="#eef2ff" stroke="#4f46e5" stroke-width="4"/>
+        <rect x="214" y="94" width="42" height="72" rx="13" fill="#eef2ff" stroke="#4f46e5" stroke-width="4"/>
+        <path d="M177 119 H194 M177 137 H194 M226 119 H243 M226 137 H243" stroke="#312e81" stroke-width="3" stroke-linecap="round"/>
+      </g>
+      <g fill="#b45309">
+        <circle class="spark s1" cx="121" cy="91" r="5"/>
+        <circle class="spark s2" cx="292" cy="86" r="6"/>
+        <circle class="spark s3" cx="207" cy="61" r="5"/>
+        <circle class="spark s4" cx="332" cy="139" r="4"/>
+      </g>
+      <path d="M88 205 H332" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".35"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 31 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">按名呼召</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Called by Name</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qara beshem</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">比撒列不是匿名劳工，而是神亲自提名的工匠。经文让我们看见，具体技能和具体岗位也能成为回应呼召的地方。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神的灵充满</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Filled with the Spirit</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">ruach Elohim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章把神的灵与智慧、聪明、知识和巧工连在一起。属灵并不排斥专业，反而能更新手艺、判断和执行。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">安息日记号</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Sabbath Sign</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">ot leolam</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">安息日是约的记号，说明神的百姓不以不停生产证明价值。连建造会幕这样的圣工，也必须顺服神设定的节奏。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神亲手写成</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Written by God's Finger</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">etsba Elohim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">两块法版不是人的宗教创意，而是神主动赐下的见证。群体的敬拜与生活秩序，最终要由神的话语定形。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 31 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章把“如何建造”与“何时停止”放在一起。研读时要同时看见神赐技能、神设边界、神亲自赐下见证，使服事、休息和顺服成为同一个圣约生活。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter places building and stopping side by side. It shows God giving skill, setting boundaries, and providing His testimony, so that service, rest, and obedience belong together in covenant life.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Spirit-Given Skill for Holy Work</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神提名工匠并赐下智慧 (31:1-11)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">31:1-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华告诉摩西，祂已经按名召了犹大支派户珥的孙子、乌利的儿子比撒列，并以神的灵充满他，使他有智慧、聪明、知识，能作各样的工，设计巧工，用金、银、铜制造器物，也能刻宝石、雕木，作各样精巧的工作。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD tells Moses that He has called Bezalel by name and filled him with the Spirit of God, giving wisdom, understanding, knowledge, and every kind of skill for artistic work in gold, silver, bronze, stone, and wood.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣灵装备人的手</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文第一次详细说明执行会幕工程的人。神的灵不只给人讲论的能力，也给人设计、判断材料、精细制作的能力。“智慧、聪明、知识”说明圣所之美需要属神的洞察，也需要真实可验证的工艺。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Spirit equips practical hands as well as speaking mouths. Wisdom, understanding, and knowledge include artistic judgment, material skill, and faithful execution for the sanctuary's revealed pattern.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把专业带到神面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的工作技能、审美能力、工程判断、管理能力，也可以成为服事神和祝福人的器皿。桥梁原则是：不要把“属灵”缩小成聚会里的表达；当你在职场、家庭或教会中认真做好具体工作，也能用受神塑造的手回应祂。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Professional skill, design sense, technical judgment, and management can become vessels of service. Spiritual life is not limited to meetings; faithful work done before God is also worship.</p>
+        </div>
+        
+    </div>
+</div>
+
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">31:6-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神又分派但支派亚希撒抹的儿子亚何利亚伯与比撒列同工，并把智慧赐给一切有智慧的人，使他们能照神所吩咐的制造会幕、约柜、施恩座、器具、桌子、灯台、香坛、燔祭坛、洗濯盆、圣衣、膏油和圣香。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            God appoints Oholiab to work with Bezalel and gives skill to all the wise-hearted workers. Together they are to make the tent, ark, mercy seat, furnishings, priestly garments, anointing oil, and holy incense according to the LORD's command.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">个人呼召进入群体配搭</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">比撒列被按名呼召，但工程不是个人英雄主义。亚何利亚伯和一切有智慧的人一同承担任务，且内容严格对应前几章的吩咐。经文强调：恩赐需要配搭，创意需要顺服，工匠的自由在神命令的范围内发挥。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Bezalel is named, but the work is shared. Oholiab and the wise-hearted workers join him, and their task follows God's previous instructions. Gifts require cooperation, and creativity serves obedience.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从独自表现转向共同建造</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人容易把能力变成个人品牌，甚至在服事中也追求被看见。本段提醒我们，神赐恩赐是为建造群体。桥梁原则是：在团队、教会和家庭中，成熟的能力愿意配搭、交接、听命，并让整体使命大过个人光环。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Ability can become personal branding, even in ministry. This passage redirects gifts toward shared building: mature skill cooperates, hands off, listens, and values the mission above visibility.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Sabbath as Covenant Sign</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">圣工不能取代安息日 (31:12-17)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">31:12-15</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西告诉以色列人，务要守祂的安息日，因为这是神与他们世世代代之间的记号，使他们知道是耶和华使他们成圣。凡干犯安息日的，要从民中剪除；六日要作工，第七日是完全安息的圣日，归给耶和华。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD commands Israel to keep His Sabbaths as a sign through their generations, so they may know that He sanctifies them. Work is for six days, but the seventh is a holy Sabbath of complete rest to the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">安息显明谁使人成圣</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">安息日命令紧接会幕工匠名单，显示即使是神圣工程，也不能越过神设立的时间边界。“使你们成圣的是耶和华”是关键：以色列的身份不是由产量制造，而是由神分别出来。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Sabbath command follows the appointment of workers, showing that even sacred construction cannot override God's boundary for time. Israel's holiness is received from the LORD, not manufactured by output.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">停止不是懒惰，而是信靠</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在绩效、通知和责任不断逼近的生活里，停止常让人不安。安息日的桥梁原则是：我不是靠永不下线证明自己有价值。规律地停止工作、敬拜神、恢复身体与关系，是承认生命由神成圣，而不是由我掌控。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In a world of metrics, alerts, and pressure, stopping can feel unsafe. Sabbath teaches that worth is not proven by constant availability; rest, worship, and restored relationships confess that life is held by God.</p>
+        </div>
+        
+    </div>
+</div>
+
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">31:16-17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            以色列人要世世代代守安息日为永远的约。这日是耶和华与以色列人之间永远的证据，因为耶和华六日创造天地，第七日便安息舒畅。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Israel is to keep the Sabbath throughout their generations as a lasting covenant sign. It witnesses that the LORD made heaven and earth in six days and rested and was refreshed on the seventh.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从创造节奏认识约的主</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">安息日不只是社会福利，也回到创造秩序。神创造后安息舒畅，成为以色列时间生活的根基。百姓每周守安息，就是在时间中宣告：创造天地的主也是救赎他们、与他们立约的主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Sabbath reaches back to creation. Israel's weekly rest confesses that the Creator of heaven and earth is also the Redeemer who covenants with His people.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让时间重新作见证</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们的日程表常暴露真正敬畏的对象：业绩、焦虑、他人期待或自我控制。安息的桥梁原则是让时间替我们作见证。把一段固定时间分别给神，不是逃避责任，而是训练心承认世界不靠我支撑。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Our calendars often reveal what we fear most: performance, anxiety, approval, or control. Setting apart time for God lets time bear witness that the world does not depend on us.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Tablets of Testimony</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神亲手赐下见证法版 (31:18)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">31:18</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华在西奈山和摩西说完了话，就把两块法版交给他；这是神用指头写的石版，是见证的版。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When the LORD finished speaking with Moses on Mount Sinai, He gave him the two tablets of the testimony, stone tablets written by the finger of God.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神的话完成山上的交付</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这一节结束了从二十五章开始的会幕指示，也把焦点放回神亲自赐下的约。法版称为“见证”，说明以色列不是凭模糊宗教热情生活，而是凭神明确定立的话语与祂相交。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This verse closes the Sinai instructions and centers the covenant on God's own testimony. Israel's life with God is shaped not by vague religious energy but by His clearly given word.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神的话校准热心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">热心、创意和忙碌若离开神的话，很容易转向自我投射。法版提醒我们，真正的敬拜既有美，也有界限。桥梁原则是：在重大决定、服事方向和生活节奏上，让神的话先说话，再让计划、情绪和能力跟随。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Zeal, creativity, and busyness can become self-projection when detached from God's word. The tablets teach us to let Scripture speak first, so plans, emotions, and abilities follow obediently.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何阅读出埃及记 31 章</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">稳健阅读本章，要先观察它在会幕指示结尾的位置：神已经启示圣所蓝图，现在指定执行者、重申安息日、交付法版。因此本章不是一般工作伦理短文，而是在圣约上下文中说明技能、时间和话语都属于神。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">A responsible reading begins with the chapter's location at the end of the tabernacle instructions. God has revealed the sanctuary pattern, now appoints workers, reaffirms the Sabbath, and gives the tablets. The chapter is not generic work advice; it places skill, time, and word under the covenant Lord.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">释经轨道：从结构到含义</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">本章可按三步阅读：第一，神按名呼召并赐灵，使工匠能照启示建造；第二，神用安息日限制工作，表明成圣来自祂；第三，神亲手赐下法版，确认圣约生活以祂的话为见证。这样能避免把工艺、安息或法版孤立成零散主题。</p>
+    <p class="en-text text-sm text-stone-500 italic leading-6">The exegesis track follows three movements: named and Spirit-equipped workers, Sabbath boundaries for work, and tablets given by God's own hand. This keeps craft, rest, and testimony together within the covenant narrative.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修轨道：从含义到生活</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">应用本章时，不宜简单说“努力工作”或“多休息”，而要抓住桥梁原则：能力从神而来，能力为群体建造；工作有神给的边界，停止是信靠；所有热心都要被神的话校准。这些原则能进入职业选择、团队配搭、时间管理和属灵分辨。</p>
+    <p class="en-text text-sm text-stone-500 italic leading-6">The devotional track applies bridge principles: ability comes from God and builds community; work has God-given limits; rest expresses trust; and zeal must be calibrated by God's word. These truths shape vocation, teamwork, time, and discernment.</p>
+  </div>
+</section>
+
+<section class="bg-[var(--theme-accent)] rounded-xl border border-indigo-100 shadow-sm p-6 sm:p-8">
+  <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900 mb-3">实际落地指南 / Practice Guide</h3>
+  <p class="text-stone-700 leading-8 text-justify mb-3">读本章时，可以用四个问题默想：我是否把专业能力看作神托付的恩赐？我是否愿意与人配搭，而不把恩赐变成个人舞台？我是否给工作设下敬虔边界，让安息见证我信靠神？我是否让神的话先校准我的计划与热心？</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Use four questions for meditation: Do I receive my skill as God's entrusted gift? Do I cooperate rather than turn gifting into a stage? Do I set faithful boundaries so rest witnesses trust? Do I let God's word calibrate my plans and zeal?</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"这是我和以色列人永远的证据，因为六日之内耶和华造天地，第七日便安息舒畅。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"It is a sign forever between me and the people of Israel, for in six days the LORD made heaven and earth, and on the seventh day he rested and was refreshed."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus Chapter 31 双轨研读报告</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

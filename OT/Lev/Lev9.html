@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 9 | 利未记 9章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：祭坛火焰与献祭 */
+            --theme-secondary: #7c2d12; /* 次色：洁净、血与分别为圣 */
+            --theme-accent: #fff7ed;       /* 提亮色：荣耀显现的暖光 */
+            --theme-bg: #fffbf5;               /* 网页底色：温暖浅金 */
+            --theme-text: #3f1f0b;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .altar-stage {
+            background:
+                radial-gradient(circle at 50% 20%, rgba(255,237,213,.95), transparent 34%),
+                linear-gradient(145deg, #fff7ed 0%, #fed7aa 45%, #fef3c7 100%);
+            min-height: 100%;
+        }
+        .smoke-line {
+            stroke-dasharray: 180;
+            stroke-dashoffset: 180;
+            animation: smokeRise 5.8s ease-in-out infinite;
+        }
+        .smoke-line.s2 { animation-delay: .8s; }
+        .smoke-line.s3 { animation-delay: 1.5s; }
+        .flame-core { animation: flamePulse 1.8s ease-in-out infinite; transform-origin: 210px 149px; }
+        .flame-outer { animation: flameSway 2.4s ease-in-out infinite; transform-origin: 210px 160px; }
+        .glory-ring { animation: gloryOpen 4.8s ease-in-out infinite; transform-origin: center; }
+        .people-dot { animation: bowAndRise 4.8s ease-in-out infinite; transform-origin: center; }
+        .people-dot.p2 { animation-delay: .2s; }
+        .people-dot.p3 { animation-delay: .4s; }
+        .people-dot.p4 { animation-delay: .6s; }
+        @keyframes smokeRise {
+            0% { stroke-dashoffset: 180; opacity: .1; transform: translateY(18px); }
+            45% { stroke-dashoffset: 0; opacity: .72; transform: translateY(-5px); }
+            100% { stroke-dashoffset: -180; opacity: 0; transform: translateY(-34px); }
+        }
+        @keyframes flamePulse {
+            0%, 100% { transform: scale(.95); opacity: .82; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        @keyframes flameSway {
+            0%, 100% { transform: rotate(-2deg) scale(1); }
+            50% { transform: rotate(3deg) scale(1.04); }
+        }
+        @keyframes gloryOpen {
+            0%, 100% { transform: scale(.9); opacity: .25; }
+            50% { transform: scale(1.14); opacity: .78; }
+        }
+        @keyframes bowAndRise {
+            0%, 100% { transform: translateY(0); opacity: .65; }
+            48%, 64% { transform: translateY(11px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-flame-curved mr-2 text-stone-600"></i> 利未记 9章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 9</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">祭司顺服事奉，神的荣耀以火显现</h1>
+    <p class="en-text text-stone-500 italic mb-5">Priestly Obedience Meets the Revealed Glory of God</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 9 章是祭司承接圣职之后的首次公开事奉。亚伦先为自己献赎罪祭和燔祭，再为百姓献赎罪祭、燔祭、素祭和平安祭；摩西和亚伦进入会幕，又出来为百姓祝福。经文高潮不是人的仪式本身，而是耶和华的荣耀向众民显现，火从耶和华面前出来烧尽祭坛上的祭物。全章显示：接近圣洁的神需要神所设立的次序、代赎和祝福，而真正使敬拜成真的，是神主动悦纳并显明祂的同在。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 9 records the first public ministry after the priests' ordination. Aaron offers sacrifices first for himself and then for the people; Moses and Aaron bless the congregation; and the chapter climaxes when the glory of the LORD appears and fire consumes the offerings. The passage teaches that drawing near to the holy God requires His appointed order, atonement, and blessing, while true worship is completed by God's gracious acceptance and presence.</p>
+  </div>
+  <aside class="altar-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">祭坛之火与俯伏敬拜</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以升起的烟、跳动的火和俯伏的人群表现本章重点：祭物被悦纳，荣耀临到，百姓由观看转向敬拜。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Smoke, fire, and bowing figures picture accepted worship and the people's reverent joy.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated altar fire, rising smoke, and people bowing in Leviticus 9" class="w-full mt-4">
+      <defs>
+        <radialGradient id="gloryLev9" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="#fff7ed"/>
+          <stop offset="55%" stop-color="#f59e0b" stop-opacity=".62"/>
+          <stop offset="100%" stop-color="#b45309" stop-opacity=".05"/>
+        </radialGradient>
+        <linearGradient id="flameLev9" x1="0" x2="0" y1="0" y2="1">
+          <stop offset="0%" stop-color="#fef3c7"/>
+          <stop offset="42%" stop-color="#f97316"/>
+          <stop offset="100%" stop-color="#7c2d12"/>
+        </linearGradient>
+      </defs>
+      <circle class="glory-ring" cx="210" cy="95" r="88" fill="url(#gloryLev9)"/>
+      <g fill="none" stroke="#7c2d12" stroke-width="4" stroke-linecap="round" opacity=".42">
+        <path class="smoke-line s1" d="M184 122 C160 94, 202 73, 176 42"/>
+        <path class="smoke-line s2" d="M214 122 C238 94, 196 74, 224 41"/>
+        <path class="smoke-line s3" d="M240 127 C268 101, 230 79, 259 54"/>
+      </g>
+      <path d="M142 174 H278 L258 221 H162 Z" fill="#78350f" opacity=".9"/>
+      <path d="M156 174 H264" stroke="#fbbf24" stroke-width="7" stroke-linecap="round"/>
+      <path class="flame-outer" d="M210 98 C245 129, 235 165, 210 177 C179 162, 180 127, 210 98 Z" fill="url(#flameLev9)" opacity=".9"/>
+      <path class="flame-core" d="M210 120 C225 139, 219 159, 210 168 C196 156, 198 137, 210 120 Z" fill="#fff7ed" opacity=".92"/>
+      <g fill="#7c2d12" opacity=".72">
+        <circle class="people-dot p1" cx="108" cy="224" r="9"/>
+        <circle class="people-dot p2" cx="142" cy="229" r="8"/>
+        <circle class="people-dot p3" cx="278" cy="229" r="8"/>
+        <circle class="people-dot p4" cx="312" cy="224" r="9"/>
+      </g>
+      <path d="M72 241 H348" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".34"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 9 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">第八日</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Eighth Day</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">yom hashmini</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">七日承接礼之后的第八日，标志祭司公开事奉正式开始。神的百姓不是凭热心随意靠近，而是在神设立的时间和次序中敬拜。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">为自己赎罪</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Atonement for Himself</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kipper baado</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">亚伦虽被设立为大祭司，仍先需要为自己献祭。事奉者不是因自身完美站立，而是先领受神预备的洁净与怜悯。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">荣耀显现</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Glory Appears</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kevode YHWH</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章反复指向耶和华的荣耀显现。敬拜的终点不是仪式完成感，而是神亲自显明祂在百姓中间。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">祝福百姓</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Blessing the People</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">barak et-haam</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">亚伦献祭之后举手祝福，说明祭司职分不只处理罪，也把神的恩惠传递给会众，使敬拜走向生命被坚固。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">利未记 9 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按祭司就职后的首次事奉流程展开：预备、献祭、祝福、荣耀显现。每个单元都先看经文上下文，再把敬拜、洁净与服事的原则连到今日生活。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">The chapter follows the first priestly ministry after ordination: preparation, sacrifice, blessing, and the appearance of glory. Each unit moves from context to present-day worship, cleansing, and service.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Preparation for Public Worship</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">第八日的召集与预备 (9:1-6)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">9:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            到了第八日，摩西召了亚伦和他的儿子，并以色列的长老来。他吩咐亚伦取牛犊作赎罪祭、公绵羊作燔祭，又吩咐百姓带公山羊、牛犊、羊羔、公牛、公绵羊和调油的素祭到耶和华面前；因为今日耶和华要向他们显现。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the eighth day Moses called Aaron, his sons, and the elders of Israel. Aaron was to bring offerings for himself, and the people were to bring their appointed offerings before the LORD, because the LORD would appear to them that day.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁的事奉从听命开始</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“第八日”承接前七天的祭司承接礼，表示亚伦正式进入公开职分。摩西没有让祭司凭个人灵感设计敬拜，而是按耶和华的吩咐安排献祭。经文重点放在“耶和华要向你们显现”，说明所有预备都指向神主动临在，而非宗教表演。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The eighth day follows the seven-day ordination period and begins Aaron's public ministry. Worship is not improvised by priestly preference; it is ordered by the LORD's command and aimed at His gracious appearance.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把预备交给神的话</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人容易把服事等同于效率、创意或即时成果。利未记 9 章提醒我们，最深的预备是按神的话调整自己：先承认需要洁净，再带着顺服来到祂面前。在家庭、职场或教会事奉中，真正稳固的开始不是“我能做什么”，而是“主如何吩咐我靠近祂”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In modern service we often prize efficiency, creativity, and immediate results. This passage calls us to prepare by God's word: admitting our need for cleansing and approaching Him with obedient trust.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Aaron Offers for Himself</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">亚伦先为自己献祭 (9:7-14)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">9:7-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西对亚伦说：“你就近坛前，献你的赎罪祭和燔祭，为自己与百姓赎罪。”亚伦近前宰了为自己作赎罪祭的牛犊，把血抹在坛角上，倒在坛脚那里；又照耶和华所吩咐的焚烧脂油、腰子和肝上的网子，并在营外烧了肉和皮。他又宰了燔祭，洗了脏腑和腿，按次序烧在坛上。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses told Aaron to draw near to the altar and make atonement for himself and for the people. Aaron offered the calf as his sin offering, applied the blood to the altar, burned the appointed portions, burned the rest outside the camp, and then offered the burnt offering as commanded.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">事奉者也需要赎罪</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伦被膏立为祭司，却必须先为自己献赎罪祭和燔祭。经文没有把属灵领袖描写成天然洁净的人，而是强调他同样站在神圣洁审判之下，需要血的遮盖和全然献上。利未记的次序保护会众，也保护事奉者不把职分误认为个人资格。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Aaron's office does not make him inherently clean. Before serving the people, he needs atonement and wholehearted consecration, showing that ministry rests on God's provision rather than personal status.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">先让自己被恩典处理</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常想先解决别人的问题，却回避自己在神面前需要被光照的部分。亚伦的次序提醒每个服事者、父母、同工和带领者：不要用角色遮盖生命。先来到神面前认罪、被洁净、重新献上，才能以谦卑而不是控制来服事人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often want to fix others while avoiding our own need before God. Aaron's order teaches leaders, parents, and coworkers to receive grace first, so service flows from humility rather than control.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Offerings for the People</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">亚伦为百姓献祭 (9:15-21)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">9:15-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伦奉上百姓的供物，取那为百姓作赎罪祭的公山羊宰了，又献燔祭和素祭；他也宰了牛和公绵羊作平安祭，把血洒在坛的周围，把脂油和胸、右腿按例献上，在耶和华面前摇一摇，照摩西所吩咐的办理。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Aaron then presented the people's offerings: the goat for a sin offering, the burnt offering, the grain offering, and the peace offerings. He applied the blood, burned the portions on the altar, and waved the breast and right thigh before the LORD as Moses had commanded.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">完整的敬拜回应完整的需要</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">百姓的献祭包含赎罪祭、燔祭、素祭和平安祭，覆盖罪得遮盖、生命献上、日常供养和与神相交的层面。经文重复“照所吩咐的”，显示祭司不是表演者，而是忠心执行神所赐的敬拜秩序，使全会众可以在神面前得以靠近。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The people's offerings address guilt, consecration, daily provision, and fellowship. The repeated obedience to command shows that priestly ministry serves the congregation by preserving God's appointed way of approach.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让全人都进入敬拜</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">敬拜不是只处理罪疚，也包含把工作、食物、关系、感恩和平安都带到神面前。当压力把生命分割成许多互不相干的区域时，本段邀请我们重新整合：主关心我的悔改，也关心我的身体劳碌、家庭餐桌和与人和好的路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Worship does more than address guilt; it brings work, provision, relationships, gratitude, and peace before God. This passage invites us to bring the whole life into His presence.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Blessing, Glory, and Fire</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">祝福临到，荣耀显现 (9:22-24)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">9:22-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伦向百姓举手，为他们祝福；献完赎罪祭、燔祭和平安祭，就下来了。摩西、亚伦进入会幕，又出来为百姓祝福，耶和华的荣耀就向众民显现。有火从耶和华面前出来，烧尽坛上的燔祭和脂油；众民一见，就都欢呼，俯伏在地。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Aaron lifted his hands and blessed the people. Moses and Aaron entered the tent of meeting, then came out and blessed the people again. The glory of the LORD appeared, fire came out from before the LORD and consumed the offering, and the people shouted and fell on their faces.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神亲自悦纳祂所设立的敬拜</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伦的祝福之后，摩西和亚伦从会幕出来再祝福百姓，随后荣耀显现，火烧尽祭物。火不是人的操控结果，而是神主动悦纳的记号。百姓的回应兼有欢呼和俯伏：喜乐不是轻浮，敬畏也不是冰冷；两者在神的同在中相遇。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The consuming fire is not a humanly produced effect but the sign of God's acceptance. The people's shout and prostration hold joy and reverence together in the presence of the LORD.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在悦纳中敬畏，在敬畏中欢呼</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们无法制造神的同在，却能按祂的话预备自己，等候祂使敬拜成为真实。当神让我们看见祂的怜悯，无论是在祷告中的光照、关系中的和好，还是重担中的扶持，合宜的回应不是自我夸耀，而是欢呼并俯伏：知道自己被悦纳，也知道悦纳来自圣洁的主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We cannot manufacture God's presence, but we can prepare ourselves by His word and wait for Him. When mercy becomes visible, the fitting response is both joy and surrender: accepted by grace before the holy Lord.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论总结 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">从献祭次序到今日灵修</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">利未记 9 章需要双轨阅读：先尊重经文本身的礼仪次序，再谨慎连接到今日的信仰实践。释经轨道观察人物、祭物、次序、重复语句和高潮；灵修轨道则把“靠近神需要洁净、服事者先被恩典处理、敬拜指向神的同在”这些原则带入现代生活。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Leviticus 9 should be read on two tracks: first honoring the ritual order of the text, then carefully applying its enduring principles. The exegesis track observes persons, offerings, sequence, repeated commands, and climax; the devotional track brings cleansing, grace-shaped service, and worship toward God's presence into daily life.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">释经路径 / Exegesis Path</h3>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">上下文：</span>第 8 章完成祭司承接礼，第 9 章展示首次公开事奉，后接第 10 章对擅自献火的警告。<span class="en-text italic text-stone-400 block">Context moves from ordination to first ministry and then to warning against unauthorized worship.</span></li>
+      <li><span class="font-bold text-stone-800">结构：</span>预备、祭司为自己献祭、为百姓献祭、祝福与荣耀显现，形成逐步靠近神的秩序。<span class="en-text italic text-stone-400 block">The structure moves through preparation, atonement, communal offerings, blessing, and glory.</span></li>
+      <li><span class="font-bold text-stone-800">重点：</span>荣耀显现和火烧祭物表明神悦纳祂所吩咐的敬拜。<span class="en-text italic text-stone-400 block">The appearance of glory and consuming fire mark divine acceptance of appointed worship.</span></li>
+    </ul>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修路径 / Devotional Path</h3>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">桥梁原则：</span>旧约祭物指向靠神恩典得以靠近的原则，今日应用应聚焦悔改、顺服、敬畏和感恩。<span class="en-text italic text-stone-400 block">The bridge principle focuses on grace-enabled approach, repentance, obedience, reverence, and gratitude.</span></li>
+      <li><span class="font-bold text-stone-800">生活应用：</span>在服事、家庭和职场中，先处理自己与神的关系，再带着祝福而不是优越感服事人。<span class="en-text italic text-stone-400 block">In ministry, family, and work, tend your own life before God before serving others.</span></li>
+      <li><span class="font-bold text-stone-800">敬拜回应：</span>神的悦纳带来欢呼，也带来俯伏；成熟信心同时拥抱喜乐与敬畏。<span class="en-text italic text-stone-400 block">God's acceptance produces both gladness and surrender; mature faith holds joy and reverence together.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"耶和华的荣耀向众民显现。有火从耶和华面前出来，烧尽坛上的燔祭和脂油；众民一见，就都欢呼，俯伏在地。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The glory of the LORD appeared to all the people; fire came out from before the LORD and consumed the offering, and the people shouted and fell on their faces."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Leviticus Chapter 9 双轨研读报告</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

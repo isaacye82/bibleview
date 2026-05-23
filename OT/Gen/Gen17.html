@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 17 | 创世记 17章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 创世记17章主题色：立约石榴红、橄榄绿、羊皮金、旷野暖白 */
+            --theme-primary: #9a3412;
+            --theme-secondary: #3f6212;
+            --theme-accent: #fef3c7;
+            --theme-bg: #f9f3e8;
+            --theme-text: #2f1b12;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .covenant-mark {
+            position: relative;
+            min-height: 340px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 50% 30%, rgba(254, 243, 199, 0.58), transparent 18%),
+                linear-gradient(180deg, #2f1b12 0%, #6b2f16 46%, #d9a65a 100%);
+            box-shadow: inset 0 0 80px rgba(47, 27, 18, 0.42);
+        }
+        .covenant-mark svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .name-scroll {
+            animation: scrollBreathe 5.8s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .seal-ring {
+            stroke-dasharray: 11 10;
+            animation: sealTurn 13s linear infinite;
+            transform-origin: 200px 168px;
+        }
+        .promise-seed {
+            animation: seedPulse 3.2s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .promise-seed.two { animation-delay: -0.9s; }
+        .promise-seed.three { animation-delay: -1.8s; }
+        .promise-line {
+            stroke-dasharray: 8 14;
+            animation: promiseFlow 8.5s linear infinite;
+        }
+        @keyframes scrollBreathe {
+            0%, 100% { transform: translateY(0) scale(0.98); opacity: 0.88; }
+            50% { transform: translateY(-8px) scale(1.02); opacity: 1; }
+        }
+        @keyframes sealTurn {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes seedPulse {
+            0%, 100% { opacity: 0.38; transform: scale(0.86); }
+            50% { opacity: 1; transform: scale(1.18); }
+        }
+        @keyframes promiseFlow {
+            from { stroke-dashoffset: 0; opacity: 0.35; }
+            50% { opacity: 0.9; }
+            to { stroke-dashoffset: -140; opacity: 0.35; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-ring mr-2 text-stone-600"></i> 创世记 17章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 17</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_0.92fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">圣约记号：新名、应许与当天顺服</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">The covenant sign: new names, promised life, and same-day obedience.</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">
+                        创世记17章发生在亚伯兰九十九岁时。神以“全能的神”显现，呼召他在神面前行走并作完全人；随后把亚伯兰改名为亚伯拉罕，把撒莱改名为撒拉，并把割礼赐下为圣约的记号。本章的重点不是人用记号换取恩典，而是神先立约、先应许，然后呼召祂的子民以身体、家庭与日常秩序回应祂的信实。
+                    </p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">
+                        Genesis 17 takes place when Abram is ninety-nine. God appears as God Almighty, calls him to walk before the Lord and be whole-hearted, renames Abram and Sarai, and gives circumcision as the covenant sign. The chapter does not present a human ritual earning grace; God first pledges his covenant promise, then calls his people to embody that promise in family, identity, and daily obedience.
+                    </p>
+                </div>
+                <aside class="covenant-mark border border-orange-900/20">
+                    <svg viewBox="0 0 400 340" role="img" aria-label="Animated covenant seal, parchment names, and promise seeds">
+                        <defs>
+                            <linearGradient id="parchment" x1="0" x2="1">
+                                <stop offset="0%" stop-color="#fef3c7" stop-opacity="0.95"/>
+                                <stop offset="100%" stop-color="#f5d58a" stop-opacity="0.8"/>
+                            </linearGradient>
+                            <radialGradient id="sealGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fed7aa" stop-opacity="0.95"/>
+                                <stop offset="62%" stop-color="#c2410c" stop-opacity="0.42"/>
+                                <stop offset="100%" stop-color="#7c2d12" stop-opacity="0"/>
+                            </radialGradient>
+                        </defs>
+                        <path class="promise-line" d="M38 247 C105 188, 142 221, 202 166 S312 89, 360 127" fill="none" stroke="#fef3c7" stroke-width="2.5" stroke-linecap="round"/>
+                        <g class="name-scroll">
+                            <rect x="82" y="64" width="236" height="102" rx="16" fill="url(#parchment)" opacity="0.9"/>
+                            <path d="M103 101 H182 M103 129 H158 M220 101 H297 M220 129 H276" stroke="#7c2d12" stroke-width="5" stroke-linecap="round" opacity="0.58"/>
+                            <text x="200" y="88" text-anchor="middle" fill="#7c2d12" font-size="13" font-family="serif">Abram → Abraham</text>
+                            <text x="200" y="151" text-anchor="middle" fill="#7c2d12" font-size="13" font-family="serif">Sarai → Sarah</text>
+                        </g>
+                        <circle cx="200" cy="168" r="78" fill="url(#sealGlow)"/>
+                        <circle class="seal-ring" cx="200" cy="168" r="56" fill="none" stroke="#fef3c7" stroke-width="4" opacity="0.86"/>
+                        <circle cx="200" cy="168" r="26" fill="#9a3412" opacity="0.88"/>
+                        <path d="M188 168 L198 178 L216 154" fill="none" stroke="#fef3c7" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle class="promise-seed" cx="91" cy="245" r="6" fill="#fef3c7"/>
+                        <circle class="promise-seed two" cx="307" cy="231" r="7" fill="#fde68a"/>
+                        <circle class="promise-seed three" cx="337" cy="95" r="5" fill="#fef9c3"/>
+                        <path d="M60 289 C126 262, 270 262, 340 289" fill="none" stroke="#3f6212" stroke-width="10" stroke-linecap="round" opacity="0.74"/>
+                    </svg>
+                    <div class="absolute inset-x-0 bottom-0 p-5 bg-gradient-to-t from-stone-950/70 to-transparent text-center">
+                        <p class="text-sm font-bold text-amber-50 serif">记号不是起点，恩典才是起点。</p>
+                        <p class="text-xs text-amber-100/80 en-text italic">The sign follows grace; it does not replace grace.</p>
+                    </div>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="flex items-end justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+                        <p class="en-text text-sm text-stone-500 italic">Key ideas for reading Genesis 17 faithfully.</p>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">全能的神</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Almighty</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">El Shaddai</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">神在人的衰老与无能中宣告自己的充足能力。The title points to God's sufficiency when human possibility has nearly disappeared.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">在我面前行走</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Walk before Me</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">hithallek lepanai</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">这不是瞬间表演，而是持续活在神面前。It describes a life oriented before God's face, not a religious moment detached from ordinary days.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">圣约记号</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Covenant Sign</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">berit / milah</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">割礼是约中身份的可见印记，指向神已先赐下的应许。The sign marks belonging to the covenant community and witnesses to a promise already given by God.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">以撒的笑</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Isaac's Laughter</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Yitschaq</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">人因不可能而笑，神却把笑声变成应许之子的名字。Human disbelief laughs at impossibility; God turns laughter into the name of promised joy.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-2">研读视图 · Study View</p>
+                <h2 class="serif text-3xl font-bold text-stone-900">创世记17章逐段双轨研读</h2>
+                <p class="en-text text-sm text-stone-500 italic mt-2">Each unit pairs contextual meaning with devotional application.</p>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:1-2</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        亚伯兰年九十九岁的时候，耶和华向他显现，对他说：“我是全能的神。你当在我面前作完全人，我就与你立约，使你的后裔极其繁多。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        When Abram was ninety-nine years old, Yahweh appeared to Abram and said to him, “I am God Almighty. Walk before me, and be blameless. I will make my covenant between me and you, and will multiply you exceedingly.”
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">等候中的全能呼召</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">十三年沉默之后，神不是先解释延迟，而是先启示祂是谁。“全能的神”把焦点从亚伯兰身体的衰残转向神自己的能力；“作完全人”不是无罪完美，而是完整、专一、在神面前不分裂地活着。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After years of silence, God does not begin by explaining the delay but by revealing himself. Blamelessness means whole-hearted covenant integrity before God, not sinless performance.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把延迟交还给神</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当工作、家庭或健康的进展长期停滞时，人容易把神的沉默解读为缺席。本段的桥梁原则是：信心先凝视神的所是，再处理眼前的不可能。今天可以用一个具体选择回应祂，例如诚实、节制、饶恕，继续在神面前行走。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When progress stalls, faith begins by looking at who God is before measuring what seems impossible. A concrete act of honesty, restraint, or forgiveness can become today's walk before him.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:3-8</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        亚伯兰俯伏在地；神又对他说：“我与你立约，你要作多国的父。从此以后，你的名不再叫亚伯兰，要叫亚伯拉罕，因为我已立你作多国的父。我也要将你现在寄居的地，就是迦南全地，赐给你和你的后裔，作永远的产业；我也必作他们的神。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        Abram fell on his face. God said, “As for me, behold, my covenant is with you. You will be the father of a multitude of nations. Your name will no more be called Abram, but Abraham, for I have made you the father of a multitude of nations. I will give to you and to your offspring the land of your travels, all the land of Canaan, for an everlasting possession. I will be their God.”
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">新名承载新身份</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯兰俯伏回应神的临在。改名不是心理暗示，而是神以话语重塑他的身份：从“尊贵之父”到“多国之父”。土地与后裔的应许也被放在“我必作他们的神”之下，说明圣约核心是关系归属。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The name change is divine identity-giving. Land and offspring are not detached benefits; they are gathered under the covenant promise, “I will be their God.”</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神命名你的生命</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活常用绩效、收入、学历或失败经历给人命名。本段邀请我们把自我定义交回给神：你不是只由履历或创伤解释的人，而是被神呼召、被神带入应许的人。今天可以问：我正在听谁给我命名？</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Our age names people by productivity, status, or wounds. This passage invites us to receive identity from God and ask whose voice is defining us today.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:9-14</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        神又对亚伯拉罕说：“你和你的后裔必世世代代遵守我的约。你们所有的男子都要受割礼；这是我与你们立约的证据。你们世世代代的男子，无论是家里生的，是用银子从外人买的，生下来第八日都要受割礼。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        God said to Abraham, “As for you, you shall keep my covenant, you and your offspring after you throughout their generations. Every male among you shall be circumcised. It will be a token of the covenant between me and you. He who is eight days old shall be circumcised among you, throughout your generations, whether born in the house or bought with money from any foreigner.”
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恩典之后的可见记号</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">割礼被称为“约的证据”，不是取代神应许的魔法动作。它把圣约刻入家庭传承，也把家中生的、买来的外人都纳入同一记号之下，显示神的约有清楚边界，也有向外扩展的恩典范围。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Circumcision is a sign of the covenant, not a substitute for God's promise. It marks covenant belonging across generations and even includes household outsiders brought under Abraham's house.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让信仰有身体感</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">信心不是只在脑中同意一套观念，也会进入身体、时间表、消费习惯和家庭秩序。桥梁原则是：神的恩典先接纳我们，随后也训练我们把归属活出来。可以检视一个具体领域：我的日常节奏是否看得出我属于神？</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faith is not mere mental agreement; grace trains embodied belonging in schedules, habits, relationships, and households. Where does your ordinary routine show that you belong to God?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:15-16</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        神又对亚伯拉罕说：“你的妻子撒莱不可再叫撒莱，她的名要叫撒拉。我必赐福给她，也要使你从她得一个儿子。我要赐福给她，她也要作多国之母；必有百姓的君王从她而出。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        God said to Abraham, “As for Sarai your wife, you shall not call her name Sarai, but her name will be Sarah. I will bless her, and moreover I will give you a son by her. Yes, I will bless her, and she will be a mother of nations. Kings of peoples will come from her.”
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">撒拉被放在应许中心</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神不仅重申亚伯拉罕的应许，也明确说应许之子要从撒拉而出。她不是旁观者或工具，而是被神命名、被神赐福、被放入圣约延续中的人。经文修正任何把她边缘化的读法。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Sarah is not a passive instrument. God names her, blesses her, and places her at the center of the promised line. The passage refuses to marginalize her role.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">看见被忽略的人</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在人际关系与事奉中，我们可能只看见显眼的领袖，却忽略共同承受应许的人。神亲自点名撒拉，提醒我们尊重那些在家庭、团队、教会中被低估的忠心。今天可以主动肯定一个常被忽略的贡献者。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God names Sarah, inviting us to notice people whose faithfulness is easily overlooked. Today, honor someone whose contribution usually remains unseen.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:17-22</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        亚伯拉罕就俯伏在地喜笑，心里说：“一百岁的人还能得孩子吗？撒拉已经九十岁了，还能生养吗？”亚伯拉罕对神说：“但愿以实玛利活在你面前。”神说：“不然，你妻子撒拉要给你生一个儿子，你要给他起名叫以撒。我要与他坚定所立的约，作他后裔永远的约。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        Abraham fell on his face, and laughed, and said in his heart, “Will a child be born to him who is one hundred years old? Will Sarah, who is ninety years old, give birth?” Abraham said to God, “Oh that Ishmael might live before you!” God said, “No, but Sarah, your wife, will bear you a son. You shall call his name Isaac. I will establish my covenant with him for an everlasting covenant for his offspring after him.”
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神纠正替代方案</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯拉罕的笑带着惊讶，也带着对现实限制的计算。他提出以实玛利作为可理解的替代方案；神却既赐福以实玛利，又坚持圣约之子将从撒拉而生。神的怜悯不等于放弃祂原定的应许路线。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Abraham offers Ishmael as a reasonable alternative. God blesses Ishmael yet insists that the covenant line will come through Sarah's son Isaac. Mercy does not cancel God's chosen promise.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把“较容易的计划”交给神</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常把神的应许缩小成自己能管理的方案，因为那样更安全、更可控。本段的桥梁原则是：神能怜悯我们的现实顾虑，也会温柔而坚定地带我们回到祂的话。祷告可以很诚实：主啊，祝福我手中的以实玛利，也教我等候你所说的以撒。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often shrink promise into a manageable plan. God can care for our practical concerns while calling us back to his word: bless what is in my hands, Lord, and teach me to wait for what you promised.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">17:23-27</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        正当那日，亚伯拉罕遵着神的命，给以实玛利和家里的一切男子，无论是在家里生的，是用银子买的，都行了割礼。亚伯拉罕受割礼的时候年九十九岁；他儿子以实玛利受割礼的时候年十三岁。
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        Abraham took Ishmael his son, all who were born in his house, and all who were bought with his money, every male among the men of Abraham's house, and circumcised the flesh of their foreskin that same day, as God had said to him. Abraham was ninety-nine years old when he was circumcised. Ishmael his son was thirteen years old when he was circumcised.
+                    </p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">当天顺服的重量</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">叙事用“正当那日”强调亚伯拉罕的即时回应。顺服不仅是个人内心决定，也带动整个家进入约的秩序。经文没有浪漫化顺服的代价，却清楚显示信心会落实为可见行动。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The phrase “that same day” highlights immediate obedience. Faith becomes visible action and reshapes Abraham's household under the covenant order.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要把清楚的顺服推迟成模糊的感动</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些顺服需要长久分辨，但有些已经足够清楚：道歉、停止欺骗、归还不属于自己的东西、重新建立敬拜节奏。桥梁原则是：当神的话已经清楚，延迟常会削弱心的敏锐。今天选择一个“正当那日”的行动。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some obedience requires discernment; some is already clear. When God's word is clear, delay can dull the heart. Choose one “that same day” response today.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">方法论总结 · Methodology</p>
+                <h2 class="serif text-3xl font-bold text-stone-900 mb-3">两条路径：先听经文，再进入生命</h2>
+                <p class="en-text text-base text-stone-500 italic mb-8">Two movements: listen to the text first, then let the text enter life.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="rounded-xl border border-stone-200 p-5 bg-slate-50/70">
+                        <h3 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h3>
+                        <p class="en-text text-xs uppercase tracking-widest text-stone-400 mb-4">Contextual Exegesis</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">创世记17章应放在12、15、16章之后阅读：神已主动呼召亚伯兰，也已立下后裔与土地的应许；16章人的急躁方案带来张力；17章则以神的显现、新名和割礼记号重新整理圣约关系。</p>
+                        <p class="en-text text-sm leading-6 text-stone-500 italic text-justify">Genesis 17 should be read after chapters 12, 15, and 16. God's call and promise come first; human impatience creates tension; then God reorders covenant identity through appearance, renaming, and the covenant sign.</p>
+                    </div>
+                    <div class="rounded-xl border border-stone-200 p-5 bg-[var(--theme-accent)]/30">
+                        <h3 class="serif text-xl font-bold text-stone-900 mb-2">灵修存在应用</h3>
+                        <p class="en-text text-xs uppercase tracking-widest text-stone-400 mb-4">Devotional Application</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">应用不是把经文变成励志口号，而是在经文原意中找到桥梁原则：神先赐恩典，再呼召回应；神赐新身份，也重整身体与家庭生活；神怜悯人的现实焦虑，却仍邀请人信靠祂的话。</p>
+                        <p class="en-text text-sm leading-6 text-stone-500 italic text-justify">Application does not turn Scripture into slogans. It draws bridge principles from the text: grace precedes response, identity reshapes embodied life, and God meets human anxiety while calling us to trust his word.</p>
+                    </div>
+                </div>
+                <div class="mt-6 rounded-xl border border-stone-200 p-5">
+                    <h3 class="serif text-lg font-bold text-stone-900 mb-3">实际落地指南 · Practical Guide</h3>
+                    <div class="grid sm:grid-cols-3 gap-4 text-sm text-stone-700">
+                        <div>
+                            <p class="font-bold mb-1">观察经文 · Observe</p>
+                            <p class="leading-6">留意重复词：“约”“后裔”“赐福”“世世代代”。</p>
+                            <p class="en-text text-xs italic text-stone-500 mt-2">Notice repeated words: covenant, offspring, blessing, generations.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-1">解释脉络 · Interpret</p>
+                            <p class="leading-6">先问本段如何推进亚伯拉罕之约，再问它如何照亮信心生活。</p>
+                            <p class="en-text text-xs italic text-stone-500 mt-2">Ask first how the passage advances the Abrahamic covenant, then how it forms faithful living.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold mb-1">回应行动 · Respond</p>
+                            <p class="leading-6">选择一个“当天”的顺服，把听见的道落实到可见生活。</p>
+                            <p class="en-text text-xs italic text-stone-500 mt-2">Choose one same-day act of obedience that makes hearing visible.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"我要与你并你世世代代的后裔坚立我的约，作永远的约，是要作你和你后裔的神。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"I will establish my covenant between me and you and your offspring after you throughout their generations, to be God to you and to your offspring after you."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Genesis Chapter 17 · 创世记 17章双轨灵修综览</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

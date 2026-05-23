@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 50 | 创世记 50章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #14532d; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbeb;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #292524;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .promise-stage {
+            background: radial-gradient(circle at 18% 14%, rgba(254,243,199,.96), transparent 34%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 48%, #dcfce7 100%);
+            min-height: 100%;
+        }
+        .promise-path { stroke-dasharray: 360; stroke-dashoffset: 360; animation: promiseTrail 6s ease-in-out infinite; }
+        .coffin-float { animation: coffinFloat 4.8s ease-in-out infinite; transform-origin: center; }
+        .hope-dot { animation: hopeRise 4.2s ease-in-out infinite; opacity: .45; }
+        .hope-dot.d2 { animation-delay: .7s; }
+        .hope-dot.d3 { animation-delay: 1.3s; }
+        @keyframes promiseTrail {
+            0% { stroke-dashoffset: 360; opacity: .36; }
+            45%, 68% { stroke-dashoffset: 0; opacity: .95; }
+            100% { stroke-dashoffset: -360; opacity: .36; }
+        }
+        @keyframes coffinFloat {
+            0%, 100% { transform: translateY(3px); }
+            50% { transform: translateY(-7px); }
+        }
+        @keyframes hopeRise {
+            0%, 100% { transform: translateY(8px); opacity: .35; }
+            50% { transform: translateY(-10px); opacity: 1; }
+        }
+        @media (max-width: 430px) {
+            nav .space-x-4 { column-gap: .5rem; }
+            .nav-btn { padding-left: .25rem; padding-right: .25rem; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-wheat-awn mr-2 text-stone-600"></i> 创世记 50章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 50</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">从哀哭到盼望：神把恶意转为拯救</h1>
+    <p class="en-text text-stone-500 italic mb-5">From Mourning to Hope: God Turns Evil Toward Preservation</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">创世记第 50 章以雅各的安葬、约瑟的饶恕和约瑟临终的吩咐结束整卷书。雅各被带回迦南埋葬，表明应许之地仍是族长家族的盼望中心；约瑟面对哥哥们的恐惧，没有以权力报复，而是承认神在人的恶意之上掌管历史；约瑟临终时提到神必眷顾，并吩咐后人带他的骸骨离开埃及，使创世记的结尾直接望向出埃及。全章把死亡、罪咎、家庭修复与神的护理放在一起，显示神的应许不会被坟墓、过犯或埃及的繁荣截断。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Genesis 50 closes the book with Jacob&#39;s burial, Joseph&#39;s forgiveness, and Joseph&#39;s final charge. Jacob is carried back to Canaan, keeping the promised land at the center of the family&#39;s hope. Joseph refuses revenge and confesses that God rules above human evil. His dying words, that God will surely visit His people and carry them out of Egypt, point directly toward Exodus. The chapter holds death, guilt, family repair, and providence together, showing that God&#39;s promise is not cut off by graves, sin, or Egyptian comfort.</p>
+  </div>
+  <aside class="promise-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">棺木等候，路向应许</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以尼罗河畔的棺木、远处迦南山线和缓慢移动的金色路径，表现死亡中仍有神眷顾的盼望。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A coffin in Egypt, a path toward Canaan, and rising promise lights portray hope beyond death.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated coffin in Egypt with a path toward the promised land" class="w-full mt-4">
+      <defs>
+        <linearGradient id="skyGen50" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fef3c7"/><stop offset="55%" stop-color="#fed7aa"/><stop offset="100%" stop-color="#dcfce7"/></linearGradient>
+        <linearGradient id="pathGen50" x1="0" x2="1"><stop offset="0%" stop-color="#7c2d12"/><stop offset="100%" stop-color="#14532d"/></linearGradient>
+      </defs>
+      <rect x="0" y="0" width="420" height="250" rx="18" fill="url(#skyGen50)" opacity=".9"/>
+      <path d="M22 126 C72 96, 118 98, 164 124 C212 151, 258 139, 322 86 C351 62, 382 55, 408 60" fill="none" stroke="#14532d" stroke-width="5" opacity=".35"/>
+      <path class="promise-path" d="M62 194 C120 176, 169 161, 211 136 C254 111, 293 82, 359 66" fill="none" stroke="url(#pathGen50)" stroke-width="7" stroke-linecap="round"/>
+      <g class="coffin-float">
+        <path d="M85 163 L166 153 L197 176 L116 190 Z" fill="#78350f" opacity=".92"/>
+        <path d="M103 166 L164 159 L181 173 L119 181 Z" fill="#fbbf24" opacity=".55"/>
+        <path d="M89 193 C125 207, 171 205, 205 189" fill="none" stroke="#0f766e" stroke-width="4" opacity=".38"/>
+      </g>
+      <g fill="#f59e0b">
+        <circle class="hope-dot d1" cx="235" cy="121" r="5"/>
+        <circle class="hope-dot d2" cx="285" cy="91" r="4"/>
+        <circle class="hope-dot d3" cx="334" cy="67" r="5"/>
+      </g>
+      <text x="210" y="226" text-anchor="middle" font-size="14" font-family="serif" fill="#431407" opacity=".72">神必定眷顾 / God will surely visit</text>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Genesis 50 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">应许之地的葬礼</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Burial in the Promised Land</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">maqom qever / Canaan</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">雅各坚持葬在迦南，不是怀旧，而是以身体见证神的应许仍然真实。坟墓成为信心的记号：家族暂住埃及，但归属不在埃及。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">护理中的反转</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Providential Reversal</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">hashavah letovah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约瑟说“神的意思原是好的”，不是淡化哥哥们的恶，而是承认神能在人的罪恶之上成就保全生命的旨意。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">饶恕与安慰</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Forgiveness and Comfort</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nacham / lev</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约瑟用亲切话安慰哥哥们的心，显明真正的饶恕不仅停止报复，也主动拆除恐惧，使破碎关系有重新呼吸的空间。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神必眷顾</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Will Surely Visit</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">paqod yifqod</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约瑟临终重复“神必定眷顾你们”，把全书结尾推向未来。神的应许跨越世代，最终带领百姓离开埃及。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">创世记 50 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章从雅各之死进入约瑟之死，中间以饶恕和神的护理作为核心。研读时要同时看见真实罪恶、真实哀伤、真实责任，以及神高过人的真实善意。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter moves from Jacob's death to Joseph's death, with forgiveness and providence at the center. It asks us to see real evil, real grief, real responsibility, and God's real goodness above human intent.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Jacob Mourned and Prepared for Burial</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">雅各的哀荣与防腐 (50:1-6)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟伏在父亲的面上哀哭亲嘴，又吩咐医生用香料薰父亲。埃及人为雅各哀哭七十天。哀哭的日子过了，约瑟请求法老准他照父亲所起的誓，把父亲葬在迦南地。法老准他上去埋葬父亲。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph fell upon his father&#39;s face, wept over him, and kissed him. He commanded the physicians to embalm his father, and Egypt mourned for Jacob seventy days. When the mourning ended, Joseph asked Pharaoh for permission to bury his father in Canaan according to his oath, and Pharaoh granted it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">哀伤被放在应许之中</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文没有把信心描写成没有眼泪。约瑟的哀哭真实而深重，埃及的哀悼也显示雅各因约瑟的缘故受到尊荣。但防腐和王室程序并不是终点；约瑟最关心的是守住对父亲的誓言，把雅各带回迦南。死亡的现实被承认，应许的方向也被坚持。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text does not portray faith as tearless. Joseph grieves deeply, and Egypt honors Jacob because of Joseph. Yet the embalming and court procedure are not the final word; Joseph keeps the oath to carry Jacob back to Canaan. Death is faced honestly, while the direction of promise is maintained.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在悲伤里仍守住方向</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常在丧失中只剩处理流程：医院、文件、费用、安排。创世记 50 章提醒我们，信心不是逃避悲伤，而是在悲伤里仍问：神给我的方向是什么？当家庭进入脆弱时刻，守约、守承诺、守爱，比快速恢复正常更重要。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Loss can reduce life to logistics: hospitals, forms, costs, and arrangements. Genesis 50 reminds us that faith does not avoid grief; it asks what direction God has given within grief. In fragile family moments, keeping covenant, promises, and love matters more than rushing back to normal.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Jacob Carried Back to Canaan</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">把雅各带回迦南安葬 (50:7-14)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:7-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟和法老的臣仆、埃及的长老，并约瑟全家和他弟兄们一同上去，只留下孩童和羊群牛群在歌珊。他们到了约旦河外亚达的禾场，大大号啕痛哭。雅各的儿子们照父亲所吩咐的，把他葬在麦比拉田间的洞里，然后约瑟和众人回到埃及。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph went up with Pharaoh&#39;s servants, the elders of Egypt, his household, and his brothers, leaving only the children and flocks in Goshen. At the threshing floor of Atad they lamented greatly. Jacob&#39;s sons did as he commanded and buried him in the cave of Machpelah; then Joseph and the company returned to Egypt.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">葬礼成为信心见证</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">庞大的送葬队伍让迦南人看见这不是普通家事。麦比拉洞连接亚伯拉罕、以撒、利百加、利亚和雅各，成为应许历史的地标。经文强调“照父亲所吩咐的”，说明顺服在细节中完成；他们虽返回埃及，却把家族身份重新钉在神应许的土地上。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The great funeral procession makes this more than a private family event. Machpelah links Abraham, Isaac, Rebekah, Leah, and Jacob, becoming a landmark of promise. The phrase that the sons did as Jacob commanded highlights obedience in detail; even as they return to Egypt, their identity is anchored in God&#39;s promised land.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让人生节点指向神的应许</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">婚礼、葬礼、搬家、毕业、退休，都在塑造家庭记忆。我们可以让这些节点只剩排场，也可以让它们成为信仰传递的时刻。雅各的安葬提醒我们：重要决定不只是问方便不方便，也要问这件事在向下一代表达什么盼望。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Weddings, funerals, moves, graduations, and retirements shape family memory. They can become mere events, or moments of faith transmission. Jacob&#39;s burial asks us not only what is convenient, but what hope our choices communicate to the next generation.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Brothers&#39; Fear and Joseph&#39;s Forgiveness</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">哥哥们的恐惧与约瑟的饶恕 (50:15-21)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:15-18</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟的哥哥们见父亲死了，就说：“或者约瑟怀恨我们，照着我们从前待他一切的恶足足报复我们。”他们打发人去见约瑟，说父亲临终前吩咐他赦免哥哥们的过犯。哥哥们又来俯伏在他面前说：“我们是你的仆人。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Joseph&#39;s brothers saw that their father was dead, they feared Joseph might repay all the evil they had done to him. They sent a message asking forgiveness, invoking their father&#39;s charge, and then came and fell before Joseph, saying, “We are your servants.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">旧罪咎在父亲死后浮现</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">哥哥们的恐惧显示罪咎没有因时间自动消失。雅各在世时或许像一道保护屏障；父亲死后，他们担心约瑟终于清算。经文再次回响约瑟年少时的梦：哥哥们俯伏在他面前。但此刻重点不是权力胜利，而是罪咎如何面对恩典。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The brothers&#39; fear shows that guilt does not vanish with time. Jacob may have functioned as a shield; after his death, they fear Joseph will settle accounts. Their bowing echoes Joseph&#39;s early dreams, but the focus is not triumph of power. It is guilt meeting grace.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">没有处理的罪咎会改写关系</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多关系表面平静，里面却被旧伤和猜疑支配。我们可能把别人的沉默解读为等待报复，把自己的不安投射成对方的敌意。经文邀请我们诚实面对过去，不用操控话术保护自己，而是在神面前承认真实需要：我需要赦免，也需要学习信任恩典。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many relationships look calm while old wounds and suspicion rule underneath. We may read another person&#39;s silence as delayed revenge and project our anxiety as their hostility. This passage invites honest facing of the past, not manipulative self-protection, but confession before God: I need forgiveness, and I need to learn to trust grace.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:19-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟对他们说：“不要害怕，我岂能代替神呢？从前你们的意思是要害我，但神的意思原是好的，要保全许多人的性命，成就今日的光景。现在你们不要害怕，我必养活你们和你们的妇人孩子。”于是约瑟用亲切的话安慰他们。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph said, “Do not fear. Am I in the place of God? You meant evil against me, but God meant it for good, to preserve many lives. So do not fear; I will provide for you and your little ones.” He comforted them and spoke kindly to their hearts.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不代替神，才可能真正饶恕</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">约瑟没有说哥哥们没有作恶；他清楚称那是“害我”。但他也拒绝坐在神的位置上审判和报复。经文含义的核心在于双重承认：人的恶是真实的，神的善意和掌权也是真实的。约瑟的饶恕不是忘记痛苦，而是把最终审判权交还给神，并以实际供应证明关系已被恩典重塑。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Joseph does not deny the evil done to him; he names it plainly. Yet he refuses to sit in God&#39;s place as judge and avenger. The passage holds two truths together: human evil is real, and God&#39;s good rule is real. Joseph&#39;s forgiveness is not amnesia; it returns final judgment to God and proves restored relationship through practical provision.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">饶恕不是软弱，而是停止扮演审判者</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在职场背叛、家庭伤害或朋友失信之后，我们常想用冷处理、羞辱或控制来恢复安全感。约瑟给出另一条路：不否认伤害，也不让伤害定义自己。把审判权交给神，会释放我们从报复剧本中出来，转向有边界、有真理、也有怜悯的行动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After workplace betrayal, family harm, or broken trust, we may seek safety through silence, shaming, or control. Joseph shows another way: do not deny the harm, but do not let it define you. Returning judgment to God frees us from revenge scripts and moves us toward action with boundaries, truth, and mercy.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Joseph Lives with the Family in Egypt</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">约瑟与家族留在埃及 (50:22-23)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:22-23</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟和他父亲的眷属都住在埃及。约瑟活了一百一十岁，得见以法莲第三代的子孙，玛拿西儿子玛吉的儿子也养在约瑟膝上。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph remained in Egypt with his father&#39;s household and lived one hundred ten years. He saw Ephraim&#39;s children to the third generation, and the children of Machir, son of Manasseh, were born upon Joseph&#39;s knees.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">埃及中的祝福不是最终归宿</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">一百一十岁在埃及文化中象征圆满寿数，经文也描绘约瑟看见多代子孙，显示神确实赐福。但这祝福发生在埃及，张力仍在：他们得保存，却尚未得地。创世记没有用成功人生收尾，而是用尚待成全的应许收尾。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Living to one hundred ten suggests fullness in Egyptian cultural terms, and Joseph sees generations of descendants. God has truly blessed him. Yet the blessing occurs in Egypt, and the tension remains: they are preserved but have not yet possessed the land. Genesis does not end with worldly success, but with promise still awaiting fulfillment.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">享受当下恩典，但不把埃及当家</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">事业稳定、家庭兴旺、资源增加都是神可赐的恩典；问题在于我们是否把这些当成最终安全。约瑟在埃及蒙福，却没有让埃及定义盼望。今天我们也需要感恩使用现有平台，同时记得生命的归属不由职位、城市、收入或身份标签决定。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Career stability, family growth, and increased resources can be gifts from God. The danger is treating them as ultimate security. Joseph is blessed in Egypt, but Egypt does not define his hope. We can gratefully use present platforms while remembering that our belonging is not determined by job, city, income, or status.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Joseph&#39;s Final Testament of Faith</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">约瑟临终的信心遗嘱 (50:24-26)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">50:24-26</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟对弟兄们说：“我要死了，但神必定眷顾你们，领你们从这地上去，到祂起誓赐给亚伯拉罕、以撒、雅各之地。”约瑟叫以色列的子孙起誓，说神必定眷顾你们，你们要把我的骸骨从这里搬上去。约瑟死了，年一百一十岁，人把他薰了，收殓在棺材里，停在埃及。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph said to his brothers, “I am about to die, but God will surely visit you and bring you up from this land to the land He swore to Abraham, Isaac, and Jacob.” He made Israel&#39;s sons swear to carry up his bones when God visited them. Joseph died at one hundred ten, was embalmed, and was placed in a coffin in Egypt.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">棺材在埃及，盼望在应许中</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">创世记最后一个画面不是宫殿，而是埃及的一口棺材。约瑟承认自己要死，却两次说“神必定眷顾”。他的骸骨成为未来出埃及的记号：神的百姓不会永远留在埃及。结尾把读者带到悬念中，等待那位守约的神继续行动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The final image of Genesis is not a palace but a coffin in Egypt. Joseph admits his death, yet twice says God will surely visit. His bones become a sign for the future Exodus: God&#39;s people will not remain in Egypt forever. The ending leaves the reader waiting for the covenant God to act again.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把盼望留给下一代</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们终有一天不能再亲自安排一切，但可以把信心的方向留给后来的人。约瑟没有留下埃及成功学，而是留下“神必眷顾”的盼望。今日的属灵遗产也许是一句常被孩子听见的祷告、一份正直的选择、一次在压力中仍相信神的见证。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">One day we will no longer be able to arrange everything ourselves, but we can leave a direction of faith. Joseph does not leave Egyptian success advice; he leaves the hope that God will surely visit. A spiritual legacy may be a prayer often heard by children, an honest choice, or a witness of trusting God under pressure.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="space-y-6">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从文本原意走向今日生命</h2>
+    <p class="text-stone-700 leading-8 text-justify">本页采用双轨读经：先问经文本身在创世记结尾的上下文中说什么，再问这个真理如何经过桥梁原则进入今天的悲伤、家庭关系、职场压力和长期盼望。这样的路径避免把经文变成抽象格言，也避免只停在历史资料。</p>
+    <p class="en-text text-sm text-stone-500 italic leading-7 mt-3">This page uses a two-track reading: first, what the text means in the closing context of Genesis; second, how that truth crosses into grief, family relationships, workplace pressure, and long-term hope today. This keeps Scripture from becoming either a detached slogan or mere historical data.</p>
+  </div>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+      <h3 class="serif text-xl font-bold text-stone-900 mb-3">正统解经原则</h3>
+      <p class="text-sm text-stone-600 leading-7 text-justify">观察叙事位置：创世记 50 章结束族长叙事，同时预备出埃及记。解释关键句时，要同时保留人的责任和神的护理，不能用“神的意思原是好的”轻率否定伤害，也不能让人的恶意大过神的掌权。</p>
+      <p class="en-text text-xs text-stone-400 italic border-t border-stone-200 pt-3 mt-4">Sound interpretation observes the chapter's narrative location: it closes the patriarchal story and prepares Exodus. Joseph's key statement must preserve both human responsibility and divine providence.</p>
+    </div>
+    <div class="bg-[var(--theme-accent)]/40 rounded-xl border border-amber-200 shadow-sm p-6">
+      <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用路径</h3>
+      <p class="text-sm text-stone-600 leading-7 text-justify">应用不是简单说“凡事都会好”，而是学习在未完全解决的现实中信靠神：悲伤时仍守约，受伤时不抢夺神的审判位置，顺利时不把埃及当终点，临终或交棒时把“神必眷顾”的盼望传给后来的人。</p>
+      <p class="en-text text-xs text-stone-400 italic border-t border-amber-200 pt-3 mt-4">Devotional application does not say, “Everything is automatically fine.” It learns trust in unresolved realities: covenant faithfulness in grief, forgiveness without playing judge, gratitude without making Egypt ultimate, and hope passed to the next generation.</p>
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">实际落地指南 / Practical Guide</h3>
+    <p class="text-sm text-stone-600 leading-7 text-justify">读本章时，可以用三个问题默想：我是否有一个需要带到神面前处理的旧罪咎或旧伤？我是否正在用报复、冷漠或控制来代替神的位置？我今天能留下什么小小的信心记号，使身边的人记得“神必定眷顾”？</p>
+    <p class="en-text text-xs text-stone-400 italic border-t border-stone-200 pt-3 mt-4">As you read, ask three questions: Is there old guilt or an old wound I need to bring before God? Am I replacing God through revenge, coldness, or control? What small sign of faith can I leave today so others remember that God will surely visit?</p>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"从前你们的意思是要害我，但神的意思原是好的。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"You meant evil against me, but God meant it for good."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Genesis 50 · 创世记 50章 · Providence, Forgiveness, and Hope</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

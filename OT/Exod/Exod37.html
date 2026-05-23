@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 37 | 出埃及记 37章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbeb;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #422006;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .holy-workshop {
+            background: radial-gradient(circle at 18% 18%, rgba(251,191,36,.28), transparent 30%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 48%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .gold-line { stroke-dasharray: 360; stroke-dashoffset: 360; animation: drawGold37 5.8s ease-in-out infinite; }
+        .lamp-flame { animation: flame37 2.4s ease-in-out infinite; transform-origin: center; }
+        .lamp-flame.f2 { animation-delay: .25s; }
+        .lamp-flame.f3 { animation-delay: .5s; }
+        .lamp-flame.f4 { animation-delay: .75s; }
+        .incense-thread { stroke-dasharray: 48; animation: incense37 4.5s ease-in-out infinite; }
+        .incense-thread.s2 { animation-delay: .7s; }
+        .incense-thread.s3 { animation-delay: 1.3s; }
+        .ark-glow { animation: glow37 4.2s ease-in-out infinite; transform-origin: center; }
+        @keyframes drawGold37 {
+            0% { stroke-dashoffset: 360; opacity: .35; }
+            45%, 68% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -360; opacity: .35; }
+        }
+        @keyframes flame37 {
+            0%, 100% { transform: translateY(0) scale(.92); opacity: .72; }
+            50% { transform: translateY(-5px) scale(1.08); opacity: 1; }
+        }
+        @keyframes incense37 {
+            0% { stroke-dashoffset: 48; opacity: .15; transform: translateY(8px); }
+            50% { stroke-dashoffset: 0; opacity: .75; transform: translateY(-6px); }
+            100% { stroke-dashoffset: -48; opacity: .1; transform: translateY(-18px); }
+        }
+        @keyframes glow37 {
+            0%, 100% { opacity: .68; filter: drop-shadow(0 0 0 rgba(180,83,9,0)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 13px rgba(217,119,6,.34)); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hammer mr-2 text-stone-600"></i> 出埃及记 37章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 37</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.05fr_.95fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">按山上的样式，把敬拜之所具体做成</h1>
+    <p class="en-text text-stone-500 italic mb-5">Making the Place of Worship According to the Pattern</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 37 章从命令转入执行，记述比撒列制作约柜、施恩座、陈设饼桌、金灯台和香坛。经文反复强调材料、尺寸、环、杠、器皿和装饰，显明敬拜不是凭热情临时发挥，而是按神已经启示的样式，把圣洁、怜悯、供应、光照与祷告落实在可见的空间中。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 37 moves from command to execution. Bezalel makes the ark, mercy seat, table, lampstand, and incense altar. The repeated attention to materials, measurements, rings, poles, vessels, and ornamentation shows that worship is not improvised enthusiasm; it is obedient craftsmanship shaped by God's revealed pattern.</p>
+  </div>
+  <aside class="holy-workshop rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">金线成形，灯火守望</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效用被勾勒的金线、闪动的灯火和上升的香烟，表现圣所器具从神的蓝图进入实际服事。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Gold lines, living flames, and rising incense picture revealed design becoming faithful service.</p>
+    </div>
+    <svg viewBox="0 0 430 260" role="img" aria-label="Animated sanctuary furnishings from Exodus 37" class="w-full mt-4">
+      <defs>
+        <linearGradient id="gold37" x1="0" x2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="55%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#78350f"/></linearGradient>
+        <radialGradient id="light37" cx="50%" cy="45%" r="55%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="72%" stop-color="#f59e0b" stop-opacity=".45"/><stop offset="100%" stop-color="#b45309" stop-opacity=".05"/></radialGradient>
+      </defs>
+      <ellipse class="ark-glow" cx="112" cy="106" rx="78" ry="42" fill="url(#light37)"/>
+      <rect x="58" y="100" width="110" height="50" rx="7" fill="#fef3c7" stroke="#92400e" stroke-width="3"/>
+      <path class="gold-line" d="M48 98 H178 M58 150 H168 M70 90 C88 70, 104 70, 122 90 M104 90 C123 67, 143 68, 162 90" fill="none" stroke="url(#gold37)" stroke-width="5" stroke-linecap="round"/>
+      <path class="gold-line" d="M236 185 C236 142, 236 111, 236 76 M236 118 C211 113, 197 96, 190 74 M236 118 C261 113, 275 96, 282 74 M236 146 C211 142, 196 130, 184 113 M236 146 C261 142, 276 130, 288 113" fill="none" stroke="url(#gold37)" stroke-width="6" stroke-linecap="round"/>
+      <g fill="#f59e0b">
+        <path class="lamp-flame" d="M236 59 C227 72, 236 82, 236 82 C236 82, 248 72, 236 59Z"/>
+        <path class="lamp-flame f2" d="M190 59 C181 72, 190 82, 190 82 C190 82, 202 72, 190 59Z"/>
+        <path class="lamp-flame f3" d="M282 59 C273 72, 282 82, 282 82 C282 82, 294 72, 282 59Z"/>
+        <path class="lamp-flame f4" d="M184 98 C176 110, 184 119, 184 119 C184 119, 195 110, 184 98Z"/>
+        <path class="lamp-flame f2" d="M288 98 C280 110, 288 119, 288 119 C288 119, 299 110, 288 98Z"/>
+      </g>
+      <rect x="328" y="122" width="48" height="62" rx="5" fill="#fde68a" stroke="#92400e" stroke-width="3"/>
+      <path class="gold-line" d="M318 120 H386 M325 184 H379 M352 122 V92" fill="none" stroke="url(#gold37)" stroke-width="5" stroke-linecap="round"/>
+      <path class="incense-thread" d="M344 91 C329 75, 356 64, 344 47" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      <path class="incense-thread s2" d="M354 91 C371 73, 344 62, 360 42" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      <path class="incense-thread s3" d="M363 94 C355 76, 384 67, 374 51" fill="none" stroke="#0f766e" stroke-width="3" stroke-linecap="round"/>
+      <path d="M42 216 H388" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".28"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 37 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">约柜</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Ark</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">aron</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约柜以皂荚木和精金制成，见证神把祂的话放在百姓中间。/ The ark, made of acacia wood and gold, witnesses that God places His covenant word among His people.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">施恩座</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Mercy Seat</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kapporet</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">施恩座盖在法版之上，表明神的同在不是取消圣洁，而是在圣洁中施怜悯。/ The mercy seat rests over the testimony, showing mercy given without denying holiness.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">陈设饼桌</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Table of Presence</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shulchan panim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">桌子与器皿提醒以色列：生命供应来自住在他们中间的主。/ The table and vessels remind Israel that provision comes from the Lord who dwells among them.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">纯金灯台</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Golden Lampstand</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">menorah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">灯台如杏花树枝展开，象征在圣所中持续照明的生命与警醒。/ The lampstand spreads like almond branches, picturing living, watchful light in the sanctuary.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">香坛</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Altar of Incense</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mizbach qetoret</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">香坛靠近幔子，显示祷告与敬拜在神面前成为馨香，而不是人的表演。/ The incense altar near the veil portrays prayer and worship rising before God, not human display.</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 37 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按圣所器具的制作顺序研读，观察神如何把祂启示的样式转化为百姓中间可见、可服事、可携行的敬拜秩序。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study follows the order of the sanctuary furnishings, observing how God’s revealed pattern becomes visible, serviceable, and portable worship among His people.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Ark and Mercy Seat: Word and Mercy at the Center</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">约柜与施恩座：神话语与怜悯的中心 (37:1-9)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:1-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            比撒列用皂荚木做柜，长二肘半，宽一肘半，高一肘半；里外包上精金，四围镶上金牙边，又铸四个金环安在四脚上，并用皂荚木做两根杠，包上金，穿在柜旁的环内，以便抬柜。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Bezalel made the ark of acacia wood, overlaid it with pure gold inside and outside, made a gold molding around it, cast four gold rings for its feet, and made gold-covered poles to carry it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣约中心可以被抬行</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段几乎逐项执行二十五章的命令。约柜不是普通箱子，而是放置法版的圣约见证；环和杠说明神的同在要随百姓行路，却仍按祂规定的方式被尊重。皂荚木与精金并列，强调可触及的材料被分别出来承载神圣用途。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The paragraph closely follows the earlier command. The ark is the covenant witness, not a common chest. Rings and poles show that God’s presence travels with His people, yet only according to His appointed holiness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让核心真理可以同行</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活常把信仰留在礼拜日或某个固定空间。约柜的杠提醒我们，神的话要被带进通勤、会议、家庭冲突和决定之中；但“带着神同行”不是随意利用祂，而是在每天的选择里尊重祂的话。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faith is often confined to a weekend space. The poles of the ark remind us to carry God’s word into work, family tension, and decisions, while refusing to use Him casually.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:6-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他用精金做施恩座，长二肘半，宽一肘半；又用金子锤出两个基路伯，安在施恩座的两头。基路伯高张翅膀，遮掩施恩座，脸彼此相向，朝着施恩座。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            He made the mercy seat of pure gold and hammered out two cherubim at its ends. The cherubim spread their wings over the mercy seat, facing one another and looking toward it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">怜悯在圣洁之上显明</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“施恩座”盖在约柜上方，基路伯的姿态把人的视线引向神指定相会与赦免的地方。经文没有把怜悯描写成降低标准，而是把怜悯放在圣约见证之上，说明神的恩典与祂的圣洁并不冲突。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The mercy seat covers the ark, and the cherubim direct attention to the appointed place of meeting and atonement. Mercy does not lower holiness; it is revealed over the covenant testimony.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在真实责任上寻求怜悯</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当我们犯错时，常在逃避责任和自责绝望之间摆动。施恩座给出第三条路：诚实面对神的话，也到神面前求怜悯。职场失误、人际伤害或家庭亏欠，都可以在认罪、修复与重新顺服中被带到神面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When we fail, we swing between denial and despair. The mercy seat teaches another path: face God’s word honestly and seek mercy that leads to repair and renewed obedience.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Table: Provision and Remembrance Before God</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">陈设饼桌：在神面前的供应与记念 (37:10-16)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:10-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他用皂荚木做一张桌子，包上精金，四围镶上金牙边，并做框子、金环和包金的杠；又用精金做桌上的器皿，就是盘子、调羹、奠酒的爵和瓶。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            He made the table of acacia wood, overlaid it with pure gold, made its molding, rim, rings, and poles, and made the vessels for the table: dishes, spoons, bowls, and pitchers of pure gold.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">供应被安排在敬拜中心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">桌子后来承载陈设饼，象征以色列十二支派常在神面前被记念，也承认日用供应来自神。器皿细节显示敬拜中的“普通动作”也被圣洁秩序包围，吃喝、献上和记念都属于神面前的生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The table would hold the bread of the Presence, signifying Israel remembered before God and acknowledging provision from Him. Its vessels show that ordinary acts are ordered for holy worship.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把日常供应还给赐供应的主</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">薪水、食物、时间和资源容易被看成完全属于自己。陈设饼桌邀请我们在预算、待客、家庭餐桌和慷慨行动上承认神的供应。感恩不是口号，而是把所得重新放在神面前管理。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Income, food, time, and resources can feel self-owned. The table invites gratitude in budgets, hospitality, meals, and generosity, placing provision back before the Giver.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Lampstand: Light and Living Form in the Sanctuary</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">金灯台：圣所中的光与生命形态 (37:17-24)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:17-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他用精金做一个灯台，是锤出来的；灯台的座、干、杯、球、花都接连一块。灯台有六个枝子从两旁杈出，每枝有杏花形的杯、球和花。整座灯台和一切器具都是一他连得精金做的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            He made the lampstand of pure hammered gold, with its base, shaft, cups, buds, and blossoms of one piece. Six branches extended from its sides, shaped with almond blossoms, and it and its utensils were made from a talent of pure gold.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">光不是装饰，而是守望的生命</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灯台以整块精金锤出，枝子、杯、球、花连成一体，形状像结果的树。杏花在圣经背景中常带有警醒、早醒之意；圣所的光照不是冰冷功能，而是与生命、秩序和持续事奉相连。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The lampstand is one hammered work of gold, shaped with branches and blossoms like a living tree. Its light is not mere decoration but watchful, ordered service in God’s presence.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在压力中保持清明的光</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多人在忙碌中只求“撑过去”，心里的灯却渐渐昏暗。灯台提醒我们，属灵清明需要持续供油般的节奏：祷告、读经、安静和诚实反省。这样的光帮助我们在工作压力和人际张力中不被焦虑牵引。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Busyness can keep us moving while the inner light dims. The lampstand points to rhythms of prayer, Scripture, quietness, and reflection that keep us clear under pressure.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Incense Altar and Sacred Mixtures: Prayer Near the Veil</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">香坛与圣膏油香料：靠近幔子的祷告 (37:25-29)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:25-28</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他用皂荚木做香坛，是四方的，长一肘，宽一肘，高二肘，坛的角与坛接连一块；又用精金把坛的上面、四面和坛的角包裹，四围镶上金牙边，并做金环与包金的杠。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            He made the altar of incense of acacia wood, square in shape, overlaid it with pure gold, made a gold molding around it, and made gold rings and gold-covered poles for carrying it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">祷告被安置在靠近神的位置</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">香坛虽小，却位于圣所深处，靠近幔子。它的角、金边、环和杠延续圣所器具的语言，说明祷告不是外围活动，而是敬拜生命的中心动作，持续升到神面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Though small, the incense altar stands near the veil. Its horns, molding, rings, and poles share the sanctuary’s holy vocabulary, showing prayer as central worship rather than an accessory.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让祷告回到中心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">忙碌时我们容易把祷告降为危机按钮，只在无路可走时才按下。香坛提醒我们，祷告应靠近生命中心：在回复信息前、做决定前、处理冲突前，让心先在神面前被调整。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In busyness, prayer becomes an emergency button. The incense altar calls prayer back to the center: before replies, decisions, and conflicts, the heart is reoriented before God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">37:29</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他又按做香之法做圣膏油和馨香料的净香。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            He also made the holy anointing oil and the pure fragrant incense, prepared with the skill of a perfumer.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">分别为圣也需要智慧手艺</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章以膏油和净香收束，说明圣所服事不只靠贵重材料，也需要合宜配制的智慧。“按做香之法”强调技能被顺服引导；人的手艺在神的命令下成为服事。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter closes with anointing oil and pure incense, showing that sacred service needs skilled preparation as well as precious material. Craft becomes ministry under God’s command.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把专业能力分别出来</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">无论是设计、财务、照护、教学还是管理，专业能力都可能成为自我证明，也可以成为献给神的香。第 37 章鼓励我们以诚实、细致和可被信任的工作方式，把技能分别出来服事人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Design, finance, care, teaching, and management can become self-display or an offering. Exodus 37 invites trustworthy, careful skill placed in service to God and neighbor.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从样式到生命：两条阅读路径</h2>
+  <p class="text-stone-600 leading-7 mb-2">出埃及记 37 章容易被读成器具清单，但正统读法先尊重上下文：这些器具回应 25-30 章的命令，显示神的同在、圣洁、怜悯和供应如何在会幕中被安排。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7">Exodus 37 can look like a list of furnishings, but faithful interpretation first honors the context: these objects execute the commands of chapters 25-30 and reveal how God’s presence, holiness, mercy, and provision are ordered in the tabernacle.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">正统解经路径</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Contextual Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">观察重复：</span>尺寸、材料、环、杠和金边重复出现，说明顺服细节本身就是敬拜。<span class="en-text text-stone-400 italic block">Repeated dimensions and materials show that obedient detail is part of worship.</span></li>
+      <li><span class="font-bold text-stone-800">连接上下文：</span>37 章不是新命令，而是执行先前启示，强调神的话可靠且可落实。<span class="en-text text-stone-400 italic block">The chapter executes prior revelation, stressing that God’s word can be embodied.</span></li>
+      <li><span class="font-bold text-stone-800">避免臆测：</span>器具可指向属灵意义，但不可脱离会幕、圣约和敬拜秩序随意象征化。<span class="en-text text-stone-400 italic block">Symbolic meaning must remain anchored in tabernacle, covenant, and worship context.</span></li>
+    </ul>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用路径</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><span class="font-bold text-stone-800">桥梁原则：</span>神重视按祂话语形成的敬拜，因此今日信徒也要让信仰进入具体习惯与工作方式。<span class="en-text text-stone-400 italic block">Because God shapes worship by His word, believers let faith form concrete habits and work practices.</span></li>
+      <li><span class="font-bold text-stone-800">现代落地：</span>约柜提醒神的话居中，桌子操练感恩管理，灯台操练清醒见证，香坛操练持续祷告。<span class="en-text text-stone-400 italic block">Ark, table, lampstand, and incense altar become practices of Scripture, gratitude, witness, and prayer.</span></li>
+      <li><span class="font-bold text-stone-800">应用边界：</span>应用不是把每个零件都神秘化，而是把经文显明的圣洁、秩序和献上带入日常。<span class="en-text text-stone-400 italic block">Application does not mystify every detail; it carries holiness, order, and offering into daily life.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"“他用精金做一个灯台；这灯台的座和干，与杯、球、花，都是接连一块锤出来的。”（出埃及记 37:17）"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"“He made the lampstand of pure gold. He made the lampstand of hammered work; its base, its shaft, its cups, its buds, and its flowers were of one piece with it.” (Exodus 37:17)"</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus Chapter 37 · 出埃及记第 37 章双语灵修综览</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

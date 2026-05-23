@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 21 | 出埃及记 21章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #92400e;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbeb;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #3f2a12;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .justice-stage {
+            background: radial-gradient(circle at 22% 16%, rgba(254,243,199,.95), transparent 34%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 42%, #ecfdf5 100%);
+            min-height: 100%;
+        }
+        .scale-beam { animation: scaleSettle 5.6s ease-in-out infinite; transform-origin: 210px 83px; }
+        .scale-left { animation: panLeft 5.6s ease-in-out infinite; transform-origin: 126px 123px; }
+        .scale-right { animation: panRight 5.6s ease-in-out infinite; transform-origin: 294px 123px; }
+        .boundary-line { stroke-dasharray: 18 12; animation: boundaryFlow 7s linear infinite; }
+        .mercy-dot { animation: mercyRise 4.8s ease-in-out infinite; }
+        .mercy-dot.d2 { animation-delay: .7s; }
+        .mercy-dot.d3 { animation-delay: 1.25s; }
+        .mercy-dot.d4 { animation-delay: 1.8s; }
+        @keyframes scaleSettle { 0%,100% { transform: rotate(-2.8deg); } 50% { transform: rotate(2.8deg); } }
+        @keyframes panLeft { 0%,100% { transform: translateY(6px); } 50% { transform: translateY(-5px); } }
+        @keyframes panRight { 0%,100% { transform: translateY(-5px); } 50% { transform: translateY(6px); } }
+        @keyframes boundaryFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -60; } }
+        @keyframes mercyRise { 0%,100% { opacity: .38; transform: translateY(8px); } 48% { opacity: 1; transform: translateY(-10px); } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-scale-balanced mr-2 text-stone-600"></i> 出埃及记 21章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 21</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">约中的公义：限制强权，保护生命，修复损害</h1>
+    <p class="en-text text-stone-500 italic mb-5">Covenant Justice: Restraining Power, Protecting Life, Repairing Harm</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 21 章开启“约书”的具体典章。它把西奈山上所领受的敬畏带进日常社会：仆人的年限、女性的保障、谋杀与误杀的分别、伤害赔偿、孕妇受伤、仆人身体受损、危险牲畜与疏忽造成的损失。经文的重点不是建立一个理想化的现代法典，而是在古代近东现实中显明神如何约束强者、限制报复、保护生命，并要求人对邻舍的损害负责。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 21 opens the Covenant Code by moving Sinai's reverence into daily social life: servants, vulnerable women, murder and manslaughter, bodily injury, harm to pregnant women, injured servants, dangerous animals, and negligent loss. The chapter shows covenant justice restraining power, limiting revenge, protecting life, and requiring repair for harm done to neighbors.</p>
+  </div>
+  <aside class="justice-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div><p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p><h2 class="serif text-xl font-bold text-stone-900">会幕门前的天平与界线</h2><p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效用轻微摆动的天平、流动界线和上升光点表达本章：神的典章把伤害带到可审断、可修复、有限度的秩序中。</p><p class="en-text text-xs text-stone-500 italic mt-2">A settling scale, moving boundaries, and rising lights picture harm brought under measured, repairable covenant order.</p></div>
+    <svg viewBox="0 0 420 255" role="img" aria-label="Animated scale of covenant justice from Exodus 21" class="w-full mt-4"><defs><linearGradient id="scaleGrad21" x1="0" x2="1"><stop offset="0%" stop-color="#92400e"/><stop offset="100%" stop-color="#0f766e"/></linearGradient><radialGradient id="glow21" cx="50%" cy="45%" r="62%"><stop offset="0%" stop-color="#fef3c7"/><stop offset="70%" stop-color="#f59e0b" stop-opacity=".30"/><stop offset="100%" stop-color="#92400e" stop-opacity=".06"/></radialGradient></defs><circle cx="210" cy="124" r="92" fill="url(#glow21)"/><path class="boundary-line" d="M48 213 H372" stroke="#0f766e" stroke-width="4" stroke-linecap="round" opacity=".45"/><path d="M210 63 V195" stroke="#78350f" stroke-width="9" stroke-linecap="round"/><path d="M178 199 H242" stroke="#78350f" stroke-width="9" stroke-linecap="round"/><g class="scale-beam"><path d="M103 84 H317" stroke="url(#scaleGrad21)" stroke-width="10" stroke-linecap="round"/><circle cx="210" cy="84" r="10" fill="#92400e"/><path d="M126 88 L99 136 M126 88 L153 136" stroke="#92400e" stroke-width="3"/><path d="M294 88 L267 136 M294 88 L321 136" stroke="#0f766e" stroke-width="3"/></g><g class="scale-left"><path d="M84 140 H168 C159 164, 93 164, 84 140Z" fill="#fed7aa" stroke="#92400e" stroke-width="3"/><text x="126" y="154" text-anchor="middle" font-size="13" fill="#78350f" font-weight="700">生命</text></g><g class="scale-right"><path d="M252 140 H336 C327 164, 261 164, 252 140Z" fill="#ccfbf1" stroke="#0f766e" stroke-width="3"/><text x="294" y="154" text-anchor="middle" font-size="13" fill="#134e4a" font-weight="700">修复</text></g><g fill="#0f766e"><circle class="mercy-dot d1" cx="92" cy="196" r="5"/><circle class="mercy-dot d2" cx="173" cy="181" r="5"/><circle class="mercy-dot d3" cx="248" cy="184" r="5"/><circle class="mercy-dot d4" cx="331" cy="197" r="5"/></g></svg>
+  </aside>
+</section>
+<section class="mb-8"><div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4"><div><h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2><p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 21 faithfully</p></div></div><div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">典章</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Case Laws</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mishpatim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“典章”把十诫的原则带入具体生活：家庭、劳动、身体伤害、财产损失与邻舍责任。<span class="en-text block text-[11px] text-stone-400 italic mt-2">The judgments apply covenant principles to concrete life: household, labor, injury, property, and neighbor responsibility.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">希伯来仆人</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Hebrew Servant</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">eved ivri</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章没有赞美奴役制度，而是在古代社会现实中限制主人权力，并把释放、尊严与保护写入约民生活。<span class="en-text block text-[11px] text-stone-400 italic mt-2">The text does not celebrate bondage; it restrains power and writes release, dignity, and protection into Israelite life.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">以命偿命</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Life for Life</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nefesh tahat nefesh</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“以眼还眼”的原则是司法限度，不是私人复仇许可；它要求处罚相称，禁止无限升级的报复。<span class="en-text block text-[11px] text-stone-400 italic mt-2">The principle limits judgment proportionally; it is a boundary against escalating personal revenge.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">赔还与责任</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Restitution &amp; Responsibility</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shillem yeshallem</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">坑、牛、牲畜伤害等条例强调：疏忽也会伤人。敬畏神的人要为可预见的危险承担责任。<span class="en-text block text-[11px] text-stone-400 italic mt-2">Rules about pits, oxen, and losses teach that negligence harms neighbors and must be repaired.</span></p>
+</div></div></section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <section class="mb-8"><div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8"><p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p><h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 21 章经文双轨研读</h2><p class="text-stone-600 leading-7 mt-3">本章研读先观察典章如何从十诫延伸到社会生活，再把“保护生命、限制报复、承担责任”的原则带入今日家庭、职场、冲突处理与公共责任。</p><p class="en-text text-sm text-stone-500 italic mt-2">This study first observes how the judgments extend the Ten Words into social life, then applies protection of life, restrained retaliation, and responsibility to family, work, conflict, and public duty.</p></div></section>
+<section class="mb-10"><div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Release and Protection in Servant Laws</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">仆人条例中的释放与保护 (21:1-11)</h3></div><div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：神吩咐摩西把典章摆在百姓面前。希伯来仆人服事六年，第七年可以自由出去；若他因爱主人和家人自愿留下，就在审判者面前作公开确认。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: The LORD gives judgments to be set before Israel. A Hebrew servant serves six years and goes free in the seventh; if he freely chooses to remain with his household, the decision is publicly confirmed before the judges.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">自由不是恩赐之外的例外，而是典章的方向</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段把“第七年释放”放在仆人条例的开头，说明以色列自己的被救赎经历要塑造他们怎样对待弱势者。自愿留下的程序公开化，限制主人私下操控，也承认家庭责任的复杂处境。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The servant laws begin with release in the seventh year, letting Israel’s own redemption shape treatment of vulnerable people. Public confirmation restrains private coercion and recognizes complex household realities.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在权力关系里主动给人出路</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天我们未必处在古代仆役制度中，却常在职场、家庭或服事里拥有某种影响力。本段提醒我们：敬畏神的人不把别人困在自己的利益里，而是在权力关系中创造尊重、选择与释放的空间。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may not live inside ancient servitude, yet we hold influence at work, home, or ministry. Reverence for God means not trapping others for our benefit but creating space for dignity, choice, and release.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:7-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：若女子被卖为婢，条例要求她不可被当作普通男仆随意打发；若主人不履行婚约或生活供应的责任，她可以无偿出去。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: If a daughter is given as a servant-wife, she is not to be dismissed as a male servant might be. If the man fails to provide covenantal rights, food, clothing, and marital care, she may go free without payment.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">经文在古代现实中保护被交易的女性</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段处境艰难，却显明律法在当时社会里限制男性家主权力。女子不是可任意丢弃的物件；若承诺、供应和婚姻责任被破坏，她有离开的权利。经文把弱者的保障写进约民秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The setting is difficult, yet the law restrains patriarchal power within its ancient context. The woman is not disposable property; if promises and provision are violated, she has a protected way out.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把承诺落实为具体照顾</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">爱不是口头身份，必须落在供应、尊重和忠诚中。现代关系里的承诺也需要可见的责任：按时出现、照顾需要、拒绝利用脆弱者，并在失败时愿意修复。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Love is not merely a verbal status; it takes shape in provision, respect, and faithfulness. Modern commitments also require visible responsibility: presence, care, refusal to exploit vulnerability, and repair when we fail.</p>
+        </div>
+        
+    </div>
+</div></section>
+<section class="mb-10"><div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Life Must Be Honored and Guilt Discerned</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">生命不可轻看，罪责须分辨 (21:12-17)</h3></div><div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:12-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：打人致死者要受严肃审判；但若不是预谋，神为误杀者设逃避之处。若人蓄意杀害邻舍，即使逃到祭坛也不能借宗教外衣逃避公义。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: Striking a person so that death results requires grave judgment. Yet unplanned killing has a place of refuge. Premeditated murder cannot hide behind the altar or religious appearance.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">律法区分误杀与谋杀</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文同时维护生命价值和司法辨别。不是所有死亡案件都被同样处理；动机、预谋与事实需要审察。祭坛不能成为罪的避难所，敬拜也不能遮盖故意的暴力。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The law upholds life while requiring judicial discernment. Not every death is treated alike; motive, intent, and facts matter. The altar cannot become a refuge for deliberate violence.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要用属灵语言遮盖真实伤害</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人在冲突中容易把自己包装成无辜，甚至借信仰语言逃避责任。本段呼召我们诚实面对行为的后果：该认罪就认罪，该接受查明就接受查明，让敬拜与公义同行。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In conflict we may present ourselves as innocent or use spiritual language to avoid responsibility. This passage calls us to face consequences honestly, allowing worship and justice to walk together.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:15-17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：击打父母、拐卖人口、咒骂父母都被列为严重罪行。家庭权柄、人的自由与代际尊重都受到约中公义的保护。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: Striking parents, kidnapping and selling a person, and cursing parents are treated as grave offenses. Family order, human freedom, and generational honor are protected under covenant justice.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">尊重父母与保护自由同属约民秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这些条例紧接在杀人之后，显示神看重家庭中的暴力、人口掠夺和言语背叛。拐卖人口尤其显明，人不能把神所造的人当作商品。第五诫在这里得到社会层面的展开。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">These laws follow murder because violence in the home, human theft, and verbal betrayal matter to God. Kidnapping especially shows that people made by God must not be commodified.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让尊重从家中和语言中开始</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人可能不会参与拐卖，却可能用言语贬损、控制或利用别人。本段提醒我们，敬畏神从最亲近的关系开始，也延伸到尊重每个人的自由与尊严。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may not be kidnappers, but we can demean, control, or use others with words and power. Reverence for God begins in close relationships and extends to every person’s freedom and dignity.</p>
+        </div>
+        
+    </div>
+</div></section>
+<section class="mb-10"><div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Injury, Restitution, and Proportion</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">伤害、赔偿与相称原则 (21:18-27)</h3></div><div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:18-19</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：两人相争，一方受伤卧床，若后来能起来行走，伤人者仍要赔偿误工与医治费用。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: When a fight injures someone who later recovers and walks again, the offender must still compensate for lost time and medical care.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">伤害即使不致死，也需要修复</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文不把“没有死”当作无事发生。误工、医疗和恢复期都被纳入责任范围。约中的公义关注实际损失，不只关注案件是否达到最严重程度。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text does not treat “no death” as “no harm.” Lost time, care, and recovery are included. Covenant justice attends to concrete losses, not only the most severe outcomes.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">道歉之后还要承担修复成本</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们伤害别人后，容易只想用一句“对不起”结束。但真正的悔改会关心对方实际承担了什么：时间、精力、名誉、情绪和资源。修复常需要付代价。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After harming someone, we may want one apology to close the matter. True repentance asks what the other person actually bore: time, energy, reputation, emotion, and resources. Repair often costs us.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:20-21, 26-27</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：若主人伤害仆人致死，要受审判；若打坏仆人的眼或牙，仆人因身体受损可以得自由。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: If a master strikes a servant and death follows, judgment is required. If the master destroys a servant’s eye or tooth, the servant goes free because of the injury.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">主人权力受到神的审判限制</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在古代世界，仆人常被视为主人财产；本段却把主人暴力带到审判之下，并用释放作为身体伤害的补偿。经文朝着保护被支配者的方向设限。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In the ancient world servants were often treated as property, yet this law brings masterly violence under judgment and uses release as remedy for bodily injury. Power is placed under divine limits.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">看见制度中最容易被忽略的人</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">任何组织都有更容易受伤的人：新人、基层员工、孩子、病人、移民或依赖者。属神的公义要求我们留意权力下方的人，并为他们建立可申诉、可保护的空间。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Every setting has people more easily harmed: newcomers, lower-level workers, children, the ill, immigrants, or dependents. God’s justice teaches us to notice those under power and build protective channels.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:22-25</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：若争斗中伤及怀孕妇人，造成伤害，就要按损害程度受审；经文以“命偿命、眼还眼、牙还牙”等表达相称审判的原则。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: If fighting harms a pregnant woman and injury follows, judgment is made according to the harm. “Life for life, eye for eye, tooth for tooth” expresses proportional justice.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">相称原则限制报复扩张</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段强调孕妇与胎中生命不应被卷入暴力。所谓“眼还眼”在司法语境中是相称原则：处罚不能轻忽伤害，也不能超过伤害而变成报复狂潮。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The passage refuses to treat a pregnant woman and her child as collateral damage. “Eye for eye” functions as a judicial principle of proportion, neither minimizing harm nor escalating revenge.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">愤怒也要接受神的边界</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">受伤之后，人很容易想让对方付出更多代价。神的典章不否认伤害，却给愤怒设边界。今天处理冲突时，我们需要寻求公正、事实与修复，而不是让情绪决定惩罚。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After being hurt, we may want the offender to pay more than justice requires. God does not deny harm, but He sets boundaries for anger. We seek truth, justice, and repair instead of emotional retaliation.</p>
+        </div>
+        
+    </div>
+</div></section>
+<section class="mb-10"><div class="mb-4"><p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Danger, Negligence, and Neighbor Responsibility</p><h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">危险、疏忽与邻舍责任 (21:28-36)</h3></div><div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:28-32</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：牛若触死人，要处理危险；若牛素来会触人而主人不看管，主人要承担更重责任。若受害者是仆人，也要有赔偿。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: If an ox gores a person, the danger must be addressed. If the ox was known to be dangerous and the owner failed to guard it, the owner bears heavier responsibility. Harm to a servant also requires compensation.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">知道危险却不处理，就是有责的疏忽</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段把“可预见风险”纳入道德责任。主人若不知道危险，处理方式较轻；若明知却不看管，就不是意外这么简单。约民生活要求人管理自己的资源，使邻舍不被伤害。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The law treats foreseeable risk as moral responsibility. Unknown danger is handled differently from known danger ignored. Covenant life requires managing one’s resources so neighbors are not harmed.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">为自己制造的风险负责</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活中的“牛”可能是车辆、设备、言语习惯、网络平台、财务决定或团队文化。若我们知道某件事会伤人却继续放任，就需要在神面前承认并采取实际防护。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Today’s “ox” may be a car, tool, speech pattern, online platform, financial choice, or workplace culture. If we know something can harm others and leave it unchecked, we must confess and act protectively.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">21:33-36</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            经文摘述：人若敞开坑或挖坑不遮盖，导致牲畜掉入，就要赔偿。若牛伤害别人的牛，也按责任程度处理；若主人早知牛会触人而不看管，就要全额赔还。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Summary: If someone opens or digs a pit and fails to cover it, causing an animal to fall in, restitution is required. If one ox injures another, responsibility is weighed; known negligence brings full repayment.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">公义关心日常疏忽造成的损失</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章最后从重大暴力转向看似普通的财产损失。神的典章并不只处理“属灵大事”，也处理坑是否遮盖、牲畜是否看管。敬畏神会改变人管理日常事务的方式。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter closes by moving from severe violence to ordinary property loss. God’s judgments address not only “big” matters but also whether pits are covered and animals are guarded.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在小事上预先爱邻舍</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">遮盖一个坑，是还没有出事以前的爱。许多关系破裂、工作事故和财务损害，都可以因提前沟通、清楚流程和负责管理而避免。灵修不是逃离细节，而是在细节里爱人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Covering a pit is love before an accident happens. Many relational, workplace, and financial harms can be prevented by communication, clear process, and responsible stewardship. Devotion loves people in details.</p>
+        </div>
+        
+    </div>
+</div></section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8"><p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p><h1 class="serif text-3xl font-bold text-stone-900 mb-3">从古代典章读出现代责任</h1><p class="text-stone-700 leading-8 text-justify">出埃及记 21 章需要特别谨慎地读：它处理的是古代以色列约民社会中的具体案件，不应被直接剪贴成现代民法，也不应被用来替暴力、奴役或轻看女性辩护。稳健读法先问：这些条例在当时如何限制强者、保护生命、分辨责任、要求赔偿？然后再把这些原则转化为今天可实践的邻舍之爱。</p><p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-3">Exodus 21 must be read carefully. It addresses concrete cases in ancient Israel’s covenant society and should not be copied as modern civil law or used to defend violence, slavery, or contempt for women. Sound reading asks how these laws restrained the powerful, protected life, discerned guilt, and required restitution, then carries those principles into neighbor-love today.</p></section><section class="grid md:grid-cols-2 gap-5 mb-8"><div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6"><h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2><p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegesis</p><ul class="space-y-3 text-sm text-stone-700 leading-7"><li><span class="font-bold text-[var(--theme-primary)]">读在约书脉络中：</span>第 21 章紧接十诫，说明敬拜神必然影响社会公义。<span class="en-text text-stone-500 italic block">Read the chapter as the Covenant Code following the Ten Words: worship of God shapes social justice.</span></li><li><span class="font-bold text-[var(--theme-primary)]">区分描述与方向：</span>经文面对古代制度现实，同时用释放、赔偿和限制权力指向更合神心意的秩序。<span class="en-text text-stone-500 italic block">The text addresses ancient institutions while directing them toward release, restitution, and restrained power.</span></li><li><span class="font-bold text-[var(--theme-primary)]">重视相称原则：</span>“以眼还眼”不是私刑许可，而是司法边界，防止报复失控。<span class="en-text text-stone-500 italic block">“Eye for eye” is not a license for vengeance but a judicial boundary against disproportionate retaliation.</span></li></ul></div><div class="bg-[var(--theme-accent)]/30 rounded-xl border border-amber-200 p-5 sm:p-6"><h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2><p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p><ul class="space-y-3 text-sm text-stone-700 leading-7"><li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>古代典章今日转化为责任伦理：不滥用权力、不扩大报复、主动修复损害。<span class="en-text text-stone-500 italic block">The ancient judgments become responsibility ethics today: do not abuse power, escalate revenge, or ignore repair.</span></li><li><span class="font-bold text-[var(--theme-secondary)]">个人省察：</span>问自己是否有“未遮盖的坑”：明知可能伤人却没有处理的风险、习惯或关系模式。<span class="en-text text-stone-500 italic block">Ask whether you have an “uncovered pit”: a known risk, habit, or relational pattern left unaddressed.</span></li><li><span class="font-bold text-[var(--theme-secondary)]">祷告落地：</span>求神使我们的公义不止停在观点上，而成为保护弱者、赔还亏欠、守护邻舍的具体行动。<span class="en-text text-stone-500 italic block">Pray that justice becomes concrete action: protecting the vulnerable, repaying what is owed, and guarding neighbors.</span></li></ul></div></section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"若有别害，就要以命偿命，以眼还眼，以牙还牙。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"If there is harm, then you shall give life for life, eye for eye, tooth for tooth."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 21章 / Exodus Chapter 21</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

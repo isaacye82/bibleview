@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 8 | 出埃及记 8章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #0f766e;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #7c2d12; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #ecfeff;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #f8fafc;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #1f2937;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+
+        .plague-stage {
+            background: radial-gradient(circle at 18% 20%, rgba(236,254,255,.95), transparent 34%), linear-gradient(135deg, #f8fafc 0%, #ccfbf1 48%, #fef3c7 100%);
+            min-height: 100%;
+        }
+        .nile-wave { animation: nileWave8 5.8s ease-in-out infinite; transform-origin: center; }
+        .boundary-line { animation: boundaryPulse8 4.4s ease-in-out infinite; }
+        .frog { animation: frogHop8 3.8s ease-in-out infinite; transform-origin: center bottom; }
+        .frog-b { animation-delay: .7s; }
+        .dust { animation: dustRise8 3.6s ease-in-out infinite; transform-origin: center; }
+        .dust.d2 { animation-delay: .3s; }
+        .dust.d3 { animation-delay: .6s; }
+        .dust.d4 { animation-delay: .9s; }
+        .dust.d5 { animation-delay: 1.2s; }
+        .fly { animation: flyDrift8 4.6s ease-in-out infinite; transform-origin: center; }
+        .fly.f2 { animation-delay: .35s; }
+        .fly.f3 { animation-delay: .7s; }
+        .fly.f4 { animation-delay: 1.05s; }
+        @keyframes nileWave8 {
+            0%, 100% { transform: translateY(0); opacity: .78; }
+            50% { transform: translateY(-7px); opacity: .94; }
+        }
+        @keyframes boundaryPulse8 {
+            0%, 100% { stroke-dashoffset: 0; opacity: .55; }
+            50% { stroke-dashoffset: -36; opacity: .95; }
+        }
+        @keyframes frogHop8 {
+            0%, 100% { transform: translateY(0) scale(1); }
+            42% { transform: translateY(-16px) scale(1.03); }
+            58% { transform: translateY(0) scale(.98); }
+        }
+        @keyframes dustRise8 {
+            0%, 100% { transform: translateY(14px) scale(.72); opacity: .18; }
+            45%, 70% { transform: translateY(-12px) scale(1.12); opacity: .72; }
+        }
+        @keyframes flyDrift8 {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: .38; }
+            35% { transform: translate(14px, -9px) rotate(12deg); opacity: .82; }
+            70% { transform: translate(-8px, 10px) rotate(-10deg); opacity: .65; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-bug mr-2 text-stone-600"></i> 出埃及记 8章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 8</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.05fr_.95fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">神的手段临到，硬心仍要面对真相</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Finger of God Confronts a Hardened Heart</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 8 章继续十灾叙事，神藉青蛙、虱子或蚊虫、苍蝇三组灾害击打埃及的日常秩序。法老多次在压力下让步、求代祷，却在灾害缓解后继续硬心；埃及术士终于承认“这是神的手段”。本章帮助读者看见：神的审判既揭露偶像化权力的无能，也呼召人从危机中的表面宗教转向真实顺服。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 8 continues the plague narrative through frogs, gnats or lice, and swarms of flies. Pharaoh makes concessions under pressure and asks for intercession, yet hardens his heart when relief comes. Egypt’s magicians finally confess, “This is the finger of God.” The chapter exposes the weakness of idolatrous power and calls readers beyond crisis religion into genuine obedience.</p>
+  </div>
+  <aside class="plague-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">蛙声、尘粒与分界线</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以河岸蛙群、升起的尘粒、飞虫轨迹和歌珊分界线，呈现本章从日常扰乱到神圣分别的推进。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Frogs, dust, swarming motion, and a boundary line picture disruption, limitation, and divine distinction.</p>
+    </div>
+    <svg viewBox="0 0 430 270" role="img" aria-label="Animated frogs, dust, flies, and a boundary line for Exodus 8" class="w-full mt-4">
+      <defs>
+        <linearGradient id="nileGrad8" x1="0" x2="1">
+          <stop offset="0%" stop-color="#0f766e"/>
+          <stop offset="55%" stop-color="#67e8f9"/>
+          <stop offset="100%" stop-color="#fef3c7"/>
+        </linearGradient>
+        <filter id="glow8"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+      <rect x="28" y="36" width="374" height="190" rx="24" fill="#ffffff" opacity=".56"/>
+      <path class="nile-wave" d="M38 181 C91 150, 143 207, 200 178 C261 146, 315 203, 390 166 L390 225 L38 225 Z" fill="url(#nileGrad8)" opacity=".86"/>
+      <path class="boundary-line" d="M292 47 C275 88, 276 132, 293 173 C304 199, 304 218, 295 239" fill="none" stroke="#7c2d12" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 10"/>
+      <text x="314" y="72" font-size="18" font-family="serif" font-weight="700" fill="#7c2d12">歌珊</text>
+      <text x="314" y="92" font-size="12" font-family="serif" fill="#475569" font-style="italic">Goshen set apart</text>
+      <g class="frog frog-a" transform="translate(82 142)">
+        <ellipse cx="0" cy="18" rx="26" ry="14" fill="#16a34a"/><circle cx="-12" cy="3" r="10" fill="#22c55e"/><circle cx="12" cy="3" r="10" fill="#22c55e"/><circle cx="-12" cy="1" r="3" fill="#0f172a"/><circle cx="12" cy="1" r="3" fill="#0f172a"/><path d="M-10 19 Q0 27 11 19" stroke="#064e3b" stroke-width="2" fill="none"/>
+      </g>
+      <g class="frog frog-b" transform="translate(158 165) scale(.75)">
+        <ellipse cx="0" cy="18" rx="26" ry="14" fill="#15803d"/><circle cx="-12" cy="3" r="10" fill="#4ade80"/><circle cx="12" cy="3" r="10" fill="#4ade80"/><circle cx="-12" cy="1" r="3" fill="#0f172a"/><circle cx="12" cy="1" r="3" fill="#0f172a"/><path d="M-10 19 Q0 27 11 19" stroke="#064e3b" stroke-width="2" fill="none"/>
+      </g>
+      <g class="dust-cloud" fill="#92400e" opacity=".6">
+        <circle class="dust d1" cx="205" cy="137" r="4"/><circle class="dust d2" cx="225" cy="151" r="3"/><circle class="dust d3" cx="238" cy="128" r="5"/><circle class="dust d4" cx="196" cy="160" r="3"/><circle class="dust d5" cx="251" cy="169" r="4"/>
+      </g>
+      <g class="fly-swarm" stroke="#1f2937" stroke-width="2" stroke-linecap="round" opacity=".7">
+        <path class="fly f1" d="M78 75 q8 -8 16 0 q-8 8 -16 0 M87 72 v11" fill="none"/>
+        <path class="fly f2" d="M132 92 q7 -7 14 0 q-7 7 -14 0 M140 89 v10" fill="none"/>
+        <path class="fly f3" d="M244 78 q8 -8 16 0 q-8 8 -16 0 M253 75 v11" fill="none"/>
+        <path class="fly f4" d="M348 132 q7 -7 14 0 q-7 7 -14 0 M356 129 v10" fill="none"/>
+      </g>
+      <text x="58" y="55" font-size="18" font-family="serif" font-weight="700" fill="#0f766e">这是神的手段</text>
+      <text x="58" y="76" font-size="12" font-family="serif" fill="#475569" font-style="italic">This is the finger of God</text>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 8 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">审判临到日常</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Judgment Enters Daily Life</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">makkah / plague</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">青蛙、虱子和苍蝇不是抽象灾难，而是进入卧房、炉灶、身体和土地秩序的记号。神让埃及看见：被偶像化的安全若离开祂，连最普通的生活也会失序。<span class="block en-text text-[11px] text-stone-500 italic mt-2">The plagues invade ordinary spaces, showing that life detached from the LORD loses even its daily stability.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">术士的界限</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Limit of Imitation</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">etsba Elohim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">埃及术士能模仿某些外在现象，却不能创造生命秩序，也不能止息灾害。当他们说“这是神的手段”时，权力的表演开始暴露自己的贫乏。<span class="block en-text text-[11px] text-stone-500 italic mt-2">Egypt can imitate signs, but it cannot heal or command creation; false power reaches its limit before God.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">分别与保护</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Distinction and Mercy</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">palah / set apart</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">苍蝇之灾中特别提到歌珊地被分别出来。审判不是失控的混乱，而是有目标、有边界的行动；神知道祂子民所在，也能在压力中保守他们。<span class="block en-text text-[11px] text-stone-500 italic mt-2">The LORD makes a distinction in Goshen, revealing judgment with precision and covenant care.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">假顺服的循环</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Cycle of False Yielding</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kabed lev</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">法老在压力下求代祷，却在缓解后再次硬心。本章提醒读者分辨危机中的暂时让步与真实悔改：真正的回应不是谈判神的命令，而是顺服祂。<span class="block en-text text-[11px] text-stone-500 italic mt-2">Pharaoh asks for relief but resists obedience; temporary concession is not the same as repentance.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-7">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h1 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">出埃及记 8 章逐段研读</h1>
+    <p class="text-stone-700 leading-7 text-justify">本章以三组灾害推进：青蛙进入埃及日常生活，尘土变成微小却无法复制的虫灾，苍蝇之灾显明神在歌珊地作出分别。每段都把“容我的百姓去，好事奉我”的命令放在中心。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-2">This study follows three movements: frogs invading daily life, dust becoming a small yet unrepeatable plague, and swarms of flies revealing God’s distinction in Goshen. Each unit keeps the command “Let my people go, that they may serve me” at the center.</p>
+  </div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">青蛙遍满埃及 (8:1-7)</h2>
+    <p class="en-text text-sm italic text-stone-500">Frogs Cover Egypt (8:1-7)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:1-7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西去见法老，说：“容我的百姓去，好事奉我。你若不肯容他们去，我必使青蛙糟蹋你的四境。”青蛙要上来进你的宫殿、卧房、床榻，并你臣仆、百姓的房屋，进入炉灶和抟面盆。亚伦伸杖在埃及的江河、池塘以上，青蛙就上来遮满了埃及地；行法术的也照样行，叫青蛙上了埃及地。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD said to Moses, “Go in to Pharaoh and say to him, Thus says the LORD, Let my people go, that they may serve me. But if you refuse, I will smite all your borders with frogs.” Frogs would enter palace, bedroom, bed, houses, ovens, and kneading bowls. Aaron stretched out his hand, and frogs came up and covered Egypt; the magicians did the same by their secret arts.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">被打扰的生活秩序 / Disturbed Order</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">青蛙在埃及文化中可与生育和尼罗河生命力相连，但这里它们不再象征丰盛，而成为失序的压力。经文强调它们进入最私密、最日常的空间，说明神的命令被拒绝时，法老以为可掌控的国度会从内部被扰乱。术士只能增加同类现象，却不能恢复秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The frogs turn a symbol of fertility and Nile abundance into an image of disorder. They enter private and ordinary spaces, showing that Pharaoh’s controlled world is being disrupted from within. The magicians can reproduce the effect, but they cannot restore order.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">当神触碰我的舒适区 / When Comfort Is Touched</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段把古老真理带到今天：神有时藉不方便、打扰和失控感揭露我们真正依靠什么。职场节奏、家庭空间或计划被打乱时，我们不只问“怎样快点恢复正常”，也要问“我是否正在抗拒神清楚的呼召”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This passage connects with modern life when inconvenience exposes what we rely on. When work rhythms, home space, or plans are disrupted, we should ask not only how to regain normality, but whether we are resisting a clear call from God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">法老求缓解却不顺服 (8:8-15)</h2>
+    <p class="en-text text-sm italic text-stone-500">Relief Without Obedience (8:8-15)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:8-15</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            法老召了摩西、亚伦来，说：“请你们求耶和华使这青蛙离开我和我的民，我就容百姓去祭祀耶和华。”摩西照法老所定的时候祈求，青蛙就死了，人把它们堆成堆，遍地就都腥臭。法老见灾祸松缓，就硬着心，不肯听他们，正如耶和华所说的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Pharaoh called Moses and Aaron and said, “Entreat the LORD to take away the frogs from me and my people, and I will let the people go to sacrifice to the LORD.” Moses prayed according to Pharaoh’s appointed time; the frogs died and were gathered in heaps, and the land stank. But when Pharaoh saw there was respite, he hardened his heart and would not listen.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">危机中的宗教语言 / Religious Words in Crisis</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">法老第一次请摩西代求，并承认需要耶和华解除灾害。但经文紧接着说明，他不是被真理改变，而是想摆脱痛苦。青蛙死后留下腥臭，像一个记号：外在灾情可以暂退，内在硬心若未改变，腐败仍留在地上。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh asks for intercession and acknowledges that relief must come from the LORD. Yet the narrative shows that he wants pain removed more than truth obeyed. The stench left behind pictures the remaining corruption of an unchanged heart.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要只在压力中祷告 / More Than Crisis Prayer</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们也可能在压力下承诺改变，等问题过去又回到旧模式。灵修应用不是轻看危机祷告，而是让祷告继续走向顺服：在人际和职场中，若神指出该道歉、该停止操控、该诚实处理问题，就不要等压力消失后撤回回应。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may promise change under pressure and return to old patterns once relief comes. Crisis prayer is not wrong, but it must continue into obedience: apology, honesty, relinquishing control, and concrete action after the pressure lifts.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">尘土变为虱子或蚊虫 (8:16-19)</h2>
+    <p class="en-text text-sm italic text-stone-500">Dust Becomes Gnats or Lice (8:16-19)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:16-19</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西说：“你对亚伦说，伸出你的杖击打地上的尘土，使尘土在埃及遍地变作虱子。”他们就这样行；亚伦伸杖击打地上的尘土，就在人身上和牲畜身上有了虱子。行法术的也用邪术要生出虱子来，却是不能。术士就对法老说：“这是神的手段。”法老心里刚硬，不肯听他们。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to say to Aaron, “Stretch out your staff and strike the dust of the earth, that it may become gnats throughout all Egypt.” Aaron struck the dust, and gnats came on man and beast. The magicians tried by their secret arts to bring forth gnats, but they could not. They said to Pharaoh, “This is the finger of God.” Pharaoh’s heart was hardened, and he would not listen.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">尘土与创造主权 / Dust and Creator Authority</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">尘土变成虫灾，让读者想起神对受造界的主权。埃及术士在这里失败，是叙事的重要转折：他们可以操弄表象，却不能从尘土中召出生命或命令受造界。连他们也承认这是“神的手段”，但法老仍拒绝听从。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Dust becoming gnats points to God’s authority over creation. The magicians’ failure is a turning point: they can manipulate appearances, but they cannot summon life from dust or command creation. Even they call it the finger of God, while Pharaoh refuses to listen.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">承认事实不等于降服 / Recognition Is Not Surrender</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人也会在理性上承认某件事是对的，却仍不愿改变。我们可能知道骄傲伤人、焦虑掌控家庭、利益压过诚实，却继续硬着心。本段邀请我们把“我知道”推进到“我愿意顺服”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may intellectually recognize what is true and still resist change. We may know pride wounds others, anxiety controls a household, or profit has displaced honesty. The passage moves us from “I know” toward “I will obey.”</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">苍蝇之灾与歌珊分别 (8:20-24)</h2>
+    <p class="en-text text-sm italic text-stone-500">Flies and the Distinction of Goshen (8:20-24)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:20-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西清早起来，站在法老面前，说：“容我的百姓去，好事奉我。你若不容我的百姓去，我要叫成群的苍蝇到你和你臣仆并你百姓的身上，进入你的房屋。”只是当日我必分别我百姓所住的歌珊地，使那里没有成群的苍蝇，好叫你知道我是天下的耶和华。耶和华就这样行，成群的苍蝇进了法老的宫殿和他臣仆的房屋，埃及遍地就因这成群的苍蝇败坏了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to rise early before Pharaoh and say, “Let my people go, that they may serve me. If you will not, I will send swarms of flies on you, your servants, your people, and your houses.” But the LORD would set apart Goshen, where His people dwelt, so that no swarms would be there, that Pharaoh might know the LORD is in the midst of the earth. The land was ruined by the swarms.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">有边界的审判 / Judgment With Boundaries</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段第一次明确强调歌珊地被分别出来。神的审判不是自然界失控，而是有目的的显明：祂不仅是以色列的神，也是“天下的耶和华”。分别不是以色列比埃及更有资格，而是神守约怜悯的记号。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This section explicitly highlights Goshen being set apart. The plague is not nature running wild; it is purposeful revelation. The LORD is not a local deity but Lord in the midst of the earth. The distinction marks covenant mercy, not Israelite superiority.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在压力中被神知道 / Known Under Pressure</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当环境动荡时，信心不是幻想自己永不遇见困难，而是相信神知道祂子民所在。面对办公室文化、家庭张力或社会压力，我们可以求神赐下分别的生命：不被恐惧驱动，不用同样方式报复，仍然在混乱中敬拜。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faith does not pretend believers never face trouble; it trusts that God knows where His people are. In workplace culture, family tension, or social pressure, we ask for a distinct life: not fear-driven, not retaliatory, still worshiping amid disorder.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">法老提出妥协 (8:25-28)</h2>
+    <p class="en-text text-sm italic text-stone-500">Pharaoh Offers Compromise (8:25-28)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:25-28</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            法老召了摩西、亚伦来，说：“你们去，在这地祭祀你们的神吧。”摩西说：“这样行本不相宜，因为我们要把埃及人所厌恶的祭祀耶和华我们的神；若在埃及人眼前献他们所厌恶的祭，他们岂不拿石头打死我们吗？我们要往旷野去，走三天的路程，照着耶和华我们神所要吩咐我们的祭祀他。”法老说：“我容你们去，在旷野祭祀耶和华你们的神；只是不要走得很远。求你们为我祈祷。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Pharaoh called Moses and Aaron and said, “Go, sacrifice to your God within the land.” Moses answered that such worship would be offensive to the Egyptians and unsafe. They must go three days’ journey into the wilderness and sacrifice as the LORD commanded. Pharaoh replied, “I will let you go... only you shall not go very far away. Entreat for me.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬拜不能被法老定义 / Worship Cannot Be Defined by Pharaoh</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">法老从拒绝转向谈判：可以祭祀，但要留在埃及；可以出去，但不要走远。摩西拒绝让压迫者定义敬拜的地点和方式，因为真正的敬拜必须按神的吩咐，而不是按法老能接受的限度。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh shifts from refusal to negotiation: worship in Egypt, or leave but not far. Moses refuses to let the oppressor define the place and manner of worship. True worship follows the LORD’s command, not the boundaries Pharaoh finds convenient.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">半顺服仍可能是控制 / Partial Obedience as Control</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常把顺服改写成自己可控的版本：我愿意饶恕，但不要面对；我愿意诚实，但只说一半；我愿意敬拜，但不让神碰我的时间和金钱。本段帮助我们分辨：神要的不是宗教外观，而是离开埃及式控制的真实自由。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often rewrite obedience into a controllable version: forgive without facing issues, tell the truth halfway, worship without yielding time or money. The passage exposes religious appearance and calls us into real freedom from Egypt-like control.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-8">
+  <div class="mb-4 pl-4 border-l-4 border-[var(--theme-primary)]">
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">灾害止息后再次硬心 (8:29-32)</h2>
+    <p class="en-text text-sm italic text-stone-500">Hardening After Relief (8:29-32)</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">8:29-32</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西说：“我要出去求耶和华，使成群的苍蝇明天离开法老和法老的臣仆并法老的百姓；法老却不可再行诡诈，不容百姓去祭祀耶和华。”摩西离开法老去求耶和华。耶和华就照摩西的话行，叫成群的苍蝇离开法老和他的臣仆并他的百姓，一个也没有留下。这一次法老又硬着心，不容百姓去。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses said he would entreat the LORD so that the swarms would depart the next day, but Pharaoh must not deal deceitfully again by refusing to let the people sacrifice. Moses prayed, and the LORD removed the swarms; not one remained. But Pharaoh hardened his heart this time also and would not let the people go.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恩典被滥用时 / When Mercy Is Abused</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神按摩西所求除去苍蝇，甚至“一个也没有留下”，显明祂的能力和怜悯都是真实的。然而法老再次背约，说明问题不在证据不足，而在心拒绝降服。本章以重复硬心结束，为后续更重的灾预备背景。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The LORD removes the swarms completely, showing both power and mercy. Pharaoh breaks his word again; the problem is not lack of evidence but refusal to yield. The chapter ends with hardening, preparing for the heavier plagues that follow.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">领受缓解后保持诚实 / Integrity After Relief</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当神给我们喘息、医治关系或打开出路时，最危险的时刻可能不是危机中，而是危机后。真正的灵修操练是在松一口气之后仍守承诺：继续祷告，履行修复关系的步骤，按已经领受的光去行动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After God gives relief, healed relationships, or a way forward, the most dangerous moment may come after the crisis. Devotional faith keeps integrity after breathing room returns: continuing prayer, repairing relationships, and acting on the light already received.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从经文含义走向灵修应用</h1>
+  <p class="text-stone-700 leading-7 text-justify">出埃及记 8 章的解读要先尊重叙事上下文：神不是随意施灾，而是在法老持续压迫、拒绝释放以色列之后，公开显明祂是耶和华。三组灾害分别触及埃及的生活、身体和土地秩序，并逐步显出埃及术士与法老权力的界限。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-2">Reading Exodus 8 begins with context: the LORD does not send arbitrary disasters, but reveals Himself after Pharaoh’s continued oppression and refusal. The plagues touch ordinary life, bodies, and land, exposing the limits of Egypt’s magicians and Pharaoh’s authority.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2>
+    <p class="en-text text-sm text-stone-500 italic mb-4">Exegetical Path</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-primary)]">上下文：</span>每一灾都围绕“容我的百姓去，好事奉我”，重点不是奇观，而是神的主权与释放旨意。<span class="block en-text text-xs text-stone-500 italic">Context keeps the command to release God’s people at the center.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">字词观察：</span>“神的手段”强调术士无法跨越的界限；“分别”强调神审判中的精准与守约怜悯。<span class="block en-text text-xs text-stone-500 italic">“Finger of God” and “set apart” mark divine authority and covenant care.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">叙事推进：</span>法老从拒绝到谈判再到背约，显示硬心不是证据问题，而是降服问题。<span class="block en-text text-xs text-stone-500 italic">Pharaoh’s pattern shows hardening as resistance, not lack of information.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)] rounded-xl border border-cyan-100 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2>
+    <p class="en-text text-sm text-stone-500 italic mb-4">Devotional Path</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>古代法老的硬心可对应今天人对控制、安全感和面子的执着。<span class="block en-text text-xs text-stone-500 italic">The bridge connects Pharaoh’s hard heart to modern attachments to control and security.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">实际落地：</span>当压力缓解后继续守承诺，是本章最直接的操练。<span class="block en-text text-xs text-stone-500 italic">The clearest practice is integrity after relief returns.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">群体见证：</span>歌珊被分别提醒信徒在混乱中活出不同的敬拜、诚实和怜悯。<span class="block en-text text-xs text-stone-500 italic">Goshen invites a distinct witness of worship, honesty, and mercy amid disorder.</span></li>
+    </ul>
+  </div>
+</section>
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+  <h2 class="serif text-xl font-bold text-stone-900 mb-3">本章实践指南 / Practice Guide</h2>
+  <p class="text-stone-700 leading-7 text-justify">读者可用三个问题默想本章：我是否只在压力中求神移走困难，却不愿顺服祂的命令？我是否把顺服缩小成自己仍能掌控的版本？当神给我缓解之后，我是否仍按祷告中的承诺行动？</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-2">Readers may pray through three questions: Do I ask God to remove pressure while resisting His command? Have I reduced obedience into a version I can still control? After God gives relief, do I continue acting on what I promised in prayer?</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"法老见灾祸松缓，就硬着心，不肯听他们。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"But when Pharaoh saw that there was respite, he hardened his heart and would not listen to them."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Exodus 8 | 出埃及记第 8 章</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

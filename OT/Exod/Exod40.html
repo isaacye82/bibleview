@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 40 | 出埃及记 40章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：帐幕被立起、圣所成全、云火荣耀临在 */
+            --theme-primary: #b45309;
+            --theme-secondary: #2563eb;
+            --theme-accent: #fef3c7;
+            --theme-bg: #f8fafc;
+            --theme-text: #1e293b;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glory-stage {
+            background: radial-gradient(circle at 50% 24%, rgba(254,243,199,.92), transparent 34%), linear-gradient(180deg, #eff6ff 0%, #fefce8 54%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .cloud-layer { animation: cloudBreathe 6s ease-in-out infinite; transform-origin: center; }
+        .cloud-layer.back { animation-delay: 1.2s; opacity: .72; }
+        .fire-core { animation: firePulse 2.8s ease-in-out infinite; transform-origin: center bottom; }
+        .glory-rays { stroke-dasharray: 9 14; animation: rayFlow 4.8s linear infinite; }
+        .tent-line { stroke-dasharray: 360; stroke-dashoffset: 360; animation: tentDraw 5.8s ease-in-out infinite; }
+        .journey-dot { animation: journeyLift 5.8s ease-in-out infinite; }
+        .journey-dot.d2 { animation-delay: .6s; }
+        .journey-dot.d3 { animation-delay: 1.2s; }
+        @keyframes cloudBreathe {
+            0%, 100% { transform: translateX(-6px) scale(.97); opacity: .72; }
+            50% { transform: translateX(6px) scale(1.04); opacity: 1; }
+        }
+        @keyframes firePulse {
+            0%, 100% { transform: scale(.92); opacity: .72; filter: drop-shadow(0 0 2px rgba(180,83,9,.25)); }
+            50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 12px rgba(180,83,9,.55)); }
+        }
+        @keyframes rayFlow {
+            from { stroke-dashoffset: 0; opacity: .38; }
+            to { stroke-dashoffset: -46; opacity: .8; }
+        }
+        @keyframes tentDraw {
+            0% { stroke-dashoffset: 360; opacity: .45; }
+            48%, 78% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -360; opacity: .45; }
+        }
+        @keyframes journeyLift {
+            0%, 30%, 100% { transform: translateY(8px); opacity: .32; }
+            58% { transform: translateY(-8px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-campground mr-2 text-stone-600"></i> 出埃及记 40章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 40</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">荣耀充满帐幕，神住在祂百姓中间</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Glory Fills the Tabernacle, and God Dwells among His People</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 40 章是全卷的高潮。神吩咐摩西在正月初一日立起帐幕，按次序安放约柜、桌子、灯台、香坛、洗濯盆和院帷，并用膏油分别为圣。经文不断重复“是照耶和华所吩咐他的”，强调救赎的终点不是人的创意宗教，而是按神启示建立的同在。最后，云彩遮盖会幕，耶和华的荣耀充满帐幕；以色列人的行程也从此由云火引导。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 40 is the climax of the book. On the first day of the first month, Moses sets up the tabernacle, arranges its furnishings, anoints and consecrates the space, and obeys everything the LORD commanded. Redemption reaches its goal in God's ordered presence: the cloud covers the tent, the glory fills the tabernacle, and Israel's journey is guided by cloud and fire.</p>
+  </div>
+  <aside class="glory-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">云遮盖，火引路，帐幕立起</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以缓慢呼吸的云、跳动火光和被描绘出的帐幕线条表现本章：神的荣耀不是停在远处，而是临到祂所洁净并吩咐的居所。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Breathing cloud, living fire, and a drawn tabernacle picture God's presence filling the ordered dwelling.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated cloud and fire over the completed tabernacle in Exodus 40" class="w-full mt-4">
+      <defs>
+        <linearGradient id="tentGold40" x1="0" x2="1">
+          <stop offset="0%" stop-color="#b45309"/>
+          <stop offset="50%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#2563eb"/>
+        </linearGradient>
+        <radialGradient id="fireGlow40" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#fde68a"/>
+          <stop offset="58%" stop-color="#f97316"/>
+          <stop offset="100%" stop-color="#b45309" stop-opacity=".18"/>
+        </radialGradient>
+      </defs>
+      <g class="cloud-layer back" fill="#bfdbfe">
+        <ellipse cx="164" cy="62" rx="58" ry="24"/>
+        <ellipse cx="218" cy="56" rx="70" ry="30"/>
+        <ellipse cx="270" cy="68" rx="55" ry="24"/>
+      </g>
+      <g class="cloud-layer" fill="#eff6ff" stroke="#93c5fd" stroke-width="2">
+        <ellipse cx="150" cy="86" rx="62" ry="25"/>
+        <ellipse cx="214" cy="76" rx="82" ry="34"/>
+        <ellipse cx="285" cy="88" rx="62" ry="25"/>
+      </g>
+      <path class="glory-rays" d="M210 103 L210 154 M172 110 L146 157 M248 110 L274 157 M132 116 L98 148 M288 116 L322 148" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+      <path class="fire-core" d="M210 52 C232 82 202 91 220 124 C186 103 198 82 210 52Z" fill="url(#fireGlow40)"/>
+      <path class="tent-line" d="M88 206 L210 124 L332 206 M122 206 L210 148 L298 206 M106 206 H314 M210 124 V206" fill="none" stroke="url(#tentGold40)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#2563eb">
+        <circle class="journey-dot d1" cx="128" cy="228" r="5"/>
+        <circle class="journey-dot d2" cx="210" cy="232" r="5"/>
+        <circle class="journey-dot d3" cx="292" cy="228" r="5"/>
+      </g>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 40 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">立起帐幕</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Setting Up the Dwelling</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">mishkan</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“帐幕”可作“居所”理解。全卷从埃及的奴役走到神的居所被立起，显示救赎的目标是恢复神与百姓同住。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">照命令而行</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">According to Command</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">ka'asher tsivvah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章反复说摩西“照耶和华所吩咐”。敬拜的中心不是新奇表现，而是信靠神已经启示的道路。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">膏抹成圣</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Anointed and Consecrated</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qadash</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">分别为圣不是逃离世界，而是被神指定为合用。器具、祭司与空间都被摆在神的目的之下。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">荣耀充满</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Glory Filling</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kavod YHWH</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">耶和华的荣耀充满帐幕，表明神悦纳祂所命定的居所。此后百姓不是凭焦虑移动，而是跟随云火。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 40 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章以顺服、分别为圣、荣耀临在和旅途引导作结。每个单元都从经文次序进入今日应用：神的同在既安慰人，也重新安排人的生活秩序。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter concludes with obedience, consecration, glorious presence, and guidance. Each unit moves from the text's order into present practice: God's presence comforts us and reorders our lives.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Command to Raise the Tabernacle</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神吩咐立起会幕 (40:1-8)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">40:1-8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华晓谕摩西说：“正月初一日，你要立起帐幕，就是会幕。”随后神吩咐摩西安放法柜、遮掩柜的幔子、摆设桌子、点灯、安设金香坛和燔祭坛，又把洗濯盆、院帷和门帘按次序立好。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to set up the tabernacle on the first day of the first month. Moses was to place the ark, veil, table, lampstand, incense altar, burnt-offering altar, basin, courtyard, and screen in their ordered positions.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">同在有神所赐的秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">第 40 章开头把时间标明为“正月初一日”，像新开始的记号。神没有只说“建一个敬拜场所”，而是逐项安排圣所核心、祭坛、洗濯盆和院子。经文含义强调：神的临在不是混乱的热情，而是带着圣洁次序临到百姓中间。约柜在至圣处，祭坛在入口，洗濯盆在服事之路上；这些位置本身就在讲述亲近神需要启示、赎罪和洁净。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The dated command marks a new beginning. The tabernacle is arranged by God's revealed order, showing that His presence is not religious improvisation but holy nearness shaped by covenant, atonement, and cleansing.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让生活重新按神的中心排列</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日应用不是把房间摆成古代帐幕，而是让生活的中心重新对准神。工作日程、家庭责任、人际回应和手机习惯常常抢占“圣所”的位置；这段经文邀请我们先问：什么该在中心，什么该在入口，什么需要被洁净？当人愿意按神的话重排优先次序，焦虑不会立刻消失，却会有一个更稳的中心承托每天的选择。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The application is not to recreate ancient furniture, but to reorder life around God. Schedules, work pressures, relationships, and digital habits need a truer center. Obedience gives daily choices a steady place to stand.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Consecration of the Tent and Priests</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">膏抹帐幕与祭司，分别为圣 (40:9-16)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">40:9-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神吩咐摩西用膏油膏帐幕和其中所有器具，使它们成圣；也要膏燔祭坛和洗濯盆。亚伦和他的儿子被带到会幕门口，用水洗身，穿上圣衣，受膏分别为祭司。摩西就这样行，都是照耶和华所吩咐他的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses was commanded to anoint the tabernacle and its furnishings, consecrating them as holy. Aaron and his sons were washed, clothed, and anointed for priestly service. Moses did everything just as the LORD commanded him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁是为神所用，不是自我装饰</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“膏抹”和“成圣”说明帐幕器具不是因材质昂贵才重要，而是因被神指定才分别出来。亚伦和儿子也不是凭血缘自动合格，他们需要洗身、穿衣、受膏。经文把圣洁描述为被神洁净、装备、委派的状态。摩西在这里没有挑选个人偏好的方式，而是顺服神的吩咐，让敬拜服事的资格来自神的设立。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Anointing and consecration show that holiness is not decorative status. Objects and priests are set apart because God cleanses, equips, and appoints them for His service.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把普通责任献给神的目的</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常把“属灵”局限在聚会或祷告时刻，但这段经文提醒人：被分别为圣，就是把平常的能力、关系、职业和资源放回神的目的里。职场中的诚实、家庭里的耐心、冲突里的克制，都可以成为献给神的服事。桥梁原则是：神先洁净并呼召人，然后人把具体责任带进祂的旨意，而不是用宗教热情遮盖未处理的生命。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Consecration places ordinary responsibilities under God's purpose. Integrity at work, patience at home, and restraint in conflict can become service offered to Him after He cleanses and calls us.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Moses Completes the Work</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">摩西照命令完成一切工 (40:17-33)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">40:17-33</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            第二年正月初一日，帐幕立起来。摩西安上卯座、竖起板、穿上闩、立起柱子；又把法版放在柜里，将施恩座安在柜上，挂上幔子遮掩法柜。随后他摆设桌子、点灯、烧香、献燔祭和素祭，安设洗濯盆与院帷。经文多次总结：“是照耶和华所吩咐他的。”这样，摩西就完了工。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the first day of the first month in the second year, the tabernacle was raised. Moses assembled its structure, placed the testimony in the ark, arranged the furnishings, offered worship, set up the basin and courtyard, and completed the work exactly as the LORD commanded.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">顺服把蓝图变成可居住的见证</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这一大段像施工清单，却有重要属灵重量。前面几章神给了蓝图、百姓奉献材料、工匠制作器具；如今摩西把一切按次序安放，使神所启示的图样成为百姓中间实际的会幕。反复出现的“照耶和华所吩咐”不是机械重复，而是全卷对摩西顺服的见证。与金牛犊事件形成鲜明对比：人自造的敬拜导致混乱，按神话语完成的敬拜预备荣耀临到。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The repeated obedience turns revealed design into a dwelling witness. In contrast to the golden calf, worship shaped by God's word prepares a place for His glory among the people.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">忠心常常藏在重复的小步骤里</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人容易寻找快速、强烈、立刻可见的属灵体验，但这段清单式叙述提醒我们：许多成熟来自按神话语持续完成下一步。写一封诚实的邮件、修复一次关系、守住一个承诺、每天在压力中祷告，这些看似普通的动作，可能正是在把生命“立起来”。神看重的不只是高峰时刻，也看重无人注目的持续顺服。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faithfulness is often hidden in repeated steps. Honest work, repaired relationships, kept promises, and prayer under pressure may be the ordinary obedience through which a life is set upright before God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Glory Fills and Guides</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">荣耀充满帐幕，云火引导行程 (40:34-38)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">40:34-38</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            当时，云彩遮盖会幕，耶和华的荣光充满了帐幕；摩西不能进会幕，因为云彩停在其上，耶和华的荣光充满其中。云彩从帐幕收上去，以色列人就起程；若云彩不收上去，他们就不起程。日间耶和华的云彩在帐幕以上，夜间云中有火，在以色列全家的眼前。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The cloud covered the tent of meeting, and the glory of the LORD filled the tabernacle so fully that Moses could not enter. When the cloud lifted, Israel set out; when it remained, they stayed. By day the cloud was over the tabernacle, and by night fire was in it before all Israel.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">荣耀既亲近又不可操控</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">最后的画面极其重要：神真的住在百姓中间，但祂不是被人掌控的宗教力量。连摩西也不能随意进入，因为荣耀充满帐幕。云彩和火同时表达遮蔽、同在、引导和保护。出埃及记从法老压迫下的哭声开始，以神荣耀在百姓眼前引导旷野行程结束；救赎不是只离开埃及，更是学习在神同在中前行或停留。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The glory is near yet not controllable. Even Moses cannot enter at will. The cloud and fire reveal presence, guidance, covering, and protection as Israel learns to move or wait with God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">学习在神的引导中行动，也在祂的沉默中等候</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常把引导理解为“赶快告诉我下一步”，但本章最后说：云彩收上去才起程，云彩停住就不走。属灵成熟包括行动的勇气，也包括等候的顺服。面对换工作、家庭决定、关系修复或服事方向，我们可以祷告求神开门，也要学习在门未开时不焦躁地制造答案。神同在的记号不只是推进，也可能是保守我们停在祂要我们停的地方。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Guidance includes courage to move and obedience to wait. In work decisions, family concerns, relationships, and ministry direction, God's presence may lead us forward or keep us still until His time is clear.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论总结 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何同时做稳健解经与真实灵修</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">出埃及记 40 章特别适合用“双轨阅读”：先按经文原意理解帐幕、膏抹、祭司、云彩和荣耀，再把这些真理通过桥梁原则带入今天的生活。这样既避免把古代礼仪随意寓意化，也避免只停在背景知识而不回应神。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Exodus 40 calls for a two-track reading: first understand the tabernacle, anointing, priesthood, cloud, and glory in their textual context; then carry those truths into present life through careful bridge principles. This avoids careless allegory and also avoids knowledge without response.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <div class="flex items-center gap-2 mb-3">
+      <i class="fas fa-book-open text-[var(--theme-primary)]"></i>
+      <h3 class="serif text-xl font-bold text-stone-900">正统解经原则</h3>
+    </div>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegetical Principles</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-stone-900">上下文 Context:</span> 先看第 40 章如何总结 25-39 章的帐幕蓝图、建造与祭司分别。 / Read chapter 40 as the completion of the tabernacle instructions and construction in chapters 25-39.</li>
+      <li><span class="font-bold text-stone-900">重复 Repetition:</span> 注意“照耶和华所吩咐”反复出现，说明顺服是本章结构核心。 / The repeated phrase “as the LORD commanded” is a structural key to the chapter.</li>
+      <li><span class="font-bold text-stone-900">全卷脉络 Whole Book:</span> 出埃及从奴役到同在，从法老的控制到耶和华的引导。 / Exodus moves from slavery under Pharaoh to life guided by the LORD's presence.</li>
+    </ul>
+  </div>
+
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <div class="flex items-center gap-2 mb-3">
+      <i class="fas fa-heart text-[var(--theme-secondary)]"></i>
+      <h3 class="serif text-xl font-bold text-stone-900">灵修应用路径</h3>
+    </div>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application Path</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-stone-900">桥梁 Bridge:</span> 从“神按启示住在百姓中间”过渡到“信徒今日按神话语安排生活中心”。 / Move from God's revealed dwelling among Israel to ordering today's life around His word.</li>
+      <li><span class="font-bold text-stone-900">现实 Reality:</span> 把经文带入工作压力、家庭节奏、关系修复、决策等具体场景。 / Apply the text to work pressure, family rhythms, relational repair, and decision-making.</li>
+      <li><span class="font-bold text-stone-900">回应 Response:</span> 不是制造情绪，而是操练顺服、洁净、等候与跟随。 / The response is practiced obedience, cleansing, waiting, and following rather than manufactured emotion.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="bg-[var(--theme-accent)]/40 rounded-xl border border-amber-200 shadow-sm p-6 sm:p-8">
+  <h3 class="serif text-xl font-bold text-stone-900 mb-3">实际落地指南 / Practical Guide</h3>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="bg-white/80 rounded-lg border border-white p-4">
+      <p class="font-bold text-sm text-stone-900 mb-1">先观察 / Observe</p>
+      <p class="text-xs text-stone-600 leading-6">列出本章动作顺序：立起、安放、膏抹、洗净、完成、充满、引导。 / Trace the verbs: set up, place, anoint, wash, finish, fill, guide.</p>
+    </div>
+    <div class="bg-white/80 rounded-lg border border-white p-4">
+      <p class="font-bold text-sm text-stone-900 mb-1">再归纳 / Interpret</p>
+      <p class="text-xs text-stone-600 leading-6">问这些动作如何显明神的圣洁、同在和主权。 / Ask how these actions reveal God's holiness, presence, and rule.</p>
+    </div>
+    <div class="bg-white/80 rounded-lg border border-white p-4">
+      <p class="font-bold text-sm text-stone-900 mb-1">后回应 / Respond</p>
+      <p class="text-xs text-stone-600 leading-6">选择一个今天可顺服的小步骤，并为需要等候的事交托。 / Choose one obedient step today and entrust one waiting place to God.</p>
+    </div>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"当时，云彩遮盖会幕，耶和华的荣光就充满了帐幕。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Then the cloud covered the tent of meeting, and the glory of the LORD filled the tabernacle."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 40章 / Exodus Chapter 40</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

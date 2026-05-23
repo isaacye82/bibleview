@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 14 | 创世记 14章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 创世记14章主题色：古战场铜、战火灰、荣耀金 */
+            --theme-primary: #9a4f20;
+            --theme-secondary: #b68a2d;
+            --theme-accent: #fff3cf;
+            --theme-bg: #f8f1e7;
+            --theme-text: #32251a;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .war-panorama {
+            position: relative;
+            min-height: 320px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 68% 22%, rgba(255, 216, 122, 0.28), transparent 28%),
+                linear-gradient(180deg, #55453a 0%, #8a5531 52%, #2f281f 100%);
+            box-shadow: inset 0 0 80px rgba(31, 23, 16, 0.55);
+        }
+        .war-panorama svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .smoke-line {
+            stroke-dasharray: 10 16;
+            animation: smokeDrift 9s linear infinite;
+        }
+        .smoke-line.two {
+            animation-duration: 12s;
+            animation-delay: -4s;
+        }
+        .gold-pulse {
+            animation: goldPulse 3.6s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .standard {
+            animation: standardWave 4.8s ease-in-out infinite;
+            transform-origin: 50% 60%;
+        }
+        .ember {
+            animation: emberRise 5.5s ease-in-out infinite;
+        }
+        .ember.delay-one { animation-delay: -1.8s; }
+        .ember.delay-two { animation-delay: -3.4s; }
+        @keyframes smokeDrift {
+            from { stroke-dashoffset: 0; opacity: 0.25; }
+            50% { opacity: 0.8; }
+            to { stroke-dashoffset: -120; opacity: 0.25; }
+        }
+        @keyframes goldPulse {
+            0%, 100% { opacity: 0.45; transform: scale(0.96); }
+            50% { opacity: 0.95; transform: scale(1.08); }
+        }
+        @keyframes standardWave {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1.6deg); }
+        }
+        @keyframes emberRise {
+            0% { transform: translateY(22px); opacity: 0; }
+            20% { opacity: 0.95; }
+            100% { transform: translateY(-72px); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-shield-alt mr-2 text-stone-600"></i> 创世记 14章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 14</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">战火中的祭司祝福与信心选择</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">Priestly blessing and faithful discernment amid the fires of war.</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">
+                        创世记14章把亚伯兰带进国际冲突的现场：四王与五王交战，所多玛败落，罗得被掳。亚伯兰不是为掠夺而战，而是为拯救亲族而行动；得胜之后，他接受麦基洗德奉至高神而来的祝福，却拒绝所多玛王用财富定义他的成功。
+                    </p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">
+                        Genesis 14 places Abram in an international crisis: four kings defeat five, Sodom collapses, and Lot is taken captive. Abram fights not for plunder but for rescue; after victory, he receives Melchizedek's blessing from God Most High and refuses to let Sodom's wealth define his success.
+                    </p>
+                </div>
+                <aside class="war-panorama border border-stone-700/20">
+                    <svg viewBox="0 0 720 430" role="img" aria-label="远山战火与麦基洗德微光剪影">
+                        <defs>
+                            <linearGradient id="mountainGlow" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#241d18"/>
+                                <stop offset="65%" stop-color="#4b3828"/>
+                                <stop offset="100%" stop-color="#1d1814"/>
+                            </linearGradient>
+                            <radialGradient id="holyGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#ffe7a3" stop-opacity="0.95"/>
+                                <stop offset="65%" stop-color="#d7a83c" stop-opacity="0.28"/>
+                                <stop offset="100%" stop-color="#d7a83c" stop-opacity="0"/>
+                            </radialGradient>
+                        </defs>
+                        <path d="M0 260 L90 190 L175 232 L265 166 L354 230 L455 140 L555 218 L640 168 L720 232 L720 430 L0 430 Z" fill="url(#mountainGlow)"/>
+                        <path d="M0 302 C105 250 185 300 294 260 C405 219 510 285 720 245 L720 430 L0 430 Z" fill="#201a16" opacity="0.86"/>
+                        <path class="smoke-line" d="M55 185 C115 138 176 167 236 120 C303 68 372 124 446 82" fill="none" stroke="#d8d0c3" stroke-width="5" stroke-linecap="round" opacity="0.65"/>
+                        <path class="smoke-line two" d="M295 194 C376 148 422 181 484 130 C551 75 607 126 676 87" fill="none" stroke="#efe0bd" stroke-width="4" stroke-linecap="round" opacity="0.55"/>
+                        <g class="standard">
+                            <path d="M128 338 L128 222" stroke="#ba8a3a" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M132 224 C168 214 183 236 218 225 L218 284 C184 298 161 269 132 285 Z" fill="#813b21" opacity="0.92"/>
+                        </g>
+                        <g transform="translate(500 236)">
+                            <circle class="gold-pulse" cx="52" cy="42" r="92" fill="url(#holyGlow)"/>
+                            <path d="M52 18 C38 18 31 29 31 42 C31 55 40 62 52 62 C64 62 73 55 73 42 C73 29 66 18 52 18 Z" fill="#1b1511"/>
+                            <path d="M23 145 C32 83 72 83 82 145 Z" fill="#1b1511"/>
+                            <path d="M7 88 C30 77 70 77 97 89" fill="none" stroke="#f4cf79" stroke-width="5" stroke-linecap="round"/>
+                            <circle cx="25" cy="84" r="9" fill="#f1c765"/>
+                            <path d="M75 79 C89 75 101 81 106 94 C92 99 80 95 75 79 Z" fill="#8a2930"/>
+                        </g>
+                        <circle class="ember" cx="238" cy="330" r="4" fill="#ffc36a"/>
+                        <circle class="ember delay-one" cx="275" cy="350" r="3" fill="#ff9d4d"/>
+                        <circle class="ember delay-two" cx="603" cy="335" r="4" fill="#ffd982"/>
+                    </svg>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="flex items-end justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+                        <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Genesis 14 faithfully</p>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">亲族之约</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Covenant Loyalty</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">go'el pattern</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">亚伯兰冒险追击，不是为了帝国扩张，而是以守约的责任救回罗得。这预备读者看见信心不是退隐，而是在混乱中承担爱的责任。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">至高神</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Most High</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">El Elyon</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">麦基洗德称神为“天地的主”，把亚伯兰的得胜从军事技术提升到敬拜视角：真正掌权的不是诸王，而是创造并赐福的神。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">饼与酒的祝福</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Bread, Wine, Blessing</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">melekh-shalem</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">麦基洗德是“撒冷王”和“祭司”，以供应与祝福迎接亚伯兰。经文本身强调神的祝福临到疲惫的得胜者，使胜利回到敬拜。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">拒绝所多玛的赏赐</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Refusing Sodom's Reward</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">lifted hand oath</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">亚伯兰向耶和华举手起誓，拒绝让所多玛王说“我使亚伯兰富足”。这是信心的边界：得胜以后仍选择倚靠神。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-6 bg-white/80 border border-stone-200 rounded-2xl p-5 sm:p-6">
+                <h2 class="serif text-2xl font-bold text-stone-900 mb-2">逐段研读：创世记14章</h2>
+                <p class="en-text text-sm text-stone-500 italic">A bilingual study path through Genesis 14</p>
+            </div>
+            <div class="verse-card mb-8">
+                
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">14:1-4</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        当暗拉非、亚略、基大老玛、提达作王的时候，他们与所多玛、蛾摩拉、押玛、洗扁和比拉诸王交战；这些王曾服事基大老玛十二年，第十三年就背叛了。
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        In the days of Amraphel, Arioch, Chedorlaomer, and Tidal, these kings made war against the kings of Sodom, Gomorrah, Admah, Zeboiim, and Bela. For twelve years they had served Chedorlaomer, but in the thirteenth year they rebelled.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">亚伯兰故事进入列国舞台</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文用一串王名打开场景，显明应许之地并非安静真空，而是被权力、贡赋和叛乱牵动的世界。亚伯兰还未正式出场，但他的信心生活已经被放进真实政治和军事压力之中。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The narrative widens Abram's story into the arena of nations. The promised land is not an untouched sanctuary but a contested world of power, tribute, and revolt.</p>
+                    </div>
+
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">信心生活不逃离复杂世界</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人也常被公司政治、家庭张力和社会变化卷入。桥梁原则是：属神的人不是等环境简单后才顺服，而是在复杂中辨认神的应许，学习不被恐惧牵着走。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faith does not wait for a simple world. In workplace pressure, family tension, and public uncertainty, God's people learn to obey without being ruled by fear.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="verse-card mb-8">
+                
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">14:5-12</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        第十四年，基大老玛和同盟诸王击败多族，又在西订谷击败所多玛和蛾摩拉。所多玛王和蛾摩拉王逃跑，有人掉在石漆坑里。敌军夺取所多玛、蛾摩拉一切财物和粮食，也把亚伯兰侄儿罗得和他的财物掳去。
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        In the fourteenth year Chedorlaomer and his allies struck many peoples and defeated Sodom and Gomorrah in the Valley of Siddim. They took the goods and food of the cities, and they also took Lot, Abram's nephew, and his possessions.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">罗得的选择进入后果</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">第13章罗得选择约旦河平原，渐渐挪移帐棚直到所多玛。第14章没有用责备语气，却让读者看见靠近所多玛带来的脆弱：城市的败落也牵连他和他的家产。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Lot's earlier choice now bears consequences. The text does not scold him loudly, but it shows the vulnerability that comes from settling near Sodom's life and fate.</p>
+                    </div>
+
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">方向比速度更深地塑造我们</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们可能没有立刻做出“大错”，却天天朝某种价值靠近。桥梁原则是：选择工作机会、关系圈和消费方式时，要问它会把心带向哪里，而不只问它带来多少利益。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Small directions form deep loyalties. In career choices, relationships, and spending habits, wisdom asks not only what we gain but where our hearts are being led.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="verse-card mb-8">
+                
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">14:13-16</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        有一个逃出来的人告诉希伯来人亚伯兰。亚伯兰听见他侄儿被掳，就率领家中训练有素的三百一十八人，直追到但；夜间分队攻击敌人，追到大马士革左边的何把，将罗得和一切财物、妇女、人民都夺回来。
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        A survivor told Abram the Hebrew. When Abram heard that his kinsman had been taken, he led 318 trained men from his household, pursued as far as Dan, attacked by night, and recovered Lot, the goods, the women, and the people.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不是征服者，而是拯救者</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯兰被称为“希伯来人”，显出他在列国中是寄居者，却有真实行动力。他的夜袭策略成功，但经文焦点不是军事荣耀，而是救回亲族和受掳的人，表现出应许之民的责任。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Abram is a sojourner among the nations, yet he acts with courage. The emphasis is not conquest for glory but rescue for the vulnerable and covenant responsibility.</p>
+                    </div>
+
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">勇敢可以是爱的形状</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在职场或家庭中，勇敢不一定是赢过别人，也可能是为被忽略的人发声、承担麻烦、及时介入危机。桥梁原则是：信心使我们有边界，也使我们不冷漠。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Courage may look like love: speaking for the overlooked, entering a crisis, or carrying inconvenience. Faith gives boundaries, but it does not permit indifference.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="verse-card mb-8">
+                
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">14:17-20</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        亚伯兰杀败诸王回来，所多玛王出来迎接他。撒冷王麦基洗德带着饼和酒出来；他是至高神的祭司。他祝福亚伯兰说：“愿天地的主、至高的神赐福与亚伯兰！至高的神把敌人交在你手里，是应当称颂的！”亚伯兰就把所得的拿出十分之一给他。
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        After Abram returned from defeating the kings, the king of Sodom came out to meet him. Melchizedek king of Salem brought out bread and wine; he was priest of God Most High. He blessed Abram and blessed God Most High, and Abram gave him a tenth of everything.
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">祝福重新解释胜利</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">麦基洗德的出现短而关键。他不是向亚伯兰索取战利品，而是用饼酒供应他，并宣告神是“天地的主”。十分之一不是交易，而是亚伯兰承认胜利来自神的敬拜回应。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Melchizedek reframes victory as gift. Bread and wine refresh Abram, blessing names God as the true giver, and the tithe becomes worshipful acknowledgment rather than payment.</p>
+                    </div>
+
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">得胜之后先敬拜</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">成功后最容易把成果归给能力、资源或运气。桥梁原则是：当项目完成、考试通过、危机解除时，先停下来感谢神，并用慷慨提醒自己，生命不是由战利品定义。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After success, worship keeps the heart honest. Gratitude and generosity remind us that our lives are not finally defined by trophies, metrics, or applause.</p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="verse-card mb-8">
+                
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">14:21-24</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+                        所多玛王对亚伯兰说：“你把人口给我，财物你自己拿去吧。”亚伯兰说：“我已经向耶和华至高的神、天地的主起誓，凡是你的东西，就是一根线、一根鞋带，我都不拿，免得你说：我使亚伯兰富足。只有仆人所吃的，并与我同行的人亚乃、以实各、幔利所应得的分，可以让他们拿去。”
+                    </p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+                        The king of Sodom offered Abram the goods, but Abram said he had sworn to the LORD, God Most High, Possessor of heaven and earth, that he would take nothing from Sodom, not even a thread or sandal strap, lest Sodom say, "I have made Abram rich."
+                    </p>
+                </div>
+
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">拒绝让所多玛叙述恩典</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯兰不是轻看财物，也没有替同伴放弃应得之分；他拒绝的是让所多玛王成为他富足的解释者。他把“至高神”与“耶和华”并称，清楚表明自己的祝福来源。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Abram does not despise material provision or deny his allies their share. He rejects a story in which Sodom becomes the source and explanation of his blessing.</p>
+                    </div>
+
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700">
+                            <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                            <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+                        </div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不是所有机会都值得接受</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些资源会附带错误叙事，使人以为身份、价值和安全感都来自它。桥梁原则是：当升迁、合作或金钱会迫使我们亏损良心时，信心允许我们说“不”，并相信神仍能供应。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Not every opportunity is worth receiving. When promotion, partnership, or money demands a compromised story, faith can say no and still trust God's provision.</p>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">方法论总结 · Methodology</p>
+                <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">两条路径：先读清经文，再带入生命</h2>
+                <p class="en-text text-sm sm:text-base italic text-stone-500 mb-6">Two paths held together: read the text carefully, then let its truth address life.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <article class="border border-stone-200 rounded-xl p-5 bg-slate-50/70">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">正统解经原则</h3>
+                        <p class="en-text text-xs text-stone-500 italic mb-3">Grammatical, historical, and contextual reading</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify">本章首先按叙事上下文阅读：第13章罗得靠近所多玛，第14章他被卷入城邦战争；麦基洗德的祝福解释亚伯兰的胜利；所多玛王的提议则考验亚伯兰对祝福来源的认信。这样的读法避免把人物任意象征化，先尊重文本自己的推进。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic mt-3">This path follows the narrative flow: Lot's earlier move toward Sodom, Abram's rescue, Melchizedek's blessing, and the king of Sodom's test. It honors the text before drawing application.</p>
+                    </article>
+                    <article class="border border-stone-200 rounded-xl p-5 bg-[var(--theme-accent)]/30">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修存在应用</h3>
+                        <p class="en-text text-xs text-stone-500 italic mb-3">Devotional application through a bridge principle</p>
+                        <p class="text-sm leading-7 text-stone-700 text-justify">应用不是跳过经文去找感动，而是从经文含义搭桥到今天：亚伯兰救罗得，帮助我们思想负责任的勇敢；他接受祝福，提醒成功后先敬拜；他拒绝所多玛财物，引导我们在利益面前守住身份与良心。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic mt-3">Application is not sentiment detached from Scripture. It bridges the text into ordinary life: courageous responsibility, worship after success, and integrity when gain carries a false story.</p>
+                    </article>
+                </div>
+                <div class="mt-6 border-l-4 border-[var(--theme-primary)] bg-stone-50 p-5 rounded-r-xl">
+                    <h3 class="serif font-bold text-stone-900 mb-2">实际落地指南 · Practical Guide</h3>
+                    <p class="text-sm leading-7 text-stone-700 text-justify">读创世记14章时，可按四步默想：观察谁在争战与交易，辨认神如何借祝福重述胜利，审查自己最容易接受哪一种“所多玛式叙事”，最后用一个具体行动回应，例如为一位陷入危机的人承担责任，或在一项利益选择前立定清洁边界。</p>
+                    <p class="en-text text-xs leading-6 text-stone-500 italic mt-3">A practical reading rhythm: observe the conflict and offers, notice how blessing reframes victory, examine the false narratives you are tempted to accept, and respond with one concrete act of responsibility or integrity.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"愿天地的主、至高的神赐福与亚伯兰！"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Blessed be Abram by God Most High, Possessor of heaven and earth."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世记 14章 · Genesis Chapter 14 · Exegesis & Devotional Report</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

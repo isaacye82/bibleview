@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 6 | 利未记 6章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #9a3412;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #4d7c0f; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #ffedd5;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fff7ed;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #3b2414;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .altar-stage {
+            background:
+                radial-gradient(circle at 50% 24%, rgba(255,237,213,.96), transparent 32%),
+                linear-gradient(135deg, #fff7ed 0%, #f7fee7 58%, #ffffff 100%);
+            min-height: 100%;
+        }
+        .altar-flame { animation: altarFlame 3.4s ease-in-out infinite; transform-origin: center bottom; }
+        .ember { animation: emberRise 4.6s ease-in-out infinite; }
+        .ember.e2 { animation-delay: .7s; }
+        .ember.e3 { animation-delay: 1.3s; }
+        .ember.e4 { animation-delay: 2s; }
+        .restitution-line { stroke-dasharray: 10 12; animation: lineMove 5.5s linear infinite; }
+        .coin { animation: coinReturn 5.2s ease-in-out infinite; transform-origin: center; }
+        .coin.c2 { animation-delay: .45s; }
+        .coin.c3 { animation-delay: .9s; }
+        .priest-step { animation: priestStep 4.8s ease-in-out infinite; transform-origin: center; }
+        .holy-ring { animation: holyPulse 4.2s ease-in-out infinite; transform-origin: center; }
+        @keyframes altarFlame {
+            0%, 100% { transform: scaleY(.86) translateY(7px); opacity: .76; }
+            50% { transform: scaleY(1.14) translateY(-5px); opacity: 1; }
+        }
+        @keyframes emberRise {
+            0% { transform: translateY(24px); opacity: 0; }
+            42% { opacity: .95; }
+            100% { transform: translateY(-34px); opacity: 0; }
+        }
+        @keyframes lineMove { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -96; } }
+        @keyframes coinReturn {
+            0%, 100% { transform: translateX(-18px) scale(.86); opacity: .45; }
+            50% { transform: translateX(22px) scale(1.05); opacity: 1; }
+        }
+        @keyframes priestStep {
+            0%, 100% { transform: translateX(-8px); opacity: .65; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+        @keyframes holyPulse {
+            0%, 100% { transform: scale(.92); opacity: .34; }
+            50% { transform: scale(1.08); opacity: .68; }
+        }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-flame-curved mr-2 text-stone-600"></i> 利未记 6章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 6</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">赔偿、祭坛与不熄的火</h1>
+    <p class="en-text text-stone-500 italic mb-5">Restitution, the Altar, and the Unending Fire</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 6 章把圣洁带进两个方向：一方面，得罪邻舍和亏负财物的罪必须在神面前承认，并以归还、加赔和赎愆祭回应；另一方面，祭司每日管理燔祭、素祭和赎罪祭，使祭坛的火常常烧着。经文不把敬拜缩小为仪式，也不把悔改缩小为情绪。神所喜悦的悔改包括对人的修复，也包括在祂面前持续、谨慎、圣洁的服事。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 6 brings holiness in two directions. Wrong done to a neighbor through deceit or withheld property must be confessed before God, restored with added compensation, and answered through a guilt offering. At the same time, the priests must tend the burnt offering, grain offering, and sin offering so that the altar fire keeps burning. Worship is not reduced to ritual, and repentance is not reduced to feeling. God-shaped repentance repairs what was damaged and keeps faithful service alive before Him.</p>
+  </div>
+  <aside class="altar-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">归还的银点与不熄的坛火</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以归还的银点、祭司脚步和不熄火焰表现本章主题：悔改修复亏欠，敬拜每日守火。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Returning silver marks, priestly movement, and an unending flame picture repaired wrong and daily worship.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated restitution and altar fire motif for Leviticus 6" class="w-full mt-4">
+      <defs>
+        <linearGradient id="flameGrad6" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="#9a3412"/>
+          <stop offset="48%" stop-color="#f97316"/>
+          <stop offset="100%" stop-color="#fed7aa"/>
+        </linearGradient>
+        <radialGradient id="holyGlow6" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#ffedd5"/>
+          <stop offset="68%" stop-color="#fb923c" stop-opacity=".27"/>
+          <stop offset="100%" stop-color="#4d7c0f" stop-opacity=".08"/>
+        </radialGradient>
+      </defs>
+      <circle class="holy-ring" cx="213" cy="138" r="80" fill="none" stroke="url(#holyGlow6)" stroke-width="24"/>
+      <path class="restitution-line" d="M63 72 C122 42, 168 96, 213 74 C260 51, 312 50, 357 84" fill="none" stroke="#4d7c0f" stroke-width="5" stroke-linecap="round" opacity=".58"/>
+      <g fill="#facc15" stroke="#9a3412" stroke-width="2">
+        <circle class="coin c1" cx="108" cy="70" r="10"/>
+        <circle class="coin c2" cx="196" cy="76" r="8"/>
+        <circle class="coin c3" cx="294" cy="68" r="9"/>
+      </g>
+      <g class="priest-step" opacity=".82">
+        <path d="M95 185 C112 151, 139 151, 156 185 Z" fill="#fef3c7" stroke="#9a3412" stroke-width="3"/>
+        <path d="M126 150 V116" stroke="#9a3412" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="126" cy="99" r="13" fill="#fed7aa" stroke="#9a3412" stroke-width="3"/>
+      </g>
+      <g transform="translate(0, 5)">
+        <path d="M174 185 H260 L244 221 H190 Z" fill="#78350f" opacity=".94"/>
+        <path d="M183 185 H251" stroke="#431407" stroke-width="7" stroke-linecap="round"/>
+        <path class="altar-flame" d="M218 174 C194 151, 211 132, 220 102 C245 132, 250 153, 218 174 Z" fill="url(#flameGrad6)"/>
+        <path class="altar-flame" d="M219 166 C207 153, 216 141, 221 125 C233 145, 232 157, 219 166 Z" fill="#fff7ed" opacity=".76"/>
+      </g>
+      <g fill="#f97316">
+        <circle class="ember e1" cx="190" cy="152" r="4"/>
+        <circle class="ember e2" cx="240" cy="147" r="5"/>
+        <circle class="ember e3" cx="221" cy="134" r="4"/>
+        <circle class="ember e4" cx="257" cy="160" r="3"/>
+      </g>
+      <path d="M62 226 H358" stroke="#9a3412" stroke-width="3" stroke-linecap="round" opacity=".26"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 6 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">归还并加五分之一</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Restitution Plus a Fifth</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">heshiv + chomesh</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">亏负邻舍不是只向神说一句抱歉；经文要求归还原物并加上五分之一。<span class="en-text italic text-stone-500">Repentance becomes concrete when wrong is repaired and loss is acknowledged.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">坛上的火常常烧着</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Fire Kept Burning</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">esh tamid</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">祭坛火焰象征持续的敬拜与神所设立的赎罪途径。它不是情绪高潮，而是每日忠心维护的圣洁秩序。<span class="en-text italic text-stone-500">The altar fire pictures steady worship sustained by daily obedience.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">至圣的祭物</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Most Holy Offering</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qodesh qodashim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">赎罪祭和祭司份额被称为至圣，提醒人恩典不是随便，赦免也不轻率。<span class="en-text italic text-stone-500">Forgiveness is merciful, yet it is handled with reverence before a holy God.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">祭司的日常职责</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Priestly Daily Service</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">torat hakohanim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章多次说“条例”，让人看见圣洁生活需要重复、秩序和警醒。<span class="en-text italic text-stone-500">Holiness often looks like repeated faithful attention, not dramatic novelty.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">利未记 6 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章从赔偿的赎愆祭进入祭司日常条例，帮助读者看见圣洁如何同时塑造公共诚信、敬拜秩序和服事者的生命。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter moves from restitution in the guilt offering to daily priestly regulations, showing how holiness shapes public integrity, worship order, and the servant's life.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Guilt Offering and Concrete Restitution</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">赎愆祭与真实赔偿 (6:1-7)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:1-7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西：人若在交托、交易、抢夺、欺压或拾得遗失物的事上欺骗邻舍，又起假誓，就犯了罪。他要在献赎愆祭的日子归还所亏负的，并另外加上五分之一交给原主；祭司要为他在耶和华面前赎罪，他就必蒙赦免。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD instructed Moses that if someone deceives a neighbor over a deposit, bargain, robbery, oppression, or lost property, and then swears falsely, he has sinned. He must return what was wrongfully taken, add one fifth to it, give it to the owner, and bring a guilt offering. The priest will make atonement before the LORD, and he will be forgiven.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">得罪邻舍也是得罪神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段把商业欺诈、侵占财物、假誓和敬拜连在一起。人亏负的是邻舍，但罪首先被说成“干犯耶和华”，因为神的圣洁覆盖日常经济关系。赎愆祭不是替代赔偿，而是与赔偿同行：先承认具体亏欠，再按神所定的方法寻求赦免。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The passage links economic deceit, false oaths, restitution, and worship. The neighbor suffers the loss, yet the offense is also against the LORD because daily dealings stand under His holiness. The guilt offering does not replace restitution; it accompanies repaired responsibility.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">悔改要走到被伤害的人那里</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的应用不只是“我心里觉得抱歉”。若我们在金钱、承诺、工作成果、信用或沟通中亏负人，桥梁原则是：先面对事实，再尽力修复。属灵成熟常常表现为愿意发信息道歉、补偿损失、澄清误导、归还不属于自己的利益。神的赦免邀请我们诚实，也释放我们不再用遮掩维持形象。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Application begins beyond private regret. When money, promises, work, credit, or communication have wronged someone, repentance faces facts and seeks repair. Spiritual maturity may mean apologizing, compensating loss, correcting a misleading claim, or returning an unfair gain. God's forgiveness invites honesty and frees us from image management.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Burnt Offering: The Fire Must Not Go Out</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">燔祭的条例：火不可熄灭 (6:8-13)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:8-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西晓谕亚伦和他的子孙：燔祭要整夜在坛上，坛上的火要常常烧着。祭司要穿细麻布衣服，收起坛上的灰，放在坛旁；再换衣服，把灰拿到营外洁净之处。坛上的火要不断添柴，不可熄灭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to command Aaron and his sons concerning the burnt offering. It remains on the altar through the night, and the altar fire must be kept burning. The priest wears linen garments, removes the ashes, changes clothes, carries the ashes to a clean place outside the camp, and adds wood so the fire does not go out.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">持续敬拜中的细节圣洁</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">燔祭强调全然献上，而本段关注祭司如何维持祭坛。灰烬处理、衣服更换、添柴守火都显示圣洁不是抽象概念，而是有秩序的服事。火“不可熄灭”说明以色列每日都活在神面前，敬拜不是偶发事件，而是持续关系。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The burnt offering expresses total dedication, but this unit focuses on priestly maintenance. Ash removal, garment changes, and adding wood show holiness embodied in ordered service. The unending fire portrays Israel living continually before God, not meeting Him only in occasional moments.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">信心需要每日添柴</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人很容易把属灵生命寄托在一次退修会、一次感动或一次危机祷告上。但本段提醒我们，火需要每日被看顾。桥梁原则是：稳定的小顺服保护深层关系。固定祷告、诚实认罪、规律安息、在忙碌中守住敬拜时间，都是今日“添柴”的方式。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">It is easy to depend on rare moments of inspiration, retreats, or crisis prayers. This passage reminds us that fire is tended daily. The bridge principle is that steady small obedience protects deep relationship: prayer, confession, rest, and guarded worship time are ways of adding wood today.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Grain Offering: Memorial Portion and Priestly Share</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">素祭的条例：记念与祭司份额 (6:14-18)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:14-18</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            素祭要在耶和华面前献上。祭司从细面、油和乳香中取出一把，烧在坛上作为记念，余下的要归亚伦和他的子孙，在圣处吃，不可有酵；这是从献给耶和华火祭中赐给他们的份，是至圣的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The grain offering is presented before the LORD. The priest takes a handful of fine flour, oil, and incense and burns it on the altar as a memorial portion. What remains belongs to Aaron and his sons; it is eaten in a holy place without leaven. It is their portion from the LORD's food offerings and is most holy.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">感恩献上也在圣洁秩序中</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">素祭多与感恩、日常供应和献上劳作果实有关。本段说明祭物既向神献上记念部分，也成为祭司在圣所中的供应。无酵和圣处强调即使是食物分配，也属于神圣秩序。神看重人的劳作，也使服事者在祂的安排中得供养。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The grain offering is associated with gratitude, provision, and the fruit of labor. A memorial portion is offered to God, while the remainder sustains the priests in a holy setting. The unleavened bread and holy place show that even provision and distribution belong to God's sacred order.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把普通劳作带到神面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们的工作、薪水、家务和专业能力似乎很普通，但素祭提醒我们，日常产出也可以成为敬拜。桥梁原则是：不把“属灵”与“日常”切开。认真工作、公平分配、支持服事、用收入表达感恩，都是把普通生活带到神面前的方式。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Work, income, household labor, and professional skills can feel ordinary, yet the grain offering teaches that daily output can become worship. The bridge principle is not to split the spiritual from the ordinary. Honest work, fair distribution, support for ministry, and grateful giving bring ordinary life before God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Priestly Grain Offering at Consecration</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">祭司承接职分时的素祭 (6:19-23)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:19-23</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伦和他的子孙受膏的日子，要献细面十分之一伊法为常献的素祭，早晨一半，晚上一半，用油调和，在煎盘上作成；祭司受膏接续时也要如此献。这素祭要全然烧给耶和华，不可吃。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the day Aaron and his sons are anointed, they must offer a tenth of an ephah of fine flour as a regular grain offering, half in the morning and half in the evening, mixed with oil and prepared on a griddle. The anointed priest who succeeds him must do the same. This offering is wholly burned to the LORD and not eaten.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">带领者先把自己献上</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">前一段素祭有祭司可吃的份，但这里祭司自己的素祭要全然烧尽。受膏服事的人不能把职分当作取得资源的管道；他首先站在神面前，把自己和每日服事归给神。早晚献上也呼应持续、规律的委身。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The previous grain offering provided a priestly portion, but the priest's own offering is wholly burned. Ministry is not first a channel for receiving benefits; the servant stands before God and offers himself and his daily work to Him. Morning and evening underline regular dedication.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">职位越高，越需要先奉献自己</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">无论在教会、家庭还是职场，带领都容易变成控制、表现或索取。本段给出的桥梁原则是：影响力必须先被奉献净化。父母、主管、小组长、老师和服事者都需要问：我是在利用角色满足自己，还是先把角色交给神，成为祝福他人的管道？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Leadership in church, family, or work can become control, performance, or entitlement. The bridge principle is that influence must first be offered to God. Parents, managers, group leaders, teachers, and servants can ask whether they use the role for themselves or entrust it to God for others' good.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Sin Offering and Holy Handling</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">赎罪祭的圣洁处理 (6:24-30)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">6:24-30</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            赎罪祭要在宰燔祭牲的地方宰在耶和华面前，是至圣的。为罪献祭的祭司要在圣处吃这祭物。凡摸这肉的要成为圣；若血弹在衣服上，要在圣处洗净。煮祭物的瓦器要打碎，铜器要擦磨冲洗；但血带进会幕为赎罪的祭，肉不可吃，必须用火焚烧。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The sin offering is slaughtered before the LORD where the burnt offering is slaughtered; it is most holy. The priest who offers it eats it in a holy place. Whatever touches the flesh becomes holy; blood on a garment must be washed in a holy place. An earthen vessel used for boiling is broken, a bronze vessel is scoured and rinsed, and any offering whose blood is brought into the tent for atonement must be burned, not eaten.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">赦罪之物不可随便处理</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文详细规定肉、血、器皿和地点，显示赎罪祭承载圣洁严肃性。血不是普通污渍，祭肉不是普通食物，器皿也不能随意再用。神借这些细节教导以色列：罪的处理需要按祂的方法，赦免是恩典，却绝不廉价。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The detailed rules for flesh, blood, vessels, and location reveal the seriousness of the sin offering. Blood is not an ordinary stain, the meat is not ordinary food, and vessels are not casually reused. Israel learns that sin must be handled by God's appointed means; forgiveness is gracious but never cheap.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要把恩典变成轻率</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们相信神赦免人，但本段防止我们把赦免当作随口一句“没事”。桥梁原则是：恩典越真实，越带来敬畏。面对反复的罪、破裂的关系或良心的迟钝，我们需要认真处理，而不是用属灵话语淡化后果。来到神面前的人可以得洁净，也要学习珍惜洁净。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We trust that God forgives, but this passage keeps forgiveness from becoming a casual phrase. The bridge principle is that real grace deepens reverence. Repeated sin, broken relationships, and a dull conscience need serious attention, not spiritual language that minimizes consequences. Those cleansed by God learn to treasure cleansing.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从条例到生命：两条阅读路径</h2>
+  <p class="en-text text-sm text-stone-500 italic mb-6">From regulation to life: two faithful reading paths</p>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="rounded-xl border border-stone-200 bg-slate-50/70 p-5">
+      <h3 class="serif font-bold text-lg text-stone-900 mb-2">正统解经原则</h3>
+      <p class="en-text text-xs text-stone-500 italic mb-3">Contextual exegesis</p>
+      <p class="text-sm text-stone-600 leading-7 text-justify">先确认利未记处在会幕敬拜和祭司制度的上下文中，观察赎愆祭、燔祭、素祭、赎罪祭各自的功能。不要把古代祭礼直接等同为现代动作，而要先问：这条条例怎样显明神的圣洁、罪的真实、赦免的途径和群体关系的修复？</p>
+      <p class="en-text text-xs text-stone-400 italic border-t border-stone-200 pt-3 mt-3">Read Leviticus within tabernacle worship and priestly service. Identify each offering's function before applying it. Ask how the regulation reveals God's holiness, the reality of sin, appointed forgiveness, and repaired community life.</p>
+    </div>
+    <div class="rounded-xl border border-stone-200 bg-[var(--theme-accent)]/30 p-5">
+      <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修应用路径</h3>
+      <p class="en-text text-xs text-stone-500 italic mb-3">Devotional bridge</p>
+      <p class="text-sm text-stone-600 leading-7 text-justify">再用桥梁原则进入今日生活：赔偿对应真实修复，坛火对应每日敬拜，祭司条例对应服事中的警醒，至圣祭物对应对恩典的敬畏。应用时避免空泛化，要落到金钱、关系、工作诚信、时间安排和服事动机等具体层面。</p>
+      <p class="en-text text-xs text-stone-400 italic border-t border-stone-200 pt-3 mt-3">Then bridge into present life: restitution becomes repair, altar fire becomes daily worship, priestly rules become attentive service, and most holy offerings become reverent gratitude. Apply concretely to money, relationships, work integrity, time, and motives in service.</p>
+    </div>
+  </div>
+</section>
+<section class="grid md:grid-cols-3 gap-4 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h4 class="serif font-bold text-stone-900 mb-2">观察 / Observe</h4>
+    <p class="text-sm text-stone-600 leading-7">列出经文重复的词：归还、五分之一、火、圣处、至圣。重复词帮助我们抓住本章重点。</p>
+    <p class="en-text text-xs text-stone-400 italic mt-2">Trace repeated words: return, one fifth, fire, holy place, most holy.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h4 class="serif font-bold text-stone-900 mb-2">解释 / Interpret</h4>
+    <p class="text-sm text-stone-600 leading-7">把每条条例放在会幕和祭司职责中理解，避免脱离上下文作随意象征化。</p>
+    <p class="en-text text-xs text-stone-400 italic mt-2">Interpret each rule within tabernacle worship and priestly responsibility.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h4 class="serif font-bold text-stone-900 mb-2">实践 / Practice</h4>
+    <p class="text-sm text-stone-600 leading-7">选择一个具体亏欠去修复，或选择一个每日敬拜节奏去守住，让经文进入生活。</p>
+    <p class="en-text text-xs text-stone-400 italic mt-2">Repair one concrete wrong or guard one daily rhythm of worship.</p>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"坛上的火要在其上常常烧着，不可熄灭。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The fire on the altar shall be kept burning on it; it shall not go out."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Leviticus 6 双轨灵修研读报告 / Dual-Track Devotional Study Report</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

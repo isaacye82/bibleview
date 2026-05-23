@@ -1,6 +1,8 @@
 (function () {
   const availableChapters = {
-    Gen: Array.from({ length: 13 }, (_, i) => i + 1),
+    Gen: Array.from({ length: 50 }, (_, i) => i + 1),
+    Exod: Array.from({ length: 40 }, (_, i) => i + 1), 
+    Lev: Array.from({ length: 9 }, (_, i) => i + 1),
     Song: Array.from({ length: 8 }, (_, i) => i + 1),
     Josh: Array.from({ length: 24 }, (_, i) => i + 1),
     Joel: Array.from({ length: 3 }, (_, i) => i + 1),
@@ -12,7 +14,7 @@
     Zeph: Array.from({ length: 3 }, (_, i) => i + 1),
     Hag: Array.from({ length: 2 }, (_, i) => i + 1),
     Mal: Array.from({ length: 4 }, (_, i) => i + 1),
-    Matt: Array.from({ length: 28 }, (_, i) => i + 1),
+    Matt: Array.from({ length: 28 }, (_, i) => i + 1), //NT
     Mark: Array.from({ length: 16 }, (_, i) => i + 1),
     Luke: Array.from({ length: 24 }, (_, i) => i + 1),
     John: Array.from({ length: 21 }, (_, i) => i + 1),
@@ -155,9 +157,19 @@
       links: [
         { name: "上海地方教会60年", url: "Topics/Books/shchurch.html" },
         { name: "最后的告别", url: "Topics/Books/BeingMortal.html" },
-        { name: "超凡之心", url: "Topics/Books/theHeart.html" }
+        { name: "超凡之心", url: "Topics/Books/theHeart.html" },
       ]
-    }
+    },
+    // 复制上面的块来添加新主题，例如：     
+    /*{
+        title: "专题研究",
+        abbr: "Study",
+        desc: "Special Topics",
+        image: "url('../../Config/oldbooks1.jpg')",
+        links: [
+            { name: "示例文章", url: "Topics/Sample.html" }
+        ]
+    },*/
   ];
 
   const state = {

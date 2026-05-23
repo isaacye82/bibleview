@@ -1,108 +1,495 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<title>留言板 · Guestbook</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body {
-    font-family: "Microsoft YaHei", Arial, sans-serif;
-    background: #f5f6fa;
-    padding: 20px;
-}
-.container {
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-}
-h1 { margin-bottom: 10px; }
-textarea, input {
-    width: 100%;
-    margin: 8px 0;
-    padding: 8px;
-}
-button {
-    padding: 6px 14px;
-    cursor: pointer;
-}
-.message {
-    border-top: 1px solid #eee;
-    padding: 10px 0;
-}
-.reply {
-    margin-left: 20px;
-    font-size: 0.9em;
-    color: #555;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>留言板 · Guestbook - BibleView</title>
+    <style>
+        :root {
+            --bg-color: #f5f1e8;
+            --surface: rgba(255, 255, 255, 0.78);
+            --surface-solid: #ffffff;
+            --surface-soft: #eee8dc;
+            --text-main: #202225;
+            --text-light: #6b6f76;
+            --header-bg: rgba(250, 247, 240, 0.82);
+            --header-border: rgba(42, 35, 27, 0.13);
+            --card-border: rgba(42, 35, 27, 0.13);
+            --brand: #9f653a;
+            --brand-strong: #6d442c;
+            --accent: #1f7a73;
+            --accent-soft: rgba(31, 122, 115, 0.13);
+            --gold: #c5923b;
+            --primary-gradient: linear-gradient(135deg, var(--brand-strong), var(--accent));
+            --shadow-sm: 0 14px 35px rgba(54, 43, 31, 0.1);
+            --shadow-hover: 0 24px 80px rgba(54, 43, 31, 0.14);
+            --radius-box: 8px;
+            --radius-btn: 8px;
+        }
+
+        body.dark-mode {
+            --bg-color: #151a20;
+            --surface: rgba(31, 38, 47, 0.78);
+            --surface-solid: #202832;
+            --surface-soft: #26313d;
+            --text-main: #edf0f2;
+            --text-light: #aeb7c2;
+            --header-bg: rgba(21, 26, 32, 0.82);
+            --header-border: rgba(255, 255, 255, 0.11);
+            --card-border: rgba(255, 255, 255, 0.11);
+            --brand: #d6a464;
+            --brand-strong: #f0c982;
+            --accent: #73c5bd;
+            --accent-soft: rgba(115, 197, 189, 0.14);
+            --gold: #e1b45a;
+            --shadow-sm: 0 14px 35px rgba(0, 0, 0, 0.26);
+            --shadow-hover: 0 24px 80px rgba(0, 0, 0, 0.34);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background:
+                radial-gradient(circle at 18% 5%, rgba(197, 146, 59, 0.18), transparent 28rem),
+                radial-gradient(circle at 86% 0%, rgba(31, 122, 115, 0.16), transparent 24rem),
+                linear-gradient(180deg, var(--bg-color), var(--bg-color));
+            color: var(--text-main);
+            font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", system-ui, sans-serif;
+            font-weight: 300;
+            line-height: 1.8;
+            letter-spacing: 0;
+            transition: background 0.4s ease, color 0.3s ease;
+        }
+
+        header {
+            min-height: 72px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            border-bottom: 1px solid var(--header-border);
+            background: var(--header-bg);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            text-align: center;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-title {
+            margin-bottom: 2px;
+            color: var(--text-main);
+            font-size: 1.12rem;
+            font-weight: 800;
+            letter-spacing: 0;
+        }
+
+        .header-subtitle {
+            color: var(--text-light);
+            font-size: 0.74rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(-50%);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-btn);
+            background: var(--surface-solid);
+            color: var(--text-main);
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            background: var(--accent-soft);
+            transform: translateY(-50%) translateY(-2px);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 44px 20px;
+            flex: 1;
+        }
+
+        .content-card,
+        .guestbook-card {
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-box);
+            background: var(--surface);
+            box-shadow: var(--shadow-hover);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .content-card {
+            padding: clamp(28px, 5vw, 48px);
+            margin-bottom: 18px;
+        }
+
+        .content-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 170px;
+            background:
+                linear-gradient(180deg, rgba(21, 26, 32, 0.18), transparent),
+                url("topics.jpg") center 42% / cover;
+            opacity: 0.2;
+            pointer-events: none;
+        }
+
+        .content-card::after {
+            content: "";
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 72px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold));
+            opacity: 0.75;
+            pointer-events: none;
+        }
+
+        .card-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            color: var(--brand-strong);
+            font-size: 0.82rem;
+            font-weight: 750;
+            text-transform: uppercase;
+        }
+
+        .kicker::before {
+            content: "";
+            width: 34px;
+            height: 1px;
+            background: currentColor;
+        }
+
+        h2 {
+            margin: 0;
+            color: var(--text-main);
+            font-size: clamp(2.2rem, 7vw, 4.8rem);
+            font-weight: 850;
+            line-height: 1.02;
+            letter-spacing: 0;
+        }
+
+        .lead {
+            max-width: 720px;
+            margin-top: 20px;
+            color: var(--text-light);
+            font-size: 1.03rem;
+            line-height: 1.9;
+        }
+
+        .note-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 26px;
+        }
+
+        .note-item {
+            min-height: 108px;
+            padding: 16px;
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-box);
+            background: color-mix(in srgb, var(--surface-solid) 72%, transparent);
+        }
+
+        .note-item strong {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            font-size: 0.96rem;
+        }
+
+        .note-item span {
+            display: block;
+            color: var(--text-light);
+            font-size: 0.88rem;
+            line-height: 1.65;
+        }
+
+        .guestbook-card {
+            padding: 18px;
+        }
+
+        .giscus-shell {
+            min-height: 260px;
+            padding: clamp(18px, 4vw, 30px);
+            border: 1px dashed color-mix(in srgb, var(--accent) 36%, var(--card-border));
+            border-radius: var(--radius-box);
+            background: color-mix(in srgb, var(--surface-solid) 62%, transparent);
+        }
+
+        .setup-placeholder {
+            max-width: 720px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .setup-placeholder h3 {
+            margin-bottom: 10px;
+            color: var(--text-main);
+            font-size: 1.28rem;
+        }
+
+        .setup-placeholder p {
+            margin-bottom: 10px;
+            color: var(--text-light);
+        }
+
+        .setup-placeholder code {
+            display: inline-flex;
+            max-width: 100%;
+            padding: 2px 7px;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--surface-soft);
+            color: var(--brand-strong);
+            font-family: "SFMono-Regular", Consolas, monospace;
+            font-size: 0.86em;
+            overflow-wrap: anywhere;
+        }
+
+        .action-area {
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        .back-btn {
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 18px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-btn);
+            background: var(--primary-gradient);
+            color: #fff;
+            box-shadow: var(--shadow-sm);
+            font-size: 0.95rem;
+            font-weight: 750;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .back-btn {
+            color: #111820;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        footer {
+            padding: 34px 20px;
+            border-top: 1px solid var(--header-border);
+            background: color-mix(in srgb, var(--header-bg) 80%, transparent);
+            color: var(--text-light);
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        @media (max-width: 760px) {
+            .note-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                min-height: 64px;
+                padding: 0 15px;
+            }
+
+            .theme-toggle {
+                right: 15px;
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+
+            .header-title {
+                font-size: 1rem;
+            }
+
+            .header-subtitle {
+                font-size: 0.68rem;
+            }
+
+            .container {
+                padding: 28px 14px;
+            }
+
+            .content-card::before {
+                height: 130px;
+            }
+
+            .guestbook-card {
+                padding: 12px;
+            }
+        }
+    </style>
 </head>
-<body>
+<body class="dark-mode">
 
-<div class="container">
-    <h1>正在开发中，敬请期待...</h1>
-    <h1>留言板 Guestbook</h1>
-    <p>欢迎留言，彼此勉励</p>
-    <input id="name" placeholder="你的名字（可留空）">
-    <textarea id="content" placeholder="留言内容"></textarea>
-    <button onclick="addMessage()">提交留言</button>
+    <header>
+        <div class="header-content">
+            <h1 class="header-title">留言板</h1>
+            <p class="header-subtitle">Guestbook</p>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">
+            <span id="theme-icon">🌙</span>
+        </button>
+    </header>
 
-    <div id="messages"></div>
-</div>
+    <main class="container">
+        <section class="content-card" aria-labelledby="guestbook-title">
+            <div class="card-inner">
+                <p class="kicker">GitHub Discussions</p>
+                <h2 id="guestbook-title">留言板 <br>Guestbook</h2>
+                <p class="lead">欢迎在这里留下读经心得、网站建议或彼此勉励的话。此页面预留给 GitHub Discussions 评论系统，适合 GitHub Pages、Netlify 与 Vercel 等静态托管方式。</p>
 
-<script>
-const STORAGE_KEY = "guestbook_messages";
-
-function loadMessages() {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-}
-
-function saveMessages(msgs) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(msgs));
-}
-
-function addMessage() {
-    const name = document.getElementById("name").value || "匿名";
-    const content = document.getElementById("content").value.trim();
-    if (!content) return;
-
-    const msgs = loadMessages();
-    msgs.unshift({ name, content, replies: [] });
-    saveMessages(msgs);
-
-    document.getElementById("content").value = "";
-    render();
-}
-
-function addReply(index, text) {
-    const msgs = loadMessages();
-    msgs[index].replies.push(text);
-    saveMessages(msgs);
-    render();
-}
-
-function render() {
-    const msgs = loadMessages();
-    const box = document.getElementById("messages");
-    box.innerHTML = "";
-
-    msgs.forEach((m, i) => {
-        const div = document.createElement("div");
-        div.className = "message";
-        div.innerHTML = `
-            <strong>${m.name}</strong>：${m.content}
-            <div>
-                <input placeholder="回复…" onkeydown="if(event.key==='Enter') addReply(${i}, this.value)">
+                <div class="note-grid" aria-label="留言板说明">
+                    <div class="note-item">
+                        <strong>公开留言</strong>
+                        <span>留言会保存在 GitHub Discussions 中，便于回复、整理与长期保留。</span>
+                    </div>
+                    <div class="note-item">
+                        <strong>需要登录</strong>
+                        <span>访客需要使用 GitHub 账号留言，可减少垃圾信息与维护负担。</span>
+                    </div>
+                    <div class="note-item">
+                        <strong>静态友好</strong>
+                        <span>页面本身仍是纯静态 HTML，不需要额外数据库或服务器。</span>
+                    </div>
+                </div>
             </div>
-            ${m.replies.map(r => `<div class="reply">↳ ${r}</div>`).join("")}
-        `;
-        box.appendChild(div);
-    });
-}
+        </section>
 
-render();
-</script>
+        <section class="guestbook-card" aria-label="留言区">
+            <div class="giscus-shell">
+                <div class="setup-placeholder">
+                    <h3>留言须知</h3>
+                    <p>留言区将使用 GitHub Discussions 保存内容。若下方暂未显示留言框，请先在 GitHub 仓库启用 Discussions，并将 giscus.app 生成的脚本粘贴到本文件标注位置。</p>
+                    <p>当前仓库建议填写：<code>isaacye82/bibleview</code></p>
+                </div>
+                
+                <script src="https://giscus.app/client.js"
+                    data-repo="isaacye82/bibleview"
+                    data-repo-id="R_kgDOQn4VjQ"
+                    data-category="General"
+                    data-category-id="DIC_kwDOQn4Vjc4C9pVI"
+                    data-mapping="pathname"
+                    data-strict="0"
+                    data-reactions-enabled="1"
+                    data-emit-metadata="0"
+                    data-input-position="bottom"
+                    data-theme="preferred_color_scheme"
+                    data-lang="zh-CN"
+                    crossorigin="anonymous"
+                    async>
+                </script>
+             
+            </div>
+        </section>
 
+        <div class="action-area">
+            <a href="../index.html" class="back-btn">
+                <span>←</span> 返回首页 | Back to Home
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 圣经纵览 BibleView | 内容仅供学习参考</p>
+    </footer>
+
+    <script>
+        function getSavedTheme() {
+            try {
+                return window.localStorage ? window.localStorage.getItem("bibleview-theme") : null;
+            } catch (error) {
+                return null;
+            }
+        }
+
+        function saveTheme(isDark) {
+            try {
+                if (window.localStorage) {
+                    window.localStorage.setItem("bibleview-theme", isDark ? "dark" : "light");
+                }
+            } catch (error) {}
+        }
+
+        function updateGiscusTheme(isDark) {
+            const frame = document.querySelector("iframe.giscus-frame");
+            if (!frame) return;
+
+            frame.contentWindow.postMessage({
+                giscus: {
+                    setConfig: {
+                        theme: isDark ? "dark" : "light"
+                    }
+                }
+            }, "https://giscus.app");
+        }
+
+        (function applySavedTheme() {
+            const saved = getSavedTheme();
+            const isDark = saved ? saved === "dark" : window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+            document.body.classList.toggle("dark-mode", isDark);
+            document.getElementById("theme-icon").textContent = isDark ? "🌙" : "☀";
+        })();
+
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle("dark-mode");
+            saveTheme(isDark);
+            document.getElementById("theme-icon").textContent = isDark ? "🌙" : "☀";
+            updateGiscusTheme(isDark);
+        }
+    </script>
 </body>
 </html>

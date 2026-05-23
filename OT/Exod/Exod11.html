@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 11 | 出埃及记 11章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #5b1f2a;     /* 主色：午夜审判中的深红 */
+            --theme-secondary: #b45309; /* 次色：门内灯火与离去路上的金色 */
+            --theme-accent: #fff7ed;       /* 提亮色：温暖灯光 */
+            --theme-bg: #fbf7f3;               /* 网页底色：柔和羊皮纸色 */
+            --theme-text: #2a1518;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .midnight-stage {
+            background:
+                radial-gradient(circle at 74% 35%, rgba(251, 191, 36, .36), transparent 18%),
+                linear-gradient(145deg, #2a1518 0%, #3b1420 42%, #0f172a 100%);
+            min-height: 100%;
+        }
+        .moon-mark11 { animation: moonPulse11 4.5s ease-in-out infinite; transform-origin: center; }
+        .shadow-wave11 { animation: shadowPass11 6.2s ease-in-out infinite; transform-origin: center; }
+        .door-light11 { animation: lampPulse11 2.8s ease-in-out infinite; transform-origin: center; }
+        .road-dust11 { animation: roadDrift11 5.4s ease-in-out infinite; }
+        @keyframes moonPulse11 {
+            0%, 100% { opacity: .42; transform: scale(.96); }
+            50% { opacity: .78; transform: scale(1.04); }
+        }
+        @keyframes shadowPass11 {
+            0% { transform: translateX(-190px); opacity: .16; }
+            45%, 72% { transform: translateX(0); opacity: .7; }
+            100% { transform: translateX(190px); opacity: .14; }
+        }
+        @keyframes lampPulse11 {
+            0%, 100% { opacity: .78; filter: drop-shadow(0 0 4px rgba(251, 191, 36, .7)); }
+            50% { opacity: 1; filter: drop-shadow(0 0 12px rgba(251, 191, 36, .95)); }
+        }
+        @keyframes roadDrift11 {
+            0%, 100% { transform: translateX(-10px); opacity: .45; }
+            50% { transform: translateX(16px); opacity: .85; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-door-open mr-2 text-stone-600"></i> 出埃及记 11章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 11</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.05fr_.95fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">最后一灾的宣告：分别、审判与释放</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Final Plague Announced: Distinction, Judgment, and Release</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 11 章是逾越节前的沉重转折。耶和华宣告最后一灾将临到埃及，法老不再只是面对经济损失或环境灾难，而是面对家族、王权与偶像秩序被击中的审判。与此同时，经文强调以色列人与埃及人之间的分别：神使百姓在埃及人眼前蒙恩，连犬类也不敢向他们摇舌。摩西在怒中离开法老，表明妥协的谈判已经结束，释放将由神亲自完成。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 11 is the solemn threshold before Passover. The LORD announces the final plague, moving Pharaoh beyond economic damage into judgment upon household, throne, and false order. At the same time, the chapter stresses a clear distinction between Israel and Egypt: the people receive favor, and not even a dog growls against them. Moses leaves Pharaoh in anger because the season of bargaining is over; deliverance will now be completed by God himself.</p>
+  </div>
+  <aside class="midnight-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden text-orange-50">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-orange-200/80 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold">午夜的宣告，门内的灯火，离去的道路</h2>
+      <p class="text-sm text-orange-100/80 mt-2">纯 CSS/SVG 动效以月色、掠过的暗影、门内灯火和渐显道路，呈现第 11 章中最后审判的临近与百姓被分别保守。</p>
+      <p class="en-text text-xs text-orange-100/70 italic mt-2">Moonlight, passing shadow, lit doors, and a road of departure portray judgment and preserved people.</p>
+    </div>
+    <svg viewBox="0 0 430 270" role="img" aria-label="Animated midnight announcement and protected doors in Exodus 11" class="w-full mt-4">
+      <defs>
+        <radialGradient id="moonGrad11" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff7ed"/>
+          <stop offset="70%" stop-color="#fbbf24"/>
+          <stop offset="100%" stop-color="#92400e"/>
+        </radialGradient>
+        <linearGradient id="roadGrad11" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#f59e0b" stop-opacity=".1"/>
+          <stop offset="100%" stop-color="#fef3c7" stop-opacity=".7"/>
+        </linearGradient>
+      </defs>
+      <rect x="24" y="26" width="382" height="216" rx="24" fill="#111827" opacity=".78"/>
+      <circle class="moon-mark11" cx="338" cy="70" r="35" fill="url(#moonGrad11)" opacity=".72"/>
+      <g class="shadow-wave11">
+        <path d="M68 44 C140 92, 191 61, 271 114 C322 148, 355 147, 404 132 L404 242 L68 242 Z" fill="#030712" opacity=".76"/>
+      </g>
+      <path d="M78 213 C148 190, 236 188, 352 213 L386 242 L46 242 Z" fill="url(#roadGrad11)" opacity=".78"/>
+      <g class="road-dust11" fill="#fed7aa" opacity=".72">
+        <circle cx="130" cy="208" r="2"/><circle cx="185" cy="201" r="2.5"/><circle cx="238" cy="205" r="2"/><circle cx="297" cy="211" r="2.4"/>
+      </g>
+      <g transform="translate(76 126)">
+        <rect x="0" y="30" width="74" height="62" rx="5" fill="#4c1d1d"/>
+        <path d="M-8 31 L37 0 L82 31 Z" fill="#7f1d1d"/>
+        <rect class="door-light11" x="26" y="48" width="22" height="34" rx="3" fill="#fbbf24"/>
+        <path class="door-light11" d="M10 35 H64" stroke="#f59e0b" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <g transform="translate(254 132)">
+        <rect x="0" y="26" width="70" height="58" rx="5" fill="#3f1f2a"/>
+        <path d="M-7 27 L35 0 L77 27 Z" fill="#5b1f2a"/>
+        <rect class="door-light11" x="25" y="43" width="20" height="31" rx="3" fill="#fde68a"/>
+        <path class="door-light11" d="M9 31 H61" stroke="#fbbf24" stroke-width="5" stroke-linecap="round"/>
+      </g>
+      <text x="48" y="62" font-size="17" font-family="serif" font-weight="700" fill="#ffedd5">约到半夜，我必出去巡行埃及遍地</text>
+      <text x="48" y="83" font-size="12" font-family="serif" fill="#fed7aa" font-style="italic">About midnight I will go out into the midst of Egypt.</text>
+      <text x="133" y="256" font-size="12" font-family="serif" fill="#fff7ed">分别与释放 / distinction and release</text>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 11 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">最后一灾</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Final Plague</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nega / plague, blow</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“再使一样的灾殃”说明审判进入终点。它不是任意报复，而是对长期奴役、杀婴与抗拒神命令的公义回应。<span class="block en-text text-[11px] text-stone-500 italic mt-2">The final plague is not random vengeance but a just answer to oppression and resistance.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">百姓蒙恩</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Favor Before the People</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">chen / favor, grace</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">以色列人向邻舍求金银，并非贪取，而是奴役多年后的补偿与神掌权的记号。埃及的惧怕转为对神仆人的尊重。<span class="block en-text text-[11px] text-stone-500 italic mt-2">Israel's favor signals God's rule and a form of recompense after years of bondage.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">长子之灾</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Firstborn Judgment</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">bekor / firstborn</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">长子代表家族未来、继承秩序与王权延续。审判临到从宝座到磨坊、从人到牲畜，显明无人能把自己置于神的主权之外。<span class="block en-text text-[11px] text-stone-500 italic mt-2">The firstborn represents future and inheritance; the judgment reaches every level of Egypt.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">清楚分别</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Clear Distinction</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">palah / distinguish</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">犬类不向以色列人摇舌，是极强的安宁画面。神的分别不是民族优越，而是祂信实守约、按应许保守百姓。<span class="block en-text text-[11px] text-stone-500 italic mt-2">The silence of the dogs pictures God's covenant protection, not human superiority.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-6 bg-white rounded-xl border border-stone-200 shadow-sm p-5 sm:p-6">
+  <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)] mb-2">研读导览 / Study Guide</p>
+  <h2 class="serif text-2xl font-bold text-stone-900 mb-2">第 11 章按宣告、分别、最后警告来阅读</h2>
+  <p class="text-sm text-stone-600 leading-7 text-justify">本章只有十节，却把前十灾的冲突推到顶点。阅读时要同时留意两条线：一是经文如何显明神对法老权势的审判；二是神如何在审判临近时为自己的百姓预备释放。</p>
+  <p class="en-text text-xs text-stone-500 leading-6 italic mt-2">This short chapter brings the conflict to its climax. Read both tracks together: God's judgment on Pharaoh's power and God's preparation of his people for release.</p>
+</section>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:1</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“我再使一样的灾殃临到法老和埃及，然后他必容你们离开这地。他容你们去的时候，总要催逼你们都从这地出去。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And the LORD said unto Moses, Yet will I bring one plague more upon Pharaoh, and upon Egypt; afterwards he will let you go hence: when he shall let you go, he shall surely thrust you out hence altogether.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">最后一击使释放不可逆转</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“再使一样的灾殃”把前面反复的警告与拒绝推向终局。法老仍在场面上掌权，但经文已经宣告结局：他不只会允许以色列离开，甚至会催逼他们全体出去。释放的主动权不在法老，而在耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The final plague makes deliverance irreversible. Pharaoh appears powerful, yet the LORD has already announced the outcome: Egypt will drive Israel out completely.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神能结束长期的捆绑</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些压迫和困局看似永远不会改变，甚至每一次盼望都被新的拖延击碎。本节提醒我们，神的时间不是被人的阻挡牵着走。今天在职场压力、家庭重担或内心成瘾中祷告时，可以求神赐下忍耐，也相信祂能在合宜时刻打开不能打开的门。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Long bondage can make delay feel final. This verse teaches us to pray with endurance and trust that God can open doors no human power seems willing to open.</p>
+        </div>
+        
+    </div>
+</div>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:2-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你要传于百姓的耳中，叫他们男女各人向邻舍要金器银器。耶和华叫百姓在埃及人眼前蒙恩，并且摩西在埃及地、法老臣仆和百姓的眼中看为极大。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Speak now in the ears of the people, and let every man borrow of his neighbour, and every woman of her neighbour, jewels of silver, and jewels of gold. And the LORD gave the people favour in the sight of the Egyptians. Moreover the man Moses was very great in the land of Egypt, in the sight of Pharaoh's servants, and in the sight of the people.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">奴役之后的蒙恩与补偿</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">百姓向邻舍要金银，呼应神早先对亚伯拉罕的应许：他的后裔将从受苦之地带着许多财物出来。这里不是鼓励贪婪，而是表明神能使压迫者的资源反过来服事祂的旨意，并恢复被奴役者的尊严。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The silver and gold echo God's promise that Abraham's descendants would leave with possessions. This is favor, recompense, and dignity after bondage.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">尊严不由压迫者定义</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人在长期被轻看后，容易把别人的眼光当成自己的价值。神让百姓在埃及人眼前蒙恩，提醒我们真正的尊严来自神的看顾。面对不公平的工作环境或人际评价，可以诚实争取公义，同时不让羞辱成为身份的核心。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When people have been treated as lesser, God's favor restores dignity. We may seek justice without letting shame become our identity.</p>
+        </div>
+        
+    </div>
+</div>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:4-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西说：“耶和华这样说：约到半夜，我必出去巡行埃及遍地。凡在埃及地，从坐宝座的法老直到磨子后的婢女所有的长子，以及一切头生的牲畜，都必死。埃及遍地必有大哀号，从前没有这样的，后来也必没有。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And Moses said, Thus saith the LORD, About midnight will I go out into the midst of Egypt: And all the firstborn in the land of Egypt shall die, from the firstborn of Pharaoh that sitteth upon his throne, even unto the firstborn of the maidservant that is behind the mill; and all the firstborn of beasts. And there shall be a great cry throughout all the land of Egypt, such as there was none like it, nor shall be like it any more.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从宝座到磨坊的全面审判</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“约到半夜”突出神亲自行动的时刻。“从坐宝座的法老直到磨子后的婢女”覆盖社会两端，说明埃及整体参与或受益于奴役秩序。长子之灾触及未来、继承和国家延续，宣告埃及不能再靠自己的权势维持假安全。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The judgment reaches from throne to mill, touching Egypt's whole order. The firstborn represent future and inheritance, so false security collapses at its center.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要把未来建在不义上</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段严肃提醒我们：若一个人、家庭或组织把未来建在压迫、欺骗和骄傲上，迟早会被神的真光审问。现代生活中，这可能表现为为了业绩牺牲良心、为了掌控伤害家人、为了面子拒绝悔改。敬畏神，就是让未来从今天的公义开始。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">A future built on injustice is unstable before God. Reverence means beginning with justice today, in work, family, ambition, and repentance.</p>
+        </div>
+        
+    </div>
+</div>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            至于以色列中，无论是人是牲畜，连狗也不敢向他们摇舌，好叫你们知道耶和华是将埃及人和以色列人分别出来。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            But against any of the children of Israel shall not a dog move his tongue, against man or beast: that ye may know how that the LORD doth put a difference between the Egyptians and Israel.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">审判中的安静保守</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“连狗也不敢摇舌”用日常画面表达极深的平安：在埃及哀号遍地时，以色列的住处受到神特别保守。分别不是因为以色列本身更强，而是因为耶和华按约施行拯救。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The silent dogs picture profound peace in the midst of judgment. Israel is preserved by covenant mercy, not by superior strength.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在喧嚣中学习被神分别</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神的分别不是让人骄傲地与世界隔绝，而是在混乱中活出属于神的平安与忠诚。当办公室充满焦虑、家庭关系紧张、社会声音彼此撕裂时，信徒可以用安静、诚实和怜悯见证自己属于另一位主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Being set apart is not arrogance. It is quiet loyalty, honesty, and mercy when surrounding voices are anxious or divided.</p>
+        </div>
+        
+    </div>
+</div>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你这一切臣仆都要俯伏来见我，说：求你和跟从你的百姓都出去。然后我要出去。”于是摩西气忿忿地离开法老，出去了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And all these thy servants shall come down unto me, and bow down themselves unto me, saying, Get thee out, and all the people that follow thee: and after that I will go out. And he went out from Pharaoh in a great anger.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">谈判结束，神的话站立</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西预告法老臣仆将来俯伏求他们离开，这反转了奴隶在埃及的地位。摩西的怒气不是个人失控，而是面对持续硬心、压迫和藐视神话语时的义愤。此时已经没有更多讨价还价的空间。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The bowing servants reverse Israel's status. Moses' anger is moral grief before persistent hardness and oppression, not mere personal irritation.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">有些妥协必须停止</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">爱人并不等于无限容忍不义，温柔也不等于永远退让。摩西离开法老，提醒我们在面对操控、欺压或持续伤害时，需要清楚界限。基督徒的界限不是出于报复，而是为了忠于神、保护生命，并给悔改留下真实的空间。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Love does not require endless compromise with harm. Godly boundaries protect life, honor truth, and leave room for real repentance.</p>
+        </div>
+        
+    </div>
+</div>
+
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">11:9-10</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华对摩西说：“法老必不听你们，使我的奇事在埃及地多起来。”摩西、亚伦在法老面前行了这一切奇事，耶和华使法老的心刚硬，不容以色列人出离他的地。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And the LORD said unto Moses, Pharaoh shall not hearken unto you; that my wonders may be multiplied in the land of Egypt. And Moses and Aaron did all these wonders before Pharaoh: and the LORD hardened Pharaoh's heart, so that he would not let the children of Israel go out of his land.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">硬心与神迹的总结</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这两节总结前面灾祸叙事，也为第 12 章逾越节铺路。法老不听并不使神失败，反而让神的奇事显明得更完整。经文同时强调人的抗拒与神的主权：法老真实拒绝，神也在这拒绝中成就更大的拯救。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">These verses summarize the plague narrative and prepare for Passover. Pharaoh's refusal does not defeat God; it becomes the stage for fuller deliverance.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">拒绝不能废掉神的旨意</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当人的拒绝、制度的阻力或长期的失败挡在面前，我们容易以为神的工作停住了。本段给人稳固盼望：神不仅能在顺利中工作，也能在抵挡中显明祂的信实。今天的顺服可能看似没有结果，但神看见，并能把忠心纳入祂更大的故事。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Resistance does not cancel God's purpose. Faithful obedience may appear fruitless for a season, yet God can gather it into his larger story.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)] mb-2">方法论总结 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何平衡正统解经与灵修应用</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">出埃及记第 11 章含有严肃审判主题，阅读时不能把经文简化成情绪化的威胁，也不能绕过其历史处境。正统解经先问：本章在出埃及叙事中的位置是什么？法老的硬心、长子之灾、以色列蒙恩和“分别”如何服务于神释放百姓的主线？</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 11 must not be reduced to emotional threat language, nor detached from its historical setting. Sound interpretation first asks how hardness, firstborn judgment, favor, and distinction serve the larger story of God's deliverance.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-5 sm:p-6">
+    <div class="flex items-center gap-2 mb-3 text-[var(--theme-primary)]">
+      <i class="fas fa-book-open text-sm"></i>
+      <h3 class="serif font-bold text-lg">正统解经路径 / Sound Exegesis</h3>
+    </div>
+    <p class="text-sm text-stone-600 leading-7 text-justify mb-3">先按上下文观察：第 11 章承接前十灾，预告第 12 章逾越节。其次看关键词：“最后一灾”“蒙恩”“长子”“分别”都服务于同一主题：耶和华审判压迫者并释放祂的百姓。最后避免孤立应用，不把以色列的特殊历史身份直接等同于个人成功保证。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic">Begin with context: chapter 11 follows the plague cycle and prepares for Passover. Key terms point to one theme: the LORD judges oppression and releases his people. Avoid turning Israel's historical role into a simple promise of personal success.</p>
+  </article>
+  <article class="bg-white rounded-xl border border-stone-200 shadow-sm p-5 sm:p-6">
+    <div class="flex items-center gap-2 mb-3 text-[var(--theme-secondary)]">
+      <i class="fas fa-seedling text-sm"></i>
+      <h3 class="serif font-bold text-lg">灵修应用路径 / Devotional Application</h3>
+    </div>
+    <p class="text-sm text-stone-600 leading-7 text-justify mb-3">灵修应用从经文含义出发，再跨到今日处境。桥梁原则是：神反对压迫与硬心，保守属祂的人，并呼召他们在混乱中持守信心。因此可应用于职场不义、家庭界限、长期等待和身份恢复，但应用必须保持谦卑，不把自己轻率放在审判者的位置。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic">Application moves from meaning to present life. The bridge principle is that God opposes oppression, preserves his people, and calls them to faithfulness in turmoil. Apply humbly to workplace injustice, family boundaries, waiting, and restored identity.</p>
+  </article>
+</section>
+
+<section class="bg-[var(--theme-accent)] rounded-xl border border-orange-100 shadow-sm p-6 sm:p-8">
+  <h3 class="serif text-xl font-bold text-stone-900 mb-3">本章落地指南 / Practical Guide</h3>
+  <div class="grid sm:grid-cols-3 gap-4">
+    <div class="bg-white/80 rounded-lg border border-orange-100 p-4">
+      <p class="font-bold text-sm text-stone-800 mb-1">辨认硬心</p>
+      <p class="en-text text-[11px] text-stone-500 italic mb-2">Recognize hardness</p>
+      <p class="text-xs text-stone-600 leading-6">问自己是否正在用拖延、控制或骄傲拒绝神已经显明的命令。</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-2">Ask whether delay, control, or pride is resisting what God has made clear.</p>
+    </div>
+    <div class="bg-white/80 rounded-lg border border-orange-100 p-4">
+      <p class="font-bold text-sm text-stone-800 mb-1">守住界限</p>
+      <p class="en-text text-[11px] text-stone-500 italic mb-2">Keep boundaries</p>
+      <p class="text-xs text-stone-600 leading-6">面对持续伤害时，用诚实和温柔设立界限，不把妥协误认为爱。</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-2">Set honest and gentle boundaries where harm persists; compromise is not always love.</p>
+    </div>
+    <div class="bg-white/80 rounded-lg border border-orange-100 p-4">
+      <p class="font-bold text-sm text-stone-800 mb-1">盼望释放</p>
+      <p class="en-text text-[11px] text-stone-500 italic mb-2">Hope for release</p>
+      <p class="text-xs text-stone-600 leading-6">在漫长等待中继续忠心，因为神能使看似封闭的局面突然转向。</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-2">Remain faithful in long waiting; God can turn a closed situation at the right time.</p>
+    </div>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"好叫你们知道耶和华是将埃及人和以色列人分别出来。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"That ye may know how that the LORD doth put a difference between the Egyptians and Israel."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 11章 · Exodus Chapter 11</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

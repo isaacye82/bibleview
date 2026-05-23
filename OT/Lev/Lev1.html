@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 1 | 利未记 1章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #a16207; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fff7ed;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffaf3;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #3b2414;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .altar-stage {
+            background: radial-gradient(circle at 22% 12%, rgba(255,247,237,.95), transparent 34%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 48%, #fafaf9 100%);
+            min-height: 100%;
+        }
+        .flame { animation: flameSway 3.4s ease-in-out infinite; transform-origin: 210px 136px; }
+        .flame.inner { animation-delay: .35s; }
+        .smoke-line { stroke-dasharray: 92; stroke-dashoffset: 92; animation: smokeRise 4.8s ease-in-out infinite; }
+        .smoke-line.s2 { animation-delay: .7s; }
+        .smoke-line.s3 { animation-delay: 1.25s; }
+        .blood-ring { animation: ringPulse 4.2s ease-in-out infinite; transform-origin: center; }
+        .embers circle { animation: emberLift 3.2s ease-in-out infinite; transform-origin: center; }
+        .embers circle:nth-child(2) { animation-delay: .45s; }
+        .embers circle:nth-child(3) { animation-delay: .8s; }
+        .embers circle:nth-child(4) { animation-delay: 1.1s; }
+        @keyframes flameSway {
+            0%, 100% { transform: rotate(-2deg) scale(.98); opacity: .9; }
+            50% { transform: rotate(2deg) scale(1.05); opacity: 1; }
+        }
+        @keyframes smokeRise {
+            0% { stroke-dashoffset: 92; opacity: .08; transform: translateY(8px); }
+            45%, 70% { stroke-dashoffset: 0; opacity: .45; transform: translateY(-4px); }
+            100% { stroke-dashoffset: -92; opacity: .04; transform: translateY(-18px); }
+        }
+        @keyframes ringPulse {
+            0%, 100% { opacity: .38; transform: scale(.98); }
+            50% { opacity: .7; transform: scale(1.02); }
+        }
+        @keyframes emberLift {
+            0%, 100% { opacity: .3; transform: translateY(8px) scale(.8); }
+            50% { opacity: 1; transform: translateY(-10px) scale(1.08); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-flame-curved mr-2 text-stone-600"></i> 利未记 1章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 1</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">燔祭：全然献上的亲近之路</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Burnt Offering: A Way of Nearness through Whole Surrender</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 1 章从会幕中神对摩西说话开始，说明以色列人如何借着燔祭来到耶和华面前。经文按牲畜来源分为牛、羊、鸟三类，显示不同经济处境的人都能参与敬拜；但每一类祭物都强调无残疾、按手、宰杀、血洒在坛周围、剥皮或处理内脏、并把祭物烧在坛上，成为“献与耶和华为馨香的火祭”。本章的重点不是鼓励人用宗教行为换取神的喜悦，而是教导圣洁神主动开设一条可亲近的路：罪人不能轻率来到神面前，却可以按神所赐的方式，以代替、洁净与全然奉献来回应祂。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 1 begins with the LORD speaking from the tent of meeting and explains how Israel may draw near through the burnt offering. The chapter moves through offerings from the herd, the flock, and birds, showing that worship is open to people in different economic situations. Yet each offering stresses an unblemished animal, laying on of hands, slaughter, blood applied around the altar, careful preparation, and the burning of the whole offering as a pleasing aroma to the LORD. The point is not that religious action buys divine favor, but that the holy God graciously provides a way of approach through substitution, cleansing, and whole-hearted surrender.</p>
+  </div>
+  <aside class="altar-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">祭坛火焰与上升馨香</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以祭坛、温和火焰、血色环线与上升烟气表现燔祭主题：神开设亲近之路，人全然献上并蒙悦纳。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A simple altar, flame, blood line, and rising smoke picture holy approach, surrender, and acceptance.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated altar fire and rising pleasing aroma for Leviticus 1" class="w-full mt-4">
+      <defs>
+        <linearGradient id="flameGradLev1" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="#a16207"/>
+          <stop offset="55%" stop-color="#f97316"/>
+          <stop offset="100%" stop-color="#fff7ed"/>
+        </linearGradient>
+        <linearGradient id="altarGradLev1" x1="0" x2="1">
+          <stop offset="0%" stop-color="#7c2d12"/>
+          <stop offset="100%" stop-color="#92400e"/>
+        </linearGradient>
+      </defs>
+      <path class="smoke-line s1" d="M176 102 C145 71, 187 51, 162 26" fill="none" stroke="#78716c" stroke-width="4" stroke-linecap="round" opacity=".42"/>
+      <path class="smoke-line s2" d="M211 101 C242 69, 200 55, 226 28" fill="none" stroke="#78716c" stroke-width="4" stroke-linecap="round" opacity=".38"/>
+      <path class="smoke-line s3" d="M244 107 C269 82, 250 57, 284 39" fill="none" stroke="#78716c" stroke-width="3" stroke-linecap="round" opacity=".32"/>
+      <path class="flame outer" d="M210 136 C166 100, 197 73, 207 43 C246 82, 271 106, 210 136 Z" fill="url(#flameGradLev1)"/>
+      <path class="flame inner" d="M210 131 C193 107, 215 88, 221 68 C242 99, 240 119, 210 131 Z" fill="#fff7ed" opacity=".82"/>
+      <ellipse class="blood-ring" cx="210" cy="164" rx="116" ry="18" fill="none" stroke="#991b1b" stroke-width="5" stroke-dasharray="18 14" opacity=".58"/>
+      <path d="M112 149 H308 L282 205 H138 Z" fill="url(#altarGradLev1)"/>
+      <path d="M128 205 H292 L307 224 H113 Z" fill="#431407" opacity=".92"/>
+      <path d="M146 169 H274" stroke="#fed7aa" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+      <g class="embers" fill="#f97316">
+        <circle cx="156" cy="138" r="4"/><circle cx="267" cy="133" r="3"/><circle cx="236" cy="151" r="3.5"/><circle cx="184" cy="154" r="3"/>
+      </g>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 1 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">会幕中的呼召</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Calling from the Tent</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">vayyiqra</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">利未记开头的“呼叫”表明神不是沉默疏远的神，祂从会幕中主动指示百姓如何亲近祂。EN: The opening call shows that God graciously speaks from the tent and defines the way His people may approach.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">无残疾的祭牲</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">An Unblemished Offering</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">tamim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“无残疾”强调献给神的必须完整，也预备读者理解代替性献祭需要合宜的代表。EN: The unblemished animal points to wholeness before God and to the fitting representative offered in the worshiper’s place.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">按手与认同</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Laying on of Hands</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">samak yad</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">献祭者按手在祭牲头上，表达认同、交托与代表关系；祭物被接纳，使人得以亲近。EN: Laying hands expresses identification and entrusting oneself to the offering that is accepted on the worshiper’s behalf.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">馨香的火祭</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Pleasing Aroma</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">reah nihoah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">祭物升起的香气象征按神旨意献上的敬拜蒙悦纳，不是操控神，而是顺服神所设立的亲近之路。EN: The pleasing aroma pictures worship received according to God’s provision, not manipulation of God by ritual.</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">利未记 1 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按祭物类别展开：牛、羊、鸟。每个单元都先观察经文中神所设立的亲近秩序，再把代替、洁净与全然奉献的原则连接到今日生活。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">The chapter follows the offerings from herd, flock, and birds. Each unit observes God’s appointed order of approach and then connects substitution, cleansing, and surrender to life today.</p>
+  </div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Call to Draw Near from the Tent of Meeting</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">从会幕发出的亲近呼召 (1:1-2)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华从会幕中呼叫摩西，对他说：“你晓谕以色列人说：你们中间若有人献供物给耶和华，要从牛群羊群中献牲畜为供物。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD called Moses and spoke to him from the tent of meeting, saying, “Speak to the people of Israel and say to them, When any one of you brings an offering to the LORD, you shall bring your offering of livestock from the herd or from the flock.”
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神先呼叫，然后人献上</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">利未记不是从人的宗教热心开始，而是从耶和华在会幕中呼叫摩西开始。“供物”有亲近、带来礼物的意思，说明献祭是在神已经住在百姓中间之后，祂亲自教导他们如何以合宜的方式靠近圣洁的神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter begins with divine speech, not human initiative. The offering is a means of drawing near because God first chooses to dwell among His people and instructs them in holy approach.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">亲近神从聆听开始</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的奉献、服事和敬拜也不能只凭冲动或习惯。压力中我们常急着做点什么证明自己，但本节提醒我们先听神的话，再回应祂的呼召。真实的亲近不是表演，而是在日常选择中把主权还给神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Our worship and service should begin with listening rather than restless self-proving. In pressure, we often rush to act; this passage calls us to respond to God’s word before offering our work, time, or devotion.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Burnt Offering from the Herd</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">牛作为燔祭的献上 (1:3-9)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:3-4</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他的供物若以牛为燔祭，就要在会幕门口献一只没有残疾的公牛，可以在耶和华面前蒙悦纳。他要按手在燔祭牲的头上，燔祭便蒙悦纳，为他赎罪。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If his offering is a burnt offering from the herd, he shall offer a male without blemish. He shall bring it to the entrance of the tent of meeting, that he may be accepted before the LORD. He shall lay his hand on the head of the burnt offering, and it shall be accepted for him to make atonement for him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">无残疾、按手、蒙悦纳</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">燔祭的目标是“在耶和华面前蒙悦纳”。无残疾的公牛代表完整献上；按手表明献祭者与祭牲发生代表关系；“为他赎罪”显示亲近神必须面对罪与洁净的问题。经文把敬拜、代替和赦免紧密连接。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The goal is acceptance before the LORD. The unblemished male signals wholeness, laying on hands expresses representation, and atonement shows that approach to God must deal honestly with sin.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把自己真实交托给神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">按手不是旁观宗教仪式，而是承认“这是为我”。现代人容易把信仰变成知识、节目或道德形象；本段邀请我们停止旁观，把罪、羞耻、成就焦虑和控制欲真实带到神面前，让祂所预备的恩典承载我们。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Laying on hands is not religious spectatorship; it says, “This is for me.” Faith cannot remain information or image-management. We bring sin, shame, anxiety, and control to God and rest in His provided grace.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:5-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            他要在耶和华面前宰公牛；亚伦子孙作祭司的，要奉上血，把血洒在会幕门口坛的周围。那人要剥去燔祭牲的皮，把燔祭牲切成块子。祭司要把火放在坛上，把柴摆在火上……祭司就要把一切全烧在坛上，当作燔祭，献与耶和华为馨香的火祭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Then he shall kill the bull before the LORD, and Aaron’s sons the priests shall bring the blood and throw the blood against the sides of the altar. The offering is skinned and cut into pieces; the priests arrange the fire, wood, and pieces on the altar. The priest shall burn all of it on the altar, as a burnt offering, a food offering with a pleasing aroma to the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">血、坛与全然焚烧</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">血洒在坛周围，说明生命归给神，也显明赎罪不是抽象观念。祭牲被剥皮、切块、洗净内脏与腿，最后“一切全烧”，突出燔祭的完整性：不是留下部分给自己，而是全然献与耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The blood around the altar makes atonement concrete: life belongs to God. The detailed preparation and complete burning stress the total character of the burnt offering, wholly given to the LORD.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让隐藏处也被洁净</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">内脏和腿要洗，提醒我们神关心外在行为，也关心内里的动机和日常行走。灵修应用不是制造完美人设，而是在工作习惯、金钱决定、关系语气和私下欲望中，让神的圣洁整理我们整个人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The washing of inner parts and legs reminds us that God cares about motives and daily paths. Devotion is not crafting a flawless image; it lets God’s holiness reorder our habits, money, speech, and desires.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Burnt Offering from the Flock</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">羊群中的燔祭 (1:10-13)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:10-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            人的供物若以绵羊或山羊为燔祭，就要献上没有残疾的公羊。要把羊宰于坛的北边，在耶和华面前；亚伦子孙作祭司的，要把羊血洒在坛的周围……祭司就要全然奉献，烧在坛上。这是燔祭，是献与耶和华为馨香的火祭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If his gift for a burnt offering is from the flock, from the sheep or goats, he shall bring a male without blemish and kill it on the north side of the altar before the LORD. The priests throw its blood against the altar, arrange the pieces, head, and fat, wash the entrails and legs, and burn all of it as a pleasing aroma to the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">同一条恩典之路</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">羊的程序与牛相似，说明祭物价值虽有差异，神所要求的亲近原则却一致：无残疾、血、洁净、全然焚烧。不同经济能力的人可以献不同祭物，但没有人可以绕过神所设立的圣洁道路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The flock offering follows the same pattern as the herd offering. Economic value differs, but the way of approach remains: wholeness, blood, cleansing, and total surrender before God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要比较奉献的大小</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段安慰资源有限的人，也提醒资源充足的人。神看重的不是我们能否献出别人眼中更大的东西，而是我们是否按祂的话诚实献上自己。在职场或家庭中，忠心常表现为把当前可交托的责任完整献给主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This comforts those with limited resources and humbles those with much. God is not impressed by comparison; He receives faithful surrender. In work and family, devotion often means offering the responsibility currently in our hands.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Burnt Offering from Birds</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">鸟作为燔祭的献上 (1:14-17)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:14-17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            人奉给耶和华的供物若以鸟为燔祭，就要献斑鸠或是雏鸽为供物。祭司要把鸟拿到坛前，揪下头来，把鸟烧在坛上；鸟的血要流在坛的旁边……要拿着鸟的两个翅膀，把鸟撕开，只是不可撕断；祭司要在坛上、在火的柴上焚烧。这是燔祭，是献与耶和华为馨香的火祭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If his offering to the LORD is a burnt offering of birds, he shall bring turtledoves or pigeons. The priest brings it to the altar, wrings off its head, drains its blood on the side of the altar, removes the crop and feathers, tears it open by its wings without severing it, and burns it on the altar as a pleasing aroma to the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">贫弱者也被纳入敬拜</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">鸟类祭物通常是较贫穷者能负担的供物。经文仍称它为“馨香的火祭”，说明神没有把穷人的敬拜看为次等。祭物规模变小，圣洁原则没有降低；神的亲近之路既圣洁，也有怜悯。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Bird offerings were accessible to poorer worshipers, yet they are still called a pleasing aroma. The scale is smaller, but holiness is not lowered; God’s way of approach is both holy and merciful.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">微小也可以全然</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当我们觉得时间、能力、金钱或情绪都很有限时，容易以为自己没有什么可献。利未记 1 章告诉我们，神接纳按祂心意献上的微小。一个诚实的祷告、一次克制的回答、一份尽责的小工作，都可以成为全然归主的回应。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When time, strength, money, or emotional capacity feels small, we may assume we have nothing to offer. Leviticus 1 teaches that small offerings, given according to God’s will, can still be whole-hearted responses to Him.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从经文原意走向今日回应</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">阅读利未记 1 章时，正统解经路径先问：神在会幕语境中如何教导以色列亲近祂？祭物、祭司、血、坛和火祭各在上下文中承担什么功能？这样能避免把献祭制度简化成抽象寓意，也避免把古代礼仪直接粗糙套用到今天。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">A faithful reading first asks what the text meant in the tabernacle setting: how did God teach Israel to approach Him, and what roles did offering, priest, blood, altar, and fire play in context? This guards against reducing the sacrifices to vague symbolism or applying ancient ritual in a careless way.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">正统解经原则</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">先看文学结构：从牛到羊到鸟，重复的程序突显亲近神的共同原则。再看关键词：无残疾、按手、赎罪、全烧、馨香。最后放在圣经整体中理解：献祭显明神的圣洁、人的需要和神主动赐下的亲近方式。</p>
+    <p class="en-text text-xs text-stone-400 italic leading-6">Observe structure, repeated terms, and covenant context. The sacrifices reveal God’s holiness, human need, and the gracious way God provides for approach.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用路径</h3>
+    <p class="text-stone-600 leading-7 text-justify mb-3">应用不是复制献祭动作，而是抓住桥梁原则：圣洁神主动呼召，人借神所预备的恩典来到祂面前，并以完整生命回应。今天可落实为诚实认罪、放下自我证明、在工作与关系中把隐藏动机交给神整理。</p>
+    <p class="en-text text-xs text-stone-400 italic leading-6">Application does not repeat the ritual; it follows the bridge principle: the holy God calls, provides grace for approach, and receives whole-life surrender in ordinary decisions.</p>
+  </div>
+</section>
+<section class="bg-[var(--theme-accent)] rounded-xl border border-orange-100 shadow-sm p-6 sm:p-8">
+  <h3 class="serif text-xl font-bold text-stone-900 mb-3">实际落地指南 / Practical Guide</h3>
+  <p class="text-stone-700 leading-8 text-justify mb-3">默想本章时，可以用三个问题祷告：我正在凭自己表现争取接纳，还是信靠神所预备的恩典？我生命中哪些“内脏与腿”的隐秘动机和行走方式需要被洁净？我今天能把哪一件具体责任全然献给主？</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Pray with three questions: Am I trying to earn acceptance, or trusting God’s provided grace? Which hidden motives and daily paths need cleansing? What concrete responsibility can I offer wholly to the Lord today?</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"他要按手在燔祭牲的头上，燔祭便蒙悦纳，为他赎罪。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"He shall lay his hand on the head of the burnt offering, and it shall be accepted for him to make atonement for him."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">利未记 1章 | Leviticus Chapter 1</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

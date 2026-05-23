@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 45 | 创世记 45章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fffbeb;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #f8fafc;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #292524;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reunion-stage {
+            background: radial-gradient(circle at 50% 18%, rgba(251,191,36,.34), transparent 30%), linear-gradient(145deg, #fff7ed 0%, #ecfeff 55%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .curtain-left { animation: curtainLeft 5.6s ease-in-out infinite; transform-origin: 150px 40px; }
+        .curtain-right { animation: curtainRight 5.6s ease-in-out infinite; transform-origin: 270px 40px; }
+        .tear-drop { animation: tearFall 3.6s ease-in-out infinite; }
+        .tear-drop.t2 { animation-delay: .7s; }
+        .grain-line { stroke-dasharray: 180; stroke-dashoffset: 180; animation: grainDraw 5.6s ease-in-out infinite; }
+        .road-line { stroke-dasharray: 260; stroke-dashoffset: 260; animation: roadDraw 5.6s ease-in-out infinite; }
+        .heart-pulse { animation: heartPulse 2.8s ease-in-out infinite; transform-origin: center; }
+        @keyframes curtainLeft { 0%, 26% { transform: translateX(0); opacity: .88; } 55%, 100% { transform: translateX(-44px); opacity: .42; } }
+        @keyframes curtainRight { 0%, 26% { transform: translateX(0); opacity: .88; } 55%, 100% { transform: translateX(44px); opacity: .42; } }
+        @keyframes tearFall { 0% { transform: translateY(-8px); opacity: 0; } 35% { opacity: 1; } 100% { transform: translateY(34px); opacity: 0; } }
+        @keyframes grainDraw { 0% { stroke-dashoffset: 180; opacity: .35; } 45%, 70% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: -180; opacity: .35; } }
+        @keyframes roadDraw { 0% { stroke-dashoffset: 260; opacity: .25; } 55%, 82% { stroke-dashoffset: 0; opacity: .85; } 100% { stroke-dashoffset: -260; opacity: .25; } }
+        @keyframes heartPulse { 0%,100% { transform: scale(.96); opacity: .72; } 50% { transform: scale(1.08); opacity: 1; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-hands-holding-circle mr-2 text-stone-600"></i> 创世记 45章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 45</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">真相中的和好：神把伤害转为保全生命</h1>
+    <p class="en-text text-stone-500 italic mb-5">Reconciliation in Truth: God Turns Harm toward the Preservation of Life</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">创世记第 45 章是约瑟故事的情感高峰。约瑟不再隐藏身份，而是在泪水中向弟兄显明自己。他没有粉饰弟兄当年的罪，也没有让苦毒掌管解释权；他三次强调“神差我在你们以先来”，把家庭伤害放在神保全生命、延续应许的更大作为中。和好在这里不是逃避真相，而是在真相、悔改、拥抱与具体供应中重新建立关系。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Genesis 45 is the emotional summit of Joseph's story. Joseph reveals himself with tears, neither excusing his brothers' sin nor letting bitterness define the whole story. By saying that God sent him ahead, he places family harm within God's larger work of preserving life and continuing the promise. Reconciliation here is not denial; it is truth, mercy, embrace, and concrete provision.</p>
+  </div>
+  <aside class="reunion-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">帘幕开启，眼泪成路</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以打开的帘幕、落下的眼泪、粮穗线条和通向迦南的道路，表现隐藏身份被揭开后，神的护理把破碎家庭带向保全生命的道路。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Opening curtains, falling tears, grain, and a road picture hidden providence becoming visible mercy.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated curtains opening, tears falling, grain and road for Genesis 45" class="w-full mt-4">
+      <defs>
+        <linearGradient id="curtainGen45" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#92400e"/></linearGradient>
+        <linearGradient id="roadGen45" x1="0" x2="1"><stop offset="0%" stop-color="#0f766e"/><stop offset="100%" stop-color="#b45309"/></linearGradient>
+      </defs>
+      <rect x="92" y="38" width="118" height="132" rx="12" fill="url(#curtainGen45)" class="curtain-left" opacity=".82"/>
+      <rect x="210" y="38" width="118" height="132" rx="12" fill="url(#curtainGen45)" class="curtain-right" opacity=".82"/>
+      <circle cx="210" cy="95" r="38" fill="#fef3c7" opacity=".92"/>
+      <path class="tear-drop" d="M189 122 C182 132, 185 143, 194 144 C203 142, 204 131, 197 122 C195 119, 191 119, 189 122Z" fill="#0891b2" opacity=".75"/>
+      <path class="tear-drop t2" d="M226 121 C219 132, 222 143, 231 144 C240 142, 241 131, 234 121 C232 118, 228 118, 226 121Z" fill="#0891b2" opacity=".66"/>
+      <path class="grain-line" d="M88 198 C128 172, 170 180, 210 164 C254 146, 292 155, 335 128" fill="none" stroke="#b45309" stroke-width="6" stroke-linecap="round"/>
+      <path class="road-line" d="M74 230 C136 208, 170 218, 214 198 C260 178, 300 180, 354 154" fill="none" stroke="url(#roadGen45)" stroke-width="8" stroke-linecap="round" opacity=".75"/>
+      <g class="heart-pulse" fill="#dc2626" opacity=".75"><path d="M210 190 C197 177, 178 185, 181 203 C184 220, 210 232, 210 232 C210 232, 236 220, 239 203 C242 185, 223 177, 210 190Z"/></g>
+      <text x="210" y="74" text-anchor="middle" font-size="18" font-family="serif" font-weight="700" fill="#713f12">我是约瑟</text>
+      <text x="210" y="100" text-anchor="middle" font-size="11" font-family="serif" fill="#57534e">I am Joseph</text>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Genesis 45 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">兄弟相认</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Revealed Brotherhood</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约瑟说“我是约瑟”，使隐藏多年的真实关系被显明。审判没有成为终点，真相被带到光中，好让破裂的家庭开始被医治。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神差我在先</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Sent Me Ahead</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">约瑟没有否认弟兄的恶，却把痛苦放进神更大的护理中。人的伤害不能取消神保全生命的旨意。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">余民得保全</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Preserved Remnant</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">饥荒中的“存留余种”指向神对亚伯拉罕家族应许的坚守。救赎历史在家庭重逢中继续向前。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">父亲心苏醒</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Revived Heart</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">雅各从麻木到心灵苏醒，不是因环境立刻改变，而是因真实消息与可见凭据重新点燃盼望。</p>
+</div></div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">创世记 45 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章从约瑟显明身份开始，展示真相、护理、赦免、供应与盼望如何一起形成和好的道路。每个单元都从上下文经文含义进入今日人际关系与信心生活的应用。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This chapter moves from Joseph's self-revelation to truth, providence, forgiveness, provision, and hope. Each unit connects contextual meaning with present faith and relational practice.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Joseph Reveals Himself</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">约瑟显明身份 (45:1-4)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:1-4</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟在众人面前不能再自禁，吩咐左右退去；他放声大哭，向弟兄说：“我是约瑟。我的父亲还在吗？”弟兄因惧怕不能回答。约瑟叫他们近前来，说：“我是你们的兄弟约瑟，就是你们所卖到埃及的。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph could no longer control himself. He sent everyone away, wept aloud, and said to his brothers, “I am Joseph. Is my father still alive?” They were terrified, but he invited them near and named the painful truth: he was the brother they had sold into Egypt.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">真相先被带到光中</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">约瑟的哭声显示这不是冷静操控的场面，而是多年隐藏、思念与痛苦的爆发。他没有跳过事实，清楚说“你们所卖到埃及的”，因为真正的和好不能建立在模糊责任上。经文同时注意到弟兄的惧怕，说明罪被揭开时，人首先感到的不一定是安慰，而是震动。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Joseph’s tears show that this is not manipulation but the release of long-hidden grief and longing. He names the truth, “whom you sold into Egypt,” because reconciliation cannot rest on blurred responsibility. The brothers’ fear shows how exposure of sin first shakes before it heals.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">面对真相而不被真相吞没</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在人际关系中，属灵成熟不是装作没有受伤，也不是用旧伤永远惩罚别人。约瑟给我们的桥梁原则是：把事实说清楚，同时为恩典留下空间。今天在家庭、职场或教会关系里，我们也需要诚实命名伤害，却让神带领下一步，而不是让恐惧和报复决定结局。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual maturity does not pretend there was no wound, nor does it use old wounds to punish forever. Joseph shows a bridge principle: name the truth clearly while leaving room for grace. In family, workplace, or church conflicts, honesty and mercy must walk together.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Providence Interprets Suffering</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神的护理解释苦难 (45:5-8)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:5-8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟劝弟兄不要因卖他到这里而自忧自恨，因为神差他在他们以先来，为要保全生命。饥荒还要持续，神差他来保存余种、大施拯救。所以差他到埃及的不是他们，乃是神；神使他作法老的父、全家的主，并埃及全地的宰相。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph told them not to be distressed or angry with themselves, because God had sent him ahead to preserve life. The famine would continue, yet God sent him to preserve a remnant and bring great deliverance. It was not ultimately they who sent him there, but God, who raised him to authority in Egypt.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">人的恶与神的差遣并列</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">约瑟没有说弟兄无罪，也没有把神的护理变成对恶行的许可。他把两个层面并列：弟兄确实卖了他，但神在更深处差他在先。这里的重点不是解释每个痛苦细节，而是宣告神能在人的罪与混乱中推进保全生命的旨意。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Joseph does not deny his brothers’ guilt or make providence a permission for evil. He holds two levels together: they sold him, yet God sent him ahead. The passage does not explain every painful detail; it declares that God can advance life-preserving purposes through human disorder.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把经历交还给神的更大故事</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常在伤害后只剩两种叙事：自责或控诉。约瑟提醒我们还有第三条路：承认罪的真实，同时寻求神如何在破碎中保全生命。灵修应用不是轻率地说“一切都好”，而是在祷告中求神把痛苦从单纯的伤口，转化为更深的智慧、怜悯与使命。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After harm, we often live by self-blame or accusation. Joseph shows another way: acknowledge real sin while seeking how God preserves life amid brokenness. Devotionally, this is not saying “everything is fine,” but asking God to turn pain into wisdom, mercy, and vocation.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Sent to Bring the Father Near</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">差遣接父亲下埃及 (45:9-15)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:9-15</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟催促弟兄上去告诉父亲：神使他作埃及全地的主，请父亲下到他那里，不要耽延。父亲和全家可住在歌珊，他要在那里奉养他们，免得因饥荒败落。约瑟又与便雅悯和众弟兄亲嘴、抱着他们哭，随后弟兄就和他说话。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Joseph urged his brothers to tell his father that God had made him lord of Egypt and to come down without delay. The family would live in Goshen, where Joseph would provide for them during the famine. He embraced Benjamin and his brothers with tears, and afterward they spoke with him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">和好带出具体供应</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">约瑟的赦免不是停在情绪表达。他立刻安排住处、粮食和家庭保全，显示和好会产生承担责任的行动。弟兄“就和他说话”是重要细节：惧怕中的沉默被拥抱和供应打开，关系开始恢复真实交流。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Joseph’s forgiveness does not stop with emotion. He arranges a place, food, and protection, showing that reconciliation bears concrete responsibility. The note that the brothers spoke with him matters: fearful silence is opened by embrace and provision into restored communication.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">用行动承担和好的代价</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常把和好缩小成一句“没事了”，但经文显示恢复关系需要时间、空间和实际安排。在家庭照顾、团队修复或朋友关系中，若神给我们能力，就要学习用具体行动保护对方，而不是只要求对方立刻放松。真正的恩典常常带着可触摸的供应。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often reduce reconciliation to “it’s fine,” but the text shows that restored relationships need time, space, and practical arrangements. In families, teams, and friendships, grace becomes tangible when it protects and provides rather than merely demanding that others relax.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Pharaoh Provides for the Journey</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">法老供应回程礼物 (45:16-20)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:16-20</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            约瑟弟兄来了的消息传到法老宫里，法老和臣仆都喜悦。法老吩咐约瑟让弟兄带车辆回迦南，接父亲和眷属来埃及；不要顾惜家中的器具，因为埃及全地的美物都是他们的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Pharaoh’s household heard that Joseph’s brothers had come, Pharaoh and his servants were pleased. Pharaoh commanded Joseph to send wagons to Canaan to bring his father and family to Egypt, telling them not to worry about their possessions, for the best of Egypt would be theirs.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">外邦权柄也服事神的保全</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">法老的欢迎延伸了神护理的主题。约瑟不只在私人层面得着和好，也在公共权柄中得着供应，使雅各全家能迁移存活。创世记常显示神的应许家族并非靠自我封闭存续，神也能使用外邦资源成全祂的安排。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh’s welcome extends the theme of providence. Joseph receives not only private reconciliation but public provision, enabling Jacob’s family to survive. Genesis often shows that the promise family is not preserved by isolation; God may use outside resources for His purposes.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">接受神借不同渠道来的帮助</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有时我们只期待神用熟悉的人和方式帮助我们，本章却提醒我们供应可能来自意想不到的制度、上级、资源或机会。属灵分辨不是骄傲地拒绝一切外来帮助，而是在正直中领受神为生命存留所开的门。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may expect God to help only through familiar people and methods, yet provision can come through unexpected institutions, leaders, resources, or opportunities. Discernment does not proudly reject outside help; it receives open doors with integrity.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Returning with Evidence</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">带着凭据回迦南 (45:21-24)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:21-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            以色列的儿子们照着法老的命令而行，约瑟给他们车辆和路上用的食物，又给各人衣服，给便雅悯更多银子和衣服，也送给父亲驴、粮食、饼和路上食物。约瑟打发弟兄离开，并嘱咐他们不要在路上相争。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The sons of Israel received wagons and provisions for the journey. Joseph gave garments to each brother, more gifts to Benjamin, and donkeys loaded with goods and food for his father. As he sent them away, he warned them not to quarrel on the road.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恩典之后仍需警醒</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">礼物和车辆成为好消息的可见凭据，也预备雅各信心苏醒。然而约瑟提醒他们不要在路上相争，说明蒙恩之后旧习性仍可能冒头。经文非常实际：和好开启新路，但新路仍需要谦卑、节制和彼此忍耐。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The gifts and wagons become visible evidence of good news and prepare Jacob’s renewed hope. Yet Joseph warns them not to quarrel, showing that old patterns can surface even after grace. Reconciliation opens a new road, but humility and restraint must walk it.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要让旧模式破坏新恩典</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当神开始修复关系时，人很容易在路上重新争辩谁错得更多、谁贡献更大。约瑟的提醒适用于今天的团队复盘、家庭谈话和婚姻修复：既然神开了新门，就不要把全部精力花在彼此追责上，而要用诚实和节制守住新开始。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When God begins repairing relationships, we can quickly return to arguments about blame and credit. Joseph’s warning speaks to teams, families, and marriages: when a new door opens, do not spend all your strength relitigating blame; guard the new beginning with truth and self-control.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Jacob’s Spirit Revives</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">雅各心灵苏醒 (45:25-28)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">45:25-28</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            弟兄从埃及上去，来到迦南见父亲雅各，告诉他说：“约瑟还在，并且作埃及全地的宰相。”雅各心里冰凉，因为不信他们。及至看见约瑟打发来接他的车辆，心就苏醒，说：“罢了！我的儿子约瑟还在，趁我未死以先，我要去见他一面。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The brothers returned to Jacob in Canaan and told him, “Joseph is still alive, and he is ruler over all Egypt.” Jacob’s heart went numb because he did not believe them. But when he saw the wagons Joseph had sent, his spirit revived, and he resolved to go see Joseph before he died.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从麻木到苏醒的盼望</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">雅各的“不信”并非简单顽梗，而是多年丧子之痛后的心灵麻木。神没有责备他的迟疑，而是借话语和车辆这类可见凭据逐步唤醒他。结尾的“我要去见他”把本章从隐藏的痛苦带向重逢的盼望。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Jacob’s disbelief is not mere stubbornness; it is numbness after years of grief. God does not rebuke his slowness but uses words and visible wagons to awaken him. His resolve to see Joseph moves the chapter from hidden pain toward hopeful reunion.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">给疲惫的人一点可见的盼望</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多人不是不想相信，而是经历太久失望，心已经冰凉。雅各提醒我们，对疲惫者的陪伴需要耐心，也需要具体凭据：一个稳定的行动、一次真实的探访、一份可见的供应。神常借这些小而真实的记号，使人重新有力气往前走。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many people do not refuse faith; they are simply numb after long disappointment. Jacob teaches us to accompany the weary with patience and concrete signs: a steady action, a real visit, tangible provision. God often uses such visible mercies to revive courage.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何读创世记 45 章</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">正统解经路径先问：这段经文在约瑟叙事与创世记整体应许中如何运作？答案是，神借约瑟保存雅各家，使亚伯拉罕之约继续推进；人的罪被真实承认，神的护理也被真实宣告。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">The interpretive path first asks how the passage functions within Joseph's story and Genesis as a whole. God preserves Jacob's family through Joseph so the Abrahamic promise continues; human sin is truly named, and divine providence is truly confessed.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">解经原则 / Exegetical Principles</h3>
+    <p class="text-stone-700 leading-7 text-justify mb-3">第一，按上下文阅读：第 45 章回应第 37 章的出卖、第 42-44 章的试验，以及第 50 章对神护理的总结。第二，区分人的责任与神的主权：约瑟没有取消弟兄的罪，也没有否认神的差遣。第三，注意叙事细节：哭泣、亲近、说话、车辆和雅各心苏醒，都是和好逐步成形的线索。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6">Read in context: Genesis 45 answers the sale in chapter 37, the testing in chapters 42-44, and anticipates chapter 50. Distinguish human responsibility from God's sovereignty, and attend to narrative details such as tears, nearness, speech, wagons, and Jacob's revived spirit.</p>
+  </div>
+  <div class="bg-[var(--theme-accent)]/20 rounded-xl border border-stone-200 shadow-sm p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-3">灵修应用 / Devotional Practice</h3>
+    <p class="text-stone-700 leading-7 text-justify mb-3">灵修路径不是把自己强行代入约瑟或雅各，而是从经文原则进入今天：真相需要被说出，伤害需要被承认，供应需要具体，盼望也需要可见凭据。实际操练可以包括为一个破裂关系祷告、写下事实与感受、寻求合宜对话，并用行动保护而非操控对方。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6">Devotional use does not force us into the role of Joseph or Jacob. It receives the passage's principles: truth must be spoken, harm acknowledged, provision made concrete, and hope supported by visible signs. Practice prayer, honest naming, wise conversation, and protective action rather than control.</p>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"现在，不要因为把我卖到这里自忧自恨；这是神差我在你们以先来，为要保全生命。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Do not be distressed or angry with yourselves because you sold me here, for God sent me before you to preserve life."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Genesis 45 双轨研读报告 / Dual-Track Devotional Study</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

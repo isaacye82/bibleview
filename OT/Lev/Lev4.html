@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 4 | 利未记 4章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7f1d1d;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #b45309; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbf2;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #3f1f12;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+
+        .atonement-stage {
+            background: radial-gradient(circle at 50% 20%, rgba(254, 243, 199, .92), transparent 34%), linear-gradient(145deg, #fff7ed 0%, #fef3c7 48%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .altar-flame { animation: flameLift 2.8s ease-in-out infinite; transform-origin: center bottom; }
+        .altar-flame.f2 { animation-delay: .25s; }
+        .altar-flame.f3 { animation-delay: .5s; }
+        .blood-drop { animation: dropTrace 4.8s ease-in-out infinite; }
+        .blood-drop.d2 { animation-delay: .55s; }
+        .blood-drop.d3 { animation-delay: 1.1s; }
+        .camp-line { stroke-dasharray: 12 10; animation: campMove 7s linear infinite; }
+        .veil-ray { animation: rayPulse 4s ease-in-out infinite; transform-origin: center; }
+        @keyframes flameLift {
+            0%, 100% { transform: translateY(0) scale(.94); opacity: .75; }
+            50% { transform: translateY(-9px) scale(1.06); opacity: 1; }
+        }
+        @keyframes dropTrace {
+            0% { transform: translateY(-18px); opacity: 0; }
+            25%, 65% { opacity: 1; }
+            100% { transform: translateY(40px); opacity: 0; }
+        }
+        @keyframes campMove { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -44; } }
+        @keyframes rayPulse {
+            0%, 100% { opacity: .35; transform: scale(.96); }
+            50% { opacity: .82; transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-flame-curved mr-2 text-stone-600"></i> 利未记 4章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 4</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">误犯之罪与代求的祭坛</h1>
+    <p class="en-text text-stone-500 italic mb-5">Unintentional Sin and the Altar of Atonement</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 4 章介绍赎罪祭，重点不是纵容犯罪，而是说明圣洁的神如何为误犯、软弱和群体污染预备回转之路。经文依次提到受膏祭司、全会众、官长和平民，显示罪的影响会随着责任位置扩散；同时也显示每一种身份都能来到神所指定的祭坛前。血被带到圣所、抹在坛角、倒在坛脚，脂油焚烧，尸体有时带到营外，这些细节共同表达：罪真实地玷污人与群体，但神也真实地赐下遮盖、洁净与赦免。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 4 introduces the sin offering, not as permission to sin, but as God’s provided way for unintentional failure, weakness, and communal contamination to be addressed. The chapter moves from the anointed priest to the whole congregation, a ruler, and an ordinary person, showing that sin spreads according to responsibility while every station of life is summoned to God’s appointed altar. Blood, altar horns, poured-out blood, burned fat, and removal outside the camp all testify that sin truly defiles, and God truly provides atonement, cleansing, and forgiveness.</p>
+  </div>
+  <aside class="atonement-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">祭坛之火，血痕归洁</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以祭坛、血滴、幔前光线和营外虚线表现本章：罪被带到神指定之处，生命代价遮盖污秽，赦免把人重新带回圣洁秩序。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">The altar, blood, veil-light, and camp boundary portray sin brought into God’s appointed cleansing order.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated altar, blood, veil light, and camp boundary for Leviticus 4" class="w-full mt-4">
+      <defs>
+        <linearGradient id="flameGradLev4" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="#b45309"/>
+          <stop offset="55%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#fff7ed"/>
+        </linearGradient>
+        <radialGradient id="veilGlowLev4" cx="50%" cy="50%" r="60%">
+          <stop offset="0%" stop-color="#fef3c7"/>
+          <stop offset="70%" stop-color="#f59e0b" stop-opacity=".35"/>
+          <stop offset="100%" stop-color="#7f1d1d" stop-opacity=".08"/>
+        </radialGradient>
+      </defs>
+      <rect x="74" y="188" width="272" height="18" rx="5" fill="#7f1d1d" opacity=".88"/>
+      <rect x="112" y="143" width="196" height="45" rx="8" fill="#92400e" opacity=".72"/>
+      <path d="M128 143 L128 122 M292 143 L292 122" stroke="#7f1d1d" stroke-width="12" stroke-linecap="round"/>
+      <path class="altar-flame" d="M194 139 C178 115, 202 106, 197 82 C224 104, 226 122, 211 140 Z" fill="url(#flameGradLev4)"/>
+      <path class="altar-flame f2" d="M225 141 C214 121, 236 111, 232 92 C255 114, 249 133, 236 144 Z" fill="url(#flameGradLev4)" opacity=".9"/>
+      <path class="altar-flame f3" d="M168 143 C158 127, 174 115, 172 100 C190 119, 187 134, 177 145 Z" fill="url(#flameGradLev4)" opacity=".82"/>
+      <circle class="veil-ray" cx="210" cy="63" r="43" fill="url(#veilGlowLev4)"/>
+      <path class="veil-ray" d="M210 28 L210 98 M180 48 L240 78 M240 48 L180 78" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" opacity=".72"/>
+      <g fill="#991b1b">
+        <circle class="blood-drop d1" cx="138" cy="117" r="5"/>
+        <circle class="blood-drop d2" cx="210" cy="108" r="5"/>
+        <circle class="blood-drop d3" cx="282" cy="117" r="5"/>
+      </g>
+      <path class="camp-line" d="M54 225 C115 240, 166 236, 210 225 C260 212, 313 216, 366 229" fill="none" stroke="#b45309" stroke-width="4" stroke-linecap="round" opacity=".55"/>
+      <text x="210" y="248" text-anchor="middle" font-size="12" fill="#78350f" font-family="serif">atonement · cleansing · forgiveness</text>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 4 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">赎罪祭</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Sin Offering</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">chatta’t</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">赎罪祭处理误犯之罪带来的玷污，使人与群体可以重新站在圣洁神面前。重点不只是内疚感被安慰，而是关系与敬拜秩序被神洁净。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">误犯</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Unintentional Sin</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">bishgagah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“误犯”指不是高举拳头悖逆，却真实违反神命令的行为。经文提醒人：无知、疏忽和软弱也需要被带到光中，而不是被轻看。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">坛角与血</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Horns and Blood</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qarnot ha-mizbeach</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">坛角象征祭坛的力量与接触点，血被抹在其上，表明生命被献上以遮盖罪污。赦免不是抽象情绪，而是神设立的圣洁程序。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">担当责任</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Bearing Responsibility</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nasa avon</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">祭司、会众、官长和平民都被点名，因为越靠近影响力中心，罪越会牵动他人。神的恩典既赦免，也训练人诚实承担责任。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">利未记 4 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按祭司、全会众、官长和平民四个责任层面展开。每个单元先观察赎罪祭在上下文中的含义，再以桥梁原则连接今日的认罪、修复、领导责任和真实赦免。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study follows four spheres of responsibility: priest, congregation, ruler, and common person. Each unit moves from contextual meaning to confession, repair, leadership responsibility, and assurance of forgiveness today.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Anointed Priest’s Unintentional Sin</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">受膏祭司误犯之罪 (4:1-12)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华晓谕摩西，吩咐他告诉以色列人：若有人在耶和华所禁止的任何事上误犯了一件，就要按神所启示的方式处理。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD spoke to Moses and instructed him to tell Israel: if anyone sins unintentionally in any of the LORD’s commandments and does what should not be done, God has appointed a way to deal with it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">误犯也需要被神处理</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章开头把赎罪祭放在神主动启示的框架中。误犯不是故意叛逆，但仍然破坏人与神的圣洁关系。经文的重点是让罪被正确命名，并被带到神所指定的祭坛前，而不是藏在“我不是故意的”后面。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter begins with divine instruction. Unintentional sin is not defiant rebellion, yet it still disrupts holy fellowship. The text teaches Israel to name such failure truthfully and bring it to God’s appointed remedy.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要让无心成为逃避</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活里，很多伤害也发生在无心之中：一句轻率的话、一次忽略、一个没有察觉的偏见。灵修的第一步不是自我控诉，而是在神面前诚实说：“主啊，我需要被光照和洁净。”</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many modern wounds are also unintentional: careless words, neglect, unnoticed bias. Devotion begins not with self-condemnation but with honest prayer: “Lord, expose and cleanse what I failed to see.”</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:3-12</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若受膏的祭司犯罪，使百姓陷在罪里，他要献一只无残疾的公牛为赎罪祭。血要带进会幕，弹在幔子前，又抹在香坛的角上，其余的倒在燔祭坛脚；脂油焚烧，公牛其余部分带到营外洁净之处焚烧。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If the anointed priest sins and brings guilt on the people, he must offer an unblemished bull. Its blood is brought into the tent, sprinkled before the veil, placed on the horns of the incense altar, and poured at the base of the burnt offering altar. The fat is burned, while the rest is taken outside the camp to a clean place and burned.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵责任越大，影响越深</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">祭司代表百姓亲近神，所以他的罪不只是私人失误，会牵连群体敬拜。血进入圣所范围，说明罪污触及敬拜中心；带到营外焚烧，则显示罪必须被彻底移出营地。经文既严肃看待领袖责任，也给领袖真实悔改的路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Because the priest represents the people before God, his sin is not merely private. Blood enters the holy area, showing that defilement touches worship itself; removal outside the camp depicts a full clearing away of guilt.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">影响力需要更深的透明</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在家庭、教会或职场中，越有影响力的人越不能把罪简化为“个人问题”。本段提醒我们：领导不是隐藏破口，而是更快来到神前承认、修复、承担，使所服事的人不被我们的盲点拖累。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In family, church, or workplace leadership, failure cannot be reduced to a private matter. Influence calls for quicker honesty, repair, and responsibility before God so that others are not burdened by our blindness.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Whole Congregation’s Unintentional Sin</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">全会众误犯之罪 (4:13-21)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:13-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若以色列全会众误犯，后来知道所行的是耶和华所禁止的事，会众要献一只公牛。长老按手在牛头上，血带进会幕，弹在幔子前，抹在坛角上，其余倒在坛脚；祭司为他们赎罪，他们就蒙赦免。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If the whole congregation sins unintentionally and later realizes that it has done what the LORD forbids, the congregation must offer a bull. The elders lay hands on it, the blood is brought into the tent, sprinkled before the veil, placed on the altar horns, and poured at the altar base. The priest makes atonement, and they are forgiven.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">群体也需要共同悔改</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文承认罪可能成为群体性的盲点。长老代表会众按手，说明群体不能把责任推给无名的“大环境”。赎罪祭的程序与祭司误犯相近，显示集体误行同样会污染敬拜共同体，也同样需要神所赐的赦免。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text recognizes corporate blindness. Elders lay hands on behalf of the congregation, refusing to hide behind vague social forces. Communal failure defiles communal worship and requires God’s provided forgiveness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">为我们共同参与的错误负责</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天我们也可能参与一种群体性错误：沉默纵容不公、团队文化伤人、家庭习惯冷漠。灵修应用不是只问“谁最坏”，而是问“我在其中怎样参与、忽略或受益？主啊，带领我们一起回转。”</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may share in corporate wrongs: tolerating injustice, harmful team culture, cold family patterns. Devotional honesty asks not only who is most guilty, but how we participated, ignored, or benefited, and then seeks shared repentance.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">A Ruler’s Unintentional Sin</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">官长误犯之罪 (4:22-26)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:22-26</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若官长误犯了耶和华所禁止的事，后来知道自己的罪，就要牵一只无残疾的公山羊为供物，按手在羊头上，在燔祭牲被宰之处宰杀。祭司要把血抹在燔祭坛的角上，其余倒在坛脚，并焚烧脂油；祭司为他赎罪，他就蒙赦免。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If a ruler sins unintentionally and later becomes aware of his guilt, he must bring an unblemished male goat, lay his hand on its head, and slaughter it where burnt offerings are slaughtered. The priest puts blood on the altar horns, pours the rest at the base, burns the fat, makes atonement, and the ruler is forgiven.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">权柄不免除悔改，反而需要悔改</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">官长的祭牲与程序比祭司和全会众简单，却仍然公开、具体、不可省略。经文没有给权柄特殊豁免；相反，官长必须承认自己也在神命令之下。血抹坛角说明他的错误同样需要生命代价来遮盖。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The ruler’s procedure is simpler than the priest’s or congregation’s, yet it remains public and concrete. Authority receives no exemption; rulers too stand under God’s command and need atonement.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">用权柄的人要先能认错</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">不论是主管、父母、服事带领者，最伤人的常不是犯错本身，而是拒绝承认。利未记 4 章训练我们在有责任的位置上说：“这是我的错，我要按神喜悦的方式修复。”这样的谦卑会保护群体。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">For supervisors, parents, and ministry leaders, the deepest harm often comes not from error alone but from refusing to admit it. Leviticus 4 trains responsible people to say, “This is mine to confess and repair before God.”</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">An Ordinary Person’s Unintentional Sin</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">平民误犯之罪 (4:27-35)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:27-31</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若平民中有人误犯，后来知道自己的罪，就要为所犯的罪牵一只无残疾的母山羊，按手在赎罪祭牲头上宰杀。祭司把血抹在燔祭坛的角上，其余倒在坛脚，脂油焚烧为馨香的祭；祭司为他赎罪，他就蒙赦免。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If one of the common people sins unintentionally and later realizes guilt, that person brings an unblemished female goat, lays a hand on its head, and slaughters it. The priest places blood on the altar horns, pours the rest at the base, burns the fat as a pleasing aroma, makes atonement, and the person is forgiven.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">普通人的罪也被神认真对待</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文没有只关心祭司和官长，也细致规定平民的赎罪。母山羊的供物显示神按人的位置和能力开路，但“按手、流血、赎罪、赦免”的核心不变。每一个普通人都活在神圣洁的关注与恩典之下。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter does not address only priests and rulers. God gives detailed provision for ordinary people. The offering differs, but the core remains: identification, blood, atonement, and forgiveness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">你的隐微失败也可以带到神前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们容易觉得自己的小失败不值得处理，或觉得自己太普通，神不会在意。但神既认真看待罪，也认真赐下赦免。今天可以把那些反复的脾气、逃避、嫉妒和敷衍带到神面前，求祂具体洁净。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We may dismiss small failures or assume ordinary people are unnoticed by God. Yet God treats sin seriously and gives forgiveness seriously. Bring recurring anger, avoidance, envy, or negligence into His cleansing light.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:32-35</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若人牵一只绵羊羔作赎罪祭，也要献无残疾的母羊，按手在羊头上，在宰燔祭牲之处宰杀。祭司照样取血抹坛角，其余倒在坛脚，取下脂油焚烧；祭司为他所犯的罪赎了，他就蒙赦免。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If the person brings a lamb as the sin offering, it must be an unblemished female. The person lays a hand on its head, and it is slaughtered where burnt offerings are slaughtered. The priest puts blood on the altar horns, pours the rest at the base, burns the fat, makes atonement, and the person is forgiven.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">赦免的反复宣告是本章恩典的回声</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">最后一段重复前面的动作，也重复“他就蒙赦免”。这种重复让读者感到程序的稳定可靠：罪不能被草率处理，赦免也不是模糊愿望。神用清楚的途径让犯罪者知道自己可以重新站立。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The final unit repeats the actions and the promise: the person is forgiven. Repetition creates assurance. Sin is not handled casually, and forgiveness is not vague wishfulness; God gives a reliable way back.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神的赦免结束无止境自责</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些人承认罪以后仍不断惩罚自己，好像痛苦越久越属灵。利未记 4 章提醒我们：神要求真实悔改，也赐下真实赦免。若神已经开路，我们就学习感谢、修复，并重新顺服，而不是停留在无尽自责里。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some confess sin yet continue punishing themselves, as if longer misery were more spiritual. Leviticus 4 calls for real repentance and grants real forgiveness. When God provides a way back, we give thanks, repair what we can, and obey anew.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">从献祭细节进入圣洁与恩典</h1>
+  <p class="text-stone-700 leading-8 text-justify">本章采用双轨方法：先在利未记的圣洁、会幕和献祭秩序中理解赎罪祭的意义，观察“误犯、按手、血、坛角、赎罪、赦免”等重复元素；再把经文原则谨慎连接到今日生活中的无心伤害、责任承担、群体悔改和真实赦免。这样既尊重旧约祭礼的历史处境，也让读者在基督徒灵修中学习诚实来到神前。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-3">This chapter uses a two-track method: first reading the sin offering within Leviticus’ holiness, tabernacle, and sacrificial order, then carefully applying its principles to unintentional harm, responsibility, communal repentance, and real forgiveness today.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-primary)]">读在会幕脉络中：</span>利未记 4 章不是普通道德讲章，而是说明圣洁神如何使有罪的人继续敬拜。<span class="en-text text-stone-500 italic block">Read the chapter within the tabernacle context: it explains how sinful people may continue worship before a holy God.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">留意责任层级：</span>祭司、会众、官长和平民的顺序显示罪的影响与人的责任位置有关。<span class="en-text text-stone-500 italic block">Notice the order of priest, congregation, ruler, and common person; the spread of sin relates to responsibility and influence.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">尊重重复程序：</span>按手、流血、坛角、倒血、焚烧和赦免不是机械细节，而是经文表达洁净与恢复的方式。<span class="en-text text-stone-500 italic block">The repeated actions are not mechanical trivia; they are the text’s language for cleansing and restoration.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/35 rounded-xl border border-amber-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>误犯之罪提醒我们，无心的伤害仍需要承认、修复和神的洁净。<span class="en-text text-stone-500 italic block">Unintentional sin teaches that unintended harm still calls for confession, repair, and cleansing from God.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">个人操练：</span>每天求神显明盲点，并在关系中主动说清楚、道歉、补偿，而不是只停留在内疚。<span class="en-text text-stone-500 italic block">Ask God daily to reveal blind spots, then speak clearly, apologize, and repair relationships instead of remaining in guilt alone.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">福音方向：</span>本章的祭礼使读者更珍惜神所赐的赦免：神不轻看罪，也不让悔改的人无路可回。<span class="en-text text-stone-500 italic block">The sacrificial pattern helps readers treasure forgiveness: God does not trivialize sin, and He does not leave repentant people without a way back.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"祭司要为他所犯的罪赎了，他就必蒙赦免。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The priest shall make atonement for the sin he has committed, and he shall be forgiven."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">利未记 4章 / Leviticus Chapter 4</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

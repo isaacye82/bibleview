@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 1 | 出埃及记 1章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #2f6f73;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #8a3f2b; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #e8f3f1;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #f7f3ea;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #1f2d2c;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+        .exodus-panorama {
+            position: relative;
+            min-height: 320px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 24% 18%, rgba(246, 214, 137, 0.42), transparent 28%),
+                linear-gradient(180deg, #d7c198 0%, #b98b5e 43%, #2f6f73 44%, #163f46 100%);
+            box-shadow: inset 0 0 75px rgba(22, 63, 70, 0.45);
+        }
+        .exodus-panorama svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .river-wave { stroke-dasharray: 18 22; animation: riverFlow 8s linear infinite; }
+        .river-wave.two { animation-duration: 11s; animation-delay: -3s; opacity: 0.55; }
+        .brick-row { animation: brickBurden 4.8s ease-in-out infinite; transform-origin: center; }
+        .reed { animation: reedSway 3.9s ease-in-out infinite; transform-origin: bottom; }
+        .basket { animation: basketDrift 6s ease-in-out infinite; }
+        .life-pulse { animation: lifePulse 3.2s ease-in-out infinite; transform-origin: center; }
+        @keyframes riverFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -160; } }
+        @keyframes brickBurden { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
+        @keyframes reedSway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(3deg); } }
+        @keyframes basketDrift { 0%,100% { transform: translate(0, 0); } 50% { transform: translate(18px, -6px); } }
+        @keyframes lifePulse { 0%,100% { opacity: 0.45; transform: scale(0.96); } 50% { opacity: 0.92; transform: scale(1.08); } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-water mr-2 text-stone-600"></i> 出埃及记 1章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 1</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+            <section class="grid lg:grid-cols-[1.12fr_0.88fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">压迫中的保存与兴起</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">Preserved and Multiplied Under Oppression</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">出埃及记第一章从雅各家进入埃及的名单开始，显示创世记的应许没有中断。新王不认识约瑟，以恐惧和政策压迫以色列人；但越压迫，神的子民越发增多。两个收生婆敬畏神，拒绝把国家命令置于生命之上，成为本章安静却关键的见证。</p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">Exodus 1 begins with Jacob's family in Egypt and shows that the promise of Genesis has not failed. A new king who does not know Joseph turns fear into policy and oppresses Israel; yet the more they are afflicted, the more they multiply. Two midwives fear God and refuse to place a royal command above human life, becoming quiet but decisive witnesses.</p>
+                </div>
+                <aside class="exodus-panorama border border-stone-700/20">
+                    <svg viewBox="0 0 720 430" role="img" aria-label="尼罗河水纹、砖坯重压与生命被保存的芦箱意象">
+                        <defs>
+                            <linearGradient id="riverBlue" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#2f6f73"/>
+                                <stop offset="100%" stop-color="#113f46"/>
+                            </linearGradient>
+                            <radialGradient id="lifeGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fff7d6" stop-opacity="0.95"/>
+                                <stop offset="65%" stop-color="#f3c96a" stop-opacity="0.32"/>
+                                <stop offset="100%" stop-color="#f3c96a" stop-opacity="0"/>
+                            </radialGradient>
+                        </defs>
+                        <rect x="0" y="188" width="720" height="242" fill="url(#riverBlue)" opacity="0.96"/>
+                        <path class="river-wave" d="M-20 245 C80 212 152 278 250 245 C350 212 430 278 540 245 C618 222 670 232 748 246" fill="none" stroke="#d9f2ee" stroke-width="6" stroke-linecap="round" opacity="0.72"/>
+                        <path class="river-wave two" d="M-10 318 C74 292 150 344 236 318 C334 288 430 346 520 316 C610 286 666 306 735 320" fill="none" stroke="#b7dcd8" stroke-width="5" stroke-linecap="round"/>
+                        <g class="brick-row" transform="translate(62 76)">
+                            <rect x="0" y="0" width="78" height="34" rx="3" fill="#8a3f2b"/>
+                            <rect x="84" y="0" width="78" height="34" rx="3" fill="#a95436"/>
+                            <rect x="42" y="40" width="78" height="34" rx="3" fill="#7c3527"/>
+                            <rect x="126" y="40" width="78" height="34" rx="3" fill="#9a5135"/>
+                            <path d="M20 96 C54 124 114 124 154 95" fill="none" stroke="#4a241b" stroke-width="8" stroke-linecap="round" opacity="0.75"/>
+                        </g>
+                        <g transform="translate(512 128)">
+                            <path class="reed" d="M20 278 C9 200 24 122 10 40" fill="none" stroke="#e1c36f" stroke-width="7" stroke-linecap="round"/>
+                            <path class="reed" d="M54 278 C38 184 70 116 44 28" fill="none" stroke="#ddba5e" stroke-width="7" stroke-linecap="round"/>
+                            <path class="reed" d="M92 280 C80 204 100 128 88 48" fill="none" stroke="#ecd48a" stroke-width="7" stroke-linecap="round"/>
+                        </g>
+                        <g class="basket" transform="translate(360 248)">
+                            <circle class="life-pulse" cx="76" cy="48" r="82" fill="url(#lifeGlow)"/>
+                            <path d="M16 66 C28 20 122 20 136 66 C116 104 38 104 16 66 Z" fill="#8a5b2f" stroke="#f0cf8b" stroke-width="5"/>
+                            <path d="M42 49 C60 37 92 37 110 49" fill="none" stroke="#f6e6b9" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M58 64 C72 76 88 76 102 64" fill="none" stroke="#3d2a1f" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+                        </g>
+                        <path d="M0 184 L80 150 L168 180 L250 130 L352 174 L458 122 L566 176 L720 126 L720 190 L0 190 Z" fill="#6d4d35" opacity="0.62"/>
+                    </svg>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="flex items-end justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+                        <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 1 faithfully</p>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">应许的延续</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Continuity of Promise</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">parah / ravah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“生养众多”的语言回响创世记，说明神的祝福在异地、低处、受压环境中仍然运行。<br><span class="en-text text-[11px] text-stone-400 italic block mt-2">The language of multiplying echoes Genesis, showing that God's blessing continues even in a foreign, pressured place.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">恐惧驱动的权力</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Power Driven by Fear</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nithakkemah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">法老以“来吧，我们用巧计待他们”把不安全感制度化；经文揭露压迫常从惧怕他人开始。<br><span class="en-text text-[11px] text-stone-400 italic block mt-2">Pharaoh turns insecurity into policy; the chapter exposes how oppression often begins with fear of the other.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">苦工与砖坯</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Forced Labor and Bricks</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">avodah qashah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">严酷劳役不只是经济剥削，也是身份压制；埃及试图用砖和城定义以色列人的未来。<br><span class="en-text text-[11px] text-stone-400 italic block mt-2">Harsh labor is not merely economic exploitation; Egypt tries to define Israel's future through bricks and store cities.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">敬畏神的勇气</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Courage That Fears God</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">yare Elohim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">收生婆的敬畏不是抽象情绪，而是在具体命令面前保护生命、拒绝参与暴力。<br><span class="en-text text-[11px] text-stone-400 italic block mt-2">The midwives' fear of God is practical: they protect life and refuse to cooperate with violence.</span></p>
+</div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+            <section class="mb-6 bg-white rounded-2xl border border-stone-200 shadow-sm p-5 sm:p-6">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-2">研读路径 · Study Flow</p>
+                <h2 class="serif text-2xl font-bold text-stone-900 mb-2">从增多、压迫到敬畏神的见证</h2>
+                <p class="en-text text-sm text-stone-500 italic">From multiplication and oppression to the witness of God-fearing courage.</p>
+            </section>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:1-7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            以色列的众子各带家眷来到埃及。约瑟和他的弟兄，并那一代的人都死了；以色列人生养众多，极其强盛，满了那地。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The sons of Israel came into Egypt with their households. Joseph, his brothers, and that generation died; yet the children of Israel were fruitful, increased abundantly, and the land was filled with them.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从家族名单到应许扩展</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">开头的名单把出埃及记接续到创世记。约瑟死了，但神给亚伯拉罕、以撒、雅各的应许没有死。“生养众多”不是普通人口统计，而是应许在历史压力中继续发芽。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The opening genealogy connects Exodus to Genesis. Joseph has died, but God's promise to Abraham, Isaac, and Jacob has not. Israel's multiplication is not mere population growth; it is promise taking root under historical pressure.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">看见神在低处仍工作</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些季节像埃及：不是理想之地，却是神继续塑造生命的地方。当熟悉的支持离开时，信心学习不把盼望绑在某个人或环境上，而是记念神仍能使生命增长。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some seasons feel like Egypt: not ideal, yet still a place where God forms life. When familiar supports are gone, faith learns not to tie hope to one person or setting, but to remember that God can still bring growth.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:8-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            有不认识约瑟的新王兴起，惧怕以色列人强盛，就派督工辖制他们，叫他们建造积货城，并用严酷苦工使他们生活愁烦。只是越发苦害，他们越发多起来。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            A new king arose who did not know Joseph. Fearing Israel's strength, he set taskmasters over them, forced them to build store cities, and made their lives bitter with hard bondage. Yet the more they were afflicted, the more they multiplied.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恐惧变成制度性压迫</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">法老“不认识约瑟”不只是资料缺失，也表示对过去恩典的拒绝。经文让我们看见权力若被恐惧支配，就会把人变成威胁、劳力和数字；但压迫不能废掉神保存百姓的旨意。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pharaoh's failure to know Joseph is more than missing information; it signals rejection of remembered grace. Fearful power turns people into threats, labor, and numbers, yet oppression cannot cancel God's preserving purpose.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不让惧怕支配待人方式</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">职场、家庭或社群中，惧怕常让人用控制代替信任。出埃及记提醒我们先辨认心里的恐惧，再拒绝把压力转嫁给更弱的人。敬畏神的人学习在紧张局面中仍按人的尊严待人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In workplaces, families, and communities, fear can replace trust with control. Exodus calls us to name our fears and refuse to pass pressure downward. Those who fear God learn to treat people with dignity even in tense settings.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:15-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            埃及王命令希伯来收生婆施弗拉和普阿，若是男孩就杀他；收生婆却敬畏神，不照王命而行，存留男孩的性命。神厚待收生婆，百姓也越发强盛。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The king of Egypt commanded the Hebrew midwives, Shiphrah and Puah, to kill the boys. But the midwives feared God and did not do as the king commanded; they let the boys live. God dealt well with the midwives, and the people grew stronger.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬畏神高过惧怕王</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">施弗拉和普阿的名字被记下，法老的名字反而没有出现。经文含义清楚：真正有重量的不是帝国头衔，而是敬畏神、保护生命的忠心行动。她们的抵抗安静，却合乎神的心意。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Shiphrah and Puah are named while Pharaoh is not. The point is clear: imperial titles are not the true weight in history; faithful actions that fear God and protect life are. Their resistance is quiet, but aligned with God's heart.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在小岗位上守住生命原则</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">很多信心抉择不是发生在讲台上，而是在岗位、流程、签字、会议和照护现场。现代应用不是鼓励鲁莽对抗，而是问：当命令伤害生命和良心时，我能否用智慧、勇气和代价保护正确的事？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many acts of faith happen not on a platform but in jobs, procedures, signatures, meetings, and care. The application is not reckless defiance; it asks whether we can use wisdom, courage, and costly integrity to protect what is right when commands wound life and conscience.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">1:22</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            法老吩咐他的众民说：以色列人所生的男孩都要丢在河里，一切女孩可以存留。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Pharaoh charged all his people, saying that every son born to the Hebrews must be cast into the river, while every daughter might live.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">黑暗加深，拯救伏笔出现</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">命令从暗中的收生婆扩大到全社会，罪恶公开制度化。河本是死亡工具，却将在下一章成为摩西被保存的地方；经文在最黑暗处预备读者看见神反转人的恶谋。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The command expands from private pressure on midwives to public participation by society. The river is meant as an instrument of death, yet in the next chapter it becomes the place where Moses is preserved. The darkest point prepares us to see God overturn evil intent.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在未见出路时持守盼望</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些处境暂时只看见命令、压力和风险，尚未看见“摩西”。本章邀请我们不轻看黑暗，却也不把黑暗当作最后一句话。祷告中的盼望，是在出路未显明时仍选择忠心。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some situations show only orders, pressure, and risk before any “Moses” is visible. This chapter does not minimize darkness, but neither does it let darkness speak the final word. Hope in prayer remains faithful before the way forward is clear.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+            <section class="grid lg:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">路径一 · Path One</p>
+                    <h2 class="serif text-2xl font-bold text-stone-900 mb-4">正统解经原则</h2>
+                    <p class="text-sm leading-7 text-stone-700 text-justify mb-3">先看上下文：出埃及记1章承接创世记中神给列祖的应许，也为摩西出生和出埃及拯救铺路。再看重复词：增多、苦害、敬畏神、存留生命，构成本章的阅读线索。</p>
+                    <p class="en-text text-sm leading-7 text-stone-500 italic text-justify">Begin with context: Exodus 1 continues the patriarchal promises in Genesis and prepares for Moses' birth and the deliverance from Egypt. Then observe repeated ideas: multiplication, affliction, fear of God, and preserving life.</p>
+                </div>
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-secondary)] font-bold mb-3">路径二 · Path Two</p>
+                    <h2 class="serif text-2xl font-bold text-stone-900 mb-4">灵修应用原则</h2>
+                    <p class="text-sm leading-7 text-stone-700 text-justify mb-3">灵修应用不是把自己直接放成主角，而是从经文原意搭桥到今日生活：当环境压迫、权力制造惧怕、良心面对压力时，信徒如何敬畏神、尊重生命、持守盼望。</p>
+                    <p class="en-text text-sm leading-7 text-stone-500 italic text-justify">Devotional application does not make us the main character. It builds a bridge from the text's meaning to life today: when circumstances oppress, power creates fear, and conscience is pressured, believers learn to fear God, honor life, and hold hope.</p>
+                </div>
+            </section>
+            <section class="mt-6 bg-[var(--theme-accent)] rounded-2xl border border-stone-200 p-6 sm:p-8">
+                <h3 class="serif text-xl font-bold text-stone-900 mb-3">落地指南 · Practical Guide</h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm leading-7 text-stone-700">
+                    <div><strong>观察 / Observe</strong><br>列出谁在行动、谁在受苦、神的应许如何仍在推进。<br><span class="en-text text-xs text-stone-500 italic">Notice who acts, who suffers, and how God's promise continues.</span></div>
+                    <div><strong>辨认 / Discern</strong><br>分辨惧怕如何塑造人的命令、制度和关系。<br><span class="en-text text-xs text-stone-500 italic">Discern how fear shapes commands, systems, and relationships.</span></div>
+                    <div><strong>回应 / Respond</strong><br>在今天具体岗位中选择敬畏神、保护生命、拒绝参与伤害。<br><span class="en-text text-xs text-stone-500 italic">Choose in concrete roles to fear God, protect life, and refuse harm.</span></div>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"只是越发苦害他们，他们越发多起来，越发蔓延。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The more they afflicted them, the more they multiplied and grew."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 1章 · Exodus Chapter 1</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

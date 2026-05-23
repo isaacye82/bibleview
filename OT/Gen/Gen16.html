@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 16 | 创世记 16章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 创世记16章主题色：旷野陶土、泉水青绿、日光沙金 */
+            --theme-primary: #a44b23;
+            --theme-secondary: #0f766e;
+            --theme-accent: #ecfeff;
+            --theme-bg: #fff8ed;
+            --theme-text: #3f2315;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .wilderness-vision {
+            position: relative;
+            min-height: 350px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 75% 15%, rgba(253, 224, 71, 0.46), transparent 15%),
+                linear-gradient(180deg, #fef3c7 0%, #fed7aa 43%, #b45309 100%);
+            box-shadow: inset 0 -55px 90px rgba(92, 42, 13, 0.26);
+        }
+        .wilderness-vision svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .heat-line {
+            stroke-dasharray: 10 18;
+            animation: heatDrift 8s linear infinite;
+        }
+        .heat-line.two {
+            animation-duration: 11s;
+            animation-delay: -4s;
+        }
+        .spring-ring {
+            transform-origin: center;
+            animation: springPulse 3.8s ease-in-out infinite;
+        }
+        .spring-ring.two {
+            animation-delay: -1.6s;
+        }
+        .tear-drop {
+            animation: tearFall 4.6s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .tear-drop.two {
+            animation-delay: -2.2s;
+        }
+        .eye-ray {
+            animation: eyeRay 5.4s ease-in-out infinite;
+            transform-origin: center;
+        }
+        @keyframes heatDrift {
+            from { stroke-dashoffset: 0; opacity: 0.2; }
+            50% { opacity: 0.58; }
+            to { stroke-dashoffset: -120; opacity: 0.2; }
+        }
+        @keyframes springPulse {
+            0%, 100% { opacity: 0.22; transform: scale(0.72); }
+            50% { opacity: 0.78; transform: scale(1.08); }
+        }
+        @keyframes tearFall {
+            0% { transform: translateY(-12px); opacity: 0; }
+            35% { opacity: 0.9; }
+            100% { transform: translateY(46px); opacity: 0; }
+        }
+        @keyframes eyeRay {
+            0%, 100% { opacity: 0.25; transform: scaleX(0.92); }
+            50% { opacity: 0.72; transform: scaleX(1.04); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-eye mr-2 text-stone-600"></i> 创世记 16章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 16</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_0.92fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">旷野中的看见与应许中的等待</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">Being seen in the wilderness while learning to wait for the promise.</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">
+                        创世记16章把应许家庭的张力摆在明处：撒莱因长久无子而焦急，亚伯兰顺从人的安排，夏甲在受苦与骄傲之间被卷入破碎关系。神没有忽略这位埃及使女，反而在旷野水泉旁呼唤她、听见她的苦情，并赐下关乎以实玛利的名字与未来。本章提醒读者：人的捷径会制造伤口，但看顾人的神仍在伤口中寻找、命名、引导。
+                    </p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">
+                        Genesis 16 exposes the strain inside the family of promise: Sarai grows anxious over barrenness, Abram accepts a human workaround, and Hagar is caught in a broken household. Yet God does not overlook the Egyptian servant. At a spring in the wilderness, he calls her by name, hears her affliction, and gives Ishmael a name and future. Human shortcuts wound, but the God who sees still seeks, names, and guides the wounded.
+                    </p>
+                </div>
+                <aside class="wilderness-vision border border-amber-800/20">
+                    <svg viewBox="0 0 720 440" role="img" aria-label="旷野水泉、泪滴与看顾之眼的动态意象">
+                        <defs>
+                            <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fff7ad" stop-opacity="0.95"/>
+                                <stop offset="58%" stop-color="#f59e0b" stop-opacity="0.26"/>
+                                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                            </radialGradient>
+                            <radialGradient id="springGlow" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#a7f3d0" stop-opacity="0.95"/>
+                                <stop offset="66%" stop-color="#14b8a6" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#14b8a6" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="duneShade" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#f4b266"/>
+                                <stop offset="55%" stop-color="#c96a28"/>
+                                <stop offset="100%" stop-color="#7c2d12"/>
+                            </linearGradient>
+                        </defs>
+                        <circle cx="552" cy="74" r="96" fill="url(#sunGlow)"/>
+                        <path class="eye-ray" d="M115 104 C222 34 357 34 492 104 C358 174 224 174 115 104 Z" fill="#fff7ed" opacity="0.34"/>
+                        <path d="M212 104 C270 70 338 70 397 104 C338 139 270 139 212 104 Z" fill="none" stroke="#7c2d12" stroke-width="5" opacity="0.52"/>
+                        <circle cx="305" cy="104" r="24" fill="#0f766e" opacity="0.72"/>
+                        <circle cx="305" cy="104" r="9" fill="#fefce8"/>
+                        <path class="heat-line" d="M54 176 C128 134 188 187 258 144 C330 100 396 151 468 110 C548 64 614 112 682 74" fill="none" stroke="#fff7ed" stroke-width="5" stroke-linecap="round"/>
+                        <path class="heat-line two" d="M22 230 C108 190 164 235 246 196 C324 158 385 199 468 160 C556 118 624 158 704 120" fill="none" stroke="#fef3c7" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M0 292 C116 242 224 274 338 238 C468 197 588 241 720 202 L720 440 L0 440 Z" fill="url(#duneShade)"/>
+                        <path d="M0 354 C126 316 230 353 350 323 C493 286 602 326 720 292 L720 440 L0 440 Z" fill="#8a3a16" opacity="0.55"/>
+                        <g transform="translate(352 328)">
+                            <ellipse cx="0" cy="28" rx="116" ry="32" fill="#074e49" opacity="0.34"/>
+                            <ellipse cx="0" cy="20" rx="92" ry="22" fill="#0f766e" opacity="0.6"/>
+                            <ellipse cx="0" cy="17" rx="55" ry="12" fill="#99f6e4" opacity="0.82"/>
+                            <circle class="spring-ring" cx="0" cy="18" r="34" fill="none" stroke="#ccfbf1" stroke-width="5"/>
+                            <circle class="spring-ring two" cx="0" cy="18" r="52" fill="none" stroke="#5eead4" stroke-width="4"/>
+                            <circle cx="0" cy="18" r="96" fill="url(#springGlow)"/>
+                        </g>
+                        <path class="tear-drop" d="M486 185 C486 185 470 211 470 224 C470 236 477 244 486 244 C495 244 502 236 502 224 C502 211 486 185 486 185 Z" fill="#cffafe" opacity="0.82"/>
+                        <path class="tear-drop two" d="M220 205 C220 205 207 226 207 238 C207 248 213 255 220 255 C228 255 234 248 234 238 C234 226 220 205 220 205 Z" fill="#ecfeff" opacity="0.74"/>
+                        <path d="M118 382 C205 364 293 379 362 363 C438 345 526 361 618 336" fill="none" stroke="#facc15" stroke-width="3" opacity="0.28"/>
+                    </svg>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">人的捷径</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Human Workaround</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">banah / to build</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">撒莱说“或许可以因她得孩子”，显出等待中的焦虑。她想建立家庭，却用控制代替信靠，提醒我们属灵盼望不能靠压迫别人来完成。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">破碎关系</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Fractured Household</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qalal / despise</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">夏甲怀孕后轻看主母，撒莱又苦待夏甲。罪不只停在一个决定里，也会扩散为权力、羞辱与彼此伤害。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">听见苦情</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Hears Affliction</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Yishma'el</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">“以实玛利”的名字宣告神听见。被家庭结构边缘化的人，在神面前仍有名字、未来与被回应的呼声。</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                        <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">看顾我的神</h4>
+                        <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The God Who Sees</p>
+                        <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">El Ro'i</p>
+                        <p class="text-xs text-stone-600 leading-relaxed text-justify">夏甲给神起名，见证神不是抽象观念，而是在旷野水泉旁亲自看见受苦者的主。</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-7 bg-white/80 border border-stone-200 rounded-2xl p-5 sm:p-6">
+                <p class="text-xs uppercase tracking-[0.2em] text-[var(--theme-primary)] font-bold mb-2">研读导览 · Study Guide</p>
+                <h2 class="serif text-2xl font-bold text-stone-900 mb-2">从人的安排到神的看见</h2>
+                <p class="text-sm leading-7 text-stone-600">以下按叙事推进拆分：家庭焦虑、关系破裂、旷野呼唤、孩子命名、夏甲的见证与以实玛利出生。每段都保留释经轨道与灵修应用轨道。</p>
+                <p class="en-text text-sm leading-6 text-stone-500 italic mt-2">The study follows the narrative movement from anxious arrangement to fractured relationships, wilderness encounter, divine naming, Hagar's confession, and Ishmael's birth.</p>
+            </div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伯兰的妻撒莱没有给他生孩子。她有一个埃及使女名叫夏甲。撒莱对亚伯兰说：“耶和华使我不能生育，求你和我的使女同房，或者我可以因她得孩子。”亚伯兰听从了撒莱的话；撒莱就把夏甲给丈夫为妾。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Sarai, Abram's wife, had borne him no children. She had an Egyptian servant named Hagar. Sarai said to Abram that perhaps she could obtain children through her servant, and Abram listened to Sarai; Sarai gave Hagar to him as a wife.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">等待中的焦虑</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段紧接第15章的应许，形成强烈张力：神刚应许亚伯兰有后裔，撒莱却仍面对现实的不孕。她的方案符合当时社会习俗，却不是神亲自吩咐的道路。“亚伯兰听从”显示他没有主动辨明应许的方式，家庭开始用人的掌控替代信心等待。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This scene follows the promise of Genesis 15 and exposes the tension between God's word and Sarai's barrenness. Her plan fits ancient custom, but it is not commanded by God. Abram's listening shows a passive failure to discern how the promise should be received.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要用捷径替代信靠</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当祷告迟迟未见结果，我们很容易把“我必须立刻解决”当成成熟。桥梁原则是：真实信心不是拒绝行动，而是不让恐惧支配行动。今天在职场规划、婚姻压力或家庭期待中，可以先停下来问：这个选择是在回应神的带领，还是在用别人承受我的焦虑？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When prayer seems delayed, we may confuse control with maturity. Faith does not reject action, but it refuses to let fear govern action. In career, marriage, or family pressure, ask whether the choice responds to God's leading or merely transfers anxiety onto someone else.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:4-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            夏甲怀孕后就小看她的主母。撒莱对亚伯兰说：“我因你受屈。”亚伯兰说：“使女在你手下，你可以随意待她。”于是撒莱苦待夏甲，夏甲就从撒莱面前逃走。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Hagar conceived, she despised her mistress. Sarai blamed Abram, and Abram gave Sarai power over Hagar. Sarai dealt harshly with her, and Hagar fled from her presence.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">权力失序带来伤害</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">夏甲的轻看、撒莱的责备、亚伯兰的推脱，共同显出罪的连锁反应。经文没有把任何一方简单塑造成完全无辜者，却特别让读者看见弱势者所承受的苦待。人的方案一旦离开爱与公义，就会在家庭内部制造更深的裂缝。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Hagar's contempt, Sarai's blame, and Abram's passivity reveal a chain reaction of sin. The text does not flatten the characters into simple categories, but it does expose the suffering placed on the vulnerable. A human plan without love and justice deepens the fracture.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在冲突中承担责任</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代关系里的冲突也常这样升级：有人轻看，有人控诉，有人沉默推责。桥梁原则是：敬虔不是维持表面和平，而是在自己拥有权力的位置上停止伤害。今天可以具体操练一次诚实道歉、一次保护弱者的决定，或一次不再把责任丢给别人的回应。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Conflict still escalates through contempt, accusation, and avoidance. Godliness is not the appearance of peace; it is stopping harm where we have power. Practice one honest apology, one act of protection for the vulnerable, or one refusal to pass blame onward.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:7-10</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华的使者在旷野书珥路上的水泉旁遇见夏甲，问她从哪里来、往哪里去。夏甲说她从主母撒莱面前逃出来。使者吩咐她回去，又应许要使她的后裔极其繁多。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The angel of the LORD found Hagar by a spring on the way to Shur and asked where she came from and where she was going. She said she was fleeing from Sarai. The angel told her to return and promised to multiply her offspring greatly.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神主动寻找逃亡者</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“遇见”也可理解为“找着”，强调神主动临到旷野中的夏甲。问题“从哪里来、往哪里去”不是为了取得资讯，而是帮助她面对过去与未来。回去的命令不等于认可苦待，而是在神的看顾与应许中，把夏甲从绝望逃亡带回可被保守的道路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Lord's messenger finds Hagar; divine initiative reaches her in the wilderness. The questions about origin and destination invite her to face both wound and future. The command to return does not bless abuse; it places her journey under God's care and promise.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神询问你的方向</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人在压力下常只想离开，却未必知道要往哪里去。桥梁原则是：神的看顾常从一个诚实问题开始。今天可以在祷告中回答两句：“主啊，我正从什么逃走？我正往哪里去？”这不是否认痛苦，而是让神在痛苦里重新给方向。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Under pressure, we may know what we are fleeing but not where we are going. God's care often begins with an honest question. Pray: "Lord, what am I running from, and where am I headed?" This does not deny pain; it lets God restore direction inside it.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:11-12</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            使者说：“你如今怀孕要生一个儿子，可以给他起名叫以实玛利，因为耶和华听见了你的苦情。”又预告这孩子将像野驴一样自由强悍，与众人相对而居。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The angel said that Hagar would bear a son and name him Ishmael, because the LORD had heard her affliction. The child would live with fierce freedom, in tension with many around him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">名字成为恩典记号</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“以实玛利”意为“神听见”。神没有只处理夏甲的处境，也把她未出生孩子的名字与命运放在自己的听见之下。第12节的描述不是浪漫化冲突，而是诚实预告以实玛利后裔的独立、张力与存续。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Ishmael means "God hears." God addresses not only Hagar's present crisis but also the name and future of her unborn son. Verse 12 does not romanticize conflict; it soberly foretells independence, tension, and survival.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">你的苦情不是噪音</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些痛苦在家庭、组织或群体里不被认真听见，但在神面前不是噪音。桥梁原则是：神对受苦者的听见，会重新赋予人尊严和未来。今天可以把一件不敢说出口的委屈带到神面前，也学习成为愿意认真聆听别人的人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some suffering is dismissed in families, workplaces, or communities, but it is not noise before God. His hearing restores dignity and future. Bring one unspoken grief to him today, and become the kind of person who listens carefully to another's pain.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:13-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            夏甲称那对她说话的耶和华为“看顾人的神”，因为她说：“在这里我也看见那看顾我的吗？”所以那井名叫庇耳拉海莱，在加低斯和巴列中间。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Hagar called the LORD who spoke to her "the God who sees me," for she marveled that she had seen the One who saw her. Therefore the well was called Beer-lahai-roi, between Kadesh and Bered.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">夏甲的信仰见证</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">夏甲是圣经中少数直接给神起名的人之一。她没有用抽象称号，而是从亲身经历中说出“看顾我的神”。井名把这次相遇留在地理记忆中：神的看见不是观念，而是在具体地点、具体痛苦、具体人生里发生。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Hagar is one of the few people in Scripture who names God from personal encounter. "The God who sees me" is not abstract language; it rises from lived experience. The well's name anchors divine seeing in a real place and a real wound.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在被看见中重新站立</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">许多人不是缺少效率，而是长期觉得无人真正看见自己的眼泪、努力与害怕。桥梁原则是：被神看见会医治人对自我价值的扭曲。今天可以把一个普通地点变成“记念的井”：在日记、通勤路或办公桌前，写下一句“主在这里也看顾我”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many people do not merely lack efficiency; they feel unseen in tears, labor, and fear. Being seen by God heals distorted worth. Turn an ordinary place into a memorial well: in a journal, on a commute, or at a desk, write, "The Lord sees me here too."</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">创 16:15-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            后来夏甲给亚伯兰生了一个儿子，亚伯兰给他起名叫以实玛利。夏甲生以实玛利的时候，亚伯兰年八十六岁。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Hagar bore Abram a son, and Abram named his son Ishmael. Abram was eighty-six years old when Hagar bore Ishmael to him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">应许故事仍未完成</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯兰为孩子取名以实玛利，说明他接纳了神借夏甲所得的启示。然而第16章并没有解决第15章的核心问题：应许之子仍未出现。叙事停在八十六岁，预备读者继续等候神在下一章重新确认圣约。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Abram names the child Ishmael, showing that he receives the word given through Hagar. Yet Genesis 16 does not resolve the promise of Genesis 15. The note that Abram is eighty-six prepares readers to keep waiting for God's covenant clarification.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在未完成中继续顺服</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人生很多章节并不以完美解决收尾，而是留下未完成的张力。桥梁原则是：神的信实不因过程复杂而失效。今天若你正处在“事情已经发生、应许还未明朗”的阶段，可以先做下一件清楚的顺服之事，并把结局交还给神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Many chapters of life end with tension rather than tidy resolution. God's faithfulness is not canceled by a complicated process. If you live between what has happened and what God has not yet clarified, obey the next clear step and entrust the outcome to him.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">方法论总结 · Methodology</p>
+                <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">两条路径：先明白经文，再进入生命</h2>
+                <p class="en-text text-sm sm:text-base italic text-stone-500 mb-6">Two paths held together: understand the text first, then let it enter life faithfully.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <div class="rounded-xl border border-stone-200 bg-slate-50/70 p-5">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">正统解经原则</h3>
+                        <p class="en-text text-xs italic text-stone-500 mb-3">Sound Exegetical Reading</p>
+                        <p class="text-sm leading-7 text-stone-600 text-justify">本章先按叙事上下文阅读：第15章刚有后裔应许，第16章却出现人的替代方案；再观察角色行动、重复主题与名字含义，例如“以实玛利”对应“神听见”，“庇耳拉海莱”对应“永活者看顾我的井”。这种路径避免把经文直接变成口号，先尊重它在创世记中的位置。</p>
+                        <p class="en-text text-xs leading-6 text-stone-400 italic mt-3">This reading begins with narrative context, character movement, repeated themes, and the meanings of names. It respects Genesis 16 within the larger promise story before turning the text into application.</p>
+                    </div>
+                    <div class="rounded-xl border border-stone-200 bg-[var(--theme-accent)]/40 p-5">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修存在主义应用</h3>
+                        <p class="en-text text-xs italic text-stone-500 mb-3">Devotional and Lived Application</p>
+                        <p class="text-sm leading-7 text-stone-600 text-justify">应用不是把自己随意代入每个角色，而是寻找经文中的桥梁原则：焦虑会催生控制，权力失序会伤害弱者，神听见并看见被忽略的人。落地时，要把这些原则带入现代处境，如家庭压力、职场责任、人际冲突与自我价值感，并转化为具体祷告、悔改和行动。</p>
+                        <p class="en-text text-xs leading-6 text-stone-400 italic mt-3">Application does not force the reader into every role. It draws bridge principles from the text and brings them into family pressure, workplace responsibility, relational conflict, and personal worth through prayer, repentance, and concrete action.</p>
+                    </div>
+                </div>
+                <div class="mt-6 rounded-xl border-l-4 border-[var(--theme-primary)] bg-white p-5 shadow-sm">
+                    <h3 class="serif font-bold text-stone-900 mb-2">实际落地指南 · Practical Guide</h3>
+                    <p class="text-sm leading-7 text-stone-600 text-justify">读创世记16章时，可按三步操练：第一，辨认自己是否正在用捷径处理神要求等待的事；第二，查看自己在关系中是否拥有权力却逃避责任；第三，把无人听见的苦情带到神面前，也主动成为一个愿意看见和聆听弱者的人。</p>
+                    <p class="en-text text-xs leading-6 text-stone-400 italic mt-2">Practice three steps: identify where you use shortcuts instead of waiting, examine where you hold power but avoid responsibility, and bring unheard affliction to God while becoming someone who sees and hears the vulnerable.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"你是看顾人的神。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"You are a God who sees."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世记 Genesis 16 · El Ro'i</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

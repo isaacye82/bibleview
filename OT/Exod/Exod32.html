@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exodus Chapter 32 | 出埃及记 32章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b91c1c;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #92400e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fff7ed;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fefcf8;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #451a03;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calf-stage {
+            background:
+                radial-gradient(circle at 50% 24%, rgba(254, 243, 199, .92), transparent 34%),
+                linear-gradient(145deg, #fff7ed 0%, #fee2e2 54%, #fefcf8 100%);
+            min-height: 100%;
+        }
+        .calf-glow { animation: calfGlow 4.8s ease-in-out infinite; transform-origin: center; }
+        .tablet-left { animation: tabletBreakLeft 5.6s ease-in-out infinite; transform-origin: 170px 126px; }
+        .tablet-right { animation: tabletBreakRight 5.6s ease-in-out infinite; transform-origin: 245px 126px; }
+        .intercession-line {
+            stroke-dasharray: 420;
+            stroke-dashoffset: 420;
+            animation: intercede 5.6s ease-in-out infinite;
+        }
+        .ember { animation: emberRise 4.4s ease-in-out infinite; transform-origin: center; }
+        .ember.e2 { animation-delay: .55s; }
+        .ember.e3 { animation-delay: 1.1s; }
+        .ember.e4 { animation-delay: 1.7s; }
+        @keyframes calfGlow {
+            0%, 100% { opacity: .72; filter: drop-shadow(0 0 0 rgba(180,83,9,0)); transform: scale(.98); }
+            50% { opacity: 1; filter: drop-shadow(0 0 16px rgba(180,83,9,.42)); transform: scale(1.03); }
+        }
+        @keyframes tabletBreakLeft {
+            0%, 42% { transform: translate(0,0) rotate(0deg); opacity: .95; }
+            62%, 100% { transform: translate(-12px,10px) rotate(-13deg); opacity: .72; }
+        }
+        @keyframes tabletBreakRight {
+            0%, 42% { transform: translate(0,0) rotate(0deg); opacity: .95; }
+            62%, 100% { transform: translate(13px,10px) rotate(14deg); opacity: .72; }
+        }
+        @keyframes intercede {
+            0% { stroke-dashoffset: 420; opacity: .3; }
+            45%, 72% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -420; opacity: .35; }
+        }
+        @keyframes emberRise {
+            0%, 100% { transform: translateY(12px) scale(.75); opacity: .25; }
+            48% { transform: translateY(-16px) scale(1.08); opacity: .95; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-alt mr-2 text-stone-600"></i> 出埃及记 32章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Exodus Chapter 32</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">金牛犊：偶像、代求与破碎的约</h1>
+    <p class="en-text text-stone-500 italic mb-5">The Golden Calf: Idolatry, Intercession, and a Broken Covenant</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">出埃及记第 32 章把读者从山上的圣所蓝图带到山下的背约危机。百姓因摩西迟延，就要求亚伦制造可见的神像；他们把金牛犊称为带领他们出埃及的神，并用敬拜语言包装偶像崇拜。神向摩西揭露百姓的败坏，摩西则按神的名、救赎和应许为百姓代求。下山后，他摔碎法版，焚毁牛犊，责问亚伦，并在营中施行严肃审判。章末摩西再次上山，愿意为百姓承担代求的重担，却也听见罪必须被神处理。本章让人看见：偶像常从急躁、不信和可控感中长出；真正的盼望不在金子塑造的形象，而在神仍听代求、仍按祂的圣洁与怜悯推进救赎历史。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Exodus 32 moves from the mountain-top pattern of the sanctuary to a covenant crisis below. When Moses seems delayed, Israel demands a visible image; Aaron makes a golden calf, and the people dress idolatry in the language of worship. God exposes their corruption to Moses, while Moses intercedes by appealing to God’s name, redemption, and promises. After descending, Moses breaks the tablets, destroys the calf, confronts Aaron, and calls for sober judgment in the camp. At the end Moses returns to intercede again, even as the Lord declares that sin must be dealt with. The chapter shows that idols often grow from impatience, unbelief, and the desire for control; hope rests not in an image formed from gold but in the holy and merciful God who still hears intercession.</p>
+  </div>
+  <aside class="calf-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">金光暗淡，代求上升</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以闪烁金牛犊、破裂法版、上升火星与穿过山谷的代求线条，表现偶像崇拜的破坏与中保代求的盼望。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A flickering calf, broken tablets, rising embers, and an intercession path picture idolatry’s rupture and mediated hope.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Animated golden calf, broken tablets, embers, and intercession line from Exodus 32" class="w-full mt-4">
+      <defs>
+        <linearGradient id="intercedeGrad32" x1="0" x2="1">
+          <stop offset="0%" stop-color="#b91c1c"/>
+          <stop offset="100%" stop-color="#92400e"/>
+        </linearGradient>
+        <radialGradient id="goldGlow32" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#fef3c7"/>
+          <stop offset="68%" stop-color="#f59e0b" stop-opacity=".75"/>
+          <stop offset="100%" stop-color="#b45309" stop-opacity=".18"/>
+        </radialGradient>
+      </defs>
+      <path d="M61 202 C123 172, 156 180, 206 152 C262 121, 303 139, 361 96" fill="none" stroke="#451a03" stroke-width="4" opacity=".18"/>
+      <path class="intercession-line" d="M67 194 C116 157, 148 166, 205 126 C260 87, 306 91, 354 51" fill="none" stroke="url(#intercedeGrad32)" stroke-width="8" stroke-linecap="round"/>
+      <g class="calf-glow">
+        <circle cx="210" cy="128" r="52" fill="url(#goldGlow32)"/>
+        <path d="M155 133 C168 103, 210 95, 250 111 L276 95 L268 124 C281 136, 282 156, 266 166 H177 C157 161, 149 149, 155 133Z" fill="#d97706" stroke="#92400e" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M183 164 L174 196 M228 164 L226 196 M254 164 L264 194" stroke="#92400e" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="250" cy="128" r="4" fill="#451a03"/>
+      </g>
+      <g>
+        <rect class="tablet-left" x="137" y="80" width="55" height="86" rx="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="4"/>
+        <rect class="tablet-right" x="228" y="80" width="55" height="86" rx="14" fill="#fee2e2" stroke="#b91c1c" stroke-width="4"/>
+        <path d="M199 91 L220 157" stroke="#b91c1c" stroke-width="5" stroke-linecap="round" opacity=".65"/>
+      </g>
+      <g fill="#b91c1c">
+        <circle class="ember e1" cx="114" cy="140" r="5"/>
+        <circle class="ember e2" cx="145" cy="117" r="4"/>
+        <circle class="ember e3" cx="302" cy="139" r="5"/>
+        <circle class="ember e4" cx="329" cy="115" r="4"/>
+      </g>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Exodus 32 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">迟延中的偶像</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Idols in Delay</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">boshesh Moshe</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">百姓看见摩西迟延，就寻找可见、可控的替代物。等待中的不安若不交给神，容易把信仰变成自己手中的形象。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">金牛犊</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Golden Calf</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">egel massekah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">金牛犊不只是外邦物件，也是把耶和华的救赎降格为人能铸造和管理的形象。偶像常披着熟悉的敬拜词汇出现。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">摩西代求</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Moses’ Intercession</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">challah paneh YHWH</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">摩西不是替罪开脱，而是抓住神的名、救赎行动和列祖应许来呼求怜悯。代求站在罪的真实与神的信实之间。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">破碎法版</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Broken Tablets</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">luchot ha-edut</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">法版摔碎不是情绪表演，而是可见地宣告约已被破坏。圣洁的神不能把偶像崇拜当作小事。</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">出埃及记 32 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按叙事推进研读：偶像形成、神揭露罪、摩西代求、约的破碎、群体审判与再次代求。每个单元都从上下文经文含义进入今日敬拜、等待、责任与悔改的操练。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study follows the narrative movement: the idol’s formation, God’s exposure of sin, Moses’ intercession, the broken covenant, communal judgment, and renewed intercession. Each unit moves from contextual meaning to present practices of worship, waiting, responsibility, and repentance.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Israel Makes the Golden Calf in the Delay</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">百姓在迟延中制造金牛犊 (32:1-6)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            百姓见摩西迟迟没有下山，就聚集到亚伦那里，要求他为他们造神明在前面引路。亚伦收集他们的金耳环，铸成牛犊。百姓宣称这就是领他们出埃及的神；亚伦又筑坛，宣告次日向耶和华守节。第二天，百姓献祭、吃喝，并起来玩乐。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When the people saw that Moses delayed coming down from the mountain, they gathered to Aaron and asked for gods to go before them. Aaron collected their gold earrings and fashioned a calf. The people called it the god who brought them out of Egypt, and Aaron built an altar and announced a feast to the LORD. The next day they offered sacrifices, ate and drank, and rose up to revel.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">等待暴露了他们想掌控神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段紧接圣所与安息日的启示，却显示山下百姓无法忍受看不见的中保与看不见的神。“造神明在前面引路”把救赎主降为可携带的宗教物件。亚伦宣称向耶和华守节，说明偶像崇拜不一定公开拒绝神，也可能把神按人的焦虑和欲望重新塑形。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The scene follows the sanctuary instructions but reveals a people unwilling to wait for an unseen mediator and unseen God. Their request for gods to go before them reduces the Redeemer to a portable religious object. Aaron’s feast language shows that idolatry may not openly deny God; it can reshape Him according to human anxiety and desire.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在迟延中拒绝制造替代品</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当答案迟迟不来，我们也会寻找“金牛犊”：可量化的安全感、可控制的人际关系、能立即安抚焦虑的习惯。灵修的桥梁原则是：等待不是许可我们自造神，而是邀请我们在看不见的神面前学习信靠。今天可以具体操练，把一个最想抓住控制权的处境交给神，并停止用替代品安抚自己。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When answers delay, we also seek golden calves: measurable security, controllable relationships, or habits that quickly soothe anxiety. The bridge principle is that waiting does not authorize self-made gods; it invites trust before the unseen God. Today, name one situation where you are grasping for control and surrender it without turning to substitutes.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">God Exposes the Sin, and Moses Intercedes</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">神揭露罪，摩西为百姓代求 (32:7-14)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:7-10</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华告诉摩西下山，因为他从埃及领出的百姓已经败坏，偏离所吩咐的道路，为自己铸了牛犊并向它献祭。神称他们是硬着颈项的百姓，并向摩西显明祂对罪的烈怒。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to go down, for the people brought out of Egypt had corrupted themselves. They had quickly turned aside from His command, made a calf, worshiped it, and sacrificed to it. The LORD called them a stiff-necked people and revealed His burning anger against their sin.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">罪被神准确命名</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神没有把事件描述成误会或文化表达，而称之为败坏、偏离、敬拜偶像。经文中的“硬着颈项”描绘拒绝受引导的固执。神的忿怒不是任性，而是圣洁之约对背叛的真实回应；若没有这份圣洁，救赎也会被贬低成纵容。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God does not describe the event as a misunderstanding or cultural expression, but as corruption, turning aside, and worshiping an idol. “Stiff-necked” pictures stubborn refusal to be led. Divine anger is not volatility; it is the covenant holiness that responds truthfully to betrayal.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神命名我们不愿承认的罪</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活常把偶像改名为压力管理、个人选择或效率工具。经文邀请我们让神的话重新命名内心真正敬拜的对象。若某个目标一被威胁，我们就失控、撒谎或伤人，那可能已经不只是偏好，而是偶像。悔改从诚实命名开始。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern life often renames idols as stress management, personal choice, or efficiency. Scripture invites God’s word to rename what the heart truly worships. If a threatened goal makes us lose control, lie, or harm others, it may be more than a preference; it may be an idol. Repentance begins with honest naming.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:11-14</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西恳求耶和华，提醒祂已经用大力和大能的手领百姓出埃及，又求神顾惜祂在列国中的名，并记念向亚伯拉罕、以撒、以色列所起的誓。耶和华听了摩西的恳求，没有按所说的灾降与百姓。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses pleaded with the LORD, appealing to the redemption accomplished by His mighty hand, to the honor of His name among the nations, and to His sworn promise to Abraham, Isaac, and Israel. The LORD heard Moses’ plea and did not bring the announced disaster upon the people.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">代求抓住神已经启示的信实</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西的代求不是操控神，而是按神已显明的救赎、名声和应许向神呼求。这里让读者看见真正的中保站在神与犯罪百姓之间，不否认罪，却求神按祂的约怜悯。代求的根基不是人的可爱，而是神自己的信实。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses does not manipulate God; he appeals according to God’s revealed redemption, name, and promises. The true mediator stands between God and a sinful people, not denying sin but pleading for mercy according to covenant faithfulness. Intercession rests in God’s reliability, not human attractiveness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">为人代求时抓住神的性情</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">为家人、教会或同事代求时，我们容易只重复问题本身。摩西教我们把祷告锚定在神是谁、神已经做了什么、神应许了什么。面对令人失望的人，代求不是替他们轻看罪，而是把他们带到更大的怜悯与更真实的圣洁面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When praying for family, church, or coworkers, we often rehearse the problem. Moses teaches us to anchor prayer in who God is, what He has done, and what He has promised. Intercession does not minimize sin; it brings people before greater mercy and truer holiness.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">The Tablets Are Broken, and the Idol Is Destroyed</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">法版破碎，偶像被毁 (32:15-20)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:15-20</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西拿着两块两面写着神字迹的法版下山。约书亚听见营中声音，以为是争战声；摩西却辨认出那是歌唱声。摩西靠近营，看见牛犊和跳舞，就发怒，把法版摔碎在山下，又焚烧牛犊，磨得粉碎，撒在水面上，叫以色列人喝。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses came down carrying the two tablets, written on both sides by God. Joshua thought the sound in the camp was the noise of battle, but Moses recognized singing. When Moses saw the calf and dancing, he burned with anger, shattered the tablets at the foot of the mountain, burned and ground the calf to powder, scattered it on the water, and made Israel drink it.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">破碎法版显明破碎的约</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">两块法版强调这约来自神亲自的写作。摩西摔碎法版，是以可见行动表现百姓已经破坏圣约关系。牛犊被焚、磨、撒、喝，显出偶像的虚无与污秽：人所膜拜的金像最终不能拯救人，只能成为人必须面对的苦果。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The tablets stress that the covenant comes from God’s own writing. Moses’ shattering of them visibly enacts the people’s shattering of the covenant relationship. Burning, grinding, scattering, and drinking the calf exposes idolatry’s emptiness: the image cannot save; it becomes a bitter consequence to face.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要美化必须被毁掉的偶像</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">有些东西在我们心中被镀上金色：名声、消费、掌声、完美表现。神的怜悯有时表现为拆毁这些东西，使我们看见它们不能承受敬拜。真正的医治不只是“少爱一点偶像”，而是愿意让神把它磨碎，恢复祂在心中的位置。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Some things are gilded in the heart: reputation, consumption, applause, perfect performance. God’s mercy may dismantle them so we see they cannot bear worship. Healing is not merely loving idols less; it is allowing God to grind them down and restore His place in the heart.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Aaron Deflects, and the Levites Stand Apart</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">亚伦推诿，利未人分别出来 (32:21-29)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:21-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西责问亚伦为何使百姓陷在大罪里。亚伦推说百姓专于作恶，又说他们把金子给他，他丢进火里，这牛犊便出来了。亚伦的回答暴露了领袖在压力下纵容罪、又为自己开脱的危险。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses asked Aaron why he had brought such great sin upon the people. Aaron deflected blame onto the people’s evil intent and claimed that when he threw the gold into the fire, the calf came out. His answer exposes the danger of leaders yielding to pressure and then excusing themselves.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵领袖不能把责任推给群众</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伦确实面对群众压力，但经文没有把他描绘成无辜旁观者。他收金、塑形、筑坛、宣告节期。推诿的话与创世记中犯罪后的自辩相似：人试图减轻责任，却更显出内心失序。领导责任包括在群体焦虑时守住真理边界。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Aaron faced real pressure, yet the text does not portray him as innocent. He collected gold, shaped it, built an altar, and announced a feast. His deflection echoes post-sin self-defense in Genesis. Leadership responsibility includes guarding truth when the community is anxious.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在压力中停止为妥协找理由</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">无论在家庭、团队还是教会中，我们都可能说“大家都这样”“我也没办法”。本段提醒我们：压力能解释处境，却不能洗净妥协。今天可以检视一个自己正在合理化的选择，向神承认真实责任，并寻求具体修正。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In family, teams, or church, we may say, “Everyone does this” or “I had no choice.” Pressure may explain the situation, but it does not cleanse compromise. Examine one rationalized choice today, confess real responsibility, and seek a concrete correction.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:25-29</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西看见百姓放肆，就站在营门中呼喊：“凡属耶和华的，都要到我这里来。”利未子孙聚集到他那里，并照摩西的话在营中执行审判。那日约有三千人倒下；摩西说他们今日归耶和华为圣。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Moses saw that the people were out of control and stood at the camp gate, calling, “Whoever is for the LORD, come to me.” The sons of Levi gathered to him and carried out judgment in the camp. About three thousand fell that day, and Moses declared that they had been set apart to the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁要求群体作出明确站立</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这一段沉重而严肃，不能被轻率应用为人的暴力许可。它发生在西奈立约刚被公开破坏的历史处境中，显示偶像崇拜会毁坏整个群体。利未人的站立表明归属耶和华必须高过血缘、阵营和群众情绪。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This severe passage must not be casually applied as permission for human violence. It belongs to the historical moment when the Sinai covenant was publicly ruptured, showing that idolatry destroys the community. Levi’s stand shows that belonging to the LORD surpasses kinship, faction, and crowd pressure.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在群体失控时仍选择属神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代处境中，我们的“营门选择”常发生在价值观、商业伦理、网络舆论和亲密关系里。属神不是以强硬伤人证明自己，而是在混乱中清楚站在真理、敬畏和悔改这一边。愿我们有勇气不被群体情绪带走。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Today, the “camp gate” choice often appears in values, business ethics, online outrage, and close relationships. Belonging to God is not harshness that harms others; it is a clear stand for truth, reverence, and repentance amid confusion. We need courage not to be swept away by the crowd.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Moses Intercedes Again, Yet Sin Is Still Addressed</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">摩西再次代求，罪仍被神追讨 (32:30-35)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">32:30-35</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            第二天，摩西告诉百姓他们犯了大罪，并上到耶和华那里，求神赦免；若不赦免，他愿从神所写的册上被涂抹。耶和华回答，谁得罪祂，祂就涂抹谁；摩西仍要带领百姓前行，神的使者会在前面引路，但到追讨的日子，罪仍被追讨。后来耶和华因牛犊的事击打百姓。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The next day Moses told the people they had sinned greatly and went up to the LORD to seek forgiveness. If forgiveness were not granted, Moses asked to be blotted out of God’s book. The LORD answered that the sinner would be blotted out; Moses must still lead the people onward, with God’s angel going before them. Yet in the day of visitation, sin would be visited, and the LORD struck the people because of the calf.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">代求真实，却不能把罪变成无事</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西愿意为百姓承担极深的代求重担，显出中保的爱；但神也说明罪不能被随意转嫁或当作不存在。百姓仍要往前走，这显示恩典没有让历史终止；罪仍被追讨，这显示恩典不是廉价纵容。圣洁与怜悯在本章同时被彰显。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses bears a profound intercessory burden, revealing mediator-like love. Yet God states that sin cannot simply be transferred or treated as nothing. The people still move forward, showing that grace does not end the story; sin is still addressed, showing that grace is not cheap indulgence. Holiness and mercy stand together.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在赦免盼望中认真面对后果</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常希望神赦免，却不想面对修复关系、承认伤害或承担后果。本段帮助我们同时抓住两件事：可以真实求赦免，也要真实走悔改道路。福音式的盼望不是逃避责任，而是在神怜悯中开始修补被罪损坏的生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often want forgiveness without repaired relationships, admitted harm, or consequences. This passage helps us hold two truths together: we may truly seek forgiveness, and we must truly walk repentance. Gospel-shaped hope does not escape responsibility; it begins restoration under God’s mercy.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">从偶像危机进入圣洁与怜悯的双轨阅读</h1>
+  <p class="text-stone-700 leading-8 text-justify">本章的研读采用双轨方法：先在西奈立约叙事中观察偶像如何形成、神如何命名罪、摩西如何代求、审判如何维护圣洁；再把这些经文原则谨慎连接到今日等待、控制欲、责任推诿、群体压力和悔改修复。这样既避免把本章简化为情绪化道德故事，也避免把严肃审判直接套用为现代人的暴力行为许可。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-3">This chapter uses a two-track method: first observing within the Sinai covenant narrative how idolatry forms, how God names sin, how Moses intercedes, and how judgment guards holiness; then carefully connecting those principles to delay, control, deflection, crowd pressure, and restorative repentance today.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">正统解经原则</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Sound Exegesis</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-primary)]">连接上下文：</span>第 32 章紧接会幕与法版的启示，形成山上圣洁蓝图与山下偶像败坏的强烈对比。<span class="en-text text-stone-500 italic block">Read the chapter against the tabernacle instructions and tablets, where mountain-top holiness contrasts with camp-level corruption.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">尊重历史处境：</span>利未人的审判属于西奈立约被公开破坏的特殊时刻，不能被抽离为现代私人报复或宗教强制的依据。<span class="en-text text-stone-500 italic block">The Levite judgment belongs to the unique covenant crisis at Sinai and must not be abstracted into private retaliation or coercion today.</span></li>
+      <li><span class="font-bold text-[var(--theme-primary)]">抓住中保主题：</span>摩西的代求推动叙事，也预备读者理解真正中保需要同时面对罪、圣洁与怜悯。<span class="en-text text-stone-500 italic block">Moses’ intercession drives the narrative and prepares readers to understand mediation that faces sin, holiness, and mercy together.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/40 rounded-xl border border-orange-200 p-5 sm:p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h2>
+    <p class="en-text text-xs text-stone-500 italic mb-4">Devotional Application</p>
+    <ul class="space-y-3 text-sm text-stone-700 leading-7">
+      <li><span class="font-bold text-[var(--theme-secondary)]">桥梁原则：</span>金牛犊今天常表现为可控制的安全感、身份成就、关系占有或即时安慰；它们给人引路的错觉，却夺走真实敬拜。<span class="en-text text-stone-500 italic block">Golden calves today often appear as controllable security, achievement, possessive relationships, or instant comfort; they promise guidance while stealing worship.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">个人回应：</span>在等待和压力中，先辨认自己正在用什么替代神，再以祷告、诚实承认和具体顺服拆毁偶像。<span class="en-text text-stone-500 italic block">In delay and pressure, identify what is replacing God, then dismantle the idol through prayer, honest confession, and concrete obedience.</span></li>
+      <li><span class="font-bold text-[var(--theme-secondary)]">群体落地：</span>面对集体妥协，既不轻看罪，也不以暴烈自义回应；要选择真理、代求、悔改与修复。<span class="en-text text-stone-500 italic block">When a community compromises, neither minimize sin nor answer with self-righteous harshness; choose truth, intercession, repentance, and repair.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"凡属耶和华的，都要到我这里来。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Who is on the LORD’s side? Come to me."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">出埃及记 32章 / Exodus Chapter 32</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

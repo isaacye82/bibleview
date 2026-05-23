@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genesis Chapter 15 | 创世记 15章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 创世记15章主题色：夜空靛蓝、立约火金、祭坛烟灰 */
+            --theme-primary: #7c3f16;
+            --theme-secondary: #c49435;
+            --theme-accent: #fff4d6;
+            --theme-bg: #f7f0e5;
+            --theme-text: #2c2218;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .covenant-panorama {
+            position: relative;
+            min-height: 340px;
+            overflow: hidden;
+            border-radius: 16px;
+            background:
+                radial-gradient(circle at 68% 17%, rgba(252, 211, 77, 0.22), transparent 17%),
+                linear-gradient(180deg, #131827 0%, #2f2c31 45%, #59402b 100%);
+            box-shadow: inset 0 0 90px rgba(10, 14, 25, 0.72);
+        }
+        .covenant-panorama svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .star {
+            animation: starTwinkle 3.8s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .star.two { animation-delay: -0.8s; }
+        .star.three { animation-delay: -1.7s; }
+        .star.four { animation-delay: -2.5s; }
+        .smoke-veil {
+            stroke-dasharray: 12 20;
+            animation: smokePass 11s linear infinite;
+        }
+        .smoke-veil.two {
+            animation-duration: 14s;
+            animation-delay: -5s;
+        }
+        .torch-glow {
+            animation: torchPulse 2.6s ease-in-out infinite;
+            transform-origin: center;
+        }
+        .fire-path {
+            animation: fireWalk 5.2s ease-in-out infinite;
+            transform-origin: center;
+        }
+        @keyframes starTwinkle {
+            0%, 100% { opacity: 0.28; transform: scale(0.88); }
+            50% { opacity: 1; transform: scale(1.24); }
+        }
+        @keyframes smokePass {
+            from { stroke-dashoffset: 0; opacity: 0.18; }
+            50% { opacity: 0.72; }
+            to { stroke-dashoffset: -170; opacity: 0.18; }
+        }
+        @keyframes torchPulse {
+            0%, 100% { opacity: 0.55; transform: scale(0.94); }
+            50% { opacity: 1; transform: scale(1.08); }
+        }
+        @keyframes fireWalk {
+            0%, 100% { transform: translateX(-18px); opacity: 0.76; }
+            50% { transform: translateX(18px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire mr-2 text-stone-600"></i> 创世记 15章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Genesis Chapter 15</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.1fr_0.9fr] gap-6 items-stretch">
+                <div class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                    <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">本章核心主题 · Chapter Theme</p>
+                    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">星空下的应许与火中的圣约</h1>
+                    <p class="en-text text-lg sm:text-xl italic text-stone-500 mb-5">Promise under the stars and covenant sealed in holy fire.</p>
+                    <p class="text-sm sm:text-base leading-8 text-stone-700 text-justify mb-4">
+                        创世记15章把亚伯兰从战后得胜带入内心惧怕与等待的深处。神称自己为盾牌和赏赐，把亚伯兰带到星空之下重申后裔的应许；亚伯兰信神，神就以此为他的义。随后，神以古代立约礼的图像显明：应许的成就最终倚靠神亲自承担信实，而非人的能力。
+                    </p>
+                    <p class="en-text text-sm sm:text-base leading-7 text-stone-500 italic text-justify">
+                        Genesis 15 moves Abram from public victory into private fear and waiting. God names himself Abram's shield and reward, brings him beneath the stars, and renews the promise of offspring. Abram believes, and God counts it as righteousness. In the covenant ceremony, the Lord shows that the promise rests on divine faithfulness, not human strength.
+                    </p>
+                </div>
+                <aside class="covenant-panorama border border-stone-700/20">
+                    <svg viewBox="0 0 720 440" role="img" aria-label="星空、烟炉与火把经过祭物之间的立约意象">
+                        <defs>
+                            <radialGradient id="torchHalo" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#fde68a" stop-opacity="0.95"/>
+                                <stop offset="62%" stop-color="#f59e0b" stop-opacity="0.22"/>
+                                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="groundShade" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#251b18"/>
+                                <stop offset="52%" stop-color="#4a3426"/>
+                                <stop offset="100%" stop-color="#1a1513"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="star" cx="92" cy="58" r="3.8" fill="#fff7cc"/>
+                        <circle class="star two" cx="166" cy="98" r="2.8" fill="#fde68a"/>
+                        <circle class="star three" cx="248" cy="52" r="3.4" fill="#fff7cc"/>
+                        <circle class="star four" cx="329" cy="116" r="2.5" fill="#fde68a"/>
+                        <circle class="star" cx="420" cy="68" r="3" fill="#fff7cc"/>
+                        <circle class="star two" cx="536" cy="112" r="3.6" fill="#fde68a"/>
+                        <circle class="star three" cx="632" cy="62" r="2.7" fill="#fff7cc"/>
+                        <path d="M0 282 C118 220 222 265 343 218 C462 172 582 232 720 196 L720 440 L0 440 Z" fill="url(#groundShade)"/>
+                        <path class="smoke-veil" d="M76 205 C148 150 225 190 306 136 C386 84 472 145 561 91 C606 64 648 67 694 48" fill="none" stroke="#d9d1c4" stroke-width="6" stroke-linecap="round"/>
+                        <path class="smoke-veil two" d="M40 252 C128 211 210 226 285 186 C368 142 432 182 517 132 C589 89 635 112 705 78" fill="none" stroke="#efe3c5" stroke-width="4" stroke-linecap="round"/>
+                        <g opacity="0.9">
+                            <path d="M170 333 C210 302 247 302 286 333 C249 355 208 355 170 333 Z" fill="#c7b299"/>
+                            <path d="M434 333 C474 302 511 302 550 333 C513 355 472 355 434 333 Z" fill="#c7b299"/>
+                            <path d="M250 386 C288 354 328 354 366 386 C329 407 289 407 250 386 Z" fill="#bfa78e"/>
+                            <path d="M358 386 C396 354 436 354 474 386 C437 407 397 407 358 386 Z" fill="#bfa78e"/>
+                        </g>
+                        <g class="fire-path" transform="translate(310 274)">
+                            <circle class="torch-glow" cx="52" cy="48" r="96" fill="url(#torchHalo)"/>
+                            <path d="M23 96 C25 61 39 49 37 23 C52 41 75 47 74 82 C73 111 48 124 23 96 Z" fill="#f59e0b"/>
+                            <path d="M42 96 C42 71 51 62 51 43 C62 57 68 70 65 89 C62 108 50 115 42 96 Z" fill="#fff1a8"/>
+                            <rect x="45" y="92" width="12" height="64" rx="6" fill="#6b3b1c"/>
+                        </g>
+                        <path d="M40 392 C158 372 250 390 360 372 C470 354 578 379 680 360" fill="none" stroke="#c49435" stroke-width="3" opacity="0.32"/>
+                    </svg>
+                </aside>
+            </section>
+
+            <section class="mt-8">
+                <div class="flex items-end justify-between gap-4 mb-4">
+                    <div>
+                        <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+                        <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Genesis 15 faithfully</p>
+                    </div>
+                </div>
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">盾牌与赏赐</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Shield & Reward</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Magen / Sakhar</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">神先回应亚伯兰的惧怕，而非先要求表现；他自己成为保护与满足的来源。God meets Abram's fear first and presents himself as the source of protection and reward.</p>
+</div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">信就算为义</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Faith Counted as Righteousness</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Aman / Tsedaqah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">亚伯兰的信不是抽象乐观，而是在迟延中抓住神的话。Abram's faith is not vague optimism; it is trust in God's word while fulfillment is delayed.</p>
+</div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">割裂祭物与圣约</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Cut Covenant</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Berit</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">经过祭物之间的火把显明神主动承担立约的严肃承诺。The passing fire shows that God himself bears the solemn weight of the covenant promise.</p>
+</div>
+                    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">等待中的国度视野</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Kingdom Vision in Waiting</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Ger / Nachalah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">后裔、寄居、苦待与归回被放在神掌权的长线计划中。Offspring, sojourning, affliction, and return are held inside God's long sovereign purpose.</p>
+</div>
+                </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-6">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-2">研读视图 · Study View</p>
+                <h2 class="serif text-3xl font-bold text-stone-900">创世记15章逐段研读</h2>
+                <p class="en-text text-stone-500 italic mt-2">A bilingual passage-by-passage reading with exegesis and devotional application.</p>
+            </div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:1</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            这事以后，耶和华在异象中有话对亚伯兰说：“亚伯兰，你不要惧怕；我是你的盾牌，必大大地赏赐你。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            After these things the word of the LORD came unto Abram in a vision, saying, Fear not, Abram: I am thy shield, and thy exceeding great reward.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">得胜之后仍需神的安慰</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“这事以后”连接上一章的战争与拒绝所多玛财富。亚伯兰外在得胜，内心却可能面对报复、无后与未来不明的压力。神没有轻看他的惧怕，而是以“我是你的盾牌”把安全感从局势转回到神自己。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">“After these things” links the victory and Abram's refusal of Sodom's reward. God answers the fears behind success by giving himself as shield and reward.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把焦虑带到神的话面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">职场、家庭或服事中的一次成功并不会自动除去深处的不安。桥梁原则是：神先把人带回他的同在，再谈未来的计划。今天可以诚实承认惧怕，并用祷告重新接住“神自己是我的保护与满足”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Success does not erase anxiety. The bridge is God's presence before our plans: bring fear into prayer and receive him again as protection and satisfaction.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:2-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伯兰说：“主耶和华啊，我既无子，你还赐我什么呢？并且要承受我家业的是大马士革人以利以谢。”亚伯兰又说：“你没有给我儿子；那生在我家中的人就是我的后嗣。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And Abram said, Lord GOD, what wilt thou give me, seeing I go childless, and the steward of my house is this Eliezer of Damascus? And Abram said, Behold, to me thou hast given no seed: and, lo, one born in my house is mine heir.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">信心可以向神发问</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">亚伯兰并非不敬地顶撞，而是把应许与现实之间的张力说出来。“无子”是应许地、后裔与祝福继续展开的关键问题。经文让我们看见，正统的信心不是压抑疑问，而是在神面前陈明疑问。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Abram's question exposes the gap between promise and present reality. Faith is not the denial of questions; it speaks them before the Lord.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把“还没有”说清楚</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常用忙碌遮盖失望，或用属灵话语包装真实的痛。亚伯兰提醒我们，可以把“主啊，我还没有看见”带到神面前。这样的祷告不是退后，而是让关系保持真实，使心不被苦毒占据。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Naming the “not yet” before God keeps disappointment from becoming bitterness. Honest prayer can be an act of relationship, not retreat.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:4-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华又有话对他说：“这人必不成为你的后嗣；你本身所生的才成为你的后嗣。”于是领他走到外边，说：“你向天观看，数算众星，能数得过来吗？”又对他说：“你的后裔将要如此。”亚伯兰信耶和华，耶和华就以此为他的义。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And, behold, the word of the LORD came unto him, saying, This shall not be thine heir; but he that shall come forth out of thine own bowels shall be thine heir. And he brought him forth abroad, and said, Look now toward heaven, and tell the stars, if thou be able to number them: and he said unto him, So shall thy seed be. And he believed in the LORD; and he counted it to him for righteousness.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">星空成为应许的可见记号</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神纠正亚伯兰的推论，并把他带到户外观看星空。应许不是由亚伯兰的计算产生，而是由神的话重新定义未来。“信”强调稳稳倚靠；“算为义”显示神按信靠关系接纳他为站在正确位置上的人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The stars make the promise visible. Abram's future is redefined by God's word, and his trust is counted as right standing before God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神扩大你的视野</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">压力会让人只盯着眼前缺口，神却常把人带出狭窄空间，重新观看他的广大。今天的桥梁原则是：不要让有限数据成为最终结论。用神的应许校准心里的叙事，学习在未见之前仍然信靠。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pressure narrows vision; God widens it. Do not let limited data become the final story. Let God's promise recalibrate your inner narrative.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:7-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华又对他说：“我是耶和华，曾领你出了迦勒底的吾珥，为要将这地赐你为业。”亚伯兰说：“主耶和华啊，我怎能知道必得这地为业呢？”他说：“你为我取一只三年的母牛，一只三年的母山羊，一只三年的公绵羊，一只斑鸠，一只雏鸽。”亚伯兰就取了这些来，每样劈开分成两半，一半对着一半地摆列，只有鸟没有劈开。有鸷鸟下来落在那死畜的肉上，亚伯兰就把它吓飞了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And he said unto him, I am the LORD that brought thee out of Ur of the Chaldees, to give thee this land to inherit it. And he said, Lord GOD, whereby shall I know that I shall inherit it? And he said unto him, Take me an heifer of three years old, and a she goat of three years old, and a ram of three years old, a turtledove, and a young pigeon. And he took unto him all these, and divided them in the midst, and laid each piece one against another: but the birds divided he not. And when the fowls came down upon the carcases, Abram drove them away.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神用立约礼回应“怎能知道”</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神先追溯他带领亚伯兰离开吾珥的历史，再以当时可理解的立约仪式回应他的求证。劈开的祭物象征盟约的严肃性；鸷鸟的出现也预示应许路上会有威胁与等待，不是轻松直达。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God answers Abram's “how shall I know?” through covenant signs. The divided animals show solemn commitment, while the birds hint that the promise will face opposition.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在确据与等候之间忠心守望</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们也会问：“主啊，我怎么知道你会带领？”神不总是给出时间表，却给出他已经开始工作的记号。现实中的干扰像鸷鸟一样落下时，信心不是被动发呆，而是在等候中守住神所托付的位置。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God may not give a full timetable, but he gives signs of his faithfulness. Waiting is not passivity; it is guarding the place entrusted to us.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:12-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            日头正落的时候，亚伯兰沉沉地睡了；忽然有惊人的大黑暗落在他身上。耶和华对亚伯兰说：“你要的确知道，你的后裔必寄居别人的地，又服事那地的人；那地的人要苦待他们四百年。并且他们所要服事的那国，我要惩罚；后来他们必带着许多财物从那里出来。但你要享大寿数，平平安安地归到你列祖那里，被人埋葬。到了第四代，他们必回到此地，因为亚摩利人的罪孽还没有满盈。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And when the sun was going down, a deep sleep fell upon Abram; and, lo, an horror of great darkness fell upon him. And he said unto Abram, Know of a surety that thy seed shall be a stranger in a land that is not theirs, and shall serve them; and they shall afflict them four hundred years; and also that nation, whom they shall serve, will I judge: and afterward shall they come out with great substance. And thou shalt go to thy fathers in peace; thou shalt be buried in a good old age. But in the fourth generation they shall come hither again: for the iniquity of the Amorites is not yet full.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">应许包含漫长历史而非即时拥有</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">黑暗与沉睡让亚伯兰明白，应许之路会经过寄居、苦待与神的审判。神同时宣告亚伯兰本人平安离世，也宣告后裔将来归回。亚摩利人的罪孽未满，说明神的赐地不是任意偏爱，也包含公义与忍耐。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The promise includes affliction, judgment, return, and divine patience. God's gift of land is held together with justice, timing, and mercy.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">接受神的时间比我更长</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代生活追求即时结果，但神的工作常跨越一代又一代。桥梁原则是：我可以在有限的一生忠心，而不要求看见全部结局。面对家庭、教会或社会议题的缓慢改变，信心学习把历史交给公义又忍耐的神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God's timeline is longer than ours. Faithful living does not require seeing the whole ending; it entrusts history to a just and patient Lord.</p>
+        </div>
+        
+    </div>
+</div>
+
+            <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">15:17-21</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            日落天黑，不料有冒烟的炉并烧着的火把从那些肉块中经过。当那日，耶和华与亚伯兰立约，说：“我已赐给你的后裔，从埃及河直到伯拉大河之地，就是基尼人、基尼洗人、甲摩尼人、赫人、比利洗人、利乏音人、亚摩利人、迦南人、革迦撒人、耶布斯人之地。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            And it came to pass, that, when the sun went down, and it was dark, behold a smoking furnace, and a burning lamp that passed between those pieces. In the same day the LORD made a covenant with Abram, saying, Unto thy seed have I given this land, from the river of Egypt unto the great river, the river Euphrates: the Kenites, and the Kenizzites, and the Kadmonites, and the Hittites, and the Perizzites, and the Rephaims, and the Amorites, and the Canaanites, and the Girgashites, and the Jebusites.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神亲自经过祭物之间</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">冒烟的炉与烧着的火把象征神显现的威严与同在。令人震撼的是，经过祭物之间的是神所显明的记号，而不是亚伯兰。经文强调这约的根基在神主动、坚定、严肃的承诺。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The smoking furnace and burning torch signify God's presence. God, not Abram, passes between the pieces, grounding the covenant in divine commitment.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把盼望安放在神的信实上</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们很容易把安全感建立在自己的表现、计划和掌控力上；但本章结尾把盼望移到神的承诺上。今天的实际操练是：认真负责地行动，同时承认最终托住人生的不是我的完美，而是神主动守约的信实。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Hope rests on God's covenant faithfulness, not on our flawless control. Act responsibly, yet let your deepest security stand on the Lord who keeps his word.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-2xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs uppercase tracking-[0.22em] text-[var(--theme-primary)] font-bold mb-3">方法论 · Methodology</p>
+                <h2 class="serif text-3xl font-bold text-stone-900 mb-3">从正统解经到日常灵修</h2>
+                <p class="en-text text-stone-500 italic mb-6">From faithful interpretation to lived devotional practice.</p>
+                <div class="grid md:grid-cols-2 gap-5">
+                    <article class="rounded-xl border border-stone-200 bg-slate-50/70 p-5">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">正统解经原则 · Sound Exegesis</h3>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">先观察上下文：创世记15章承接14章的战后处境，也推进12章的后裔与土地应许。再观察文学结构：神的话、亚伯兰的发问、星空记号、立约仪式与历史预告层层展开。最后谨慎处理字词与古代背景，避免把现代愿望直接塞进经文。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic">Begin with context: Genesis 15 follows the crisis of chapter 14 and develops the promises of offspring and land from chapter 12. Then read the structure, key words, and ancient covenant setting before drawing application.</p>
+                    </article>
+                    <article class="rounded-xl border border-stone-200 bg-[var(--theme-accent)]/20 p-5">
+                        <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修应用路径 · Devotional Practice</h3>
+                        <p class="text-sm leading-7 text-stone-700 text-justify mb-3">应用不跳过原意，而是用“桥梁原则”连接：亚伯兰在惧怕、等待、疑问中学习信靠；今天的读者也在压力、延迟与不确定中学习把安全感放在神的信实上。应用要具体到祷告、关系、工作与长期忠心，而非停留在抽象口号。</p>
+                        <p class="en-text text-xs leading-6 text-stone-500 italic">Application does not bypass meaning. The bridge is trust in God's faithful word amid fear, delay, and uncertainty, expressed through prayer, relationships, work, and long obedience.</p>
+                    </article>
+                </div>
+                <div class="mt-6 rounded-xl border-l-4 border-[var(--theme-primary)] bg-stone-50 p-5">
+                    <h3 class="serif font-bold text-stone-900 mb-2">实际落地指南 · Practical Guide</h3>
+                    <p class="text-sm leading-7 text-stone-700 text-justify">读本章时可按四步进行：一、指出经文中神主动说了什么；二、分辨亚伯兰真实的惧怕与问题；三、观察神给出的应许、记号和时间表；四、把自己的“惧怕、还没有、怎么知道”写成祷告，并用一句经文回应今天的处境。</p>
+                    <p class="en-text text-xs leading-6 text-stone-500 italic mt-2">Use four steps: identify God's initiative, name Abram's fear and questions, observe God's promise and signs, then turn your own “fear, not yet, and how shall I know?” into prayer answered by Scripture.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"亚伯兰信耶和华，耶和华就以此为他的义。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"And he believed in the LORD; and he counted it to him for righteousness."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">创世记 15章 · Genesis Chapter 15</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
