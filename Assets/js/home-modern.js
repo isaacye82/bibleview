@@ -191,6 +191,12 @@
     books: [...oldTestament, ...newTestament]
   };
 
+  const readerSettingsKey = "bibleview-reader-settings";
+  const readerDefaults = {
+    fontSize: "normal",
+    style: "default"
+  };
+
   const iconBook = `
     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -218,6 +224,29 @@
     document.querySelector("[data-theme-label]").textContent = isDark ? "深色" : "浅色";
   }
 
+  function getReaderSettings() {
+    try {
+      return { ...readerDefaults, ...JSON.parse(localStorage.getItem(readerSettingsKey) || "{}") };
+    } catch (_error) {
+      return { ...readerDefaults };
+    }
+  }
+
+  function saveReaderSettings(nextSettings) {
+    localStorage.setItem(readerSettingsKey, JSON.stringify({ ...getReaderSettings(), ...nextSettings }));
+    syncReaderSettingsForm();
+  }
+
+  function syncReaderSettingsForm() {
+    const settings = getReaderSettings();
+    document.querySelectorAll("[data-reader-font]").forEach((input) => {
+      input.checked = input.value === settings.fontSize;
+    });
+    document.querySelectorAll("[data-reader-style]").forEach((input) => {
+      input.checked = input.value === settings.style;
+    });
+  }
+
   function buildLayout() {
     document.body.className = "bv-modern";
     document.body.innerHTML = `
@@ -236,6 +265,13 @@
               <a href="Config/disclaimer.html">免责声明</a>
               <a href="Config/Guestbook.html">留言板</a>
             </div>
+            <button class="bv-reader-settings-toggle" type="button" data-reader-settings-open aria-label="阅读设置">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z" stroke="currentColor" stroke-width="2"/>
+                <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.38a1.7 1.7 0 0 0-1 .92l-.03.08a2 2 0 0 1-3.74 0l-.03-.08a1.7 1.7 0 0 0-1-.92 1.7 1.7 0 0 0-1.88.34l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.62 15a1.7 1.7 0 0 0-.92-1l-.08-.03a2 2 0 0 1 0-3.74l.08-.03a1.7 1.7 0 0 0 .92-1 1.7 1.7 0 0 0-.34-1.88l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.62a1.7 1.7 0 0 0 1-.92l.03-.08a2 2 0 0 1 3.74 0l.03.08a1.7 1.7 0 0 0 1 .92 1.7 1.7 0 0 0 1.88-.34l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.38 9c.13.43.46.78.92 1l.08.03a2 2 0 0 1 0 3.74l-.08.03a1.7 1.7 0 0 0-.92 1Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+              <span>阅读设置</span>
+            </button>
             <button class="bv-mode-toggle" type="button" data-theme-toggle aria-label="切换浅色或深色模式">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M12 3v2M12 19v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M3 12h2M19 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -337,6 +373,39 @@
           </div>
           <div class="bv-chapters" data-chapters></div>
         </aside>
+
+        <section class="bv-reader-settings" data-reader-settings hidden aria-label="章节阅读设置">
+          <div class="bv-reader-settings-backdrop" data-reader-settings-close></div>
+          <div class="bv-reader-settings-card" role="dialog" aria-modal="true" aria-labelledby="reader-settings-title">
+            <div class="bv-reader-settings-head">
+              <div>
+                <h3 id="reader-settings-title">章节阅读设置</h3>
+                <p>这些设置只影响具体章节页，不改变主页和目录样式。</p>
+              </div>
+              <button class="bv-close" type="button" data-reader-settings-close aria-label="关闭阅读设置">×</button>
+            </div>
+            <div class="bv-reader-settings-body">
+              <fieldset>
+                <legend>字体大小</legend>
+                <label><input type="radio" name="reader-font-size" value="small" data-reader-font> 小</label>
+                <label><input type="radio" name="reader-font-size" value="normal" data-reader-font> 标准</label>
+                <label><input type="radio" name="reader-font-size" value="large" data-reader-font> 大</label>
+                <label><input type="radio" name="reader-font-size" value="xlarge" data-reader-font> 特大</label>
+              </fieldset>
+              <fieldset>
+                <legend>显示风格</legend>
+                <label><input type="radio" name="reader-style" value="default" data-reader-style> 默认</label>
+                <label><input type="radio" name="reader-style" value="serif" data-reader-style> 典雅衬线</label>
+                <label><input type="radio" name="reader-style" value="comfortable" data-reader-style> 宽松阅读</label>
+                <label><input type="radio" name="reader-style" value="compact" data-reader-style> 紧凑阅读</label>
+              </fieldset>
+            </div>
+            <div class="bv-reader-settings-actions">
+              <button class="bv-button" type="button" data-reader-settings-reset>恢复默认</button>
+              <button class="bv-button primary" type="button" data-reader-settings-close>完成</button>
+            </div>
+          </div>
+        </section>
 
         <footer class="bv-footer">
           <div class="bv-footer-inner">
@@ -491,6 +560,30 @@
       renderBooks();
     });
 
+    document.querySelector("[data-reader-settings-open]").addEventListener("click", () => {
+      syncReaderSettingsForm();
+      document.querySelector("[data-reader-settings]").hidden = false;
+    });
+
+    document.querySelectorAll("[data-reader-settings-close]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.querySelector("[data-reader-settings]").hidden = true;
+      });
+    });
+
+    document.querySelectorAll("[data-reader-font]").forEach((input) => {
+      input.addEventListener("change", () => saveReaderSettings({ fontSize: input.value }));
+    });
+
+    document.querySelectorAll("[data-reader-style]").forEach((input) => {
+      input.addEventListener("change", () => saveReaderSettings({ style: input.value }));
+    });
+
+    document.querySelector("[data-reader-settings-reset]").addEventListener("click", () => {
+      localStorage.removeItem(readerSettingsKey);
+      syncReaderSettingsForm();
+    });
+
     document.querySelectorAll("[data-menu-trigger]").forEach((button) => {
       button.addEventListener("click", () => {
         const panel = button.closest("[data-menu-panel]");
@@ -513,6 +606,7 @@
   function boot() {
     buildLayout();
     applyTheme(isDarkPreferred());
+    syncReaderSettingsForm();
     renderBooks();
     renderTopics();
     bindEvents();
