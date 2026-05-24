@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numbers Chapter 13 | 民数记 13章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：旷野尘土与现实压力 */
+            --theme-secondary: #166534; /* 次色：应许地果实与信心盼望 */
+            --theme-accent: #ecfccb;       /* 提亮色：葡萄谷的生命记号 */
+            --theme-bg: #fffaf0;               /* 网页底色 */
+            --theme-text: #3f1f0f;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scout-stage {
+            background:
+                radial-gradient(circle at 20% 18%, rgba(236,252,203,.9), transparent 28%),
+                linear-gradient(160deg, #fff7ed 0%, #fef3c7 48%, #dcfce7 100%);
+            min-height: 100%;
+        }
+        .route-line {
+            stroke-dasharray: 520;
+            stroke-dashoffset: 520;
+            animation: scoutRoute 7s ease-in-out infinite;
+        }
+        .grape-cluster { animation: grapeSwing 4.8s ease-in-out infinite; transform-origin: 210px 116px; }
+        .dust-dot { animation: dustRise 5.2s ease-in-out infinite; }
+        .dust-dot.d2 { animation-delay: .7s; }
+        .dust-dot.d3 { animation-delay: 1.4s; }
+        .faith-arrow { animation: arrowPulse 3.8s ease-in-out infinite; }
+        @keyframes scoutRoute {
+            0% { stroke-dashoffset: 520; opacity: .35; }
+            45%, 72% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -520; opacity: .35; }
+        }
+        @keyframes grapeSwing {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(3deg); }
+        }
+        @keyframes dustRise {
+            0%, 100% { transform: translateY(12px); opacity: .25; }
+            50% { transform: translateY(-8px); opacity: .85; }
+        }
+        @keyframes arrowPulse {
+            0%, 100% { transform: translateX(0); opacity: .55; }
+            50% { transform: translateX(10px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-map-marked-alt mr-2 text-stone-600"></i> 民数记 13章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Numbers Chapter 13</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+              <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+                <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+                <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">从果实看见应许，从巨人暴露恐惧</h1>
+                <p class="en-text text-stone-500 italic mb-5">Seeing Promise in the Fruit, Exposing Fear before the Giants</p>
+                <p class="text-stone-700 leading-8 text-justify mb-4">民数记第 13 章记录以色列人从巴兰旷野派十二个首领窥探迦南。土地确实美好，葡萄、石榴、无花果成为应许真实的证据；但城邑坚固、居民高大也成为信心的考验。十个探子把困难解释成不能进入的理由，迦勒却以“我们立刻上去得那地”为回应。本章不是鼓励盲目乐观，而是呼召神的百姓用神的应许来解释现实，而不是让现实压力重新定义神的信实。</p>
+                <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Numbers 13 follows the twelve leaders sent from the wilderness of Paran to survey Canaan. The fruit proves the land is truly good, while fortified cities and tall inhabitants test Israel's trust. Ten spies interpret danger as impossibility, but Caleb answers with readiness to go up. The chapter calls God's people to read reality through God's promise, not to let visible pressure redefine His faithfulness.</p>
+              </div>
+              <aside class="scout-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+                <div>
+                  <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+                  <h2 class="serif text-xl font-bold text-stone-900">探子路线与葡萄谷的证据</h2>
+                  <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效用行进路线、摇曳葡萄和向前箭头表现本章张力：神已经显明美地，人的心却要选择信心或退缩。</p>
+                  <p class="en-text text-xs text-stone-500 italic mt-2">The route, swinging grapes, and forward arrow picture promise made visible and faith being tested.</p>
+                </div>
+                <svg viewBox="0 0 420 250" role="img" aria-label="Animated scout route and grapes from Numbers 13" class="w-full mt-4">
+                  <defs>
+                    <linearGradient id="routeGrad13" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#7c2d12"/>
+                      <stop offset="100%" stop-color="#166534"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M56 194 C98 145, 133 164, 164 111 C198 53, 250 67, 286 99 C323 132, 337 93, 367 61" fill="none" stroke="#fed7aa" stroke-width="24" stroke-linecap="round" opacity=".55"/>
+                  <path class="route-line" d="M56 194 C98 145, 133 164, 164 111 C198 53, 250 67, 286 99 C323 132, 337 93, 367 61" fill="none" stroke="url(#routeGrad13)" stroke-width="5" stroke-linecap="round"/>
+                  <g class="grape-cluster">
+                    <line x1="210" y1="56" x2="210" y2="92" stroke="#365314" stroke-width="4" stroke-linecap="round"/>
+                    <circle cx="196" cy="98" r="12" fill="#6d28d9"/>
+                    <circle cx="218" cy="98" r="12" fill="#7e22ce"/>
+                    <circle cx="207" cy="119" r="13" fill="#581c87"/>
+                    <circle cx="231" cy="119" r="11" fill="#6b21a8"/>
+                    <circle cx="218" cy="139" r="12" fill="#4c1d95"/>
+                    <path d="M212 58 C233 48, 245 52, 253 68 C231 69, 219 68, 212 58Z" fill="#16a34a" opacity=".85"/>
+                  </g>
+                  <g fill="#7c2d12">
+                    <circle class="dust-dot d1" cx="84" cy="202" r="5"/>
+                    <circle class="dust-dot d2" cx="126" cy="176" r="4"/>
+                    <circle class="dust-dot d3" cx="318" cy="98" r="5"/>
+                  </g>
+                  <g class="faith-arrow" fill="none" stroke="#166534" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M285 190 H356"/>
+                    <path d="M338 172 L358 190 L338 208"/>
+                  </g>
+                  <path d="M50 218 H370" stroke="#92400e" stroke-width="3" opacity=".25" stroke-linecap="round"/>
+                </svg>
+              </aside>
+            </section>
+
+            <section class="mb-8">
+              <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+                <div>
+                  <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+                  <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Numbers 13 faithfully</p>
+                </div>
+              </div>
+              <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">窥探那地</h4>
+                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Spying Out the Land</p>
+                    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">tur et-ha'aretz</p>
+                    <p class="text-xs text-stone-600 leading-relaxed text-justify">探查本身不是不信，而是为顺服预备认识现实。The survey is not unbelief in itself; it becomes a test of whether reality will be read under God's promise.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">流奶与蜜</h4>
+                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Milk and Honey</p>
+                    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">zavat chalav udevash</p>
+                    <p class="text-xs text-stone-600 leading-relaxed text-justify">美地的果实证明神没有夸大祂的应许。The fruit confirms that God's promise is substantial, not vague religious language.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">另一个声音</h4>
+                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">A Different Voice</p>
+                    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Caleb's witness</p>
+                    <p class="text-xs text-stone-600 leading-relaxed text-justify">迦勒没有否认困难，却拒绝让困难拥有最终解释权。Caleb does not deny danger; he refuses to grant danger the final word.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+                    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">自看如蚱蜢</h4>
+                    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Grasshopper Identity</p>
+                    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">ka-chagavim</p>
+                    <p class="text-xs text-stone-600 leading-relaxed text-justify">恐惧先扭曲自我认识，再扭曲对使命的判断。Fear first distorts identity, then it distorts vocation.</p>
+                </div>
+              </div>
+            </section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <div class="mb-6">
+                <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">逐段研读：民数记 13章</h2>
+                <p class="en-text text-sm text-stone-500 italic mt-1">Passage-by-passage study with exegesis and devotional application</p>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:1-3</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">耶和华晓谕摩西说：“你打发人去窥探我所赐给以色列人的迦南地；他们每支派中要打发一个人，都要作首领的。”摩西就照耶和华的吩咐，从巴兰的旷野打发他们去。</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">The LORD said to Moses, "Send men to spy out the land of Canaan, which I am giving to the people of Israel." Moses sent them from the wilderness of Paran according to the command of the LORD.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">调查现实，仍在应许之内</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神称迦南为“我所赐给”的地，说明窥探行动发生在应许已经确定之后。调查不是为了决定神是否可信，而是让百姓认识将要顺服进入的地方。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The land is already described as God's gift. The mission gathers information for obedience, not evidence to decide whether God can be trusted.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">计划不必排斥信心</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在工作、家庭和服事中，认真评估风险并非不属灵；关键是评估之后谁拥有最后的话语。信心不是拒绝数据，而是在数据面前仍把神的应许放在中心。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Planning is not the opposite of faith. Faith gathers facts, then refuses to let facts displace God's promise from the center.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:4-16</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">这些人的名字如下：属流便支派的有撒刻的儿子沙母亚；属西缅支派的有何利的儿子沙法……属以法莲支派的有嫩的儿子何西阿。摩西称嫩的儿子何西阿为约书亚。</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">The names of the men are listed tribe by tribe, including Hoshea son of Nun from Ephraim. Moses called Hoshea the son of Nun Joshua.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">代表全体的首领名单</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">名单强调这不是私人冒险，而是每支派都被代表的公共行动。约书亚名字的出现也预示后续叙事：救恩与进入应许地将通过神所预备的仆人继续展开。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The list makes the mission representative and communal. Joshua's naming quietly anticipates the servant through whom the story of entering the land will continue.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">领袖的眼光会影响群体</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">一个团队、家庭或教会的领袖，不只传递信息，也塑造群体如何理解挑战。我们需要求神洁净自己的叙事方式，使我们报告事实时也带着敬畏和盼望。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Leaders do more than report facts; they shape how a community interprets pressure. We need God to purify our way of telling reality.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:17-20</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">摩西打发他们去窥探迦南地，说：“你们从南地上山地去，看那地如何……又看那地是肥美是瘠薄，其中有树木没有。你们要放开胆量，把那地的果子带些来。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">Moses told them to see what the land was like, whether the people were strong or weak, few or many, and to bring some of the fruit of the land. "Be of good courage."</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">完整观察，不选择性观看</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">摩西的问题包含土地、人民、城邑、资源和果实，既看挑战也看供应。“放开胆量”说明正确的观察需要勇气，因为恐惧会让人只看见威胁。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Moses asks for a full report: land, people, cities, resources, and fruit. Courage is needed because fear narrows attention to threat alone.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让观察恢复平衡</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">压力会让人只盯着“坚固城墙”，却忽略神已经给的果子。今天可以操练写下困难，也写下供应、恩典和可走的下一步，让心重新学习完整地看。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Pressure fixates on walls and misses fruit. Practice naming both the difficulty and the evidence of grace already present.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:21-24</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">他们上去窥探那地，从寻的旷野到利合，直到哈马口。他们到了以实各谷，从那里砍了葡萄树的一枝，上头有一挂葡萄，两个人用杠抬着。</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">They spied out the land from the wilderness of Zin to Rehob. At the Valley of Eshcol they cut down a branch with a single cluster of grapes, and two of them carried it on a pole.</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">果实成为可触摸的应许</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">以实各谷的葡萄不是装饰细节，而是把“美地”的应许变成百姓可以看见和触摸的证据。神让他们先尝到未来的真实。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The grapes are tangible evidence of the good land. God lets Israel glimpse the substance of the future He promised.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">珍惜路上的初熟果子</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神常在完整成就之前给人一些“初熟果子”：一次被更新的关系、一次祷告中的平安、一个小小的突破。不要轻看这些记号，它们帮助心继续向前。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Before fulfillment is complete, God often gives firstfruits: peace, restored relationships, small breakthroughs. Receive them as signs that strengthen hope.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:25-29</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">过了四十天，他们窥探那地才回来……又告诉摩西说：“我们到了你所打发我们去的那地，果然是流奶与蜜之地；这就是那地的果子。然而住那地的民强壮，城邑也坚固宽大。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">After forty days they returned and said, "It flows with milk and honey, and this is its fruit. However, the people who dwell in the land are strong, and the cities are fortified and very large."</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">“然而”改变了报告方向</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">探子先承认应许真实，随后用“然而”把注意力转向障碍。问题不在于他们提到困难，而在于困难开始支配整个解释框架。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">They affirm the promise, then pivot with "however." The problem is not mentioning danger; it is letting danger govern the whole interpretation.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">留意心中的“然而”</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们也常说：“神是信实的，然而我的问题太大。”灵修操练可以反过来表达：“问题确实很大，然而神仍信实。”语序有时暴露心中的王位。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We often say, "God is faithful, however my problem is huge." Faith learns to say, "The problem is huge, however God is faithful."</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:30</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">迦勒在摩西面前安抚百姓，说：“我们立刻上去得那地吧！我们足能得胜。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">But Caleb quieted the people before Moses and said, "Let us go up at once and occupy it, for we are well able to overcome it."</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">信心的声音安静恐慌</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">迦勒的回应简短直接。他不是根据以色列的军事优势发言，而是根据神已经赐地的事实发言。“立刻”表明顺服不可无限拖延。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Caleb speaks from the premise of God's gift, not Israel's visible advantage. "At once" shows that obedience cannot be postponed indefinitely.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">成为安静恐惧的人</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">在集体焦虑中，敬虔的人不一定声音最大，却能把焦点带回神。今天可以用一句诚实又有信心的话，帮助身边人从恐慌转向下一步顺服。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In communal anxiety, faithful speech can quiet fear and redirect attention to God. One honest sentence of trust may help others take the next obedient step.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="verse-card mb-8">
+                <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+                    <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">13:31-33</span>
+                    <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">但那些和他同去的人说：“我们不能上去攻击那民，因为他们比我们强壮。”探子中有人论到所窥探之地，向以色列人报恶信……“我们在那里看见亚衲族人……据我们看，自己就如蚱蜢一样；据他们看，我们也是如此。”</p>
+                    <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">The men who had gone up with him said, "We are not able to go up against the people, for they are stronger than we are." They brought a bad report, saying, "We seemed to ourselves like grasshoppers, and so we seemed to them."</p>
+                </div>
+                <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+                    <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-search-plus mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">恶信从自我缩小开始</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“我们不能”与“我们如蚱蜢”显示恐惧已经从外部评估进入身份判断。他们甚至替敌人想象结论，把自卑当作事实传播给全会众。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Fear moves from assessment to identity: "we are not able," "we seemed like grasshoppers." They project their insecurity onto the enemy and spread it as fact.</p>
+                    </div>
+                    <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+                        <div class="flex items-center mb-3 text-stone-700"><i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i><h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4></div>
+                        <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">拒绝用恐惧定义自己</h5>
+                        <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当压力让你觉得自己渺小无用时，要把身份带回神面前。基督徒不是靠自我膨胀面对挑战，而是承认软弱，同时相信神的同在比恐惧更真实。</p>
+                        <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">When pressure makes you feel small, bring your identity before God. Christian courage is not self-inflation; it is weakness held in the presence of a faithful God.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-6">
+                <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+                <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">两条阅读路径：经文含义与灵修应用</h2>
+                <p class="text-stone-700 leading-8 text-justify mb-3">本章的释经轨道先观察叙事结构：神已经称迦南为所赐之地，探子看见果实与城墙，随后报告分裂为信心与恐惧两种解释。这样阅读能避免把“勇敢”简化成性格优点，而是看见勇敢来自对神应许的信靠。</p>
+                <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">The exegesis track follows the narrative logic: God names Canaan as His gift, the spies see both fruit and fortifications, and the report divides into trust and fear. This prevents courage from becoming mere temperament; courage arises from confidence in God's promise.</p>
+            </section>
+            <section class="grid md:grid-cols-2 gap-5">
+                <div class="bg-slate-50 rounded-xl border border-stone-200 p-5">
+                    <h3 class="serif font-bold text-lg text-stone-900 mb-2">释经轨道 / Exegesis Track</h3>
+                    <p class="text-sm text-stone-600 leading-7 text-justify">先问：经文在民数记整体旅程中如何推进？人物说了什么，叙事如何评价？哪些词语显示应许、证据、恐惧和身份扭曲？</p>
+                    <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Ask how the passage advances Israel's journey, how the narrative evaluates the speeches, and how promise, evidence, fear, and distorted identity appear in the wording.</p>
+                </div>
+                <div class="bg-[var(--theme-accent)]/20 rounded-xl border border-stone-200 p-5">
+                    <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修轨道 / Devotional Track</h3>
+                    <p class="text-sm text-stone-600 leading-7 text-justify">再问：今天我如何描述困难？我的“然而”放在哪里？我是否让人的评价、失败经验或压力大小定义自己，而不是让神的信实重新塑造我的行动？</p>
+                    <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Then ask how you describe difficulty today, where your "however" is placed, and whether pressure or God's faithfulness is shaping your identity and next step.</p>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"我们立刻上去得那地吧！我们足能得胜。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Let us go up at once and occupy it, for we are well able to overcome it."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Numbers Chapter 13 / 民数记 13章 灵修综览</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

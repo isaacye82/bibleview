@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 12 | 利未记 12章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fff7ed;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffbeb;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #431407;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+
+        .purity-stage {
+            background: radial-gradient(circle at 50% 16%, rgba(255,247,237,.96), transparent 31%), linear-gradient(135deg, #fff7ed 0%, #fef3c7 42%, #ecfdf5 100%);
+            min-height: 100%;
+        }
+        .day-ring { stroke-dasharray: 28 14; transform-origin: center; animation: ringTurn 11s linear infinite; }
+        .day-ring.r2 { animation-duration: 16s; animation-direction: reverse; }
+        .altar-glow { animation: glowBreath 4.8s ease-in-out infinite; transform-origin: center; }
+        .altar-light { animation: flameRise 3.6s ease-in-out infinite; transform-origin: 210px 150px; }
+        .dove { animation: doveFloat 5.4s ease-in-out infinite; }
+        .dove-b { animation-delay: 1.1s; }
+        .water-line { stroke-dasharray: 190; animation: waterMove 5.6s ease-in-out infinite; }
+        .water-line.w2 { animation-delay: .8s; }
+        @keyframes ringTurn { to { transform: rotate(360deg); } }
+        @keyframes glowBreath { 0%,100% { opacity:.58; transform:scale(.94); } 50% { opacity:1; transform:scale(1.05); } }
+        @keyframes flameRise { 0%,100% { transform:scaleY(.88); opacity:.72; } 50% { transform:scaleY(1.1); opacity:1; } }
+        @keyframes doveFloat { 0%,100% { transform: translateY(8px); opacity:.58; } 50% { transform: translateY(-10px); opacity:1; } }
+        @keyframes waterMove { 0% { stroke-dashoffset:190; opacity:.22; } 50% { stroke-dashoffset:0; opacity:.58; } 100% { stroke-dashoffset:-190; opacity:.22; } }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-dove mr-2 text-stone-600"></i> 利未记 12章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 12</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">洁净、生命与重新亲近圣所</h1>
+    <p class="en-text text-stone-500 italic mb-5">Purification, Life, and Renewed Approach to the Sanctuary</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 12 章处理以色列妇人生育之后的洁净条例。经文的重点不是贬低女性或新生命，而是在会幕圣洁的框架中，承认生产涉及血、身体恢复、家庭身份与重新参与敬拜。母亲经过规定日子之后献祭，祭司为她赎罪，她就洁净；这显示圣洁生活既关乎敬拜次序，也关乎神对身体脆弱与贫穷处境的体恤。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 12 addresses purification after childbirth. Its concern is not contempt for women or for new life, but ordered return to sanctuary fellowship in a world where blood, bodily recovery, covenant identity, and worship are all taken seriously. The mother brings the appointed offering, the priest makes atonement, and she is declared clean, showing both holy order and divine mercy.</p>
+  </div>
+  <aside class="purity-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">等待的日数，归回的路</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以环形日数、洁净水波、鸽子与祭坛光线表现本章路径：从生产后的分隔与恢复，走向献祭、赎罪和重新进入敬拜。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Circling days, cleansing ripples, doves, and altar light picture movement from recovery to restored worship.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated purification days, doves, and altar light for Leviticus 12" class="w-full mt-4">
+      <defs>
+        <linearGradient id="lev12Gold" x1="0" x2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+        <radialGradient id="lev12Glow" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#fff7ed"/><stop offset="58%" stop-color="#fed7aa" stop-opacity=".75"/><stop offset="100%" stop-color="#b45309" stop-opacity=".08"/></radialGradient>
+      </defs>
+      <circle class="day-ring r1" cx="210" cy="92" r="54" fill="none" stroke="#b45309" stroke-width="4" opacity=".55"/>
+      <circle class="day-ring r2" cx="210" cy="92" r="74" fill="none" stroke="#0f766e" stroke-width="3" opacity=".38"/>
+      <circle class="altar-glow" cx="210" cy="166" r="56" fill="url(#lev12Glow)"/>
+      <path d="M168 198 H252 L236 152 H184 Z" fill="#92400e" opacity=".84"/>
+      <path class="altar-light" d="M210 150 C190 124, 197 104, 210 84 C225 105, 232 125, 210 150 Z" fill="url(#lev12Gold)" opacity=".9"/>
+      <g class="dove dove-a" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linecap="round"><path d="M96 126 C118 104, 139 104, 156 126"/><path d="M156 126 C138 127, 125 137, 113 153"/></g>
+      <g class="dove dove-b" fill="none" stroke="#e0f2fe" stroke-width="5" stroke-linecap="round"><path d="M264 116 C286 94, 307 94, 324 116"/><path d="M324 116 C306 117, 293 127, 281 143"/></g>
+      <path class="water-line w1" d="M70 218 C118 202, 158 234, 210 218 S309 202, 350 218" fill="none" stroke="#0f766e" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+      <path class="water-line w2" d="M86 236 C132 222, 169 250, 214 236 S292 222, 334 236" fill="none" stroke="#14b8a6" stroke-width="3" stroke-linecap="round" opacity=".34"/>
+      <text x="210" y="98" text-anchor="middle" font-size="17" font-family="serif" font-weight="700" fill="#78350f">洁净</text>
+      <text x="210" y="119" text-anchor="middle" font-size="10" font-family="serif" fill="#0f766e">Purification</text>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 12 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">产后的洁净期</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Postpartum Purification</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">tahorah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">利未记 12 章把生产后的身体恢复、礼仪洁净与会幕敬拜连在一起。这里不是把母亲或婴孩视为道德污秽，而是承认生命、血、身体边界与圣所亲近之间需要有秩序的恢复。<span class="block en-text text-[11px] text-stone-400 italic mt-2 text-left">The chapter treats childbirth through ritual restoration, not moral blame. It gives ordered space for bodily recovery and renewed approach to God.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">血源洁净</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Purification from Blood</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">dam tahorah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">经文反复提到“血源洁净”，焦点在于流血之后如何重新进入圣洁群体的敬拜生活。生命从神而来，身体的脆弱也在神面前被认真对待。<span class="block en-text text-[11px] text-stone-400 italic mt-2 text-left">The concern is how a woman returns to sanctuary fellowship after blood-related vulnerability. Life and bodily fragility are treated reverently before God.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">第八日割礼</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Eighth-Day Circumcision</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">brit milah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">男婴第八日受割礼，把新生命纳入亚伯拉罕之约的记号中。家庭的喜乐不只是私人事件，也被放在神与祂百姓的约中理解。<span class="block en-text text-[11px] text-stone-400 italic mt-2 text-left">The eighth-day sign places a newborn son within covenant identity. Family joy is interpreted inside God’s promises to His people.</span></p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">贫者可献的祭</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Offering for the Poor</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">torim / bene yonah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">若力量不够献羊羔，母亲可献两只斑鸠或雏鸽。神的律法既严肃对待亲近圣所的次序，也体恤贫穷家庭，使恢复敬拜的路向他们开放。<span class="block en-text text-[11px] text-stone-400 italic mt-2 text-left">The law preserves holiness while making restoration accessible to poor families. God’s order includes mercy for limited resources.</span></p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">利未记 12 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按生产后的洁净期、献祭与恢复亲近圣所两段阅读。每个单元先观察经文在会幕圣洁体系中的含义，再转向今日关于身体、等待、家庭压力与恩典归回的操练。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study reads Leviticus 12 through purification after childbirth, offering, and restored approach to the sanctuary. Each unit moves from contextual meaning to present practice.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Separation and Recovery after Childbirth</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">生产后的分隔与恢复 (12:1-5)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">12:1-2</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华晓谕摩西说：“你晓谕以色列人说：若有妇人怀孕生男孩，她就不洁净七天，像月经污秽的日子不洁净一样。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD spoke to Moses: when a woman conceives and bears a male child, she is ritually unclean for seven days, as in the days of her menstrual impurity.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">身体恢复被纳入圣洁秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文把生产之后的状态归入礼仪洁净范畴，而不是道德罪责。生产涉及血和身体边界，因此在会幕体系中需要暂时分隔。神没有忽略母亲的身体经历，而是用条例给她恢复的时间，也保护圣所敬拜的次序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text describes ritual impurity, not moral guilt. Childbirth involves blood and bodily vulnerability, so the sanctuary system provides temporary separation, ordered recovery, and reverent approach to God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">给身体与心灵恢复的空间</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常急着把软弱包装成效率，但本节提醒我们：神看重身体的真实限制。生产、病后、哀伤或长期压力之后，人需要有恢复空间。属灵成熟不是否认疲惫，而是在神面前按真实状态重新归位。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This passage invites us to honor real limits. After birth, illness, grief, or pressure, faith does not deny exhaustion; it receives ordered space to recover before God.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">12:3-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            第八天，要给婴孩行割礼。妇人产男孩还要在血源洁净中家居三十三天；若产女孩，就不洁净两个七天，又要在血源洁净中家居六十六天。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the eighth day the male child is circumcised. The mother then continues in the blood of purification for thirty-three days; after a female child, the period is doubled.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">新生命进入约，母亲仍在恢复中</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">第八日割礼把男婴带入约的记号，说明孩子从出生起就被放在神百姓的身份中。同时母亲仍有洁净期，不能摸圣物或进圣所。经文把家庭喜乐、约的身份与母亲恢复同时放在神的圣洁秩序下。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Circumcision marks covenant identity for the son, while the mother remains in a period of purification. The passage holds family joy, covenant belonging, and bodily restoration together under holy order.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">喜乐与等待可以并存</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人生的祝福不总是立刻带来完全自由。新工作、新家庭成员、服事机会，都可能伴随疲惫和限制。本段教我们不必把等待看成失败；神能在喜乐和恢复尚未完成时，仍确认我们属于祂。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Blessing often comes with limits and waiting. New work, family changes, and ministry opportunities can bring joy and strain together. Waiting is not failure when God is ordering restoration.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Offering and Restored Cleanness</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">献祭与重新洁净 (12:6-8)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">12:6-7</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            满了洁净的日子，无论为男孩或女孩，她要把一岁的羊羔为燔祭，一只雏鸽或斑鸠为赎罪祭，带到会幕门口交给祭司。祭司要献在耶和华面前，为她赎罪，她的血源就洁净了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When the days of purification are completed, she brings a year-old lamb for a burnt offering and a young pigeon or turtledove for a sin offering. The priest offers them before the LORD, makes atonement for her, and she is clean.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">献祭标记恢复敬拜关系</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">燔祭表达全然归向神，赎罪祭处理礼仪上的阻隔，使母亲重新进入敬拜共同体。这里的赎罪不是说生产本身是罪，而是在圣洁神面前，凡涉及不洁的状态都需要神所设立的洁净途径。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The burnt offering expresses renewed dedication, and the sin offering removes ritual obstruction. Childbirth itself is not sin; rather, the holy God provides a way for every unclean state to be restored.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">重新开始需要恩典的门</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常想靠自我调整重新开始，但经文显示真正的恢复来自神所开通的路。无论经历混乱、身体消耗或家庭压力，归回神不是靠表现证明自己，而是接受祂设立的恩典和秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Fresh starts are not achieved merely by self-management. After confusion, physical drain, or family pressure, return to God comes through the gracious way He provides.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">12:8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            她的力量若不够献一只羊羔，就要取两只斑鸠或两只雏鸽，一只为燔祭，一只为赎罪祭。祭司要为她赎罪，她就洁净了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If she cannot afford a lamb, she may bring two turtledoves or two young pigeons, one for the burnt offering and one for the sin offering. The priest makes atonement, and she is clean.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣洁条例中的怜悯</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文特别为贫穷家庭留下可负担的献祭方式。圣洁并非有资源者的特权；神要求百姓按祂的路亲近祂，也让有限的人能够真实参与。这也预备读者理解新约中马利亚献上鸟类祭物的贫寒背景。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The law gives an affordable offering for the poor. Holiness is not a privilege for the wealthy; God’s ordered approach remains open to those with limited means.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神不轻看有限的人</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当资源、精力或能力有限时，人容易觉得自己不配靠近神。本节把怜悯写进条例：神知道人的处境。今天的应用不是降低敬虔，而是在有限中诚实献上可献的，并相信神悦纳按恩典而来的归回。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Limited resources can make people feel unworthy to approach God. This verse writes mercy into the law: God knows human circumstances and receives honest worship offered through His grace.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论总结 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">从圣洁秩序到今日归回</h2>
+  <p class="text-stone-700 leading-8 text-justify mb-3">解读利未记 12 章时，需要先让经文站在会幕、祭司、洁净与圣所亲近的旧约语境中说话，再谨慎进入今日应用。这样既避免把现代情绪直接投射到古代条例，也避免把礼仪洁净误读为对女性或婴孩的道德否定。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Leviticus 12 should first be read within the Old Testament world of sanctuary, priesthood, purity, and approach to God. Application then follows carefully, avoiding both modern projection and the mistaken idea that ritual impurity equals moral rejection.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5 sm:p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-2">正统解经路径</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">The Exegetical Path</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><strong class="text-stone-800">上下文：</strong>本章接续利未记 11 章洁净条例，并继续说明圣洁神如何让百姓有秩序地亲近祂。<span class="block en-text text-xs text-stone-400 italic">Context: the chapter continues the purity instructions and the ordered approach to a holy God.</span></li>
+      <li><strong class="text-stone-800">字词观察：</strong>“不洁净”“血源洁净”“赎罪”都属于礼仪体系用语，需要按圣所语境解释。<span class="block en-text text-xs text-stone-400 italic">Word study: impurity, purification from blood, and atonement function within the sanctuary system.</span></li>
+      <li><strong class="text-stone-800">经文重心：</strong>神同时维护圣洁、照顾身体恢复，并为贫者保留可进入敬拜的道路。<span class="block en-text text-xs text-stone-400 italic">Main point: God upholds holiness, honors bodily restoration, and keeps worship accessible to the poor.</span></li>
+    </ul>
+  </div>
+  <div class="bg-[var(--theme-accent)]/30 rounded-xl border border-orange-100 p-5 sm:p-6">
+    <h3 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用路径</h3>
+    <p class="en-text text-xs text-stone-500 italic mb-4">The Devotional Path</p>
+    <ul class="space-y-3 text-sm text-stone-600 leading-7">
+      <li><strong class="text-stone-800">桥梁原则：</strong>古代洁净期提醒今日信徒，身体限制、恢复过程和属灵亲近并不彼此冲突。<span class="block en-text text-xs text-stone-400 italic">Bridge: bodily limits, recovery, and spiritual nearness need not be opposed.</span></li>
+      <li><strong class="text-stone-800">现实落地：</strong>在产后恢复、照护压力、病后重建或职场耗竭中，人可以按真实状态来到神面前。<span class="block en-text text-xs text-stone-400 italic">Practice: after childbirth, caregiving pressure, illness, or burnout, people may return honestly before God.</span></li>
+      <li><strong class="text-stone-800">福音方向：</strong>贫者可献的祭提醒我们，神亲近人的路不是按人的资源衡量，而是按祂所赐的恩典打开。<span class="block en-text text-xs text-stone-400 italic">Gospel direction: approach to God rests on His provided mercy, not on human resources.</span></li>
+    </ul>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"祭司要为她赎罪，她就洁净了。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"The priest shall make atonement for her, and she shall be clean."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Leviticus 12 灵修研读报告 / Devotional Study Report</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

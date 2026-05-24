@@ -1,11 +1,24 @@
 (function () {
   const availableChapters = {
-    Gen: Array.from({ length: 50 }, (_, i) => i + 1),
+    Gen: Array.from({ length: 50 }, (_, i) => i + 1), // 摩西五经
     Exod: Array.from({ length: 40 }, (_, i) => i + 1), 
-    Lev: Array.from({ length: 9 }, (_, i) => i + 1),
-    Song: Array.from({ length: 8 }, (_, i) => i + 1),
-    Josh: Array.from({ length: 24 }, (_, i) => i + 1),
-    Joel: Array.from({ length: 3 }, (_, i) => i + 1),
+    Lev: Array.from({ length: 27 }, (_, i) => i + 1),
+    Num: Array.from({ length: 36 }, (_, i) => i + 1),
+    Deut: Array.from({ length: 34 }, (_, i) => i + 1),
+    Josh: Array.from({ length: 24 }, (_, i) => i + 1),//历史书
+    Judg: Array.from({ length: 21 }, (_, i) => i + 1),
+    Ruth: Array.from({ length: 4 }, (_, i) => i + 1),
+    //"1Sam": Array.from({ length: 31 }, (_, i) => i + 1),
+    //"2Sam": Array.from({ length: 24 }, (_, i) => i + 1),
+    //"1Kgs": Array.from({ length: 22 }, (_, i) => i + 1),
+    //"2Kgs": Array.from({ length: 25 }, (_, i) => i + 1),
+    //"1Chr": Array.from({ length: 29 }, (_, i) => i + 1),
+    //"2Chr": Array.from({ length: 36 }, (_, i) => i + 1),
+    Ezra: Array.from({ length: 10 }, (_, i) => i + 1),
+    Neh: Array.from({ length: 13 }, (_, i) => i + 1),
+    Esth: Array.from({ length: 10 }, (_, i) => i + 1),
+    Song: Array.from({ length: 8 }, (_, i) => i + 1), //智慧书
+    Joel: Array.from({ length: 3 }, (_, i) => i + 1), //小先知书
     Obad: [1],
     Jonah: Array.from({ length: 4 }, (_, i) => i + 1),
     Mic: Array.from({ length: 7 }, (_, i) => i + 1),
@@ -173,7 +186,6 @@
   ];
 
   const state = {
-    filter: "all",
     query: "",
     books: [...oldTestament, ...newTestament]
   };
@@ -219,8 +231,7 @@
               </span>
             </a>
             <div class="bv-nav-links">
-              <a href="#library">书卷</a>
-              <a href="#topics">专题</a>
+              <a href="#library">目录</a>
               <a href="Config/disclaimer.html">免责声明</a>
               <a href="Config/Guestbook.html">留言板</a>
             </div>
@@ -241,8 +252,8 @@
               <h1 id="hero-title">圣经纵览 <span>一卷一章地看见全貌</span></h1>
               <p class="bv-lead">将已整理的旧约、新约与专题资料放在同一个清晰入口中。搜索书卷、查看已完成章节，并快速回到正在研读的内容。</p>
               <div class="bv-actions">
-                <a class="bv-button primary" href="#library">${iconBook} 浏览书卷</a>
-                <a class="bv-button" href="#topics">查看专题</a>
+                <a class="bv-button primary" href="#library">${iconBook} 打开目录</a>
+                <a class="bv-button" href="Config/Guestbook.html">留言板</a>
               </div>
             </div>
             <div class="bv-hero-panel" aria-label="诗篇 119:105">
@@ -261,34 +272,57 @@
           </section>
 
           <section class="bv-shell bv-section" id="library">
+            <div class="bv-controls">
+              <input class="bv-search" type="search" placeholder="搜索：创、Genesis、Matt、约翰..." data-search>
+            </div>
             <div class="bv-section-heading">
               <div>
                 <p class="bv-kicker">Library</p>
-                <h2>书卷导航</h2>
+                <h2>目录</h2>
               </div>
-              <p>有内容的章节会高亮显示；未整理的书卷保留索引位置，方便后续继续补充。</p>
+              <p>旧约、新约、各类主题为一级目录；展开后在二级菜单中浏览 66 卷书或专题资料。</p>
             </div>
-            <div class="bv-controls">
-              <input class="bv-search" type="search" placeholder="搜索：创、Genesis、Matt、约翰..." data-search>
-              <div class="bv-tabs" role="tablist" aria-label="书卷筛选">
-                <button class="bv-tab is-active" type="button" data-filter="all">全部</button>
-                <button class="bv-tab" type="button" data-filter="OT">旧约</button>
-                <button class="bv-tab" type="button" data-filter="NT">新约</button>
-                <button class="bv-tab" type="button" data-filter="ready">已完成</button>
-              </div>
-            </div>
-            <div class="bv-book-grid" data-book-grid></div>
-          </section>
+            <div class="bv-primary-menu" data-primary-menu>
+              <section class="bv-menu-panel is-open" data-menu-panel="OT">
+                <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="true">
+                  <span>
+                    <strong>旧约</strong>
+                    <small>Old Testament · 39 卷</small>
+                  </span>
+                  <span class="bv-menu-count">${oldTestament.length}</span>
+                </button>
+                <div class="bv-menu-body">
+                  <div class="bv-secondary-list" data-old-books></div>
+                </div>
+              </section>
 
-          <section class="bv-shell bv-section" id="topics">
-            <div class="bv-section-heading">
-              <div>
-                <p class="bv-kicker">Topics</p>
-                <h2>专题与资料</h2>
-              </div>
-              <p>背景介绍、时间线、读书文摘和深度研读集中在这里，作为章节研读之外的辅助材料。</p>
+              <section class="bv-menu-panel" data-menu-panel="NT">
+                <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="false">
+                  <span>
+                    <strong>新约</strong>
+                    <small>New Testament · 27 卷</small>
+                  </span>
+                  <span class="bv-menu-count">${newTestament.length}</span>
+                </button>
+                <div class="bv-menu-body">
+                  <div class="bv-secondary-list" data-new-books></div>
+                </div>
+              </section>
+
+              <section class="bv-menu-panel" data-menu-panel="topics">
+                <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="false">
+                  <span>
+                    <strong>各类主题</strong>
+                    <small>Topics · 背景、时间线、读书文摘</small>
+                  </span>
+                  <span class="bv-menu-count">${topicCategories.length}</span>
+                </button>
+                <div class="bv-menu-body">
+                  <div class="bv-topic-menu" data-topic-grid></div>
+                </div>
+              </section>
             </div>
-            <div class="bv-topic-grid" data-topic-grid></div>
+            <div class="bv-empty-state" data-search-empty hidden>没有找到匹配的书卷。</div>
           </section>
         </main>
 
@@ -329,30 +363,79 @@
     return Math.round(((availableChapters[book.abbr] || []).length / book.chapters) * 100);
   }
 
-  function getFilteredBooks() {
+  function getFilteredBooks(type) {
     const query = state.query.trim().toLowerCase();
     return state.books.filter((book) => {
-      const ready = (availableChapters[book.abbr] || []).length > 0;
-      if (state.filter === "OT" && book.type !== "OT") return false;
-      if (state.filter === "NT" && book.type !== "NT") return false;
-      if (state.filter === "ready" && !ready) return false;
+      if (type && book.type !== type) return false;
       if (!query) return true;
       return [book.short, book.english, book.abbr].some((value) => value.toLowerCase().includes(query));
     });
   }
 
   function renderBooks() {
-    const grid = document.querySelector("[data-book-grid]");
-    const books = getFilteredBooks();
-    if (!books.length) {
-      grid.innerHTML = `<div class="bv-empty-state">没有找到匹配的书卷。</div>`;
-      return;
-    }
+    const renderList = (selector, type) => {
+      const grid = document.querySelector(selector);
+      const books = getFilteredBooks(type);
+      grid.innerHTML = books.map((book) => {
+        const readyCount = (availableChapters[book.abbr] || []).length;
+        const label = readyCount ? `${readyCount} 章` : "待补充";
+        return `
+          <button class="bv-book-row ${readyCount ? "" : "is-empty"}" type="button" data-book="${book.abbr}" ${readyCount ? "" : "disabled"} aria-label="${escapeHtml(book.short)} ${escapeHtml(book.english)}">
+            <span class="bv-book-main">
+              <span class="bv-book-cn">${escapeHtml(book.short)} ${escapeHtml(book.abbr)}</span>
+              <span class="bv-book-en">${escapeHtml(book.english)}</span>
+            </span>
+            <span class="bv-book-status">
+              <span>${label}</span>
+            </span>
+          </button>
+        `;
+      }).join("");
+      return books.length;
+    };
 
+    const oldCount = renderList("[data-old-books]", "OT");
+    const newCount = renderList("[data-new-books]", "NT");
+    document.querySelector("[data-search-empty]").hidden = oldCount + newCount > 0;
+
+    if (state.query.trim()) {
+      setMenuPanel("OT", oldCount > 0);
+      setMenuPanel("NT", newCount > 0);
+    }
+  }
+
+  function setMenuPanel(name, isOpen) {
+    const panel = document.querySelector(`[data-menu-panel="${name}"]`);
+    if (!panel) return;
+    panel.classList.toggle("is-open", isOpen);
+    panel.querySelector("[data-menu-trigger]").setAttribute("aria-expanded", String(isOpen));
+  }
+
+  function renderTopics() {
+    const grid = document.querySelector("[data-topic-grid]");
+    grid.innerHTML = topicCategories.map((topic) => `
+      <details class="bv-topic-group">
+        <summary>
+          <span>
+            <strong>${escapeHtml(topic.title)}</strong>
+            <small>${escapeHtml(topic.abbr)} · ${escapeHtml(topic.desc)}</small>
+          </span>
+        </summary>
+        <div class="bv-topic-links">
+          ${topic.links.map((link) => `<a href="${link.url}"><span>${escapeHtml(link.name)}</span><span>→</span></a>`).join("")}
+        </div>
+      </details>
+    `).join("");
+  }
+
+  function renderBookCards() {
+    const grid = document.querySelector("[data-book-grid]");
+    if (!grid) return;
+    const books = getFilteredBooks();
     grid.innerHTML = books.map((book) => {
       const readyCount = (availableChapters[book.abbr] || []).length;
       const progress = progressFor(book);
-      const label = readyCount ? `${readyCount} / ${book.chapters} 章` : "待补充";
+      const label = readyCount ? `${readyCount} 章` : "待补充";
       return `
         <article class="bv-book ${readyCount ? "" : "is-empty"}" data-book="${book.abbr}" tabindex="${readyCount ? "0" : "-1"}" aria-label="${escapeHtml(book.short)} ${escapeHtml(book.english)}">
           <div class="bv-book-top">
@@ -367,20 +450,6 @@
         </article>
       `;
     }).join("");
-  }
-
-  function renderTopics() {
-    const grid = document.querySelector("[data-topic-grid]");
-    grid.innerHTML = topicCategories.map((topic) => `
-      <article class="bv-topic" style="--topic-image: ${topic.image}">
-        <div class="bv-topic-media" aria-hidden="true"></div>
-        <div class="bv-topic-body">
-          <h3>${escapeHtml(topic.title)}</h3>
-          <p>${escapeHtml(topic.abbr)} · ${escapeHtml(topic.desc)}</p>
-          ${topic.links.map((link) => `<a href="${link.url}"><span>${escapeHtml(link.name)}</span><span>→</span></a>`).join("")}
-        </div>
-      </article>
-    `).join("");
   }
 
   function openDrawer(abbr) {
@@ -421,25 +490,17 @@
       renderBooks();
     });
 
-    document.querySelectorAll("[data-filter]").forEach((button) => {
+    document.querySelectorAll("[data-menu-trigger]").forEach((button) => {
       button.addEventListener("click", () => {
-        state.filter = button.dataset.filter;
-        document.querySelectorAll("[data-filter]").forEach((item) => item.classList.toggle("is-active", item === button));
-        renderBooks();
+        const panel = button.closest("[data-menu-panel]");
+        const isOpen = panel.classList.toggle("is-open");
+        button.setAttribute("aria-expanded", String(isOpen));
       });
     });
 
-    document.querySelector("[data-book-grid]").addEventListener("click", (event) => {
+    document.querySelector("[data-primary-menu]").addEventListener("click", (event) => {
       const card = event.target.closest("[data-book]");
       if (card) openDrawer(card.dataset.book);
-    });
-
-    document.querySelector("[data-book-grid]").addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      const card = event.target.closest("[data-book]");
-      if (!card) return;
-      event.preventDefault();
-      openDrawer(card.dataset.book);
     });
 
     document.querySelector("[data-close]").addEventListener("click", closeDrawer);

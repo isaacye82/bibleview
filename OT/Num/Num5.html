@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numbers Chapter 5 | 民数记 5章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7c2d12;     /* 主色：圣洁界限与铜坛色调 */
+            --theme-secondary: #0f766e; /* 次色：洁净、修复与群体生命 */
+            --theme-accent: #fef3c7;       /* 提亮色：细面、金色与审慎光照 */
+            --theme-bg: #fffaf0;               /* 网页底色：温暖旷野纸色 */
+            --theme-text: #292524;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .purity-stage {
+            background:
+                radial-gradient(circle at 22% 14%, rgba(254,243,199,.98), transparent 34%),
+                linear-gradient(135deg, #fffbeb 0%, #ccfbf1 58%, #fff7ed 100%);
+            min-height: 100%;
+        }
+        .camp-ring { animation: ringPulse 5.2s ease-in-out infinite; transform-origin: center; }
+        .wash-line { stroke-dasharray: 260; stroke-dashoffset: 260; animation: washDraw 4.8s ease-in-out infinite; }
+        .confession-dot { animation: dotSettle 4.2s ease-in-out infinite; }
+        .confession-dot.d2 { animation-delay: .4s; }
+        .confession-dot.d3 { animation-delay: .8s; }
+        .scale-left { animation: scaleLeft 4.8s ease-in-out infinite; transform-origin: 210px 120px; }
+        .scale-right { animation: scaleRight 4.8s ease-in-out infinite; transform-origin: 210px 120px; }
+        @keyframes ringPulse {
+            0%, 100% { opacity: .52; transform: scale(.98); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+        @keyframes washDraw {
+            0% { stroke-dashoffset: 260; opacity: .38; }
+            48%, 72% { stroke-dashoffset: 0; opacity: 1; }
+            100% { stroke-dashoffset: -260; opacity: .45; }
+        }
+        @keyframes dotSettle {
+            0%, 100% { transform: translateY(-8px); opacity: .45; }
+            55% { transform: translateY(4px); opacity: 1; }
+        }
+        @keyframes scaleLeft {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(3deg); }
+        }
+        @keyframes scaleRight {
+            0%, 100% { transform: rotate(2deg); }
+            50% { transform: rotate(-3deg); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-scale-balanced mr-2 text-stone-600"></i> 民数记 5章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Numbers Chapter 5</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">圣洁的营，需要洁净、赔偿与真相</h1>
+    <p class="en-text text-stone-500 italic mb-5">A Holy Camp Requires Cleansing, Restitution, and Truth</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">民数记第 5 章接续前四章的营地与会幕秩序，把焦点从“如何编队前行”推进到“神住在营中，营中生活必须怎样”。经文处理三类破坏群体圣洁与信任的事：礼仪不洁需要暂时离营，亏负邻舍需要认罪并加上赔偿，婚姻疑恨需要带到祭司面前，在神面前求真相而不是让暗中猜疑吞噬关系。本章不是鼓励冷酷排斥或家庭控制，而是在古代以色列的会幕群体中说明：神的同在呼召百姓面对污染、罪责和隐藏的破裂。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Numbers 5 moves from camp arrangement to camp holiness. Because the LORD dwells among Israel, uncleanness must be handled, wrongs against neighbors must be confessed and repaid, and hidden marital suspicion must be brought under priestly oversight before God. The chapter calls the covenant community to protect holiness, repair damage, and seek truth rather than live by denial or destructive suspicion.</p>
+  </div>
+  <aside class="purity-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">营地边界、洗净水流与公义天平</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效用营地圆环、流动水线、落定的认罪点和轻摆天平，表现本章的洁净、赔偿和在神面前求真。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Camp boundaries, flowing cleansing, settled confession, and a balanced scale picture holiness that repairs community life.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated camp boundary, cleansing stream, confession, and scales from Numbers 5" class="w-full mt-4">
+      <defs>
+        <linearGradient id="washGradNum5" x1="0" x2="1">
+          <stop offset="0%" stop-color="#0f766e"/>
+          <stop offset="100%" stop-color="#7c2d12"/>
+        </linearGradient>
+        <radialGradient id="campGlowNum5" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stop-color="#fef3c7"/>
+          <stop offset="70%" stop-color="#fdba74" stop-opacity=".45"/>
+          <stop offset="100%" stop-color="#7c2d12" stop-opacity=".08"/>
+        </radialGradient>
+      </defs>
+      <circle class="camp-ring" cx="210" cy="128" r="82" fill="url(#campGlowNum5)" stroke="#7c2d12" stroke-width="4" stroke-dasharray="10 8"/>
+      <path d="M177 151 L210 86 L243 151 Z" fill="#ffedd5" stroke="#7c2d12" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M210 86 V151" stroke="#7c2d12" stroke-width="3" opacity=".55"/>
+      <path class="wash-line" d="M66 88 C112 51, 147 76, 184 116 C221 157, 273 165, 354 107" fill="none" stroke="url(#washGradNum5)" stroke-width="9" stroke-linecap="round"/>
+      <g fill="#0f766e">
+        <circle class="confession-dot d1" cx="135" cy="190" r="7"/>
+        <circle class="confession-dot d2" cx="162" cy="203" r="6"/>
+        <circle class="confession-dot d3" cx="190" cy="190" r="7"/>
+      </g>
+      <g stroke="#44403c" stroke-width="4" stroke-linecap="round" fill="none">
+        <path d="M277 83 V176"/>
+        <path d="M244 111 H310"/>
+        <path class="scale-left" d="M244 111 L222 151 H266 Z" fill="#fef3c7" opacity=".82"/>
+        <path class="scale-right" d="M310 111 L288 151 H332 Z" fill="#ccfbf1" opacity=".82"/>
+      </g>
+      <path d="M66 222 H354" stroke="#7c2d12" stroke-width="3" stroke-linecap="round" opacity=".28"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">关键概念卡片</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Numbers 5 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">营中圣洁</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Holiness in the Camp</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qadosh qerev</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">神住在以色列营中，因此营地不是普通聚居地。圣洁既涉及敬拜，也进入公共卫生、边界和群体责任。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">认罪赔偿</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Confession & Restitution</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">hitvadah, asham</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">罪不是只在心里处理；亏负他人时，悔改要走向承认、归还和额外赔偿，使破坏过的关系得到具体修补。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">隐藏的真相</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Hidden Truth</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">satar, qinah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">疑恨条例面对的是无法用普通证据证明的婚姻危机。经文把私下猜疑带到神面前，限制任意报复。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神住其中</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God Dwells Among Them</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shakan betokam</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章各条例的中心理由不是社会洁癖，而是“我住在其中”。神的同在使百姓的身体、财物和婚姻都成为信仰生活的一部分。</p>
+</div>
+  </div>
+</section>
+
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">全章脉络 / Chapter Flow</p>
+  <div class="grid md:grid-cols-3 gap-4">
+    <div class="border-l-4 border-[var(--theme-primary)] pl-4">
+      <h3 class="serif font-bold text-stone-900">5:1-4 洁净营地</h3>
+      <p class="text-sm text-stone-600 leading-7 mt-2">不洁者暂时出营，保护会幕同在中的群体圣洁。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">The camp is guarded because God's presence dwells there.</p>
+    </div>
+    <div class="border-l-4 border-[var(--theme-secondary)] pl-4">
+      <h3 class="serif font-bold text-stone-900">5:5-10 赔偿邻舍</h3>
+      <p class="text-sm text-stone-600 leading-7 mt-2">认罪、归还、加五分之一，悔改进入具体修复。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Confession becomes restitution and repair.</p>
+    </div>
+    <div class="border-l-4 border-amber-500 pl-4">
+      <h3 class="serif font-bold text-stone-900">5:11-31 面对疑恨</h3>
+      <p class="text-sm text-stone-600 leading-7 mt-2">疑恨不被放任，也不许私刑，而被带到神面前求公义判断。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Suspicion is brought under priestly process before God.</p>
+    </div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h1 class="serif text-3xl font-bold text-stone-900 mb-3">民数记 5 章：神同在中的洁净、赔偿与真相</h1>
+    <p class="text-stone-600 leading-7 text-justify">本章的条例容易让现代读者感到距离，尤其是疑恨条例。因此研读时要先看它在西奈营地、会幕同在、祭司监督和古代法律世界中的功能，再谨慎进入今日应用：圣洁不是表演，悔改需要修复，疑心不能成为操控他人的工具。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">Numbers 5 must be read in its wilderness-camp setting, with God's presence at the center and priests overseeing communal order. Its devotional bridge concerns holiness, repair, and truthful restraint rather than suspicion, control, or public shaming.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Cleansing the Camp</p>
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">营地因神同在而分别为圣 (5:1-4)</h2>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">民数记 5:1-4</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西，使长大麻风的、患漏症的、因死尸不洁净的，都出到营外；无论男女都要使他们出到营外，免得污秽他们的营，因为神住在以色列人中间。以色列人就照样行了。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD commands that those with serious skin disease, bodily discharge, or corpse-related impurity be placed outside the camp, so that the camp where He dwells will not be defiled. Israel obeys the command.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">上下文观察：会幕中心决定营地生活</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">前四章已经说明以色列按支派和利未职责围绕会幕安营。第 5 章第一段说明，神的同在不只影响宗教仪式，也影响营地的生活边界。这里的“不洁”主要属于礼仪状态，不等于个人道德低劣；暂时出营的目的，是保护神住在其中的群体圣洁，并预备洁净后重新归入群体。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The issue is ritual impurity in a camp centered on the tabernacle, not a claim that the affected people have less worth. God's dwelling presence shapes the camp's boundaries and calls the community to ordered holiness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵意义：神的同在使生活不能随便</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天我们不照搬古代营地隔离条例，但仍要学习一个桥梁原则：亲近神不是只在聚会中敬虔，也包括诚实处理会污染共同生活的事。家庭、教会和工作团队若忽略长期失序、隐瞒和伤害，属灵语言会变得空洞。今日默想：我是否有一件需要被带到光中、按真理处理的事？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We do not reproduce Israel's camp laws, but we do learn that God's presence calls everyday life into truthful order. Holiness includes dealing honestly with what harms shared life.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Confession and Restitution</p>
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">亏负邻舍，也是在干犯耶和华 (5:5-10)</h2>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">民数记 5:5-10</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若有人亏负别人，以致干犯耶和华，就要承认所犯的罪，把所亏负的如数赔还，并加上五分之一；若受害者没有亲属可收取赔偿，就归给耶和华和祭司。奉给耶和华的圣物也归祭司。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When someone wrongs another person and acts unfaithfully against the LORD, the offender must confess, repay the full amount, and add one-fifth. If there is no relative to receive restitution, it belongs to the LORD through the priestly provision.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">字词观察：认罪不是代替赔偿</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段把“亏负人”和“干犯耶和华”连在一起，说明社会关系也在神面前。经文含义很具体：悔改包括承认事实、归还原物或等值赔偿，并加上五分之一，表示罪带来的损害不只是账面损失，也包括关系和信任的破坏。若受害方已经无人代表，赔偿仍不可取消，而要归给耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The text joins horizontal wrong with offense against the LORD. Confession is concrete: acknowledge the sin, repay what was taken or damaged, and add compensation because trust has been harmed.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：悔改要落到可见的修复</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们容易把“对不起”说成一块遮羞布，却不愿面对具体损失。民数记 5 章提醒我们，属灵生命的真实度常在赔偿、归还、澄清、补做和承担后果中显明。今日默想：我是否欠某人一个具体行动，而不只是一个含糊道歉？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Repentance becomes visible when apology moves into repair. Faithful confession asks what must be returned, clarified, restored, or made whole.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Jealousy, Truth, and Priestly Oversight</p>
+    <h2 class="serif text-xl sm:text-2xl font-bold text-stone-900">疑恨不可变成私刑，要带到神面前 (5:11-31)</h2>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">民数记 5:11-15</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            若人的妻背离丈夫，或丈夫起了疑恨的心，却没有见证人，也没有被捉住，那人就要把妻带到祭司那里，并为她带大麦面作供物；这供物不浇油、不加乳香，因为是疑恨的素祭，使人想起罪孽。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If a husband suspects unfaithfulness but there are no witnesses and no proof, he must bring the matter to the priest with a grain offering of jealousy, an offering that brings hidden guilt or innocence before God.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">上下文观察：限制疑心，而不是纵容控制</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段处在古代以色列的婚约与会幕法律语境中。经文面对的是一个危险处境：丈夫怀疑，证据不足，家庭关系被隐藏事实或无根据猜疑撕裂。条例没有让丈夫私下惩罚妻子，而是要求他进入祭司监督的公开程序，把疑恨交给神的判断。今天应用时必须谨慎：这不是授权任何人用宗教名义羞辱、操控或威胁配偶。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The law addresses suspicion without evidence in ancient Israel. It restrains private retaliation by placing the matter under priestly process before God; it must not be used today to justify control or humiliation.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵意义：疑心需要真理和约束</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人际关系中的疑心若被放任，会把人推向监控、审问和报复；若被否认，也可能让真实的罪继续隐藏。本段提醒我们，疑心必须受到真理、程序、牧养和自我省察的约束。今日默想：我是在寻求真相与修复，还是在用恐惧控制别人？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Suspicion needs truth and restraint. The devotional question is whether we seek truthful repair or use fear to control another person.</p>
+        </div>
+        
+    </div>
+</div>
+
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">民数记 5:16-28</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            祭司使妇人站在耶和华面前，用圣水和帐幕地上的尘土预备苦水；妇人听见咒诅的话，回答“阿们，阿们”。祭司把咒诅写在书上，又抹在苦水里，使妇人喝下。若她有罪，咒诅临到；若她无罪，就免受灾害，并可怀孕。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The priest sets the woman before the LORD, prepares the water of bitterness, recites the oath, writes the curse, washes it into the water, and gives it to her. Guilt or innocence is placed under God's judgment, and the innocent woman is cleared.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">字词观察：在耶和华面前，不在流言面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">反复出现的关键位置是“在耶和华面前”。程序中的水、尘土、书写和“阿们”并不是普通侦查技术，而是盟约群体把隐藏案件交给神审断的礼仪。经文同时留下一个重要结果：若妇人无罪，她被宣告不受咒诅。也就是说，条例并不假定每个被怀疑的人都有罪，而是把流言和猜疑带到神面前终止。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The repeated location is “before the LORD.” The rite is not gossip or mob judgment; it entrusts hidden truth to God and explicitly provides for the clearing of the innocent.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：让真相胜过名声审判</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天的群体常用暗示、截图、传闻和阵营判断人。民数记 5 章提醒我们，神关心隐藏的真相，也保护无辜者不被猜疑永远标记。灵修操练可以很具体：停止传播未经证实的话，为受伤关系寻求成熟帮助，并求神光照自己是否也在隐藏真实问题。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">A faithful community refuses trial by rumor. It seeks truth, protects the innocent, stops careless speech, and asks God to expose what must be healed.</p>
+        </div>
+        
+    </div>
+</div>
+
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">民数记 5:29-31</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            这是疑恨的条例：妻子偏离丈夫而被玷污，或丈夫起疑恨的心，就要使妇人站在耶和华面前，祭司照这条例而行。丈夫免除罪孽，妇人若有罪就担当自己的罪孽。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The law concludes by naming the case of jealousy and requiring the woman to stand before the LORD, with the priest carrying out the prescribed process. Hidden guilt is not ignored, and suspicion is not left to private vengeance.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">经文含义：圣洁群体不能靠暗处维持</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">结尾把整段归纳为“疑恨的条例”。它承认婚姻背叛会破坏盟约家庭，也承认没有证据的疑心会破坏家庭。经文没有把复杂关系简化成情绪宣泄，而是在神面前、祭司监督下处理。民数记 5 章整体显示，神的营地必须面对三种暗处：身体不洁、财物亏负、关系疑恨。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter brings hidden disruption into the light: impurity, economic wrong, and marital suspicion. Covenant holiness refuses both denial and uncontrolled accusation.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">今日默想：在神面前成为真实的人</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">神的同在不是让我们装作一切正常，而是邀请我们把身体、钱财、关系和怀疑都放在祂面前。对于受伤的人，这章提醒我们可以寻求公义和保护；对于亏负人的人，它呼召我们承认并修复；对于被疑心吞噬的人，它呼召我们停止用猜测取代真理。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Before God, we become truthful people: seeking protection when harmed, making restitution when guilty, and refusing to let suspicion replace truth.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法说明 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">如何阅读民数记 5 章</h1>
+  <p class="text-stone-700 leading-8 text-justify">本页采用“上下文观察、字词观察、经文含义、属灵意义、灵修应用”的路径阅读民数记第 5 章。由于本章包含古代营地洁净条例和疑恨条例，应用时特别避免直接照搬制度，也避免用现代感受否定经文；重点是先理解它在以色列会幕群体中的原意，再寻找可负责任地进入今日生活的桥梁原则。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-2">This page reads Numbers 5 through context, key terms, original meaning, spiritual reflection, and devotional application. Because the chapter includes ancient camp purity laws and a jealousy rite, it avoids both flat imitation and dismissive modern reaction. The goal is responsible movement from ancient meaning to present practice.</p>
+</section>
+
+<section class="grid md:grid-cols-2 gap-5 mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">上下文解经</h2>
+    <p class="text-sm text-stone-700 leading-7 text-justify">民数记 1-4 章建立营地、支派和利未服事秩序，第 5 章说明这个营地如何在神同在中保持圣洁。解释本章时，先看会幕在营中这一中心事实，再看洁净、赔偿和疑恨如何保护群体生活。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic mt-3">Numbers 1-4 orders the camp and tabernacle service; Numbers 5 asks how this camp remains holy before the God who dwells among them.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">字词与结构观察</h2>
+    <p class="text-sm text-stone-700 leading-7 text-justify">本章结构从外在营地到人际亏负，再到最隐秘的婚姻疑恨。重要词包括“污秽”“住在其中”“承认”“赔还”“疑恨”“在耶和华面前”。这些词帮助读者看见，本章关心的是神同在下的真实与修复。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic mt-3">The chapter moves from camp impurity to social wrong to hidden marital suspicion. Repeated ideas include defilement, dwelling among them, confession, restitution, jealousy, and standing before the LORD.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用</h2>
+    <p class="text-sm text-stone-700 leading-7 text-justify">灵修应用不是把古代仪式机械搬到今天，而是把经文原则带入真实处境：敬拜神的人要处理污染共同生活的事；亏负别人时要承担修复责任；怀疑与隐藏罪都需要在真理、保护和公义中被面对。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic mt-3">Devotional application does not copy the ancient rites. It brings their principles into real life: holiness, concrete repair, truthful process, and protection from both hidden guilt and reckless accusation.</p>
+  </div>
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-5">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">桥梁原则</h2>
+    <p class="text-sm text-stone-700 leading-7 text-justify">从古代经文到今日生活的桥梁是：神的同在呼召祂的百姓成为真实、洁净、可修复的群体。今天的教会和家庭不再执行民数记的营地条例，却仍需要敬畏神、保护弱者、停止流言、承认罪、赔偿损害，并寻求成熟监督。</p>
+    <p class="en-text text-xs text-stone-500 leading-6 italic mt-3">The bridge is that God's presence forms a truthful, holy, and repairable community. Today this means reverence, protection, truthful speech, confession, restitution, and wise oversight.</p>
+  </div>
+</section>
+
+<section class="bg-[var(--theme-accent)]/40 rounded-xl border border-amber-200 shadow-sm p-6 sm:p-8">
+  <h2 class="serif text-2xl font-bold text-stone-900 mb-3">今日实践建议</h2>
+  <p class="text-stone-700 leading-8 text-justify">读完民数记 5 章，可以做三个安静而具体的操练：第一，求神指出一个正在污染你生活秩序的习惯或隐瞒；第二，列出一个需要认罪、归还或补偿的对象；第三，若关系中有疑心，先停止传播和逼迫，转向祷告、诚实对话和合宜的成熟帮助。</p>
+  <p class="en-text text-sm text-stone-500 leading-7 italic text-justify mt-2">A practical response may include three quiet steps: name one hidden disorder before God, identify one concrete act of repair, and handle relational suspicion through prayer, honest conversation, and wise help rather than pressure or rumor.</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"因为我住在以色列人中间。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"For I dwell among the people of Israel."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">BibleView Study Page · Numbers 5 / 民数记 5章</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

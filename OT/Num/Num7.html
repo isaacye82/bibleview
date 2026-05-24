@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Numbers Chapter 7 | 民数记 7章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #0f766e; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffdf7;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #2f2514;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    
+
+        .dedication-stage {
+            background:
+                radial-gradient(circle at 20% 18%, rgba(254,243,199,.96), transparent 34%),
+                radial-gradient(circle at 82% 26%, rgba(204,251,241,.75), transparent 30%),
+                linear-gradient(135deg, #fff7ed 0%, #fffbeb 52%, #f0fdfa 100%);
+            min-height: 100%;
+        }
+        .altar-flame { animation: altarFlameNum7 4.8s ease-in-out infinite; transform-origin: center bottom; }
+        .cart-line { stroke-dasharray: 300; stroke-dashoffset: 300; animation: cartMoveNum7 5.8s ease-in-out infinite; }
+        .tribe-dot { animation: tribeGatherNum7 4.6s ease-in-out infinite; transform-origin: center; }
+        .tribe-dot.d2 { animation-delay: .35s; }
+        .tribe-dot.d3 { animation-delay: .7s; }
+        .tribe-dot.d4 { animation-delay: 1.05s; }
+        .tribe-dot.d5 { animation-delay: 1.4s; }
+        .voice-ring { animation: voicePulseNum7 4.2s ease-in-out infinite; transform-origin: center; }
+        @keyframes altarFlameNum7 { 0%, 100% { transform: scaleY(.9); opacity: .62; } 50% { transform: scaleY(1.08); opacity: 1; } }
+        @keyframes cartMoveNum7 { 0% { stroke-dashoffset: 300; opacity: .38; } 48%, 72% { stroke-dashoffset: 0; opacity: 1; } 100% { stroke-dashoffset: -300; opacity: .45; } }
+        @keyframes tribeGatherNum7 { 0%, 100% { transform: translateY(8px) scale(.95); opacity: .45; } 50% { transform: translateY(-8px) scale(1.04); opacity: 1; } }
+        @keyframes voicePulseNum7 { 0%, 100% { transform: scale(.9); opacity: .32; } 50% { transform: scale(1.08); opacity: .82; } }
+
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-gift mr-2 text-stone-600"></i> 民数记 7章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Numbers Chapter 7</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">奉献会幕：同心献上，神在中间说话</h1>
+    <p class="en-text text-stone-500 italic mb-5">Dedicating the Tabernacle: Shared Offerings and God Speaking Among His People</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">民数记第 7 章是全书最长的章节之一，记录会幕立起、膏抹成圣之后，以色列十二支派首领按日献礼。经文以庄重而重复的方式列出每个支派相同的奉献，强调在神面前没有支派被省略，也没有奉献被吞没在集体名义中。利未人按职责接受车辆和牛；祭坛也在十二日中被奉献。结尾转向至圣所，摩西在施恩座上方听见神向他说话，表明有秩序的奉献最终服务于神与祂百姓同住、同说话的关系。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Numbers 7 records the dedication of the tabernacle after it was set up, anointed, and consecrated. The leaders of the twelve tribes bring offerings day by day. The repeated lists are not empty repetition; they honor each tribe equally and show that each gift is remembered before God. The Levites receive carts and oxen according to their assigned service, the altar receives the leaders’ offerings, and the chapter closes with Moses hearing the LORD speak from above the mercy seat.</p>
+  </div>
+  
+  <aside class="dedication-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">车辆聚集，祭坛奉献，施恩座发声</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以车轮路径、十二支派光点、祭坛火焰与施恩座声波，呈现本章从共同献礼到神亲自说话的流动。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">Carts, tribal lights, altar fire, and mercy-seat sound waves picture ordered offerings leading to divine speech.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated carts, altar dedication, and voice above the mercy seat from Numbers 7" class="w-full mt-4">
+      <defs>
+        <linearGradient id="cartGradNum7" x1="0" x2="1"><stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#0f766e"/></linearGradient>
+        <radialGradient id="flameGlowNum7" cx="50%" cy="52%" r="58%"><stop offset="0%" stop-color="#fde68a"/><stop offset="55%" stop-color="#f59e0b" stop-opacity=".62"/><stop offset="100%" stop-color="#b45309" stop-opacity=".1"/></radialGradient>
+      </defs>
+      <path class="cart-line" d="M58 195 C120 156, 166 156, 207 177 C250 198, 304 185, 362 145" fill="none" stroke="url(#cartGradNum7)" stroke-width="8" stroke-linecap="round"/>
+      <g fill="none" stroke="#92400e" stroke-width="5" opacity=".85">
+        <rect x="70" y="155" width="72" height="34" rx="5"/>
+        <circle cx="88" cy="196" r="10"/><circle cx="126" cy="196" r="10"/>
+        <rect x="270" y="139" width="72" height="34" rx="5"/>
+        <circle cx="288" cy="180" r="10"/><circle cx="326" cy="180" r="10"/>
+      </g>
+      <g class="altar-flame">
+        <circle cx="210" cy="111" r="54" fill="url(#flameGlowNum7)"/>
+        <path d="M195 123 C184 98, 205 90, 203 66 C225 88, 238 104, 224 128 C218 139, 202 139, 195 123Z" fill="#f59e0b" opacity=".88"/>
+        <path d="M209 128 C202 112, 214 103, 215 86 C229 104, 232 119, 222 132 C218 137, 212 136, 209 128Z" fill="#fef3c7" opacity=".88"/>
+      </g>
+      <g fill="#0f766e">
+        <circle class="tribe-dot d1" cx="92" cy="90" r="6"/><circle class="tribe-dot d2" cx="126" cy="72" r="5"/><circle class="tribe-dot d3" cx="164" cy="82" r="6"/><circle class="tribe-dot d4" cx="256" cy="75" r="6"/><circle class="tribe-dot d5" cx="300" cy="88" r="5"/><circle class="tribe-dot d2" cx="335" cy="110" r="6"/>
+      </g>
+      <g fill="none" stroke="#0f766e" stroke-width="3" opacity=".62">
+        <ellipse class="voice-ring" cx="210" cy="56" rx="42" ry="15"/>
+        <ellipse class="voice-ring" cx="210" cy="56" rx="70" ry="25"/>
+      </g>
+      <path d="M178 56 H242" stroke="#b45309" stroke-width="7" stroke-linecap="round" opacity=".68"/>
+      <path d="M160 224 H360" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".26"/>
+    </svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">关键概念卡片</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Numbers 7 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">奉献会幕</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Dedication of the Tabernacle</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">chanukkah</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章的“奉献”指把已立起并分别为圣的会幕和祭坛正式投入敬拜生活。奉献不是装饰宗教空间，而是承认神住在祂百姓中间。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">首领代表众支派</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Leaders Represent the Tribes</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">nesiim</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">各支派首领按次序献礼，显示群体敬拜需要代表性、秩序与共同参与。神看见每个支派，也记念每份按信实献上的礼物。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">同样的礼物</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Same Offering</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">qorban echad</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">十二位首领献上的内容相同，经文却逐一记载。重复让读者看见：在神面前，同心不是抹平个人与支派，而是让每一份顺服都被完整看重。</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">施恩座上说话</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Voice above the Mercy Seat</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">kapporet</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">结尾的焦点从礼物转向神的声音。真正的奉献不是停在物品清单，而是进入神赦罪、同在和引导的话语关系中。</p>
+</div></div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900">民数记 7 章经文双轨研读</h2>
+    <p class="text-stone-600 leading-7 mt-3">本章按会幕奉献、十二支派献礼、总数与神的声音来研读。每个单元先观察经文在会幕秩序中的原意，再进入今日关于资源、群体、忠心和聆听的灵修应用。</p>
+    <p class="en-text text-sm text-stone-500 italic mt-2">This study follows the dedication of the tabernacle, the twelve tribal offerings, and the final word from God, moving from context and wording into devotional application.</p>
+  </div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Leaders Bring Gifts after the Tabernacle Is Set Up</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">会幕立起后的首领奉献 (7:1-9)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西立完帐幕，用膏油抹了帐幕和其中一切器具，使坛和器具都成圣。以色列的众首领，就是各支派的族长，带来六辆篷车和十二只公牛，奉到耶和华面前。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Moses finished setting up the tabernacle, he anointed and consecrated it with all its furnishings. The leaders of Israel, heads of their fathers’ houses, brought six covered carts and twelve oxen before the LORD.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">上下文观察：圣所被立起，群体回应</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">民数记前六章整理营地、职责、洁净和祝福，第 7 章把这些秩序带到实际敬拜中。会幕不是人的项目完成后等待赞美，而是神同在的中心被分别出来；首领的奉献代表各支派承认这中心。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The earlier chapters order the camp, service, purity, and blessing. Now the leaders respond to the consecrated tabernacle with public gifts, acknowledging the LORD’s presence at the center of Israel.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：把资源带到神同在的中心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵意义：真正的奉献常从看见神已经赐下同在开始。今日默想：我的时间、能力、交通工具、金钱和组织资源，是否只围绕个人效率运转，还是愿意被调整来支持敬拜、服事和群体使命？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Devotion begins by recognizing God’s presence. Our resources, skills, transportation, money, and organization can be brought under worship and shared mission rather than merely personal efficiency.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:4-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西收下车辆和牛，照利未人各人的事奉交给他们。革顺子孙得两辆车四只牛，米拉利子孙得四辆车八只牛；哥辖子孙没有得车，因为他们所办的是圣所的事，要用肩扛抬。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD told Moses to receive the carts and oxen and give them to the Levites according to their service. Gershon received two carts and four oxen, Merari four carts and eight oxen, but Kohath received none, because the holy things assigned to them had to be carried on the shoulder.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">字词观察：奉献按职责分配</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">车辆不是平均主义地分给所有利未家族，而是按服事需要分配。哥辖没有车并非被轻看，而是因他们扛抬圣物的职责更直接接近圣所。经文含义是：资源要服从神所规定的圣洁秩序。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The gifts are distributed according to assigned service, not mere sameness. Kohath receives no carts because their holy work requires shoulder-bearing. Resources serve vocation and holiness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：不要把公平误解为完全一样</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日默想：教会、家庭和团队中的需要常常不同。成熟的奉献不是坚持“人人一样才公平”，而是愿意按真实职责支持别人。也要学习接受自己的限制和责任，不羡慕别人手中的“车辆”。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Faithful community support is not always identical distribution. It asks what each calling actually requires and helps without envy or comparison.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Twelve Days of Offerings: Honor within Repetition</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">十二日献礼：重复中的尊荣 (7:10-83)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:10-17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            用膏抹坛的日子，众首领为行奉献坛的礼而献供物。第一日献供物的是犹大支派亚米拿达的儿子拿顺；他献银盘、银碗、金盂、素祭材料、燔祭牲、赎罪祭的公山羊和平安祭牲。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            On the day the altar was anointed, the leaders presented offerings for its dedication. On the first day Nahshon son of Amminadab from Judah brought silver vessels, a gold dish, grain offering materials, animals for burnt and sin offerings, and animals for peace offerings.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">经文含义：奉献包括洁净、全献与相交</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">拿顺的礼物成为后面十一位首领的模式。银器、金盂和祭牲不是单一功能；素祭、燔祭、赎罪祭、平安祭共同表达供应、全然归主、洁净和与神相交。祭坛奉献不是只启动仪式，而是把敬拜的各层面放在神面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Nahshon’s offering becomes the pattern for the others. The gifts include grain, burnt, sin, and peace offerings, expressing provision, surrender, cleansing, and fellowship before God.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">属灵意义：奉献不是单线条的付出</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用：我们常把奉献缩小为金钱或热心，但本段提醒我们，神要的是更完整的生命回应：感恩的供应、悔改的洁净、全然的献上、与神和人的平安相交。今天可以问：我的敬拜是否只剩一个方面，而缺少悔改、感恩或关系修复？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Giving is more than one category. Worship includes gratitude, repentance, surrender, and restored fellowship. A whole-life response is richer than isolated generosity.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:18-59</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            第二日至第七日，以萨迦、西布伦、流便、西缅、迦得、以法莲各支派首领相继献上同样的供物。经文逐一列名、逐项记下，重复相同的银器、金器、素祭、燔祭、赎罪祭和平安祭。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            From the second to the seventh day, the leaders of Issachar, Zebulun, Reuben, Simeon, Gad, and Ephraim each brought the same offering. The text names each leader and records the same vessels and sacrifices in full detail.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">上下文观察：重复保存每一份忠心</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代读者可能觉得重复冗长，但古代叙事借重复表达尊荣。神没有用一句“其余相同”省略这些支派。经文含义是：集体奉献中，每个支派的名字、日子和礼物都被记念。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The repetition is a literary act of honor. Instead of summarizing the rest as identical, the text preserves each tribe’s name, day, and gift before the LORD.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">今日默想：隐藏的忠心没有被神省略</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵意义：许多服事看起来与别人相同，甚至没有新意，但神不把它们压缩成无名统计。每日照顾家人、稳定上班、安静代祷、按时服事，都可能像本章的重复清单一样，被神逐一记念。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Ordinary faithfulness may look repetitive, but it is not anonymous before God. Quiet care, steady work, prayer, and service are remembered by Him.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:60-83</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            第八日至第十二日，玛拿西、便雅悯、但、亚设、拿弗他利等支派首领继续按日献上同样的供物。十二支派共同完成祭坛奉献，没有一个支派缺席。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            From the eighth to the twelfth day, the leaders of Manasseh, Benjamin, Dan, Asher, and Naphtali continued to bring the same offering day by day. The dedication is completed with every tribe represented.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">经文含义：共同敬拜中的完整参与</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">十二日的次序让奉献成为整个营地的节奏。每个支派在自己的日子靠近祭坛，说明敬拜不是少数精英的表演，而是约民整体的回应。重复的相同性也保护群体不以礼物大小制造等级。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The twelve-day rhythm turns dedication into a shared camp-wide act. Worship is not elite performance, and identical offerings guard the community from ranking gifts by size or status.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：在自己的日子忠心靠近</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日默想：不是每个人都在第一日，也不是每个人都站在显眼位置；但每个支派都有“自己的日子”。当轮到我承担责任、道歉、奉献、服事或说鼓励的话时，我是否愿意及时靠近神，而不是因自己不在中心就退后？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Not everyone serves on the first day or in the most visible place. Faithfulness means coming near on the day entrusted to us.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+
+<section class="mb-10">
+  <div class="mb-4">
+    <p class="text-xs font-bold uppercase tracking-[0.24em] text-[var(--theme-secondary)]">Totals and the Voice of God</p>
+    <h3 class="serif text-xl sm:text-2xl font-bold text-stone-900">总数与神的声音 (7:84-89)</h3>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:84-88</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            用膏抹坛的日子，以色列众首领为行奉献坛之礼所献的，合计为十二个银盘、十二个银碗、十二个金盂，并有燔祭、赎罪祭和平安祭所需的牛、羊、公山羊等祭牲。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The dedication offerings from the leaders were totaled: twelve silver plates, twelve silver bowls, twelve gold dishes, and the animals for burnt offerings, sin offerings, and peace offerings.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">字词观察：总数不是冷冰冰的统计</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文在逐一记载之后又给出总数。总数让读者看见共同奉献的规模，也把十二支派的个别行动汇聚成一个整体见证。经文含义不是炫耀财富，而是显示全营在神面前合一地支持敬拜。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">After naming each offering, the text totals them. The totals gather individual obedience into a corporate witness of worship, not a display of wealth.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">灵修应用：个人忠心会汇成群体见证</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵意义：一份礼物看似有限，但许多人的忠心会形成群体的承载力。家庭、教会和工作团队中的健康文化，往往不是靠一次英雄行为，而是靠许多可数、可记念、可持续的小顺服累积而成。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">One act may seem small, but many faithful acts become a shared witness. Healthy families, churches, and teams are often built through sustained small obediences.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:89</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            摩西进会幕要与耶和华说话的时候，听见法柜施恩座以上、二基路伯中间有声音向他说话；耶和华就与他说话。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            When Moses entered the tent of meeting to speak with the LORD, he heard the voice speaking to him from above the mercy seat on the ark of the testimony, from between the two cherubim; the LORD spoke to him.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">经文含义：奉献的终点是神亲自说话</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章以大量礼物开始，却以神的声音结束。施恩座与约柜连接赦罪、约和神的同在；摩西听见声音，说明会幕不是静态宗教建筑，而是神与百姓相会、引导他们前行的地方。礼物服务于关系，祭坛导向聆听。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The chapter begins with gifts and ends with God’s voice. The mercy seat is tied to atonement, covenant, and presence. The tabernacle is a meeting place where the LORD speaks and guides.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">今日默想：让奉献把我带到聆听</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用：我们可能忙于献上、安排、建造和服事，却忘了停下来听神的话。本章最后提醒我们，敬拜的目标不是让神接受一堆活动，而是让我们在恩典中重新成为听命的人。今天可以安静问主：我献上的这一切，是否使我更愿意听祂？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Service and giving should lead us into listening. Worship is not activity piled before God, but grace that restores us as people who hear and obey His voice.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法说明 / Methodology</p>
+  <h1 class="serif text-3xl font-bold text-stone-900 mb-3">如何研读民数记 7 章</h1>
+  <p class="text-stone-600 leading-8 text-justify">本页采用上下文解经、字词与结构观察、灵修应用和桥梁原则来阅读本章。民数记 7 章篇幅很长，重复很多，因此读者需要先问：这些重复在会幕奉献的叙事中要表达什么？答案不是简单的仪式清单，而是神记念每个支派、按职责使用资源，并在施恩座上向祂仆人说话。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 mt-3">This page reads Numbers 7 through context, wording and structure, devotional application, and bridge principles. The long repetitions honor each tribe and lead the reader from offerings to the LORD’s voice above the mercy seat.</p>
+</section>
+<div class="grid md:grid-cols-2 gap-5 mb-8">
+  <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">上下文解经</h2>
+    <p class="text-sm text-stone-600 leading-7 text-justify">民数记 1-6 章已经建立营地、利未职责、洁净界线、个人分别和祭司祝福。第 7 章不是插入杂乱清单，而是把这些准备带到会幕投入使用的场景中：神住在营中，百姓按支派和职责回应。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6 mt-3">Numbers 1-6 prepares the camp, service, purity, consecration, and blessing. Chapter 7 shows the community responding as the tabernacle enters active use.</p>
+  </section>
+  <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">字词与结构观察</h2>
+    <p class="text-sm text-stone-600 leading-7 text-justify">结构上，本章从会幕被膏抹成圣开始，经车辆分配、十二日献礼、总数汇整，最后到施恩座上的声音。重要词包括奉献 chanukkah、首领 nesiim、供物 qorban、施恩座 kapporet。结构把礼物清单导向神同在中的话语。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6 mt-3">The chapter moves from consecration to distribution, twelve days of offerings, totals, and finally the voice from the mercy seat. The structure turns gifts toward communion and guidance.</p>
+  </section>
+  <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">灵修应用</h2>
+    <p class="text-sm text-stone-600 leading-7 text-justify">灵修应用不把古代祭物制度直接复制到今天，而是把经文原则带入现代生活：资源要服事神的使命，群体中的每份忠心都值得记念，重复的服事也可以是敬拜，奉献最终应带人更深聆听神的话。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6 mt-3">Modern application does not reproduce the sacrificial system. It receives the principles: resources serve God’s mission, each faithful act matters, repeated service can be worship, and giving should deepen listening.</p>
+  </section>
+  <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6">
+    <h2 class="serif text-xl font-bold text-stone-900 mb-2">桥梁原则</h2>
+    <p class="text-sm text-stone-600 leading-7 text-justify">从古代经文到今日生活的桥梁是：神的百姓在神同在的中心前共同献上，但奉献不是为了替代神的声音。正确的奉献会让资源归正、关系合一、心更安静，并把人带回到神施恩的话语面前。</p>
+    <p class="en-text text-xs text-stone-500 italic leading-6 mt-3">The bridge is that God’s people offer together before His presence, yet offerings never replace His voice. Right giving reorders resources, unites the community, quiets the heart, and returns us to God’s gracious word.</p>
+  </section>
+</div>
+<section class="bg-[var(--theme-accent)]/30 rounded-xl border border-amber-200 p-6 sm:p-8">
+  <h2 class="serif text-2xl font-bold text-stone-900 mb-3">实践建议 / Practice</h2>
+  <p class="text-stone-700 leading-8 text-justify">读完本章，可以做一个具体操练：列出自己可献上的“车辆和牛”，也就是时间、专业、交通、空间、金钱或协调能力；再问这些资源最适合支持哪一种服事。也可以为身边重复、低调、容易被忽略的忠心献上感谢，并用一段安静祷告结束：主啊，让我的奉献带我更会聆听你。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 mt-3">A practical response is to name your own “carts and oxen”: time, skills, transportation, space, money, or coordination. Ask where these resources best serve God’s work, thank God for hidden faithfulness around you, and end with prayerful listening.</p>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"他们要如此奉我的名为以色列人祝福，我也要赐福给他们。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Thus they shall put my name upon the people of Israel, and I will bless them."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">BibleView · Numbers 7 Study Page</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

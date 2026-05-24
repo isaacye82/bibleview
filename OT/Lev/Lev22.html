@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leviticus Chapter 22 | 利未记 22章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #b45309;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #15803d; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #fef3c7;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #fffaf0;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #431407;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .holy-stage {
+            background: radial-gradient(circle at 50% 8%, rgba(254, 243, 199, .98), transparent 30%), linear-gradient(160deg, #fff7ed 0%, #ecfdf5 55%, #f8fafc 100%);
+            min-height: 100%;
+        }
+        .altar-flame { animation: flameLift 3.2s ease-in-out infinite; transform-origin: center bottom; }
+        .flame-two { animation-delay: .35s; }
+        .flame-three { animation-delay: .7s; }
+        .offering-line { stroke-dasharray: 230; stroke-dashoffset: 230; animation: lineConsecrate 5.6s ease-in-out infinite; }
+        .name-ring { animation: ringPulse 4.4s ease-in-out infinite; transform-origin: center; }
+        .spark { animation: sparkRise 3.8s ease-in-out infinite; }
+        .spark.s2 { animation-delay: .5s; }
+        .spark.s3 { animation-delay: 1s; }
+        .spark.s4 { animation-delay: 1.5s; }
+        @keyframes flameLift {
+            0%, 100% { transform: scaleY(.9) translateY(4px); opacity: .72; }
+            50% { transform: scaleY(1.12) translateY(-6px); opacity: 1; }
+        }
+        @keyframes lineConsecrate {
+            0% { stroke-dashoffset: 230; opacity: .28; }
+            45%, 70% { stroke-dashoffset: 0; opacity: .95; }
+            100% { stroke-dashoffset: -230; opacity: .28; }
+        }
+        @keyframes ringPulse {
+            0%, 100% { transform: scale(.96); opacity: .45; }
+            50% { transform: scale(1.05); opacity: .92; }
+        }
+        @keyframes sparkRise {
+            0%, 100% { transform: translateY(10px); opacity: .2; }
+            50% { transform: translateY(-14px); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fas fa-fire-alt mr-2 text-stone-600"></i> 利未记 22章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Leviticus Chapter 22</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            
+<section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">圣物、圣名与蒙悦纳的敬拜</h1>
+    <p class="en-text text-stone-500 italic mb-5">Holy Things, the Holy Name, and Worship That Is Accepted</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">利未记第 22 章继续说明祭司如何在圣物、洁净、家庭边界和祭物质量上尊神为圣。经文先警戒祭司不可在不洁中亲近圣物，又说明谁可以吃圣物；随后转向以色列人与寄居者所献的祭，强调献给耶和华的要完整、合宜、蒙悦纳。结尾把所有规条归结到一句话：不可亵渎神的圣名，因为祂是使百姓成圣、领他们出埃及、作他们神的耶和华。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Leviticus 22 explains how priests and worshipers honor the LORD in holy food, cleanness, household boundaries, and the quality of offerings. It warns priests not to approach holy things while unclean, clarifies who may eat the sacred food, and then teaches Israel and resident sojourners to bring offerings that are whole and acceptable. The chapter closes by grounding every command in the LORD’s holy name and redeeming identity.</p>
+  </div>
+  <aside class="holy-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">完整祭物升向圣名</h2>
+      <p class="text-sm text-stone-600 mt-2">纯 CSS/SVG 动效以祭坛火焰、完整的供物线条和发光圆环表现本章主题：神悦纳合宜的敬拜，并在百姓中被尊为圣。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A clean altar flame, a whole offering, and a pulsing ring picture worship ordered toward God’s holy name.</p>
+    </div>
+    <svg viewBox="0 0 420 260" role="img" aria-label="Animated altar flame and acceptable offering from Leviticus 22" class="w-full mt-4">
+      <defs>
+        <linearGradient id="flameGrad22" x1="0" x2="0" y1="1" y2="0">
+          <stop offset="0%" stop-color="#b45309"/>
+          <stop offset="55%" stop-color="#f59e0b"/>
+          <stop offset="100%" stop-color="#fde68a"/>
+        </linearGradient>
+        <linearGradient id="greenGold22" x1="0" x2="1">
+          <stop offset="0%" stop-color="#15803d"/>
+          <stop offset="100%" stop-color="#b45309"/>
+        </linearGradient>
+      </defs>
+      <circle class="name-ring" cx="210" cy="76" r="45" fill="none" stroke="#b45309" stroke-width="5" opacity=".55"/>
+      <text class="name-ring" x="210" y="84" text-anchor="middle" font-size="26" font-family="serif" font-weight="700" fill="#92400e">קדש</text>
+      <path class="offering-line" d="M108 169 C150 132, 188 126, 226 146 C256 161, 289 151, 326 118" fill="none" stroke="url(#greenGold22)" stroke-width="10" stroke-linecap="round"/>
+      <g transform="translate(0 8)">
+        <path d="M118 205 H302 L282 226 H138 Z" fill="#7c2d12" opacity=".86"/>
+        <rect x="142" y="187" width="136" height="22" rx="4" fill="#92400e" opacity=".92"/>
+        <path class="altar-flame" d="M203 185 C177 158, 203 143, 197 116 C229 145, 242 161, 217 185 Z" fill="url(#flameGrad22)"/>
+        <path class="altar-flame flame-two" d="M221 185 C207 165, 227 153, 222 133 C245 153, 251 171, 232 185 Z" fill="#fed7aa" opacity=".9"/>
+        <path class="altar-flame flame-three" d="M187 186 C174 168, 187 155, 184 139 C203 157, 207 174, 195 186 Z" fill="#facc15" opacity=".82"/>
+      </g>
+      <g fill="#15803d">
+        <circle class="spark s1" cx="150" cy="112" r="5"/>
+        <circle class="spark s2" cx="178" cy="96" r="4"/>
+        <circle class="spark s3" cx="252" cy="107" r="5"/>
+        <circle class="spark s4" cx="287" cy="84" r="4"/>
+      </g>
+      <path d="M68 232 H352" stroke="#b45309" stroke-width="3" stroke-linecap="round" opacity=".25"/>
+    </svg>
+  </aside>
+</section>
+
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading Leviticus 22 faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">圣物不可亵渎</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Holy Things Not Profaned</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">祭司亲近圣物不是凭身份特权，而要按洁净状态与敬畏来承受。Holiness is not entitlement; it calls for reverent readiness before God.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">祭司家庭的边界</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Boundaries of the Priestly Household</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">经文细分寄居者、雇工、女儿与家中所买之人，说明圣物共享有清楚界限。The chapter distinguishes household relationships so that sacred provision is received in ordered covenant responsibility.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">无残疾的供物</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Unblemished Offerings</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“无残疾”强调献给神的礼物要完整合宜，不把次好的、破损的当作敬拜。Acceptable worship offers God what is whole, fitting, and sincere rather than what is conveniently disposable.</p>
+</div>
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">悦纳与圣名</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Acceptance and the Holy Name</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">undefined</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">最后一段把祭物规条连接到神的圣名：顺服不是形式主义，而是让神在百姓中被尊为圣。Obedience protects the witness of God’s holy name among His redeemed people.</p>
+</div>
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            
+<section class="mb-6">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">研读视图 / Study View</p>
+    <h1 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-2">利未记 22 章逐段研读</h1>
+    <p class="en-text text-sm text-stone-500 italic">A paired reading of holiness, acceptable offerings, and the name of the LORD.</p>
+  </div>
+</section>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华吩咐摩西告诉亚伦和他子孙，要谨慎对待以色列人分别为圣的圣物，免得亵渎神的圣名；凡不洁而亲近圣物的，要从神面前被剪除。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The LORD tells Moses to warn Aaron and his sons to handle Israel’s holy offerings with care, so they do not profane His holy name; an unclean priest who approaches holy things is cut off from His presence.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣职不是免于敬畏</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段开头把焦点放在“圣名”上。祭司被拣选服事圣所，但他们不能把职分当作自动通行证。“亲近”圣物必须与洁净相配，因为圣物属于神，不属于服事者个人。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The opening places the holy name at the center. Priests are chosen to serve, yet office does not remove reverence. Nearness to holy things must be matched by cleanness because the holy gifts belong to God, not to the servant.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">越亲近，越谦卑</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今天人也可能因熟悉属灵语言、岗位或服事流程而失去敬畏。本段提醒我们：越常接触神的事，越要让内心、动机和生活重新被神校准。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Familiarity with ministry, religious words, or responsibility can dull reverence. This passage calls us to let God recalibrate our motives and conduct precisely where we are most familiar with sacred things.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:4-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            亚伦子孙若患大麻风、漏症，或因死尸、遗精、爬物、不洁之人而不洁，就不可吃圣物，直到洁净。日落以后，洗身得洁，方可吃圣物；不可吃自死或被野兽撕裂的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            If a descendant of Aaron is unclean through disease, bodily discharge, contact with death, unclean creatures, or unclean persons, he must not eat the holy food until cleansed. After washing and sunset he may eat, but he must not eat what dies naturally or is torn by beasts.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">洁净规条保护圣洁秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这些条例不是把身体本身看为邪恶，而是在圣所生活中教导“生命、死亡、洁净、边界”的次序。祭司要守神所吩咐的职责，免得因轻忽而担当罪责。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">These laws do not treat the body as evil. They teach an ordered awareness of life, death, cleanness, and boundaries in sanctuary life. Priests must keep the LORD’s charge rather than carry guilt through negligence.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">承认有限，接受恢复</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">人有软弱、污染和需要暂停的时候。经文给出的不是永久排斥，而是洁净、等候、再恢复参与。现代生活中，诚实承认状态，比强撑属灵形象更健康。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Weakness and contamination require honest pauses. The text gives a path of cleansing, waiting, and restored participation. In modern life, acknowledging our true condition is healthier than performing a spiritual image.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:10-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            外人不可吃圣物；祭司的寄居者和雇工不可吃。祭司用银子买的人和生在他家的人可以吃。祭司女儿若嫁给外人不可吃；若无子回到父家，可以吃父亲的食物。误吃圣物的，要加上五分之一归给祭司。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            No outsider may eat the holy food; a priest’s guest or hired worker may not eat it. A purchased servant or one born in his house may eat. A priest’s daughter married to an outsider may not, but if widowed or divorced without children and returned to her father’s house, she may eat. Accidental misuse requires restitution with an added fifth.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">圣物共享有盟约边界</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本段显示圣物不是普通福利，而是与祭司家庭身份和圣所秩序相连。误吃之后要赔还并加五分之一，说明无意之错仍需认真修复。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Holy food is not ordinary provision; it is tied to priestly household identity and sanctuary order. Restitution with an added fifth shows that even unintentional misuse requires careful repair.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">界限也能保护恩典</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">现代人常把界限视为冷漠，但健康界限能保护信任、资源和群体秩序。无论在家庭、教会或职场，误用他人托付时，真实悔改需要具体补偿与修复。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Modern people often read boundaries as coldness, yet healthy limits protect trust, resources, and communal order. In family, church, or work, misusing what was entrusted to another calls for concrete repair, not vague regret.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:17-25</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            凡以色列人或寄居者献燔祭、还愿祭或甘心祭，要献没有残疾的公牛、绵羊或山羊，才蒙悦纳。瞎眼、折伤、残废、有瘤、疥癣等不可献；从外人手中也不可献这类残缺之物作神的食物。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Israelites and sojourners who present burnt offerings, vows, or freewill offerings must bring an unblemished male from the cattle, sheep, or goats to be accepted. Blind, injured, maimed, diseased, or defective animals must not be offered, even if received from foreigners.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">悦纳关乎完整与尊荣</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“蒙悦纳”与“无残疾”反复出现。经文并非追求华丽，而是禁止把明显残缺、不能代表尊荣的祭物带到神面前。敬拜的对象决定献礼的质量。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Acceptance and wholeness are repeated themes. The issue is not luxury but the refusal to bring an obviously defective gift before God. The worth of the One worshiped shapes the quality of the offering.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要把剩余当敬拜</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们不再献动物祭，却仍会把残余时间、残余注意力、残余诚实给神和他人。经文邀请我们问：我献上的，是方便丢出的剩余，还是带着爱与尊重的完整回应？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We no longer bring animal sacrifices, yet we can still offer leftover time, attention, and honesty to God and others. The passage asks whether our response is disposable surplus or a whole-hearted act of love and respect.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:26-30</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            牛或绵羊、山羊生下七天要跟着母亲，第八天以后才可作火祭。母牛或母羊不可和它的子同日宰杀。感谢祭要当天吃完，不可留到早晨。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            A newborn ox, sheep, or goat remains with its mother seven days; from the eighth day it may be accepted as an offering by fire. A cow or ewe and its young must not be slaughtered on the same day. A thanksgiving sacrifice must be eaten the same day and not left until morning.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">献祭中仍有怜悯与秩序</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这些细节显明，敬拜不是任意消耗生命。第八日、母与子不可同日宰杀、感谢祭当天吃完，都把敬拜放在神所定的时间、怜悯和圣洁界限中。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">These details show that worship is not careless consumption of life. The eighth day, the protection of mother and young, and the same-day thanksgiving meal place worship within God-given timing, mercy, and holy limits.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">感恩要及时，也要温柔</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">感谢祭当天吃完，提醒感恩不是收藏情绪，而是在神面前及时回应、与人分享。同时，经文中的怜悯边界也提醒我们：热心不能成为粗暴的理由。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The same-day thanksgiving meal reminds us that gratitude is not stored sentiment but timely response and shared joy before God. The mercy in these limits also warns us that zeal must never become harshness.</p>
+        </div>
+        
+    </div>
+</div>
+<div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">22:31-33</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你们要谨守遵行我的诫命；不可亵渎我的圣名，我要在以色列人中被尊为圣。我是叫你们成圣、把你们从埃及地领出来、要作你们神的耶和华。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You shall keep and do My commandments. You shall not profane My holy name, but I will be sanctified among the people of Israel. I am the LORD who sanctifies you, who brought you out of Egypt to be your God.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">规条归结于救赎身份</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">结尾把全部条例收束到神的身份和救赎行动：祂使百姓成圣，祂把他们从埃及领出来，祂要作他们的神。因此顺服不是赚取关系，而是活出已被救赎的关系。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The conclusion gathers the laws into God’s identity and saving action: He sanctifies His people, brought them out of Egypt, and is their God. Obedience does not earn the relationship; it lives out a redeemed relationship.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神的名在日常被看重</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">圣名是否被尊为圣，不只发生在礼拜场所，也发生在付款、说话、道歉、处理压力和承担责任的时刻。被救赎的人用日常选择见证：神配得最高的尊重。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God’s name is honored not only in formal worship but also in payments, speech, apologies, pressure, and responsibility. Redeemed people witness through ordinary choices that God is worthy of highest regard.</p>
+        </div>
+        
+    </div>
+</div>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            
+<section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-8">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h1 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">从圣所规条到日常敬拜</h1>
+  <p class="en-text text-sm text-stone-500 italic mb-6">From sanctuary regulations to daily worship without flattening the text.</p>
+  <div class="grid md:grid-cols-2 gap-5">
+    <div class="rounded-xl border border-stone-200 bg-slate-50/70 p-5">
+      <h2 class="serif text-lg font-bold text-stone-900 mb-2">正统解经路径 / Exegetical Path</h2>
+      <p class="text-sm text-stone-600 leading-7 text-justify mb-3">先把本章放在利未记 21-22 章的祭司圣洁语境中阅读，再观察“圣物、洁净、悦纳、圣名”等重复词。经文的首要意思不是一般道德劝勉，而是圣约群体如何在敬拜秩序中承认耶和华为圣。</p>
+      <p class="en-text text-xs text-stone-400 italic leading-6">Read the chapter within Leviticus 21-22, noting repeated terms such as holy things, cleanness, acceptance, and holy name. Its first meaning concerns how the covenant community honors the LORD as holy within ordered worship.</p>
+    </div>
+    <div class="rounded-xl border border-stone-200 bg-[var(--theme-accent)]/20 p-5">
+      <h2 class="serif text-lg font-bold text-stone-900 mb-2">灵修应用路径 / Devotional Path</h2>
+      <p class="text-sm text-stone-600 leading-7 text-justify mb-3">应用时不把旧约祭物规条直接复制成现代清单，而是透过桥梁原则：神的名配得尊荣，神所托付的不可轻忽，真实敬拜要有完整、诚实和修复关系的行动。</p>
+      <p class="en-text text-xs text-stone-400 italic leading-6">Application should not copy Israel’s sacrificial system into a modern checklist. The bridge principle is that God’s name deserves honor, entrusted holy things must not be treated casually, and true worship includes wholeness, honesty, and relational repair.</p>
+    </div>
+  </div>
+  <div class="mt-5 rounded-xl border-l-4 border-[var(--theme-primary)] bg-white p-5 shadow-sm">
+    <h2 class="serif text-lg font-bold text-stone-900 mb-2">落地指南 / Practical Guide</h2>
+    <p class="text-sm text-stone-600 leading-7 text-justify">读本章时，可以问三组问题：我是否把神的名当作轻省口号，还是在选择中尊祂为圣？我是否在职责、资源和关系边界上忠心？我献上的时间、注意力和顺服，是完整回应，还是只剩下不能用的部分？</p>
+    <p class="en-text text-xs text-stone-400 italic leading-6 mt-2">Ask three questions: Do my choices honor God’s name as holy? Am I faithful with responsibilities, resources, and relational boundaries? Is my time, attention, and obedience a whole response or merely what is left over?</p>
+  </div>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"我要在以色列人中被尊为圣。我是叫你们成圣的耶和华。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"I will be sanctified among the people of Israel. I am the LORD who sanctifies you."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">Leviticus 22 | 利未记 22章 圣经综览</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
