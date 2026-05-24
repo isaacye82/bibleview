@@ -19,6 +19,7 @@
     Esth: Array.from({ length: 10 }, (_, i) => i + 1),
     Song: Array.from({ length: 8 }, (_, i) => i + 1), //智慧书
     Joel: Array.from({ length: 3 }, (_, i) => i + 1), //小先知书
+    Amos: Array.from({ length: 9 }, (_, i) => i + 1),
     Obad: [1],
     Jonah: Array.from({ length: 4 }, (_, i) => i + 1),
     Mic: Array.from({ length: 7 }, (_, i) => i + 1),
@@ -78,7 +79,7 @@
     { short: "诗", english: "Psalms", abbr: "Ps", chapters: 150, type: "OT" },
     { short: "箴", english: "Proverbs", abbr: "Prov", chapters: 31, type: "OT" },
     { short: "传", english: "Ecclesiastes", abbr: "Eccl", chapters: 12, type: "OT" },
-    { short: "歌", english: "Song of Solomon", abbr: "Song", chapters: 8, type: "OT" },
+    { short: "歌", english: "Song", abbr: "Song", chapters: 8, type: "OT" },
     { short: "赛", english: "Isaiah", abbr: "Isa", chapters: 66, type: "OT" },
     { short: "耶", english: "Jeremiah", abbr: "Jer", chapters: 52, type: "OT" },
     { short: "哀", english: "Lamentations", abbr: "Lam", chapters: 5, type: "OT" },

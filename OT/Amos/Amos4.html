@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amos Chapter 4 | 阿摩司书 4章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #5A2E1B;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #8A5A2B; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #C97A2B;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #FFF7EC;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #2B211C;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bv-motif-stage {
+    background:
+        radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--theme-accent) 80%, white), transparent 30%),
+        linear-gradient(160deg, white 0%, color-mix(in srgb, var(--theme-accent) 55%, white) 52%, color-mix(in srgb, var(--theme-secondary) 18%, white) 100%);
+    min-height: 100%;
+}
+.bv-motif-stage svg { overflow: visible; }
+.bv-motif-soft { filter: drop-shadow(0 12px 18px rgba(0,0,0,.08)); }
+.motif-symbol { transform-box: fill-box; transform-origin: center; }
+.motion-sprout .motif-grow { animation: motifGrow 4.8s ease-in-out infinite; transform-origin: bottom center; }
+.motion-rise .motif-rise { animation: motifRise 5.6s ease-in-out infinite; }
+.motion-pulse .motif-pulse { animation: motifPulse 4.2s ease-in-out infinite; transform-origin: center; }
+.motion-swing .motif-swing { animation: motifSwing 4.8s ease-in-out infinite; transform-origin: top center; }
+.motion-flow .motif-flow { stroke-dasharray: 360; stroke-dashoffset: 360; animation: motifFlow 6.8s ease-in-out infinite; }
+.motion-circle .motif-circle { animation: motifRing 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-scatter .motif-scatter { animation: motifScatter 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-gather .motif-gather { animation: motifGather 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-shine .motif-shine { animation: motifShine 4.8s ease-in-out infinite; transform-origin: center; }
+@keyframes motifGrow {
+    0%, 100% { transform: scaleY(.82); opacity: .72; }
+    50% { transform: scaleY(1.08); opacity: 1; }
+}
+@keyframes motifRise {
+    0% { transform: translateY(14px); opacity: .12; }
+    45% { opacity: .76; }
+    100% { transform: translateY(-26px); opacity: .08; }
+}
+@keyframes motifSwing {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(3deg); }
+}
+@keyframes motifFlow {
+    0% { stroke-dashoffset: 360; opacity: .38; }
+    48%, 74% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -360; opacity: .38; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.94); opacity: .62; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes motifRing {
+    0%, 100% { transform: scale(.96); opacity: .45; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifScatter {
+    0%, 100% { transform: translate(0, 0); opacity: .52; }
+    50% { transform: translate(var(--scatter-x, 10px), var(--scatter-y, -8px)); opacity: .95; }
+}
+@keyframes motifGather {
+    0%, 100% { transform: scale(.92); opacity: .5; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifShine {
+    0%, 100% { transform: scale(.9); opacity: .45; }
+    50% { transform: scale(1.12); opacity: 1; }
+}
+.motif-route-line {
+    stroke-dasharray: 520;
+    stroke-dashoffset: 520;
+    animation: motifRoute 7s ease-in-out infinite;
+}
+.motif-sun { animation: motifPulse 4.8s ease-in-out infinite; transform-origin: center; }
+.motif-dust { animation: motifDust 5.2s ease-in-out infinite; }
+.motif-dust.d2 { animation-delay: .7s; }
+.motif-dust.d3 { animation-delay: 1.4s; }
+@keyframes motifRoute {
+    0% { stroke-dashoffset: 520; opacity: .35; }
+    45%, 72% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -520; opacity: .35; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.96); opacity: .65; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+@keyframes motifDust {
+    0%, 100% { transform: translateY(10px); opacity: .25; }
+    50% { transform: translateY(-8px); opacity: .85; }
+}
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fa-solid fa-triangle-exclamation mr-2 text-stone-600"></i> 阿摩司书 4章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Amos Chapter 4</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">预备迎见你的神</h1>
+    <p class="en-text text-stone-500 italic mb-5">Prepare to Meet Your God</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">阿摩司书4章严肃地揭露以色列的富足、压迫与虚假的宗教热心。百姓在伯特利和吉甲献祭，却没有以公义怜悯回应神；神也借饥荒、干旱、灾害和战败呼唤他们回转，但他们仍不归向耶和华。本章最后把读者带到神圣而震动人心的宣告：当人的自满和形式宗教都站立不住时，唯一正确的回应是预备迎见创造天地、鉴察人心的神。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Amos 4 exposes Israel’s luxury, oppression, and hollow religious zeal. God’s repeated disciplines called them to return, yet they did not. The chapter ends with a solemn summons: prepare to meet the Lord who forms the mountains and knows the heart.</p>
+  </div>
+  <aside class="bv-motif-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">失衡的天平</h2>
+      <p class="en-text text-xs text-stone-500 italic mt-1">The Tilted Scale</p>
+      <p class="text-sm text-stone-600 mt-2 leading-7 text-justify">视觉意象以一座倾斜的天平为中心，表现以色列在宗教热心与社会公义之间的严重失衡。轻微的摆动象征神持续的警告，也提醒读者悔改不是抽象情绪，而是回到神面前，让敬拜、生活和怜悯重新对齐。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A single tilted scale points to worship divorced from justice and to God’s call for repentance.</p>
+
+      <p class="text-[11px] text-[var(--theme-primary)] font-bold mt-3 px-3 py-2 bg-white/70 border border-white/80 rounded-lg">倾斜的天平显明失衡的公义</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-1 px-3">A tilted scale reveals broken justice.</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="The Tilted Scale" class="w-full mt-4 bv-motif-soft motion-swing">
+
+  <path d="M52 212 H368" stroke="var(--theme-secondary)" stroke-width="3" opacity=".18" stroke-linecap="round"/>
+  <circle class="motif-pulse" cx="210" cy="126" r="64" fill="var(--theme-accent)" opacity=".24"/>
+  <g class="motif-symbol motif-swing" transform="translate(130 54) scale(1.12)">
+  <path d="M104 54 V174 M62 82 H146" stroke="var(--theme-primary)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M62 82 L42 132 H82 Z M146 82 L126 132 H166 Z" fill="var(--theme-accent)" stroke="var(--theme-secondary)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M74 174 H134" stroke="var(--theme-primary)" stroke-width="8" stroke-linecap="round"/>
+</g>
+
+  <text x="210" y="232" text-anchor="middle" font-size="11" fill="var(--theme-primary)" opacity=".72" class="en-text">judgment · repentance · justice</text>
+</svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading this chapter faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">富足中的压迫</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Oppression in Luxury</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Bashan</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“巴珊”让人想到肥沃丰盛之地，阿摩司用这个意象责备那些享受安逸却压迫贫寒人的权贵。问题不只是财富本身，而是心被舒适麻木，以致看不见邻舍的苦情。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">Bashan points to abundance, but Amos uses it to expose comfort that ignores the poor.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">形式敬拜</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Hollow Worship</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Bethel and Gilgal</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">伯特利和吉甲本有属灵历史，却在此成为虚假敬虔的象征。百姓献祭、奉献、宣扬宗教行为，却没有悔改、公义和顺服。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">Sacred places become empty when worship is separated from repentance and justice.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">仍不归向我</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Yet You Did Not Return</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">shuv</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">本章反复出现“你们仍不归向我”，强调神管教的目的不是毁灭，而是呼唤人转回。真正的问题不是缺少警告，而是人心拒绝回应。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">God’s discipline was a call to return, but Israel resisted the summons.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">迎见神</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Meeting God</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Eloheika</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">“预备迎见你的神”不是轻率的宗教口号，而是审判前的严肃呼召。创造主鉴察人的思想、掌管黑暗与黎明，人不能用外表敬虔遮掩真实生命。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">To meet God is to stand before the Creator who knows the heart and rules all things.</p>
+</div>
+
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">安逸中的压迫 (4:1-3)</h2>
+    <p class="en-text text-sm italic text-stone-500">Oppression in Ease</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你们欺负贫寒，压碎穷乏，又对主人说：拿酒来，我们喝吧。主耶和华指着自己的圣洁起誓，审判的日子必临到。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You oppress the poor and crush the needy, saying, “Bring us drinks.” The Lord swears that days of judgment are coming.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">舒适不能遮盖不义</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">阿摩司首先责备撒马利亚山上的权贵阶层，特别指出他们在享乐中压迫贫弱。经文含义不是单纯反对宴乐，而是揭露一种扭曲的生命秩序：有人因别人的痛苦而更安稳，有人把权势和财富当作满足私欲的工具。神指着自己的圣洁起誓，说明社会不义不是小问题，而是直接冒犯神的性情。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Amos condemns luxury built on the suffering of the poor. Social injustice is an offense against God’s holiness.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让安逸接受神的光照</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日默想可以从一个问题开始：我的舒适是否建立在忽略他人的需要之上？灵修应用不是制造负罪感，而是让神更新我们的眼光，使我们在家庭、职场、消费和人际关系中学习公义与怜悯。真正敬畏神的人，不会只问自己是否过得舒服，也会问身边软弱的人是否被看见、被尊重、被扶持。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Ask whether your comfort has made you blind to others. God calls his people to mercy, fairness, and attentive love.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">热心却偏离的敬拜 (4:4-5)</h2>
+    <p class="en-text text-sm italic text-stone-500">Zeal Without Obedience</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:4-5</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            你们往伯特利去犯罪，到吉甲加增罪过；任意献祭、献感谢祭，又宣扬甘心祭，因为这是你们所喜爱的。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Go to Bethel and sin; go to Gilgal and multiply transgression. Offer sacrifices and announce offerings, for this is what you love.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">宗教行为不能替代悔改</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这段话带有强烈反讽。伯特利和吉甲本可使人想起神的作为，如今却成为百姓自我满足的宗教场所。他们献祭、奉献、宣扬敬虔，却没有回到神的约中。上下文观察提醒我们，神所厌恶的不是敬拜本身，而是人把敬拜变成自我展示，并用热闹的仪式掩盖不顺服的生活。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The issue is not worship itself, but worship used to cover disobedience and self-display.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从表面热心回到真实顺服</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用在于检视我们的属灵习惯：聚会、奉献、服事、祷告是否真的带我们更爱神、更爱人？若外在热心没有结出谦卑、公义、饶恕和诚实的果子，就需要安静回到主面前。神喜悦的不是被人看见的宗教表现，而是被真理塑造的心。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual practices should lead to humility, justice, forgiveness, and obedience before God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">管教中的呼唤 (4:6-8)</h2>
+    <p class="en-text text-sm italic text-stone-500">A Call Through Discipline</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:6-8</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            我使你们各城牙齿干净、各处缺粮；又使一城有雨、一城无雨，人疲乏寻找水喝。你们仍不归向我。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            I gave you famine and withheld rain; people wandered for water, yet you did not return to me.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">缺乏显明人心的方向</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">“牙齿干净”是缺粮的形象说法。神借饥荒与干旱使以色列看见生命并不掌握在自己手中。字词观察中，“归向”带有转回、回家的意思；神的管教不是任意发怒，而是呼唤百姓从自恃中醒来，重新承认供应、雨水和生命都来自耶和华。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Famine and drought reveal dependence. God’s discipline was meant to call Israel back to him.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在缺乏中听见神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当生活出现限制、失去或不确定时，我们常先寻找更快的解决办法，却未必停下来问：神要我转向什么？灵修应用不是把每个困难都简单归为惩罚，而是在困难中学习谦卑，重新倚靠神，调整失衡的欲望，并让祷告从求脱困进一步成为求更新。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">In lack, do not only seek relief. Ask how God is calling you to dependence, humility, and renewal.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">连续警告仍被忽视 (4:9-11)</h2>
+    <p class="en-text text-sm italic text-stone-500">Warnings Still Ignored</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:9-11</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            我以旱风、霉烂、蝗虫、瘟疫和刀剑攻击你们，又使你们如火中抽出来的一根柴；你们仍不归向我。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            I struck your crops, sent plague and sword, and made you like a brand plucked from the fire; yet you did not return to me.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">反复的怜悯被反复拒绝</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这一段列举农业、疾病、战争和灾难，显示以色列经历了多方面的震动，却没有从中转向神。“火中抽出来的一根柴”暗示他们曾被保留下来，这本身带有怜悯的意味。然而他们把幸存当作继续刚硬的机会，而不是悔改的契机。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Israel survived many warnings, but survival became an excuse for hardness rather than repentance.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要浪费神的提醒</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵意义在于，神有时借反复出现的提醒唤醒我们：同样的骄傲、同样的逃避、同样的关系破裂、同样的属灵冷淡，可能不是偶然。今日默想可以求主赐给我们受教的心，不等到更大的震动才回应。悔改不是羞辱，而是神为人打开的归回之路。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Repeated warnings are mercy. A teachable heart responds before deeper damage is done.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">预备迎见神 (4:12-13)</h2>
+    <p class="en-text text-sm italic text-stone-500">Prepare to Meet God</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">4:12-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            以色列啊，我必这样向你行；你当预备迎见你的神。他造山、创风、将心意指示人，使晨光变为幽暗，耶和华万军之神是他的名。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Prepare to meet your God. He forms the mountains, creates the wind, reveals thoughts, turns dawn to darkness; the Lord of hosts is his name.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">审判前的庄严呼召</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">本章结尾把焦点从人的罪转向神的威严。神是创造山岭和风的主，也是鉴察人心意念的主。经文含义清楚表明，人无法靠宗教外表、社会地位或暂时安稳逃避神。预备迎见神，首先不是准备仪式，而是以真实悔改、公义生活和敬畏的心站在他面前。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The Creator who rules nature also knows the heart. Meeting him requires repentance and reverence.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">今天就回到神面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日默想的重点是及时回应。我们终要面对神，但福音也提醒我们，神如今仍呼唤人归向他。灵修应用可以很具体：承认一个需要悔改的罪，修复一段被忽略的关系，停止一种自我欺骗的习惯，重新让敬拜与生活一致。预备迎见神，就是今天不再逃避他的声音。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Prepare today by returning to God, confessing sin, seeking repair, and aligning worship with daily life.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-6">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何阅读阿摩司书4章</h2>
+  <p class="en-text text-sm text-stone-500 italic mb-4">How to Read Amos 4</p>
+  <p class="text-stone-700 leading-8 text-justify mb-3">阅读本章时，要同时看见两条线：一条是先知对社会不义和虚假敬拜的揭露，另一条是神借管教呼唤人归回的怜悯。不要只把经文读成古代以色列的审判记录，也要让它检查今日信仰生活中敬拜与公义是否分离。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Read Amos 4 as both an exposure of injustice and hollow worship, and as God’s merciful call to return.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">释经轨道 / <span class="en-text text-base italic text-stone-500">Exegesis Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">先观察重复句“你们仍不归向我”，再看每段如何从压迫、敬拜、灾害推进到“预备迎见你的神”。注意阿摩司的反讽语气，以及伯特利、吉甲、巴珊等地点或意象在上下文中的功能。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Trace the repeated phrase “yet you did not return to me” and follow the movement from oppression to worship, discipline, and final summons.</p>
+</div>
+<div class="bg-[var(--theme-accent)]/20 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修轨道 / <span class="en-text text-base italic text-stone-500">Devotional Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">把本章作为属灵体检：我的敬拜是否与公义相连？我的舒适是否让我忽略贫弱？神在近期是否借某些提醒呼唤我回转？用具体顺服回应，而不只停留在情绪感动。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Use the chapter as a spiritual examination of worship, justice, comfort, and response to God’s warnings.</p>
+</div>
+</section>
+<section class="mt-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-3">补充原则 / Supporting Principles</h3>
+  <ul class="grid md:grid-cols-2 gap-4"><li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">上下文观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">阿摩司书前几章持续宣告神对列国和以色列的审判，第4章把焦点落在以色列内部的压迫、虚假敬拜和拒绝悔改上。读者应把本章放在整卷书关于公义、敬拜和审判的主题中理解。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">Read the chapter within Amos’s broader message of justice, worship, judgment, and covenant accountability.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">字词观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">“归向”是本章关键动作，说明神的警告指向关系的恢复；“预备迎见”则把人带到最终责任面前。两个表达合在一起，显明悔改既是现在的邀请，也是审判前的必要回应。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">The language of returning and meeting God shows both present invitation and final accountability.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">属灵意义</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">本章提醒信徒，神不接受与公义脱节的敬拜，也不会忽略被压迫者的声音。真正的属灵生命会在祷告、奉献、关系、工作伦理和对弱者的关怀中一同显明。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">True spirituality joins worship with justice, prayer with obedience, and devotion with mercy.</p>
+</li></ul>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"预备迎见神的人，今天就学习归向神。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Those who prepare to meet God learn to return to him today."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">阿摩司书 4章 BibleView 研读页</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amos Chapter 7 | 阿摩司书 7章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #7A2E2E;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #B36B3C; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #D8A24A;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #FBF6EC;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #2E241D;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bv-motif-stage {
+    background:
+        radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--theme-accent) 80%, white), transparent 30%),
+        linear-gradient(160deg, white 0%, color-mix(in srgb, var(--theme-accent) 55%, white) 52%, color-mix(in srgb, var(--theme-secondary) 18%, white) 100%);
+    min-height: 100%;
+}
+.bv-motif-stage svg { overflow: visible; }
+.bv-motif-soft { filter: drop-shadow(0 12px 18px rgba(0,0,0,.08)); }
+.motif-symbol { transform-box: fill-box; transform-origin: center; }
+.motion-sprout .motif-grow { animation: motifGrow 4.8s ease-in-out infinite; transform-origin: bottom center; }
+.motion-rise .motif-rise { animation: motifRise 5.6s ease-in-out infinite; }
+.motion-pulse .motif-pulse { animation: motifPulse 4.2s ease-in-out infinite; transform-origin: center; }
+.motion-swing .motif-swing { animation: motifSwing 4.8s ease-in-out infinite; transform-origin: top center; }
+.motion-flow .motif-flow { stroke-dasharray: 360; stroke-dashoffset: 360; animation: motifFlow 6.8s ease-in-out infinite; }
+.motion-circle .motif-circle { animation: motifRing 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-scatter .motif-scatter { animation: motifScatter 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-gather .motif-gather { animation: motifGather 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-shine .motif-shine { animation: motifShine 4.8s ease-in-out infinite; transform-origin: center; }
+@keyframes motifGrow {
+    0%, 100% { transform: scaleY(.82); opacity: .72; }
+    50% { transform: scaleY(1.08); opacity: 1; }
+}
+@keyframes motifRise {
+    0% { transform: translateY(14px); opacity: .12; }
+    45% { opacity: .76; }
+    100% { transform: translateY(-26px); opacity: .08; }
+}
+@keyframes motifSwing {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(3deg); }
+}
+@keyframes motifFlow {
+    0% { stroke-dashoffset: 360; opacity: .38; }
+    48%, 74% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -360; opacity: .38; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.94); opacity: .62; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes motifRing {
+    0%, 100% { transform: scale(.96); opacity: .45; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifScatter {
+    0%, 100% { transform: translate(0, 0); opacity: .52; }
+    50% { transform: translate(var(--scatter-x, 10px), var(--scatter-y, -8px)); opacity: .95; }
+}
+@keyframes motifGather {
+    0%, 100% { transform: scale(.92); opacity: .5; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifShine {
+    0%, 100% { transform: scale(.9); opacity: .45; }
+    50% { transform: scale(1.12); opacity: 1; }
+}
+.motif-route-line {
+    stroke-dasharray: 520;
+    stroke-dashoffset: 520;
+    animation: motifRoute 7s ease-in-out infinite;
+}
+.motif-sun { animation: motifPulse 4.8s ease-in-out infinite; transform-origin: center; }
+.motif-dust { animation: motifDust 5.2s ease-in-out infinite; }
+.motif-dust.d2 { animation-delay: .7s; }
+.motif-dust.d3 { animation-delay: 1.4s; }
+@keyframes motifRoute {
+    0% { stroke-dashoffset: 520; opacity: .35; }
+    45%, 72% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -520; opacity: .35; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.96); opacity: .65; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+@keyframes motifDust {
+    0%, 100% { transform: translateY(10px); opacity: .25; }
+    50% { transform: translateY(-8px); opacity: .85; }
+}
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fa-solid fa-scale-balanced mr-2 text-stone-600"></i> 阿摩司书 7章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Amos Chapter 7</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">准绳之下的代求与忠心</h1>
+    <p class="en-text text-stone-500 italic mb-5">Intercession and Faithfulness under the Plumb Line</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">阿摩司书第7章呈现三个审判异象与一次公开冲突。先知看见蝗虫和火的灾祸，两次为雅各家代求，耶和华怜悯而止住灾害；随后准绳的异象显明以色列已经被神公义的标准量度，审判不再延迟。伯特利祭司亚玛谢试图驱逐阿摩司，显示宗教权力对神话语的抗拒；阿摩司则表明自己不是职业先知，而是被耶和华呼召传讲信息的人。本章帮助读者看见：真正的服事既有为人代求的怜悯，也有顺服神话语的勇气。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Amos 7 presents visions of judgment and a confrontation over God’s word. Amos intercedes twice, and the Lord relents; yet the plumb line reveals that Israel has been measured and found crooked. Amaziah resists the prophet, but Amos stands in obedience to God’s call.</p>
+  </div>
+  <aside class="bv-motif-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">准绳与天平</h2>
+      <p class="en-text text-xs text-stone-500 italic mt-1">Plumb Line and Scale</p>
+      <p class="text-sm text-stone-600 mt-2 leading-7 text-justify">以简洁的衡量意象表现本章核心：神不是凭外表判断祂的百姓，而是按祂真实正直的标准察验；先知在审判信息中仍带着代求的心。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A simple measuring image highlights God’s righteous standard and the prophet’s compassionate plea.</p>
+
+      <p class="text-[11px] text-[var(--theme-primary)] font-bold mt-3 px-3 py-2 bg-white/70 border border-white/80 rounded-lg">公义衡量与怜悯代求之间的张力</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-1 px-3">The tension between just measure and merciful intercession</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="Plumb Line and Scale" class="w-full mt-4 bv-motif-soft motion-swing">
+
+  <path d="M52 212 H368" stroke="var(--theme-secondary)" stroke-width="3" opacity=".18" stroke-linecap="round"/>
+  <circle class="motif-pulse" cx="210" cy="126" r="64" fill="var(--theme-accent)" opacity=".24"/>
+  <g class="motif-symbol motif-swing" transform="translate(130 54) scale(1.12)">
+  <path d="M104 54 V174 M62 82 H146" stroke="var(--theme-primary)" stroke-width="6" stroke-linecap="round"/>
+  <path d="M62 82 L42 132 H82 Z M146 82 L126 132 H166 Z" fill="var(--theme-accent)" stroke="var(--theme-secondary)" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M74 174 H134" stroke="var(--theme-primary)" stroke-width="8" stroke-linecap="round"/>
+</g>
+
+  <text x="210" y="232" text-anchor="middle" font-size="11" fill="var(--theme-primary)" opacity=".72" class="en-text">judgment · prophecy · mercy</text>
+</svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading this chapter faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">代求中的怜悯</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Mercy in Intercession</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">Ya‘aqov / Jacob</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">阿摩司两次呼求“雅各微弱”，不是替罪恶辩护，而是在神面前承认百姓承受不起审判，显出先知心中真实的怜悯。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">Amos pleads for frail Jacob, showing compassion without excusing sin.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">准绳的标准</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">The Plumb Line Standard</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">’anak / plumb line</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">准绳象征神公义而准确的衡量。以色列外表仍有宗教和王权，里面却已经偏离神的正直标准。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">The plumb line pictures God’s just and accurate measure of His people.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">被呼召的见证</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Called Witness</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">laqach / took</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">阿摩司说明自己原是牧人和修理桑树的人，却被耶和华选召去说预言。神的话语权柄不来自人的职位，而来自神的差遣。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">Amos speaks because the Lord took and sent him, not because of human status.</p>
+</div>
+
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">蝗虫异象与先知代求 (7:1-3)</h2>
+    <p class="en-text text-sm italic text-stone-500">The Locust Vision and the Prophet’s Plea</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:1-3</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            主耶和华指示阿摩司：祂造蝗虫，要吃尽地上的青草。阿摩司说：“主耶和华啊，求你赦免；雅各微弱，他怎能站立得住呢？”耶和华就后悔说：“这灾可以免了。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The Lord showed Amos locusts devouring the land. Amos pleaded, “O Lord God, forgive; how can Jacob stand? He is so small.” The Lord relented.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">审判异象中的代求</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">上下文观察中，阿摩司书前面已经严厉指出以色列的社会不义、宗教虚假和压迫贫弱。本段并不是否定审判的公义，而是让读者看见先知不是冷漠宣告灾祸的人。蝗虫吃尽青草，意味民生根基被毁；阿摩司承认百姓有罪，却向神呼求赦免。神止住灾害，显明祂的审判不是任性发怒，而是在公义中仍有怜悯。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The vision does not deny Israel’s guilt. It shows Amos as an intercessor who pleads for frail Jacob, and it reveals God’s mercy within His justice.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">为软弱的人站在神面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用不是把别人的罪合理化，而是学习在神面前为人代求。当我们看见家庭、教会或社会中的破口时，容易只批评或退后；阿摩司提醒我们，属灵清醒应当带出怜悯的祷告。今日默想：我是否愿意为软弱、偏离、甚至让我失望的人向神呼求怜悯？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Spiritual clarity should lead to compassionate prayer. We can name sin honestly while still pleading for mercy.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">火的异象与再次怜悯 (7:4-6)</h2>
+    <p class="en-text text-sm italic text-stone-500">The Fire Vision and Renewed Mercy</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:4-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            主耶和华又指示阿摩司：祂命火来惩罚，火吞灭深渊，也要烧毁产业。阿摩司说：“主耶和华啊，求你止息；雅各微弱，他怎能站立得住呢？”耶和华说：“这灾也可免了。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The Lord showed a fire of judgment consuming the deep and the land. Amos pleaded again, and the Lord relented again.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">重复代求显明神的忍耐</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">字词观察中，火象征更深层、更彻底的审判，不只是农作物受损，也触及土地和生命的根基。阿摩司第二次代求，用语几乎重复，强调百姓的脆弱和神怜悯的必要。经文含义不是说神没有定见，而是用人能理解的方式表达：神愿意听祂仆人的祷告，并在审判临近时显出忍耐。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The fire vision intensifies the threat. Amos’s repeated plea shows the people’s weakness and God’s willingness to hear intercession.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">持续祷告而不麻木</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当问题重复出现、环境长期沉重时，人容易祷告疲乏。阿摩司第二次仍然呼求，提醒我们不要因看见人的顽梗就停止向神祈求。灵修应用在于：坚持代求不是因为我们掌控结果，而是因为神仍然垂听、怜悯并掌权。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Repeated burdens can make prayer weary, but Amos teaches perseverance in intercession before the merciful Lord.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">准绳异象与不可延迟的审判 (7:7-9)</h2>
+    <p class="en-text text-sm italic text-stone-500">The Plumb Line and Judgment No Longer Delayed</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:7-9</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            主站在按准绳建造的墙上，手拿准绳。耶和华说：“我要吊起准绳在我民以色列中；我必不再宽恕他们。以撒的邱坛必然凄凉，以色列的圣所必然荒废。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            The Lord stood by a wall with a plumb line and said He would set it among Israel; the high places and sanctuaries would be laid waste.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">神按正直标准察验祂的民</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">前两个异象中，阿摩司代求，神止住灾害；第三个异象转向准绳，说明神已经按祂的正直标准衡量以色列。墙若歪斜，不能靠粉饰继续站立。以色列的宗教中心和王室权力都将受审判，因为敬拜若脱离公义和顺服，就不能成为安全保障。本段把读者带到严肃的属灵意义：神的怜悯不可被误解为对罪的纵容。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The plumb line reveals that Israel has failed God’s righteous standard. Religious centers and royal power cannot protect a crooked people.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让神的标准校正生命</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们常用成就、忙碌、宗教活动或别人更明显的失败来安慰自己，但神用准绳察验真实的心、关系和行为。今日默想：我生命中是否有一面“看似还站立”的墙，其实已经偏离神的正直？灵修应用是愿意被神的话语校正，而不是只寻求外表稳定。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God’s word measures the heart beneath outward stability. Devotion means welcoming His correction before collapse.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">亚玛谢抗拒先知信息 (7:10-13)</h2>
+    <p class="en-text text-sm italic text-stone-500">Amaziah Resists the Prophetic Word</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:10-13</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            伯特利的祭司亚玛谢打发人去见以色列王耶罗波安，说阿摩司图谋背叛；又对阿摩司说：“先知啊，去犹大地逃命，在那里糊口说预言，不要再在伯特利说预言。”
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Amaziah, priest of Bethel, accused Amos of conspiracy and told him to leave for Judah and stop prophesying at Bethel.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">宗教权力可能拒绝神的话</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">上下文观察显示，伯特利是北国重要的宗教中心。亚玛谢把阿摩司的信息政治化，称其为谋反，试图用权力和地盘意识压制神的话。他称伯特利是“王的圣所”和“王的宫殿”，这句话暴露问题核心：敬拜场所被王权和制度利益支配，而不是顺服耶和华。经文提醒读者，外在宗教职位并不自动等于听从神。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Amaziah reframes God’s warning as political rebellion. Bethel’s religion has become tied to royal power rather than obedience to the Lord.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">不要只听合意的话</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">我们也可能像亚玛谢一样，只欢迎让自己安全、体面、方便的话，却排斥会指出罪和偶像的信息。灵修应用是培养受教的心：当神的话挑战我的习惯、利益或身份感时，我是否愿意停下来聆听，而不是立刻防卫？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We must beware of receiving only comfortable words. A teachable heart listens when God’s word confronts our security.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">阿摩司的呼召与审判宣告 (7:14-17)</h2>
+    <p class="en-text text-sm italic text-stone-500">Amos’s Calling and the Final Oracle</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">7:14-17</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            阿摩司回答说：“我原不是先知，也不是先知的门徒；我是牧人，又是修理桑树的。耶和华选召我，使我去向祂民以色列说预言。”随后他宣告亚玛谢家和以色列被掳的审判。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Amos answered that he was not a professional prophet; the Lord took him from his ordinary work and sent him to prophesy. He then announced judgment and exile.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">话语权柄来自神的差遣</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">阿摩司不是凭职业身份争取发言权，而是说明自己被耶和华呼召。神从平凡工作中取用他，使他承担不受欢迎的使命。亚玛谢拒绝听神的话，结局与他所维护的制度一同受审判。本段把个人冲突放进更大的救赎历史背景：神的话不会因人的禁止而失效，以色列的被掳也显明长期悖逆的严重后果。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Amos’s authority comes from God’s call, not professional status. Human resistance cannot silence the Lord’s word or cancel its consequences.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在平凡岗位中忠于呼召</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">属灵意义不只属于讲台或职位，也发生在神把人放置的日常岗位中。阿摩司从牧人和修理桑树的人被差遣，提醒我们：神能在平凡生活中塑造忠心，也能呼召普通人为真理作见证。今日默想：在工作、家庭和关系中，我是否愿意因顺服神而说诚实、行公义、承担代价？</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God forms faithful witnesses in ordinary work. Obedience may be costly, but His call gives courage and clarity.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-6">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何阅读阿摩司书 7章</h2>
+  <p class="en-text text-sm text-stone-500 italic mb-4">How to Read Amos 7</p>
+  <p class="text-stone-700 leading-8 text-justify mb-3">本章应同时从先知异象、代求祷告和话语冲突三条线索阅读。不要只把它看作灾难预告，也不要把代求理解为取消公义；重点在于神的公义标准、神愿意施怜悯，以及人对神话语的回应。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Read this chapter through the visions, the intercession, and the confrontation over God’s word. It holds together divine justice, mercy, and human response.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">释经轨道 / <span class="en-text text-base italic text-stone-500">Exegesis Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">先观察三个异象的推进：蝗虫和火因代求而止住，准绳则宣告审判不再延迟。再留意伯特利的背景，亚玛谢的话显示宗教体系已与王权利益绑定。最后看阿摩司的呼召，明白先知权柄来自神的差遣。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Trace the movement from relented judgments to the plumb line, then read the Bethel conflict in light of religious power and God’s call.</p>
+</div>
+<div class="bg-[var(--theme-accent)]/20 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修轨道 / <span class="en-text text-base italic text-stone-500">Devotional Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">把本章带入祷告：为软弱的人代求，求神用祂的准绳校正自己，也求主赐勇气在压力中忠于祂的话。灵修重点不是审判别人，而是在神面前受光照、受差遣。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Pray through the chapter: intercede for the weak, receive God’s correction, and ask for courage to obey His word.</p>
+</div>
+</section>
+<section class="mt-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-3">补充原则 / Supporting Principles</h3>
+  <ul class="grid md:grid-cols-2 gap-4"><li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">上下文观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">阿摩司书持续指出北国以色列在富足表象下隐藏的不义。本章的异象不是孤立灾难，而是对长期悖逆的回应。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">The visions respond to Israel’s ongoing injustice beneath outward prosperity.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">字词观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">“准绳”强调神衡量的准确和正直；“雅各微弱”强调百姓无法靠自己承受审判。这两个意象共同呈现公义与怜悯。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">The plumb line stresses God’s accuracy; frail Jacob stresses the people’s helplessness.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">属灵意义</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">神的怜悯呼唤悔改，神的标准揭露虚假安全感。真正的信仰既不逃避审判信息，也不失去代求的心。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">Mercy calls for repentance, and God’s standard exposes false security.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">今日默想</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">我更像阿摩司，愿意代求并顺服；还是更像亚玛谢，保护自己的位置而拒绝神的话？</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">Am I receiving and obeying God’s word, or defending my place against it?</p>
+</li></ul>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"神用准绳显明真实，也听见怜悯中的代求。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"God measures truthfully and hears merciful intercession."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">阿摩司书 7章 BibleView 研读页</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
