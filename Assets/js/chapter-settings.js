@@ -2,7 +2,8 @@
   const storageKey = "bibleview-reader-settings";
   const defaults = {
     fontSize: "normal",
-    style: "default"
+    fontFamily: "default",
+    spacing: "normal"
   };
 
   const css = `
@@ -33,52 +34,51 @@
       line-height: 1.45 !important;
     }
 
-    html[data-bv-reader-style="serif"] body.bv-reader-page main,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main p,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main li,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main h2,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main h3,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main h4,
-    html[data-bv-reader-style="serif"] body.bv-reader-page main h5 {
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main p,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main li,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main h2,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main h3,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main h4,
+    html[data-bv-reader-font-family="serif"] body.bv-reader-page main h5 {
       font-family: "Noto Serif SC", "Songti SC", "STSong", serif !important;
     }
 
-    html[data-bv-reader-style="comfortable"] {
-      --bv-reader-line-height: 2;
-    }
-
-    html[data-bv-reader-style="comfortable"] body.bv-reader-page main {
+    html[data-bv-reader-spacing="wide"] body.bv-reader-page main {
       max-width: 1180px !important;
     }
 
-    html[data-bv-reader-style="comfortable"] body.bv-reader-page .verse-card {
+    html[data-bv-reader-spacing="wide"] body.bv-reader-page .verse-card {
+      margin-bottom: 2.4rem !important;
       box-shadow: 0 18px 36px -24px rgba(15, 23, 42, 0.28) !important;
     }
 
-    html[data-bv-reader-style="comfortable"] body.bv-reader-page .verse-card > div {
+    html[data-bv-reader-spacing="wide"] body.bv-reader-page .verse-card > div {
       padding: 1.65rem !important;
     }
 
-    html[data-bv-reader-style="compact"] {
-      --bv-reader-line-height: 1.58;
-    }
-
-    html[data-bv-reader-style="compact"] body.bv-reader-page main {
+    html[data-bv-reader-spacing="compact"] body.bv-reader-page main {
       max-width: 980px !important;
     }
 
-    html[data-bv-reader-style="compact"] body.bv-reader-page .verse-card {
+    html[data-bv-reader-spacing="compact"] body.bv-reader-page .verse-card {
       margin-bottom: 1rem !important;
     }
 
-    html[data-bv-reader-style="compact"] body.bv-reader-page .verse-card > div {
+    html[data-bv-reader-spacing="compact"] body.bv-reader-page .verse-card > div {
       padding: 1rem !important;
     }
   `;
 
   function readSettings() {
     try {
-      return { ...defaults, ...JSON.parse(localStorage.getItem(storageKey) || "{}") };
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
+      const next = { ...defaults, ...saved };
+      if (saved.style === "serif") next.fontFamily = "serif";
+      if (saved.style === "comfortable") next.spacing = "wide";
+      if (saved.style === "compact") next.spacing = "compact";
+      delete next.style;
+      return next;
     } catch (_error) {
       return { ...defaults };
     }
@@ -87,7 +87,8 @@
   function applySettings() {
     const settings = readSettings();
     document.documentElement.dataset.bvReaderFont = settings.fontSize;
-    document.documentElement.dataset.bvReaderStyle = settings.style;
+    document.documentElement.dataset.bvReaderFontFamily = settings.fontFamily;
+    document.documentElement.dataset.bvReaderSpacing = settings.spacing;
     if (document.body) document.body.classList.add("bv-reader-page");
   }
 

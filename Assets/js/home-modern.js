@@ -8,8 +8,8 @@
     Josh: Array.from({ length: 24 }, (_, i) => i + 1),//历史书
     Judg: Array.from({ length: 21 }, (_, i) => i + 1),
     Ruth: Array.from({ length: 4 }, (_, i) => i + 1),
-    //"1Sam": Array.from({ length: 31 }, (_, i) => i + 1),
-    //"2Sam": Array.from({ length: 24 }, (_, i) => i + 1),
+    "1Sam": Array.from({ length: 31 }, (_, i) => i + 1),
+    "2Sam": Array.from({ length: 24 }, (_, i) => i + 1),
     //"1Kgs": Array.from({ length: 22 }, (_, i) => i + 1),
     //"2Kgs": Array.from({ length: 25 }, (_, i) => i + 1),
     //"1Chr": Array.from({ length: 29 }, (_, i) => i + 1),
@@ -17,8 +17,18 @@
     Ezra: Array.from({ length: 10 }, (_, i) => i + 1),
     Neh: Array.from({ length: 13 }, (_, i) => i + 1),
     Esth: Array.from({ length: 10 }, (_, i) => i + 1),
-    Song: Array.from({ length: 8 }, (_, i) => i + 1), //智慧书
-    Joel: Array.from({ length: 3 }, (_, i) => i + 1), //小先知书
+    //Job: Array.from({ length: 42 }, (_, i) => i + 1), //智慧文学
+    //Ps: Array.from({ length: 150 }, (_, i) => i + 1),
+    //Prov: Array.from({ length: 31 }, (_, i) => i + 1),
+    Eccl: Array.from({ length: 12 }, (_, i) => i + 1),
+    Song: Array.from({ length: 8 }, (_, i) => i + 1),
+    Isa: Array.from({ length: 66 }, (_, i) => i + 1), //大先知书
+    //Jer: Array.from({ length: 52 }, (_, i) => i + 1),
+    Lam: Array.from({ length: 5 }, (_, i) => i + 1),
+    //Ezek: Array.from({ length: 48 }, (_, i) => i + 1),
+    Dan: Array.from({ length: 12 }, (_, i) => i + 1),
+    Hos: Array.from({ length: 14 }, (_, i) => i + 1), //小先知书
+    Joel: Array.from({ length: 3 }, (_, i) => i + 1),
     Amos: Array.from({ length: 9 }, (_, i) => i + 1),
     Obad: [1],
     Jonah: Array.from({ length: 4 }, (_, i) => i + 1),
@@ -27,6 +37,7 @@
     Hab: Array.from({ length: 3 }, (_, i) => i + 1),
     Zeph: Array.from({ length: 3 }, (_, i) => i + 1),
     Hag: Array.from({ length: 2 }, (_, i) => i + 1),
+    Zech: Array.from({ length: 14 }, (_, i) => i + 1),
     Mal: Array.from({ length: 4 }, (_, i) => i + 1),
     Matt: Array.from({ length: 28 }, (_, i) => i + 1), //NT
     Mark: Array.from({ length: 16 }, (_, i) => i + 1),
@@ -131,6 +142,26 @@
 
   const topicCategories = [
     {
+      title: "圣经图片",
+      abbr: "BiblePics",
+      desc: "Bible Pictures",
+      image: "url('../../Config/sunrise.jpg')",
+      links: [
+        { name: "精选", url: "https://www.jianguoyun.com/p/DZymMaoQid2iDhiK6KAGIAA" },
+        { name: "按卷", url: "https://www.jianguoyun.com/p/DTPCNQkQid2iDhiL6KAGIAA" },
+        { name: "拾穗", url: "https://www.jianguoyun.com/p/DX7OHqoQid2iDhjz56AGIAA" },
+      ]
+    },
+    {
+      title: "推荐书籍",
+      abbr: "Books",
+      desc: "Books Digests",
+      image: "url('../../Config/oldbooks1.jpg')",
+      links: [
+        { name: "推荐书籍", url: "https://www.jianguoyun.com/p/DaDHx9sQ0fWiDhiynKMGIAA" },
+      ]
+    },
+    {
       title: "提前背景",
       abbr: "1Tim",
       desc: "Background",
@@ -149,13 +180,14 @@
       links: [
         { name: "保罗生平年表", url: "Topics/Acts/Paul_Timeline.pdf" },
         { name: "保罗三次布道旅行时间线", url: "Topics/Acts/PaulMinstryTimeline.html" },
+        { name: "保罗第“四”次布道旅行", url: "Topics/1Tim/PualRoute/PualRoute.html" },
         { name: "保罗与主耶稣受审的对比", url: "Topics/Acts/Paul_vs_Jesus.html" }
       ]
     },
     {
       title: "约书亚记点滴",
       abbr: "Josh",
-      desc: "Tips",
+      desc: "Special Topics",
       image: "url('../../Config/oldbooks.jpg')",
       links: [
         { name: "书8深度研读", url: "Topics/Josh/Josh8_deepThink.html" },
@@ -163,27 +195,26 @@
         { name: "书12-21深度研读2", url: "Topics/Josh/Josh12_21_deepThink2.html" }
       ]
     },
+  ];
+
+  const biblePicsTopic = topicCategories.find((topic) => topic.title === "圣经图片");
+  const booksTopic = topicCategories.find((topic) => topic.title === "推荐书籍");
+
+  const featuredItems = [
     {
-      title: "读书文摘",
-      abbr: "Books",
-      desc: "Abstract",
-      image: "url('../../Config/oldbooks1.jpg')",
-      links: [
-        { name: "上海地方教会60年", url: "Topics/Books/shchurch.html" },
-        { name: "最后的告别", url: "Topics/Books/BeingMortal.html" },
-        { name: "超凡之心", url: "Topics/Books/theHeart.html" },
-      ]
+      title: "圣经图片",
+      abbr: "BiblePics",
+      desc: "Bible Pictures",
+      links: biblePicsTopic ? biblePicsTopic.links : []
     },
-    // 复制上面的块来添加新主题，例如：     
-    /*{
-        title: "专题研究",
-        abbr: "Study",
-        desc: "Special Topics",
-        image: "url('../../Config/oldbooks1.jpg')",
-        links: [
-            { name: "示例文章", url: "Topics/Sample.html" }
-        ]
-    },*/
+    {
+      title: "推荐书籍",
+      abbr: "Books",
+      desc: "Books Digests",
+      links: booksTopic ? booksTopic.links : []
+    },
+     
+ 
   ];
 
   const state = {
@@ -192,9 +223,12 @@
   };
 
   const readerSettingsKey = "bibleview-reader-settings";
+  const recentBooksKey = "bibleview-recent-books";
+  const recentBooksLimit = 6;
   const readerDefaults = {
     fontSize: "normal",
-    style: "default"
+    fontFamily: "default",
+    spacing: "normal"
   };
 
   const iconBook = `
@@ -226,7 +260,13 @@
 
   function getReaderSettings() {
     try {
-      return { ...readerDefaults, ...JSON.parse(localStorage.getItem(readerSettingsKey) || "{}") };
+      const saved = JSON.parse(localStorage.getItem(readerSettingsKey) || "{}");
+      const next = { ...readerDefaults, ...saved };
+      if (saved.style === "serif") next.fontFamily = "serif";
+      if (saved.style === "comfortable") next.spacing = "wide";
+      if (saved.style === "compact") next.spacing = "compact";
+      delete next.style;
+      return next;
     } catch (_error) {
       return { ...readerDefaults };
     }
@@ -242,8 +282,11 @@
     document.querySelectorAll("[data-reader-font]").forEach((input) => {
       input.checked = input.value === settings.fontSize;
     });
-    document.querySelectorAll("[data-reader-style]").forEach((input) => {
-      input.checked = input.value === settings.style;
+    document.querySelectorAll("[data-reader-font-family]").forEach((input) => {
+      input.checked = input.value === settings.fontFamily;
+    });
+    document.querySelectorAll("[data-reader-spacing]").forEach((input) => {
+      input.checked = input.value === settings.spacing;
     });
   }
 
@@ -317,11 +360,39 @@
                 <p class="bv-kicker">Library</p>
                 <h2>目录</h2>
               </div>
-              <p>旧约、新约、各类主题为一级目录；展开后在二级菜单中浏览 66 卷书或专题资料。</p>
+              <p>推荐｜最近、旧约、新约、各类主题</p>
             </div>
             <div class="bv-primary-menu" data-primary-menu>
-              <section class="bv-menu-panel is-open" data-menu-panel="OT">
+              <section class="bv-menu-panel is-open" data-menu-panel="featured-recent">
                 <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="true">
+                  <span>
+                    <strong>推荐｜最近</strong>
+                    <small>Featured · 最近访问的书卷</small>
+                  </span>
+                  <span class="bv-menu-count">${featuredItems.length}</span>
+                </button>
+                <div class="bv-menu-body">
+                  <div class="bv-feature-recent">
+                    <div class="bv-quick-row">
+                      <div class="bv-quick-row-head">
+                        <strong>推荐</strong>
+                        <span>从各类主题中推荐</span>
+                      </div>
+                      <div class="bv-featured-list" data-featured-grid></div>
+                    </div>
+                    <div class="bv-quick-row">
+                      <div class="bv-quick-row-head">
+                        <strong>最近</strong>
+                        <span>从主页目录打开过的书卷</span>
+                      </div>
+                      <div class="bv-recent-list" data-recent-books></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="bv-menu-panel" data-menu-panel="OT">
+                <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="false">
                   <span>
                     <strong>旧约</strong>
                     <small>Old Testament · 39 卷</small>
@@ -350,7 +421,7 @@
                 <button class="bv-menu-trigger" type="button" data-menu-trigger aria-expanded="false">
                   <span>
                     <strong>各类主题</strong>
-                    <small>Topics · 背景、时间线、读书文摘</small>
+                    <small>图片、背景、时间线、历史、文摘等</small>
                   </span>
                   <span class="bv-menu-count">${topicCategories.length}</span>
                 </button>
@@ -393,11 +464,15 @@
                 <label><input type="radio" name="reader-font-size" value="xlarge" data-reader-font> 特大</label>
               </fieldset>
               <fieldset>
-                <legend>显示风格</legend>
-                <label><input type="radio" name="reader-style" value="default" data-reader-style> 默认</label>
-                <label><input type="radio" name="reader-style" value="serif" data-reader-style> 典雅衬线</label>
-                <label><input type="radio" name="reader-style" value="comfortable" data-reader-style> 宽松阅读</label>
-                <label><input type="radio" name="reader-style" value="compact" data-reader-style> 紧凑阅读</label>
+                <legend>字体设置</legend>
+                <label><input type="radio" name="reader-font-family" value="default" data-reader-font-family> 默认字体</label>
+                <label><input type="radio" name="reader-font-family" value="serif" data-reader-font-family> 衬线字体</label>
+              </fieldset>
+              <fieldset>
+                <legend>边距设置</legend>
+                <label><input type="radio" name="reader-spacing" value="normal" data-reader-spacing> 标准边距</label>
+                <label><input type="radio" name="reader-spacing" value="wide" data-reader-spacing> 宽松边距</label>
+                <label><input type="radio" name="reader-spacing" value="compact" data-reader-spacing> 紧凑边距</label>
               </fieldset>
             </div>
             <div class="bv-reader-settings-actions">
@@ -440,6 +515,30 @@
       if (!query) return true;
       return [book.short, book.english, book.abbr].some((value) => value.toLowerCase().includes(query));
     });
+  }
+
+  function getRecentBookAbbrs() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(recentBooksKey) || "[]");
+      return Array.isArray(saved) ? saved.filter((abbr) => typeof abbr === "string") : [];
+    } catch (_error) {
+      return [];
+    }
+  }
+
+  function getRecentBooks() {
+    return getRecentBookAbbrs()
+      .map((abbr) => state.books.find((book) => book.abbr === abbr))
+      .filter((book) => book && (availableChapters[book.abbr] || []).length > 0);
+  }
+
+  function saveRecentBook(abbr) {
+    const book = state.books.find((item) => item.abbr === abbr);
+    if (!book || !(availableChapters[book.abbr] || []).length) return;
+
+    const next = [abbr, ...getRecentBookAbbrs().filter((item) => item !== abbr)].slice(0, recentBooksLimit);
+    localStorage.setItem(recentBooksKey, JSON.stringify(next));
+    renderRecentBooks();
   }
 
   function renderBooks() {
@@ -496,6 +595,51 @@
         </div>
       </details>
     `).join("");
+  }
+
+  function renderFeaturedItems() {
+    const grid = document.querySelector("[data-featured-grid]");
+    if (!grid) return;
+
+    grid.innerHTML = featuredItems.map((item) => `
+      <details class="bv-featured-card">
+        <summary>
+          <span>
+            <strong>${escapeHtml(item.title)}</strong>
+            <small>${escapeHtml(item.abbr)} · ${escapeHtml(item.desc)}</small>
+          </span>
+        </summary>
+        <div class="bv-featured-links">
+          ${item.links.map((link) => `<a href="${link.url}"><span>${escapeHtml(link.name)}</span><span>→</span></a>`).join("")}
+        </div>
+      </details>
+    `).join("");
+  }
+
+  function renderRecentBooks() {
+    const grid = document.querySelector("[data-recent-books]");
+    if (!grid) return;
+
+    const books = getRecentBooks();
+    if (!books.length) {
+      grid.innerHTML = `<div class="bv-recent-empty">还没有最近访问的书卷</div>`;
+      return;
+    }
+
+    grid.innerHTML = books.map((book) => {
+      const readyCount = (availableChapters[book.abbr] || []).length;
+      return `
+        <button class="bv-book-row bv-recent-book-row" type="button" data-book="${book.abbr}" aria-label="${escapeHtml(book.short)} ${escapeHtml(book.english)}">
+          <span class="bv-book-main">
+            <span class="bv-book-cn">${escapeHtml(book.short)} ${escapeHtml(book.abbr)}</span>
+            <span class="bv-book-en">${escapeHtml(book.english)}</span>
+          </span>
+          <span class="bv-book-status">
+            <span>${readyCount} 章</span>
+          </span>
+        </button>
+      `;
+    }).join("");
   }
 
   function renderBookCards() {
@@ -575,8 +719,12 @@
       input.addEventListener("change", () => saveReaderSettings({ fontSize: input.value }));
     });
 
-    document.querySelectorAll("[data-reader-style]").forEach((input) => {
-      input.addEventListener("change", () => saveReaderSettings({ style: input.value }));
+    document.querySelectorAll("[data-reader-font-family]").forEach((input) => {
+      input.addEventListener("change", () => saveReaderSettings({ fontFamily: input.value }));
+    });
+
+    document.querySelectorAll("[data-reader-spacing]").forEach((input) => {
+      input.addEventListener("change", () => saveReaderSettings({ spacing: input.value }));
     });
 
     document.querySelector("[data-reader-settings-reset]").addEventListener("click", () => {
@@ -594,7 +742,10 @@
 
     document.querySelector("[data-primary-menu]").addEventListener("click", (event) => {
       const card = event.target.closest("[data-book]");
-      if (card) openDrawer(card.dataset.book);
+      if (card) {
+        saveRecentBook(card.dataset.book);
+        openDrawer(card.dataset.book);
+      }
     });
 
     document.querySelector("[data-close]").addEventListener("click", closeDrawer);
@@ -609,6 +760,8 @@
     syncReaderSettingsForm();
     renderBooks();
     renderTopics();
+    renderFeaturedItems();
+    renderRecentBooks();
     bindEvents();
 
     const busuanzi = document.createElement("script");
