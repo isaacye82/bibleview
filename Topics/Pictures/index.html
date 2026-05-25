@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>圣经图片 · BibleView</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bv-bg: #f5f1e8;
+      --bv-surface: rgba(255, 255, 255, 0.78);
+      --bv-surface-solid: #ffffff;
+      --bv-surface-soft: #eee8dc;
+      --bv-ink: #202225;
+      --bv-muted: #6b6f76;
+      --bv-border: rgba(42, 35, 27, 0.13);
+      --bv-brand: #9f653a;
+      --bv-brand-strong: #6d442c;
+      --bv-accent: #1f7a73;
+      --bv-accent-soft: rgba(31, 122, 115, 0.13);
+      --bv-shadow-soft: 0 14px 35px rgba(54, 43, 31, 0.1);
+      --bv-radius: 8px;
+      --bv-header: rgba(250, 247, 240, 0.82);
+      --bv-serif: "Microsoft YaHei UI Light", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+    }
+    body.bv-dark {
+      color-scheme: dark;
+      --bv-bg: #151a20;
+      --bv-surface: rgba(31, 38, 47, 0.78);
+      --bv-surface-solid: #202832;
+      --bv-surface-soft: #26313d;
+      --bv-ink: #edf0f2;
+      --bv-muted: #aeb7c2;
+      --bv-border: rgba(255, 255, 255, 0.11);
+      --bv-brand: #d6a464;
+      --bv-brand-strong: #f0c982;
+      --bv-accent: #73c5bd;
+      --bv-accent-soft: rgba(115, 197, 189, 0.14);
+      --bv-shadow-soft: 0 14px 35px rgba(0, 0, 0, 0.26);
+      --bv-header: rgba(21, 26, 32, 0.82);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 5%, rgba(197, 146, 59, 0.18), transparent 28rem),
+        radial-gradient(circle at 86% 0%, rgba(31, 122, 115, 0.16), transparent 24rem),
+        linear-gradient(180deg, var(--bv-bg), var(--bv-bg));
+      color: var(--bv-ink);
+      font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+    a { color: inherit; }
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--bv-border);
+      background: var(--bv-header);
+      backdrop-filter: blur(18px);
+    }
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--bv-ink);
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .brand-icon,
+    .mode-toggle {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface-solid);
+      box-shadow: var(--bv-shadow-soft);
+    }
+    .mode-toggle {
+      width: auto;
+      padding: 0 12px;
+      color: var(--bv-ink);
+      font: inherit;
+      cursor: pointer;
+    }
+    header {
+      padding: 38px 0 20px;
+      border-bottom: 1px solid var(--bv-border);
+    }
+    .kicker {
+      margin: 0 0 14px;
+      color: var(--bv-brand-strong);
+      font-size: 0.82rem;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.25rem, 6vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 720px;
+      margin: 16px 0 0;
+      color: var(--bv-muted);
+      line-height: 1.8;
+    }
+    .toolbar {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--bv-border);
+      background: var(--bv-header);
+      backdrop-filter: blur(18px);
+    }
+    .toolbar-inner {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+    .search {
+      min-height: 46px;
+      width: 100%;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      padding: 0 14px;
+      color: var(--bv-ink);
+      background: var(--bv-surface-solid);
+      font: inherit;
+      outline: none;
+    }
+    .search:focus {
+      border-color: var(--bv-accent);
+      box-shadow: 0 0 0 4px var(--bv-accent-soft);
+    }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      color: var(--bv-muted);
+    }
+    .stats span {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--bv-border);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: var(--bv-surface);
+      white-space: nowrap;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 18px;
+      padding: 22px 0 54px;
+    }
+    .group-nav {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+      display: grid;
+      gap: 8px;
+    }
+    .group-nav a {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      padding: 10px 12px;
+      text-decoration: none;
+      background: var(--bv-surface);
+      color: var(--bv-muted);
+    }
+    .group-nav a:hover { color: var(--bv-accent); }
+    .dir-node,
+    .root-files {
+      margin-bottom: 12px;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface);
+      overflow: hidden;
+      scroll-margin-top: 96px;
+    }
+    .dir-node .dir-node {
+      margin: 12px 0 0;
+      background: var(--bv-surface-solid);
+    }
+    .dir-node summary,
+    .section-head {
+      min-height: 58px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--bv-ink);
+    }
+    .section-head { cursor: default; }
+    .dir-node summary::-webkit-details-marker { display: none; }
+    .dir-node summary::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      flex: 0 0 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+    .dir-node[open] > summary::after { transform: rotate(225deg); }
+    .dir-node strong,
+    .section-head h2 {
+      display: block;
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 500;
+    }
+    .dir-node small {
+      display: block;
+      margin-top: 3px;
+      color: var(--bv-muted);
+      font-size: 0.78rem;
+    }
+    .dir-count,
+    .section-head span {
+      margin-left: auto;
+      color: var(--bv-muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .dir-content {
+      padding: 0 12px 12px;
+      border-top: 1px solid var(--bv-border);
+    }
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+      gap: 10px;
+      padding-top: 12px;
+    }
+    .file-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface-solid);
+      color: var(--bv-ink);
+      text-decoration: none;
+      box-shadow: var(--bv-shadow-soft);
+      display: flex;
+      flex-direction: column;
+    }
+    .file-card:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--bv-accent) 48%, var(--bv-border));
+    }
+    .file-preview {
+      height: 112px;
+      flex: 0 0 112px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--bv-surface-soft);
+    }
+    .file-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .file-icon {
+      min-width: 58px;
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--bv-radius);
+      color: #fff;
+      background: linear-gradient(135deg, var(--bv-brand-strong), var(--bv-accent));
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    body.bv-dark .file-icon { color: #111820; }
+    .file-info {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      padding: 10px;
+      background: var(--bv-surface-solid);
+    }
+    .file-info strong {
+      display: -webkit-box;
+      min-height: 2.7em;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-family: var(--bv-serif);
+      font-weight: 300;
+      line-height: 1.35;
+      font-size: 0.92rem;
+    }
+    .file-info span {
+      display: block;
+      margin-top: 7px;
+      color: var(--bv-muted);
+      font-family: var(--bv-serif);
+      font-size: 0.78rem;
+    }
+    .is-hidden { display: none !important; }
+    .empty-state {
+      display: none;
+      padding: 34px;
+      border: 1px dashed var(--bv-border);
+      border-radius: var(--bv-radius);
+      color: var(--bv-muted);
+      text-align: center;
+      background: var(--bv-surface);
+    }
+    .empty-state.is-visible { display: block; }
+    footer {
+      padding: 28px 0;
+      border-top: 1px solid var(--bv-border);
+      color: var(--bv-muted);
+      text-align: center;
+      background: var(--bv-header);
+    }
+    @media (max-width: 820px) {
+      .toolbar-inner { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .layout { grid-template-columns: 1fr; }
+      .group-nav {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 540px) {
+      .shell { width: min(100% - 24px, 1180px); }
+      .nav { min-height: 62px; }
+      header { padding: 28px 0 16px; }
+      h1 { font-size: 2.35rem; }
+      .group-nav { grid-template-columns: 1fr; }
+      .file-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .file-preview { height: 96px; }
+      .dir-node summary,
+      .section-head {
+        min-height: 54px;
+        padding: 10px 12px;
+      }
+      .dir-content { padding: 0 8px 8px; }
+      .mode-toggle span { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <nav class="shell nav" aria-label="资料索引导航">
+      <a class="brand" href="../../index.html">
+        <span class="brand-icon">BV</span>
+        <span>返回首页</span>
+      </a>
+      <button class="mode-toggle" type="button" data-theme-toggle aria-label="切换浅色或深色模式">
+        <span data-theme-label>浅色</span>
+      </button>
+    </nav>
+  </div>
+  <header>
+    <div class="shell">
+      <p class="kicker">BibleView Study Library</p>
+      <h1>圣经图片</h1>
+      <p class="lead">Bible Pictures · Topics/Pictures</p>
+    </div>
+  </header>
+  <div class="toolbar">
+    <div class="shell toolbar-inner">
+      <input class="search" type="search" placeholder="搜索文件名或分组..." data-search>
+      <div class="stats">
+        <span>129 个文件</span>
+        <span>6 个目录</span>
+      </div>
+    </div>
+  </div>
+  <main class="shell layout">
+    <nav class="group-nav" aria-label="文件分组">
+      <a href="#dir-1.%E7%B2%BE%E9%80%89">1.精选 <span>1</span></a><a href="#dir-2.%E6%8B%BE%E7%A9%97">2.拾穗 <span>4</span></a><a href="#dir-3.%E6%8C%89%E5%8D%B7">3.按卷 <span>4</span></a><a href="#dir-%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE">全卷120张地图 <span>120</span></a>
+    </nav>
+    <div>
+
+
+        <details class="dir-node level-1" id="dir-1.%E7%B2%BE%E9%80%89" data-dir-node data-default-open="true" data-search="1.精选" open>
+          <summary>
+            <span>
+              <strong>1.精选</strong>
+            </span>
+            <span class="dir-count">1 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="1.%E7%B2%BE%E9%80%89/%E5%AE%9E%E7%94%A8SJ%E5%9C%B0%E5%9B%BE%E9%9B%86.Atlas.pdf" target="_blank" rel="noopener" data-search="1.精选/实用sj地图集.atlas.pdf 实用sj地图集.atlas.pdf">
+                <div class="file-preview"><div class="file-icon">PDF</div></div>
+                <div class="file-info">
+                  <strong>实用SJ地图集.Atlas</strong>
+                  <span>PDF · 20.9 MB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+
+        <details class="dir-node level-1" id="dir-2.%E6%8B%BE%E7%A9%97" data-dir-node data-default-open="true" data-search="2.拾穗" open>
+          <summary>
+            <span>
+              <strong>2.拾穗</strong>
+            </span>
+            <span class="dir-count">4 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="2.%E6%8B%BE%E7%A9%97/3d-israel-map.jpg" target="_blank" rel="noopener" data-search="2.拾穗/3d-israel-map.jpg 3d-israel-map.jpg">
+                <div class="file-preview"><img src="2.%E6%8B%BE%E7%A9%97/3d-israel-map.jpg" alt="3d-israel-map.jpg" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>3d-israel-map</strong>
+                  <span>JPG · 339.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="2.%E6%8B%BE%E7%A9%97/%E5%8D%81%E4%BA%8C%E6%94%AF%E6%B4%BE%E5%88%86%E5%BE%97%E5%9C%9F%E5%9C%B0-1.png" target="_blank" rel="noopener" data-search="2.拾穗/十二支派分得土地-1.png 十二支派分得土地-1.png">
+                <div class="file-preview"><img src="2.%E6%8B%BE%E7%A9%97/%E5%8D%81%E4%BA%8C%E6%94%AF%E6%B4%BE%E5%88%86%E5%BE%97%E5%9C%9F%E5%9C%B0-1.png" alt="十二支派分得土地-1.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>十二支派分得土地-1</strong>
+                  <span>PNG · 3.5 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="2.%E6%8B%BE%E7%A9%97/%E6%97%B7%E9%87%8E42%E7%AB%99%E7%82%B9%E5%90%8D%E7%A7%B0%E5%8F%8A%E5%90%AB%E4%B9%89.jpg" target="_blank" rel="noopener" data-search="2.拾穗/旷野42站点名称及含义.jpg 旷野42站点名称及含义.jpg">
+                <div class="file-preview"><img src="2.%E6%8B%BE%E7%A9%97/%E6%97%B7%E9%87%8E42%E7%AB%99%E7%82%B9%E5%90%8D%E7%A7%B0%E5%8F%8A%E5%90%AB%E4%B9%89.jpg" alt="旷野42站点名称及含义.jpg" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>旷野42站点名称及含义</strong>
+                  <span>JPG · 3.1 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="2.%E6%8B%BE%E7%A9%97/%E6%97%B7%E9%87%8E42%E7%AB%99%E8%B7%AF%E7%BA%BF.jpg" target="_blank" rel="noopener" data-search="2.拾穗/旷野42站路线.jpg 旷野42站路线.jpg">
+                <div class="file-preview"><img src="2.%E6%8B%BE%E7%A9%97/%E6%97%B7%E9%87%8E42%E7%AB%99%E8%B7%AF%E7%BA%BF.jpg" alt="旷野42站路线.jpg" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>旷野42站路线</strong>
+                  <span>JPG · 1.9 MB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+
+        <details class="dir-node level-1" id="dir-3.%E6%8C%89%E5%8D%B7" data-dir-node data-default-open="true" data-search="3.按卷" open>
+          <summary>
+            <span>
+              <strong>3.按卷</strong>
+            </span>
+            <span class="dir-count">4 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+
+        <details class="dir-node level-2" id="dir-3.%E6%8C%89%E5%8D%B7%2F%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0" data-dir-node data-default-open="true" data-search="3.按卷/使徒行传" open>
+          <summary>
+            <span>
+              <strong>使徒行传</strong>
+            </span>
+            <span class="dir-count">1 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="3.%E6%8C%89%E5%8D%B7/%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0/%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A027%E7%AB%A0-1.PNG" target="_blank" rel="noopener" data-search="3.按卷/使徒行传/使徒行传27章-1.png 使徒行传27章-1.png">
+                <div class="file-preview"><img src="3.%E6%8C%89%E5%8D%B7/%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0/%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A027%E7%AB%A0-1.PNG" alt="使徒行传27章-1.PNG" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>使徒行传27章-1</strong>
+                  <span>PNG · 2.1 MB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+
+        <details class="dir-node level-2" id="dir-3.%E6%8C%89%E5%8D%B7%2F%E7%BA%A6%E6%8B%BF%E4%B9%A6" data-dir-node data-default-open="true" data-search="3.按卷/约拿书" open>
+          <summary>
+            <span>
+              <strong>约拿书</strong>
+            </span>
+            <span class="dir-count">3 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-1.png" target="_blank" rel="noopener" data-search="3.按卷/约拿书/jonah1-1.png jonah1-1.png">
+                <div class="file-preview"><img src="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-1.png" alt="Jonah1-1.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Jonah1-1</strong>
+                  <span>PNG · 2.4 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-2.png" target="_blank" rel="noopener" data-search="3.按卷/约拿书/jonah1-2.png jonah1-2.png">
+                <div class="file-preview"><img src="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-2.png" alt="Jonah1-2.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Jonah1-2</strong>
+                  <span>PNG · 2.7 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-3.png" target="_blank" rel="noopener" data-search="3.按卷/约拿书/jonah1-3.png jonah1-3.png">
+                <div class="file-preview"><img src="3.%E6%8C%89%E5%8D%B7/%E7%BA%A6%E6%8B%BF%E4%B9%A6/Jonah1-3.png" alt="Jonah1-3.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Jonah1-3</strong>
+                  <span>PNG · 2.1 MB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+          </div>
+        </details>
+
+        <details class="dir-node level-1" id="dir-%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE" data-dir-node data-default-open="false" data-search="全卷120张地图">
+          <summary>
+            <span>
+              <strong>全卷120张地图</strong>
+            </span>
+            <span class="dir-count">120 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/001%20%E8%BF%A6%E5%8D%97%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%92%8C%E5%8F%A4%E4%BB%A3%E5%AF%B9%E5%A4%96%E4%BA%A4%E9%80%9A.gif" target="_blank" rel="noopener" data-search="全卷120张地图/001 迦南的地理位置和古代对外交通.gif 001 迦南的地理位置和古代对外交通.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/001%20%E8%BF%A6%E5%8D%97%E7%9A%84%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE%E5%92%8C%E5%8F%A4%E4%BB%A3%E5%AF%B9%E5%A4%96%E4%BA%A4%E9%80%9A.gif" alt="001 迦南的地理位置和古代对外交通.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>001 迦南的地理位置和古代对外交通</strong>
+                  <span>GIF · 190.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/002%20%E5%8F%A4%E4%BB%A3%E8%BF%A6%E5%8D%97%E5%9C%B0%E4%B9%8B%E7%AF%84%E5%9C%8D%E5%92%8C%E4%BA%A4%E9%80%9A%E6%83%85%E5%BD%A2.gif" target="_blank" rel="noopener" data-search="全卷120张地图/002 古代迦南地之範圍和交通情形.gif 002 古代迦南地之範圍和交通情形.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/002%20%E5%8F%A4%E4%BB%A3%E8%BF%A6%E5%8D%97%E5%9C%B0%E4%B9%8B%E7%AF%84%E5%9C%8D%E5%92%8C%E4%BA%A4%E9%80%9A%E6%83%85%E5%BD%A2.gif" alt="002 古代迦南地之範圍和交通情形.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>002 古代迦南地之範圍和交通情形</strong>
+                  <span>GIF · 153.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/003%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E7%9A%84%E5%B1%B1%E5%B3%B0%E5%92%8C%E6%B2%B3%E6%B5%81%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/003 迦南地的山峰和河流 .gif 003 迦南地的山峰和河流 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/003%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E7%9A%84%E5%B1%B1%E5%B3%B0%E5%92%8C%E6%B2%B3%E6%B5%81%20.gif" alt="003 迦南地的山峰和河流 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>003 迦南地的山峰和河流 </strong>
+                  <span>GIF · 178.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/004%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E7%9A%84%E8%87%AA%E7%84%B6%E5%8D%80%E5%9F%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/004 迦南地的自然區域.gif 004 迦南地的自然區域.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/004%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E7%9A%84%E8%87%AA%E7%84%B6%E5%8D%80%E5%9F%9F.gif" alt="004 迦南地的自然區域.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>004 迦南地的自然區域</strong>
+                  <span>GIF · 212.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/005%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E9%81%A0%E5%8F%A4%E7%9A%84%E5%A4%A7%E5%9F%8E%E9%82%A6.gif" target="_blank" rel="noopener" data-search="全卷120张地图/005 迦南地遠古的大城邦.gif 005 迦南地遠古的大城邦.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/005%20%E8%BF%A6%E5%8D%97%E5%9C%B0%E9%81%A0%E5%8F%A4%E7%9A%84%E5%A4%A7%E5%9F%8E%E9%82%A6.gif" alt="005 迦南地遠古的大城邦.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>005 迦南地遠古的大城邦</strong>
+                  <span>GIF · 134.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/006%20%E4%BC%8A%E7%94%B8%E5%92%8C%E6%B4%AA%E6%B0%B4%E4%B9%8B%E5%89%8D%E4%B9%8B%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/006 伊甸和洪水之前之地.gif 006 伊甸和洪水之前之地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/006%20%E4%BC%8A%E7%94%B8%E5%92%8C%E6%B4%AA%E6%B0%B4%E4%B9%8B%E5%89%8D%E4%B9%8B%E5%9C%B0.gif" alt="006 伊甸和洪水之前之地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>006 伊甸和洪水之前之地</strong>
+                  <span>GIF · 122.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/007%20%E6%8C%AA%E4%BA%9E%E5%BE%8C%E4%BB%A3%E7%9A%84%E5%9C%8B%E6%97%8F%E5%9C%96.gif" target="_blank" rel="noopener" data-search="全卷120张地图/007 挪亞後代的國族圖.gif 007 挪亞後代的國族圖.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/007%20%E6%8C%AA%E4%BA%9E%E5%BE%8C%E4%BB%A3%E7%9A%84%E5%9C%8B%E6%97%8F%E5%9C%96.gif" alt="007 挪亞後代的國族圖.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>007 挪亞後代的國族圖</strong>
+                  <span>GIF · 425.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/008%20%E6%97%8F%E9%95%B7%E5%80%91%E5%9C%A8%E8%BF%A6%E5%8D%97%E5%9C%B0%E4%BB%A5%E5%A4%96%E4%B9%8B%E6%B4%BB%E5%8B%95.gif" target="_blank" rel="noopener" data-search="全卷120张地图/008 族長們在迦南地以外之活動.gif 008 族長們在迦南地以外之活動.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/008%20%E6%97%8F%E9%95%B7%E5%80%91%E5%9C%A8%E8%BF%A6%E5%8D%97%E5%9C%B0%E4%BB%A5%E5%A4%96%E4%B9%8B%E6%B4%BB%E5%8B%95.gif" alt="008 族長們在迦南地以外之活動.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>008 族長們在迦南地以外之活動</strong>
+                  <span>GIF · 157.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/009%20%E4%BA%9E%E4%BC%AF%E6%8B%89%E7%BD%95%E7%9A%84%E7%94%9F%E5%B9%B3%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/009 亞伯拉罕的生平 .gif 009 亞伯拉罕的生平 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/009%20%E4%BA%9E%E4%BC%AF%E6%8B%89%E7%BD%95%E7%9A%84%E7%94%9F%E5%B9%B3%20.gif" alt="009 亞伯拉罕的生平 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>009 亞伯拉罕的生平 </strong>
+                  <span>GIF · 106.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/010%20%E7%BE%85%E5%BE%97%E5%92%8C%E4%BB%96%E7%9A%84%E5%BE%8C%E4%BB%A3%E2%80%94%E6%91%A9%E6%8A%BC%E5%92%8C%E4%BA%9E%E5%80%91.gif" target="_blank" rel="noopener" data-search="全卷120张地图/010 羅得和他的後代—摩押和亞們.gif 010 羅得和他的後代—摩押和亞們.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/010%20%E7%BE%85%E5%BE%97%E5%92%8C%E4%BB%96%E7%9A%84%E5%BE%8C%E4%BB%A3%E2%80%94%E6%91%A9%E6%8A%BC%E5%92%8C%E4%BA%9E%E5%80%91.gif" alt="010 羅得和他的後代—摩押和亞們.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>010 羅得和他的後代—摩押和亞們</strong>
+                  <span>GIF · 116.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/011%20%E5%8C%97%E6%96%B9%E5%9B%9B%E7%8E%8B%E6%94%BB%E6%89%93%E5%8D%97%E6%96%B9%E4%BA%94%E7%8E%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/011 北方四王攻打南方五王.gif 011 北方四王攻打南方五王.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/011%20%E5%8C%97%E6%96%B9%E5%9B%9B%E7%8E%8B%E6%94%BB%E6%89%93%E5%8D%97%E6%96%B9%E4%BA%94%E7%8E%8B.gif" alt="011 北方四王攻打南方五王.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>011 北方四王攻打南方五王</strong>
+                  <span>GIF · 141.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/012%20%E5%A4%8F%E7%94%B2%E5%92%8C%E4%BB%A5%E5%AF%A6%E7%91%AA%E5%88%A9.gif" target="_blank" rel="noopener" data-search="全卷120张地图/012 夏甲和以實瑪利.gif 012 夏甲和以實瑪利.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/012%20%E5%A4%8F%E7%94%B2%E5%92%8C%E4%BB%A5%E5%AF%A6%E7%91%AA%E5%88%A9.gif" alt="012 夏甲和以實瑪利.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>012 夏甲和以實瑪利</strong>
+                  <span>GIF · 96.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/013%20%E4%BB%A5%E6%92%92%E7%9A%84%E7%94%9F%E5%B9%B3.gif" target="_blank" rel="noopener" data-search="全卷120张地图/013 以撒的生平.gif 013 以撒的生平.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/013%20%E4%BB%A5%E6%92%92%E7%9A%84%E7%94%9F%E5%B9%B3.gif" alt="013 以撒的生平.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>013 以撒的生平</strong>
+                  <span>GIF · 78.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/014%20%E9%9B%85%E5%90%84%E7%9A%84%E7%94%9F%E5%B9%B3.gif" target="_blank" rel="noopener" data-search="全卷120张地图/014 雅各的生平.gif 014 雅各的生平.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/014%20%E9%9B%85%E5%90%84%E7%9A%84%E7%94%9F%E5%B9%B3.gif" alt="014 雅各的生平.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>014 雅各的生平</strong>
+                  <span>GIF · 132.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/015%20%E4%BB%A5%E6%8E%83%E7%9A%84%E7%94%9F%E5%B9%B3%E3%80%81%E4%BB%A5%E6%9D%B1%E3%80%81%E4%BA%9E%E7%91%AA%E5%8A%9B%E5%92%8C%E7%B1%B3%E7%94%B8.gif" target="_blank" rel="noopener" data-search="全卷120张地图/015 以掃的生平、以東、亞瑪力和米甸.gif 015 以掃的生平、以東、亞瑪力和米甸.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/015%20%E4%BB%A5%E6%8E%83%E7%9A%84%E7%94%9F%E5%B9%B3%E3%80%81%E4%BB%A5%E6%9D%B1%E3%80%81%E4%BA%9E%E7%91%AA%E5%8A%9B%E5%92%8C%E7%B1%B3%E7%94%B8.gif" alt="015 以掃的生平、以東、亞瑪力和米甸.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>015 以掃的生平、以東、亞瑪力和米甸</strong>
+                  <span>GIF · 116.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/016%20%E7%B4%84%E7%91%9F%E5%92%8C%E7%8C%B6%E5%A4%A7%E7%9A%84%E7%94%9F%E5%B9%B3%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/016 約瑟和猶大的生平 .gif 016 約瑟和猶大的生平 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/016%20%E7%B4%84%E7%91%9F%E5%92%8C%E7%8C%B6%E5%A4%A7%E7%9A%84%E7%94%9F%E5%B9%B3%20.gif" alt="016 約瑟和猶大的生平 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>016 約瑟和猶大的生平 </strong>
+                  <span>GIF · 110.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/017%20%E5%9F%83%E5%8F%8A%E5%85%A8%E5%9B%BE%20%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/017 埃及全图  .gif 017 埃及全图  .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/017%20%E5%9F%83%E5%8F%8A%E5%85%A8%E5%9B%BE%20%20.gif" alt="017 埃及全图  .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>017 埃及全图  </strong>
+                  <span>GIF · 85.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/018%20%E6%91%A9%E8%A5%BF%E6%97%A9%E5%B9%B4%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/018 摩西早年 .gif 018 摩西早年 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/018%20%E6%91%A9%E8%A5%BF%E6%97%A9%E5%B9%B4%20.gif" alt="018 摩西早年 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>018 摩西早年 </strong>
+                  <span>GIF · 153.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/019%20%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E5%87%BA%E5%9F%83%E5%8F%8A%E5%88%B0%E8%A5%BF%E4%B9%83%E5%B1%B1%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/019 以色列人出埃及到西乃山 .gif 019 以色列人出埃及到西乃山 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/019%20%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E5%87%BA%E5%9F%83%E5%8F%8A%E5%88%B0%E8%A5%BF%E4%B9%83%E5%B1%B1%20.gif" alt="019 以色列人出埃及到西乃山 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>019 以色列人出埃及到西乃山 </strong>
+                  <span>GIF · 156.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/020%20%E5%BE%9E%E8%A5%BF%E4%B9%83%E5%B1%B1%E5%88%B0%E5%8A%A0%E4%BD%8E%E6%96%AF.gif" target="_blank" rel="noopener" data-search="全卷120张地图/020 從西乃山到加低斯.gif 020 從西乃山到加低斯.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/020%20%E5%BE%9E%E8%A5%BF%E4%B9%83%E5%B1%B1%E5%88%B0%E5%8A%A0%E4%BD%8E%E6%96%AF.gif" alt="020 從西乃山到加低斯.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>020 從西乃山到加低斯</strong>
+                  <span>GIF · 65.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/021%20%E6%8E%A2%E7%9C%8B%E6%87%89%E8%A8%B1%E5%9C%B0%E5%92%8C%E6%87%89%E8%A8%B1%E5%9C%B0%E4%B9%8B%E7%AF%84%E5%9C%8D%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/021 探看應許地和應許地之範圍 .gif 021 探看應許地和應許地之範圍 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/021%20%E6%8E%A2%E7%9C%8B%E6%87%89%E8%A8%B1%E5%9C%B0%E5%92%8C%E6%87%89%E8%A8%B1%E5%9C%B0%E4%B9%8B%E7%AF%84%E5%9C%8D%20.gif" alt="021 探看應許地和應許地之範圍 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>021 探看應許地和應許地之範圍 </strong>
+                  <span>GIF · 160.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/022%20%E5%BE%9E%E4%BD%95%E7%8F%A5%E5%B1%B1%E5%88%B0%E6%91%A9%E6%8A%BC%E5%B9%B3%E5%8E%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/022 從何珥山到摩押平原.gif 022 從何珥山到摩押平原.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/022%20%E5%BE%9E%E4%BD%95%E7%8F%A5%E5%B1%B1%E5%88%B0%E6%91%A9%E6%8A%BC%E5%B9%B3%E5%8E%9F.gif" alt="022 從何珥山到摩押平原.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>022 從何珥山到摩押平原</strong>
+                  <span>GIF · 173.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/023%20%E5%88%86%E5%9C%B0%E7%B5%A6%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" target="_blank" rel="noopener" data-search="全卷120张地图/023 分地給兩個半支派.gif 023 分地給兩個半支派.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/023%20%E5%88%86%E5%9C%B0%E7%B5%A6%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" alt="023 分地給兩個半支派.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>023 分地給兩個半支派</strong>
+                  <span>GIF · 108.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/024%20%E5%87%BA%E5%9F%83%E5%8F%8A%E5%92%8C%E9%80%B2%E8%BF%A6%E5%8D%97%E7%9A%84%E6%97%85%E5%92%8C.gif" target="_blank" rel="noopener" data-search="全卷120张地图/024 出埃及和進迦南的旅和.gif 024 出埃及和進迦南的旅和.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/024%20%E5%87%BA%E5%9F%83%E5%8F%8A%E5%92%8C%E9%80%B2%E8%BF%A6%E5%8D%97%E7%9A%84%E6%97%85%E5%92%8C.gif" alt="024 出埃及和進迦南的旅和.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>024 出埃及和進迦南的旅和</strong>
+                  <span>GIF · 248.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/025%20%E6%87%89%E8%A8%B1%E4%B9%8B%E5%9C%B0%E5%85%A8%E5%9C%96.gif" target="_blank" rel="noopener" data-search="全卷120张地图/025 應許之地全圖.gif 025 應許之地全圖.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/025%20%E6%87%89%E8%A8%B1%E4%B9%8B%E5%9C%B0%E5%85%A8%E5%9C%96.gif" alt="025 應許之地全圖.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>025 應許之地全圖</strong>
+                  <span>GIF · 241.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/026%20%E9%80%B2%E8%BF%A6%E5%8D%97%E5%92%8C%E5%88%86%E5%9C%B0%E7%B5%A6%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" target="_blank" rel="noopener" data-search="全卷120张地图/026 進迦南和分地給兩個半支派.gif 026 進迦南和分地給兩個半支派.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/026%20%E9%80%B2%E8%BF%A6%E5%8D%97%E5%92%8C%E5%88%86%E5%9C%B0%E7%B5%A6%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" alt="026 進迦南和分地給兩個半支派.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>026 進迦南和分地給兩個半支派</strong>
+                  <span>GIF · 176.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/027%20%E6%91%A9%E8%A5%BF%E8%A7%80%E7%9C%8B%E8%BF%A6%E5%8D%97%E5%9C%B0%E5%BE%8C%E5%8E%BB%E4%B8%96%E5%92%8C%E5%9F%8B%E8%91%AC.gif" target="_blank" rel="noopener" data-search="全卷120张地图/027 摩西觀看迦南地後去世和埋葬.gif 027 摩西觀看迦南地後去世和埋葬.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/027%20%E6%91%A9%E8%A5%BF%E8%A7%80%E7%9C%8B%E8%BF%A6%E5%8D%97%E5%9C%B0%E5%BE%8C%E5%8E%BB%E4%B8%96%E5%92%8C%E5%9F%8B%E8%91%AC.gif" alt="027 摩西觀看迦南地後去世和埋葬.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>027 摩西觀看迦南地後去世和埋葬</strong>
+                  <span>GIF · 92.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/028%20%E9%81%8E%E7%B4%84%E4%BD%86%E6%B2%B3%E5%8F%8A%E5%BE%81%E6%9C%8D%E5%8D%97%E6%96%B9%E8%AB%B8%E7%8E%8B%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/028 過約但河及征服南方諸王 .gif 028 過約但河及征服南方諸王 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/028%20%E9%81%8E%E7%B4%84%E4%BD%86%E6%B2%B3%E5%8F%8A%E5%BE%81%E6%9C%8D%E5%8D%97%E6%96%B9%E8%AB%B8%E7%8E%8B%20.gif" alt="028 過約但河及征服南方諸王 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>028 過約但河及征服南方諸王 </strong>
+                  <span>GIF · 167.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/029%20%E5%BE%81%E6%9C%8D%E5%8C%97%E6%96%B9%E8%AB%B8%E7%8E%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/029 征服北方諸王.gif 029 征服北方諸王.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/029%20%E5%BE%81%E6%9C%8D%E5%8C%97%E6%96%B9%E8%AB%B8%E7%8E%8B.gif" alt="029 征服北方諸王.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>029 征服北方諸王</strong>
+                  <span>GIF · 170.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/030%20%E5%B7%B2%E5%BE%97%E5%92%8C%E6%9C%AA%E5%BE%97%E4%B9%8B%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/030 已得和未得之地.gif 030 已得和未得之地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/030%20%E5%B7%B2%E5%BE%97%E5%92%8C%E6%9C%AA%E5%BE%97%E4%B9%8B%E5%9C%B0.gif" alt="030 已得和未得之地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>030 已得和未得之地</strong>
+                  <span>GIF · 279.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/031%20%E8%89%B2%E5%88%97%E4%BA%BA%E6%89%80%E5%BE%81%E6%9C%8D%E7%9A%84%E4%B8%89%E5%8D%81%E4%B8%89%E5%80%8B%E7%8E%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/031 色列人所征服的三十三個王.gif 031 色列人所征服的三十三個王.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/031%20%E8%89%B2%E5%88%97%E4%BA%BA%E6%89%80%E5%BE%81%E6%9C%8D%E7%9A%84%E4%B8%89%E5%8D%81%E4%B8%89%E5%80%8B%E7%8E%8B.gif" alt="031 色列人所征服的三十三個王.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>031 色列人所征服的三十三個王</strong>
+                  <span>GIF · 196.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/032%20%E7%B4%84%E4%BD%86%E6%B2%B3%E6%9D%B1%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/032 約但河東兩個半支派的地業.gif 032 約但河東兩個半支派的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/032%20%E7%B4%84%E4%BD%86%E6%B2%B3%E6%9D%B1%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="032 約但河東兩個半支派的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>032 約但河東兩個半支派的地業</strong>
+                  <span>GIF · 178.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/033%20%E7%8C%B6%E5%A4%A7%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/033 猶大支派的地業.gif 033 猶大支派的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/033%20%E7%8C%B6%E5%A4%A7%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="033 猶大支派的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>033 猶大支派的地業</strong>
+                  <span>GIF · 485.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/034%20%E4%BB%A5%E6%B3%95%E8%93%AE%E5%92%8C%E7%91%AA%E6%8B%BF%E8%A5%BF%E5%85%A9%E5%8D%8A%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/034 以法蓮和瑪拿西兩半支派的地業.gif 034 以法蓮和瑪拿西兩半支派的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/034%20%E4%BB%A5%E6%B3%95%E8%93%AE%E5%92%8C%E7%91%AA%E6%8B%BF%E8%A5%BF%E5%85%A9%E5%8D%8A%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="034 以法蓮和瑪拿西兩半支派的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>034 以法蓮和瑪拿西兩半支派的地業</strong>
+                  <span>GIF · 281.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/035%20%E4%BE%BF%E9%9B%85%E6%86%AB%E3%80%81%E4%BD%86%E5%92%8C%E4%BB%A5%E6%B3%95%E8%93%AE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/035 便雅憫、但和以法蓮的地業.gif 035 便雅憫、但和以法蓮的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/035%20%E4%BE%BF%E9%9B%85%E6%86%AB%E3%80%81%E4%BD%86%E5%92%8C%E4%BB%A5%E6%B3%95%E8%93%AE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="035 便雅憫、但和以法蓮的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>035 便雅憫、但和以法蓮的地業</strong>
+                  <span>GIF · 433.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/036%20%E8%A5%BF%E7%B7%AC%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/036 西緬支派的地業.gif 036 西緬支派的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/036%20%E8%A5%BF%E7%B7%AC%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="036 西緬支派的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>036 西緬支派的地業</strong>
+                  <span>GIF · 74.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/037%20%E8%A5%BF%E5%B8%83%E5%80%AB%E3%80%81%E4%BB%A5%E8%96%A9%E8%BF%A6%E3%80%81%E4%BA%9E%E8%A8%AD%E3%80%81%E6%8B%BF%E5%BC%97%E4%BB%96%E5%88%A9%E7%AD%89%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/037 西布倫、以薩迦、亞設、拿弗他利等支派的地業.gif 037 西布倫、以薩迦、亞設、拿弗他利等支派的地業.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/037%20%E8%A5%BF%E5%B8%83%E5%80%AB%E3%80%81%E4%BB%A5%E8%96%A9%E8%BF%A6%E3%80%81%E4%BA%9E%E8%A8%AD%E3%80%81%E6%8B%BF%E5%BC%97%E4%BB%96%E5%88%A9%E7%AD%89%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD.gif" alt="037 西布倫、以薩迦、亞設、拿弗他利等支派的地業.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>037 西布倫、以薩迦、亞設、拿弗他利等支派的地業</strong>
+                  <span>GIF · 273.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/038%20%E5%88%A9%E6%9C%AA%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/038 利未支派的地業 .gif 038 利未支派的地業 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/038%20%E5%88%A9%E6%9C%AA%E6%94%AF%E6%B4%BE%E7%9A%84%E5%9C%B0%E6%A5%AD%20.gif" alt="038 利未支派的地業 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>038 利未支派的地業 </strong>
+                  <span>GIF · 405.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/039%20%E6%94%BB%E5%8F%96%E5%8D%97%E9%83%A8%E4%B9%8B%E5%9C%B0%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/039 攻取南部之地 .gif 039 攻取南部之地 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/039%20%E6%94%BB%E5%8F%96%E5%8D%97%E9%83%A8%E4%B9%8B%E5%9C%B0%20.gif" alt="039 攻取南部之地 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>039 攻取南部之地 </strong>
+                  <span>GIF · 130.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/040%20%E6%9C%AA%E5%BE%97%E4%B9%8B%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/040 未得之地.gif 040 未得之地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/040%20%E6%9C%AA%E5%BE%97%E4%B9%8B%E5%9C%B0.gif" alt="040 未得之地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>040 未得之地</strong>
+                  <span>GIF · 276.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/041%20%E4%BF%84%E9%99%80%E8%81%B6%E3%80%81%E4%BB%A5%E7%AC%8F%E5%92%8C%E5%BA%95%E6%B3%A2%E6%8B%89%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/041 俄陀聶、以笏和底波拉 .gif 041 俄陀聶、以笏和底波拉 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/041%20%E4%BF%84%E9%99%80%E8%81%B6%E3%80%81%E4%BB%A5%E7%AC%8F%E5%92%8C%E5%BA%95%E6%B3%A2%E6%8B%89%20.gif" alt="041 俄陀聶、以笏和底波拉 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>041 俄陀聶、以笏和底波拉 </strong>
+                  <span>GIF · 194.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/042%20%E5%9F%BA%E7%94%B8%E3%80%81%E4%BA%9E%E6%AF%94%E7%B1%B3%E5%8B%92%E5%92%8C%E9%99%80%E6%8B%89.gif" target="_blank" rel="noopener" data-search="全卷120张地图/042 基甸、亞比米勒和陀拉.gif 042 基甸、亞比米勒和陀拉.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/042%20%E5%9F%BA%E7%94%B8%E3%80%81%E4%BA%9E%E6%AF%94%E7%B1%B3%E5%8B%92%E5%92%8C%E9%99%80%E6%8B%89.gif" alt="042 基甸、亞比米勒和陀拉.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>042 基甸、亞比米勒和陀拉</strong>
+                  <span>GIF · 134.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/043%20%E7%9D%9A%E7%8F%A5%E5%92%8C%E8%80%B6%E5%BC%97%E4%BB%96.gif" target="_blank" rel="noopener" data-search="全卷120张地图/043 睚珥和耶弗他.gif 043 睚珥和耶弗他.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/043%20%E7%9D%9A%E7%8F%A5%E5%92%8C%E8%80%B6%E5%BC%97%E4%BB%96.gif" alt="043 睚珥和耶弗他.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>043 睚珥和耶弗他</strong>
+                  <span>GIF · 119.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/044%20%E5%8F%83%E5%AD%AB%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/044 參孫 .gif 044 參孫 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/044%20%E5%8F%83%E5%AD%AB%20.gif" alt="044 參孫 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>044 參孫 </strong>
+                  <span>GIF · 156.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/045%20%E6%AF%94%E8%AE%9A%E3%80%81%E4%BB%A5%E5%80%AB%E5%92%8C%E6%8A%BC%E9%A0%93.gif" target="_blank" rel="noopener" data-search="全卷120张地图/045 比讚、以倫和押頓.gif 045 比讚、以倫和押頓.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/045%20%E6%AF%94%E8%AE%9A%E3%80%81%E4%BB%A5%E5%80%AB%E5%92%8C%E6%8A%BC%E9%A0%93.gif" alt="045 比讚、以倫和押頓.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>045 比讚、以倫和押頓</strong>
+                  <span>GIF · 170.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/046%20%E6%92%92%E6%AF%8D%E8%80%B3%E4%BB%BB%E4%BB%A5%E8%89%B2%E5%88%97%E5%85%88%E7%9F%A5%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/046 撒母耳任以色列先知 .gif 046 撒母耳任以色列先知 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/046%20%E6%92%92%E6%AF%8D%E8%80%B3%E4%BB%BB%E4%BB%A5%E8%89%B2%E5%88%97%E5%85%88%E7%9F%A5%20.gif" alt="046 撒母耳任以色列先知 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>046 撒母耳任以色列先知 </strong>
+                  <span>GIF · 224.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/047%20%E6%92%92%E6%AF%8D%E8%80%B3%E8%86%8F%E6%8E%83%E7%BE%85.gif" target="_blank" rel="noopener" data-search="全卷120张地图/047 撒母耳膏掃羅.gif 047 撒母耳膏掃羅.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/047%20%E6%92%92%E6%AF%8D%E8%80%B3%E8%86%8F%E6%8E%83%E7%BE%85.gif" alt="047 撒母耳膏掃羅.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>047 撒母耳膏掃羅</strong>
+                  <span>GIF · 93.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/048%20%E6%8E%83%E7%BE%85%E6%94%BB%E6%89%93%E4%BA%9E%E5%80%91%E4%BA%BA.gif" target="_blank" rel="noopener" data-search="全卷120张地图/048 掃羅攻打亞們人.gif 048 掃羅攻打亞們人.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/048%20%E6%8E%83%E7%BE%85%E6%94%BB%E6%89%93%E4%BA%9E%E5%80%91%E4%BA%BA.gif" alt="048 掃羅攻打亞們人.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>048 掃羅攻打亞們人</strong>
+                  <span>GIF · 173.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/049%20%E6%8E%83%E7%BE%85%E5%92%8C%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E7%9A%84%E6%88%B0%E7%88%AD.gif" target="_blank" rel="noopener" data-search="全卷120张地图/049 掃羅和非利士人的戰爭.gif 049 掃羅和非利士人的戰爭.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/049%20%E6%8E%83%E7%BE%85%E5%92%8C%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E7%9A%84%E6%88%B0%E7%88%AD.gif" alt="049 掃羅和非利士人的戰爭.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>049 掃羅和非利士人的戰爭</strong>
+                  <span>GIF · 134.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/050%20%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E5%9C%A8%E6%8E%83%E7%BE%85%E6%99%82%E4%BB%A3%E7%9A%84%E7%96%86%E5%9C%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/050 以色列人在掃羅時代的疆土.gif 050 以色列人在掃羅時代的疆土.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/050%20%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E5%9C%A8%E6%8E%83%E7%BE%85%E6%99%82%E4%BB%A3%E7%9A%84%E7%96%86%E5%9C%9F.gif" alt="050 以色列人在掃羅時代的疆土.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>050 以色列人在掃羅時代的疆土</strong>
+                  <span>GIF · 256.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/051%20%E6%8E%83%E7%BE%85%E6%94%BB%E6%89%93%E4%BA%9E%E7%91%AA%E5%8A%9B%E4%BA%BA%E3%80%81%E5%A4%A7%E8%A1%9B%E6%AE%BA%E6%AD%8C%E5%88%A9%E4%BA%9E.gif" target="_blank" rel="noopener" data-search="全卷120张地图/051 掃羅攻打亞瑪力人、大衛殺歌利亞.gif 051 掃羅攻打亞瑪力人、大衛殺歌利亞.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/051%20%E6%8E%83%E7%BE%85%E6%94%BB%E6%89%93%E4%BA%9E%E7%91%AA%E5%8A%9B%E4%BA%BA%E3%80%81%E5%A4%A7%E8%A1%9B%E6%AE%BA%E6%AD%8C%E5%88%A9%E4%BA%9E.gif" alt="051 掃羅攻打亞瑪力人、大衛殺歌利亞.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>051 掃羅攻打亞瑪力人、大衛殺歌利亞</strong>
+                  <span>GIF · 215.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/052%20%E5%A4%A7%E8%A1%9B%E9%80%83%E9%81%BF%E6%8E%83%E7%BD%B0%E8%BF%BD%E6%AE%BA%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/052 大衛逃避掃罰追殺 .gif 052 大衛逃避掃罰追殺 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/052%20%E5%A4%A7%E8%A1%9B%E9%80%83%E9%81%BF%E6%8E%83%E7%BD%B0%E8%BF%BD%E6%AE%BA%20.gif" alt="052 大衛逃避掃罰追殺 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>052 大衛逃避掃罰追殺 </strong>
+                  <span>GIF · 290.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/053%20%E5%A4%A7%E8%A1%9B%E8%BF%BD%E6%93%8A%E4%BA%9E%E7%91%AA%E5%8A%9B%E4%BA%BA.gif" target="_blank" rel="noopener" data-search="全卷120张地图/053 大衛追擊亞瑪力人.gif 053 大衛追擊亞瑪力人.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/053%20%E5%A4%A7%E8%A1%9B%E8%BF%BD%E6%93%8A%E4%BA%9E%E7%91%AA%E5%8A%9B%E4%BA%BA.gif" alt="053 大衛追擊亞瑪力人.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>053 大衛追擊亞瑪力人</strong>
+                  <span>GIF · 140.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/054%20%E6%8E%83%E7%BE%85%E8%A2%AB%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E6%AE%BA%E5%AE%B3%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/054 掃羅被非利士人殺害 .gif 054 掃羅被非利士人殺害 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/054%20%E6%8E%83%E7%BE%85%E8%A2%AB%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E6%AE%BA%E5%AE%B3%20.gif" alt="054 掃羅被非利士人殺害 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>054 掃羅被非利士人殺害 </strong>
+                  <span>GIF · 65.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/055%20%E5%A4%A7%E8%A1%9B%E5%9C%A8%E5%B8%8C%E4%BC%AF%E5%B4%99%E4%BD%9C%E7%8C%B6%E5%A4%A7%E5%92%8C%E4%BB%A5%E8%89%B2%E5%88%97%E7%8E%8B%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/055 大衛在希伯崙作猶大和以色列王 .gif 055 大衛在希伯崙作猶大和以色列王 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/055%20%E5%A4%A7%E8%A1%9B%E5%9C%A8%E5%B8%8C%E4%BC%AF%E5%B4%99%E4%BD%9C%E7%8C%B6%E5%A4%A7%E5%92%8C%E4%BB%A5%E8%89%B2%E5%88%97%E7%8E%8B%20.gif" alt="055 大衛在希伯崙作猶大和以色列王 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>055 大衛在希伯崙作猶大和以色列王 </strong>
+                  <span>GIF · 1.2 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/056%20%E5%A4%A7%E8%A1%9B%E6%94%BB%E5%8F%96%E8%80%B6%E8%B7%AF%E6%92%92%E5%86%B7%EF%BC%8C%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E5%85%A9%E6%AC%A1%E6%94%BB%E6%89%93%E8%A2%AB%E6%93%8A%E6%95%97.gif" target="_blank" rel="noopener" data-search="全卷120张地图/056 大衛攻取耶路撒冷，非利士人兩次攻打被擊敗.gif 056 大衛攻取耶路撒冷，非利士人兩次攻打被擊敗.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/056%20%E5%A4%A7%E8%A1%9B%E6%94%BB%E5%8F%96%E8%80%B6%E8%B7%AF%E6%92%92%E5%86%B7%EF%BC%8C%E9%9D%9E%E5%88%A9%E5%A3%AB%E4%BA%BA%E5%85%A9%E6%AC%A1%E6%94%BB%E6%89%93%E8%A2%AB%E6%93%8A%E6%95%97.gif" alt="056 大衛攻取耶路撒冷，非利士人兩次攻打被擊敗.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>056 大衛攻取耶路撒冷，非利士人兩次攻打被擊敗</strong>
+                  <span>GIF · 73.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/057%20%E5%A4%A7%E8%A1%9B%E7%8E%8B%E7%9A%84%E6%88%B0%E5%8A%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/057 大衛王的戰功.gif 057 大衛王的戰功.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/057%20%E5%A4%A7%E8%A1%9B%E7%8E%8B%E7%9A%84%E6%88%B0%E5%8A%9F.gif" alt="057 大衛王的戰功.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>057 大衛王的戰功</strong>
+                  <span>GIF · 262.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/058%20%E6%8A%BC%E6%B2%99%E9%BE%8D%E8%AC%80%E5%8F%8D%E5%8F%8D%E8%A2%AB%E8%AA%85.gif" target="_blank" rel="noopener" data-search="全卷120张地图/058 押沙龍謀反反被誅.gif 058 押沙龍謀反反被誅.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/058%20%E6%8A%BC%E6%B2%99%E9%BE%8D%E8%AC%80%E5%8F%8D%E5%8F%8D%E8%A2%AB%E8%AA%85.gif" alt="058 押沙龍謀反反被誅.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>058 押沙龍謀反反被誅</strong>
+                  <span>GIF · 95.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/059%20%E7%A4%BA%E5%B7%B4%E5%8F%9B%E8%AE%8A%E5%92%8C%E7%B4%84%E6%8A%BC%E9%BB%9E%E6%95%B8%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA.gif" target="_blank" rel="noopener" data-search="全卷120张地图/059 示巴叛變和約押點數以色列人.gif 059 示巴叛變和約押點數以色列人.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/059%20%E7%A4%BA%E5%B7%B4%E5%8F%9B%E8%AE%8A%E5%92%8C%E7%B4%84%E6%8A%BC%E9%BB%9E%E6%95%B8%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA.gif" alt="059 示巴叛變和約押點數以色列人.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>059 示巴叛變和約押點數以色列人</strong>
+                  <span>GIF · 192.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/060%20%E5%A4%A7%E8%A1%9B%E7%9A%84%E5%8B%87%E5%A3%AB.gif" target="_blank" rel="noopener" data-search="全卷120张地图/060 大衛的勇士.gif 060 大衛的勇士.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/060%20%E5%A4%A7%E8%A1%9B%E7%9A%84%E5%8B%87%E5%A3%AB.gif" alt="060 大衛的勇士.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>060 大衛的勇士</strong>
+                  <span>GIF · 89.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/061%20%E8%80%B6%E8%B7%AF%E6%92%92%E5%86%B7%E5%9F%8E%E5%92%8C%E5%BB%BA%E5%9C%A3%E6%AE%BF.gif" target="_blank" rel="noopener" data-search="全卷120张地图/061 耶路撒冷城和建圣殿.gif 061 耶路撒冷城和建圣殿.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/061%20%E8%80%B6%E8%B7%AF%E6%92%92%E5%86%B7%E5%9F%8E%E5%92%8C%E5%BB%BA%E5%9C%A3%E6%AE%BF.gif" alt="061 耶路撒冷城和建圣殿.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>061 耶路撒冷城和建圣殿</strong>
+                  <span>GIF · 212.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/062%20%E9%9B%B6%E6%98%9F%E4%BA%8B%E4%BB%B6%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/062 零星事件 .gif 062 零星事件 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/062%20%E9%9B%B6%E6%98%9F%E4%BA%8B%E4%BB%B6%20.gif" alt="062 零星事件 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>062 零星事件 </strong>
+                  <span>GIF · 185.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/063%20%E6%89%80%E7%BE%85%E9%96%80%E7%8E%8B%E7%9A%84%E8%A1%8C%E6%94%BF%E5%8D%80.gif" target="_blank" rel="noopener" data-search="全卷120张地图/063 所羅門王的行政區.gif 063 所羅門王的行政區.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/063%20%E6%89%80%E7%BE%85%E9%96%80%E7%8E%8B%E7%9A%84%E8%A1%8C%E6%94%BF%E5%8D%80.gif" alt="063 所羅門王的行政區.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>063 所羅門王的行政區</strong>
+                  <span>GIF · 286.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/064%20%E6%89%80%E7%BE%85%E9%96%80%E7%8E%8B%E7%9A%84%E7%96%86%E5%9F%9F%E5%92%8C%E5%B1%AC%E5%9C%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/064 所羅門王的疆域和屬國.gif 064 所羅門王的疆域和屬國.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/064%20%E6%89%80%E7%BE%85%E9%96%80%E7%8E%8B%E7%9A%84%E7%96%86%E5%9F%9F%E5%92%8C%E5%B1%AC%E5%9C%8B.gif" alt="064 所羅門王的疆域和屬國.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>064 所羅門王的疆域和屬國</strong>
+                  <span>GIF · 174.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/065%20%E7%8E%8B%E5%9C%8B%E5%88%86%E8%A3%82.gif" target="_blank" rel="noopener" data-search="全卷120张地图/065 王國分裂.gif 065 王國分裂.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/065%20%E7%8E%8B%E5%9C%8B%E5%88%86%E8%A3%82.gif" alt="065 王國分裂.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>065 王國分裂</strong>
+                  <span>GIF · 329.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/066%20%E5%8D%97%E5%8C%97%E5%85%A9%E5%9C%8B%E5%B0%8D%E5%B3%99.gif" target="_blank" rel="noopener" data-search="全卷120张地图/066 南北兩國對峙.gif 066 南北兩國對峙.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/066%20%E5%8D%97%E5%8C%97%E5%85%A9%E5%9C%8B%E5%B0%8D%E5%B3%99.gif" alt="066 南北兩國對峙.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>066 南北兩國對峙</strong>
+                  <span>GIF · 249.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/067%20%E5%85%88%E7%9F%A5%E4%BB%A5%E5%88%A9%E4%BA%9E.gif" target="_blank" rel="noopener" data-search="全卷120张地图/067 先知以利亞.gif 067 先知以利亞.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/067%20%E5%85%88%E7%9F%A5%E4%BB%A5%E5%88%A9%E4%BA%9E.gif" alt="067 先知以利亞.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>067 先知以利亞</strong>
+                  <span>GIF · 158.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/068%20%E5%85%A9%E5%9C%8B%E5%92%8C%E5%A5%BD%E6%99%82%E6%9C%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/068 兩國和好時期.gif 068 兩國和好時期.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/068%20%E5%85%A9%E5%9C%8B%E5%92%8C%E5%A5%BD%E6%99%82%E6%9C%9F.gif" alt="068 兩國和好時期.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>068 兩國和好時期</strong>
+                  <span>GIF · 212.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/069%20%E5%85%88%E7%9F%A5%E4%BB%A5%E5%88%A9%E6%B2%99.gif" target="_blank" rel="noopener" data-search="全卷120张地图/069 先知以利沙.gif 069 先知以利沙.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/069%20%E5%85%88%E7%9F%A5%E4%BB%A5%E5%88%A9%E6%B2%99.gif" alt="069 先知以利沙.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>069 先知以利沙</strong>
+                  <span>GIF · 138.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/070%20%E5%8D%97%E5%8C%97%E5%85%A9%E5%9C%8B%E8%A1%B0%E5%BE%AE.gif" target="_blank" rel="noopener" data-search="全卷120张地图/070 南北兩國衰微.gif 070 南北兩國衰微.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/070%20%E5%8D%97%E5%8C%97%E5%85%A9%E5%9C%8B%E8%A1%B0%E5%BE%AE.gif" alt="070 南北兩國衰微.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>070 南北兩國衰微</strong>
+                  <span>GIF · 213.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/071%20%E6%A5%B5%E7%9B%9B%E6%99%82%E6%9C%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/071 極盛時期.gif 071 極盛時期.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/071%20%E6%A5%B5%E7%9B%9B%E6%99%82%E6%9C%9F.gif" alt="071 極盛時期.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>071 極盛時期</strong>
+                  <span>GIF · 287.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/072%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%8B%E8%A6%86%E4%BA%A1.gif" target="_blank" rel="noopener" data-search="全卷120张地图/072 以色列國覆亡.gif 072 以色列國覆亡.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/072%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%8B%E8%A6%86%E4%BA%A1.gif" alt="072 以色列國覆亡.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>072 以色列國覆亡</strong>
+                  <span>GIF · 212.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/073%20%E7%8C%B6%E5%A4%A7%E5%9C%8B%E5%8F%97%E4%BA%9E%E8%BF%B0%E4%B9%8B%E6%AC%BA%E5%A3%93.gif" target="_blank" rel="noopener" data-search="全卷120张地图/073 猶大國受亞述之欺壓.gif 073 猶大國受亞述之欺壓.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/073%20%E7%8C%B6%E5%A4%A7%E5%9C%8B%E5%8F%97%E4%BA%9E%E8%BF%B0%E4%B9%8B%E6%AC%BA%E5%A3%93.gif" alt="073 猶大國受亞述之欺壓.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>073 猶大國受亞述之欺壓</strong>
+                  <span>GIF · 300.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/074%20%E7%8C%B6%E5%A4%A7%E5%9C%8B%E5%8F%97%E5%9F%83%E5%8F%8A%E5%92%8C%E5%B7%B4%E6%AF%94%E5%80%AB%E4%B9%8B%E6%AC%BA%E5%A3%93.gif" target="_blank" rel="noopener" data-search="全卷120张地图/074 猶大國受埃及和巴比倫之欺壓.gif 074 猶大國受埃及和巴比倫之欺壓.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/074%20%E7%8C%B6%E5%A4%A7%E5%9C%8B%E5%8F%97%E5%9F%83%E5%8F%8A%E5%92%8C%E5%B7%B4%E6%AF%94%E5%80%AB%E4%B9%8B%E6%AC%BA%E5%A3%93.gif" alt="074 猶大國受埃及和巴比倫之欺壓.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>074 猶大國受埃及和巴比倫之欺壓</strong>
+                  <span>GIF · 220.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/075%20%E4%BA%9E%E8%BF%B0%E5%B8%9D%E5%9C%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/075 亞述帝國.gif 075 亞述帝國.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/075%20%E4%BA%9E%E8%BF%B0%E5%B8%9D%E5%9C%8B.gif" alt="075 亞述帝國.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>075 亞述帝國</strong>
+                  <span>GIF · 301.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/076%20%E5%B7%B4%E6%AF%94%E5%80%AB%E5%B8%9D%E5%9C%8B%20%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/076 巴比倫帝國  .gif 076 巴比倫帝國  .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/076%20%E5%B7%B4%E6%AF%94%E5%80%AB%E5%B8%9D%E5%9C%8B%20%20.gif" alt="076 巴比倫帝國  .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>076 巴比倫帝國  </strong>
+                  <span>GIF · 385.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/077%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B8%AD%E4%B9%8B%E9%9B%B6%E6%98%9F%E5%9C%B0%E5%90%8D.gif" target="_blank" rel="noopener" data-search="全卷120张地图/077 以色列地中之零星地名.gif 077 以色列地中之零星地名.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/077%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B8%AD%E4%B9%8B%E9%9B%B6%E6%98%9F%E5%9C%B0%E5%90%8D.gif" alt="077 以色列地中之零星地名.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>077 以色列地中之零星地名</strong>
+                  <span>GIF · 198.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/078%20%E8%BF%A6%E5%8B%92%E7%9A%84%E5%AD%90%E5%AD%AB.gif" target="_blank" rel="noopener" data-search="全卷120张地图/078 迦勒的子孫.gif 078 迦勒的子孫.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/078%20%E8%BF%A6%E5%8B%92%E7%9A%84%E5%AD%90%E5%AD%AB.gif" alt="078 迦勒的子孫.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>078 迦勒的子孫</strong>
+                  <span>GIF · 43.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/079%20%E8%A5%BF%E7%B7%AC%E6%94%AF%E6%B4%BE%E7%9A%84%E9%A0%98%E5%9C%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/079 西緬支派的領土.gif 079 西緬支派的領土.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/079%20%E8%A5%BF%E7%B7%AC%E6%94%AF%E6%B4%BE%E7%9A%84%E9%A0%98%E5%9C%9F.gif" alt="079 西緬支派的領土.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>079 西緬支派的領土</strong>
+                  <span>GIF · 101.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/080%20%E6%B2%B3%E6%9D%B1%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" target="_blank" rel="noopener" data-search="全卷120张地图/080 河東兩個半支派.gif 080 河東兩個半支派.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/080%20%E6%B2%B3%E6%9D%B1%E5%85%A9%E5%80%8B%E5%8D%8A%E6%94%AF%E6%B4%BE.gif" alt="080 河東兩個半支派.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>080 河東兩個半支派</strong>
+                  <span>GIF · 170.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/081%20%E4%BB%A5%E6%B3%95%E8%93%AE%E6%94%AF%E6%B4%BE%E4%BD%94%E9%A0%98%E4%B9%8B%E7%96%86%E5%9F%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/081 以法蓮支派佔領之疆域.gif 081 以法蓮支派佔領之疆域.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/081%20%E4%BB%A5%E6%B3%95%E8%93%AE%E6%94%AF%E6%B4%BE%E4%BD%94%E9%A0%98%E4%B9%8B%E7%96%86%E5%9F%9F.gif" alt="081 以法蓮支派佔領之疆域.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>081 以法蓮支派佔領之疆域</strong>
+                  <span>GIF · 160.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/082%20%E4%BE%BF%E9%9B%85%E6%86%AB%E7%9A%84%E9%A0%98%E5%9C%9F.gif" target="_blank" rel="noopener" data-search="全卷120张地图/082 便雅憫的領土.gif 082 便雅憫的領土.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/082%20%E4%BE%BF%E9%9B%85%E6%86%AB%E7%9A%84%E9%A0%98%E5%9C%9F.gif" alt="082 便雅憫的領土.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>082 便雅憫的領土</strong>
+                  <span>GIF · 116.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/083%20%E5%A4%A7%E8%A1%9B%E7%8E%8B%E7%8F%AD%E9%95%B7%E7%9A%84%E7%A5%96%E7%B1%8D.gif" target="_blank" rel="noopener" data-search="全卷120张地图/083 大衛王班長的祖籍.gif 083 大衛王班長的祖籍.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/083%20%E5%A4%A7%E8%A1%9B%E7%8E%8B%E7%8F%AD%E9%95%B7%E7%9A%84%E7%A5%96%E7%B1%8D.gif" alt="083 大衛王班長的祖籍.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>083 大衛王班長的祖籍</strong>
+                  <span>GIF · 42.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/084%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%85%A7%E7%9A%84%E9%9B%B6%E6%98%9F%E5%9C%B0%E5%90%8D.gif" target="_blank" rel="noopener" data-search="全卷120张地图/084 以色列地內的零星地名.gif 084 以色列地內的零星地名.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/084%20%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%85%A7%E7%9A%84%E9%9B%B6%E6%98%9F%E5%9C%B0%E5%90%8D.gif" alt="084 以色列地內的零星地名.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>084 以色列地內的零星地名</strong>
+                  <span>GIF · 201.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/085%20%E6%B3%A2%E6%96%AF%E5%B8%9D%E5%9C%8B%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/085 波斯帝國 .gif 085 波斯帝國 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/085%20%E6%B3%A2%E6%96%AF%E5%B8%9D%E5%9C%8B%20.gif" alt="085 波斯帝國 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>085 波斯帝國 </strong>
+                  <span>GIF · 405.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/086%20%E5%9B%9E%E5%9C%8B%E5%90%84%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E7%9A%84%E7%A5%96%E7%B1%8D.gif" target="_blank" rel="noopener" data-search="全卷120张地图/086 回國各以色列人的祖籍.gif 086 回國各以色列人的祖籍.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/086%20%E5%9B%9E%E5%9C%8B%E5%90%84%E4%BB%A5%E8%89%B2%E5%88%97%E4%BA%BA%E7%9A%84%E7%A5%96%E7%B1%8D.gif" alt="086 回國各以色列人的祖籍.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>086 回國各以色列人的祖籍</strong>
+                  <span>GIF · 180.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/087%20%E5%85%B6%E4%BB%96%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%90%84%E5%9F%8E.gif" target="_blank" rel="noopener" data-search="全卷120张地图/087 其他以色列地之各城.gif 087 其他以色列地之各城.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/087%20%E5%85%B6%E4%BB%96%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%90%84%E5%9F%8E.gif" alt="087 其他以色列地之各城.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>087 其他以色列地之各城</strong>
+                  <span>GIF · 165.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/088%20%E5%B0%BC%E5%B8%8C%E7%B1%B3%E6%89%80%E7%AF%89%E4%B9%8B%E5%9F%8E%E7%89%86.gif" target="_blank" rel="noopener" data-search="全卷120张地图/088 尼希米所築之城牆.gif 088 尼希米所築之城牆.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/088%20%E5%B0%BC%E5%B8%8C%E7%B1%B3%E6%89%80%E7%AF%89%E4%B9%8B%E5%9F%8E%E7%89%86.gif" alt="088 尼希米所築之城牆.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>088 尼希米所築之城牆</strong>
+                  <span>GIF · 98.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/089%20%E7%AF%89%E5%9F%8E%E4%BA%BA%E5%92%8C%E5%94%B1%E6%AD%8C%E4%BA%BA%E6%89%80%E5%B1%85%E4%B9%8B%E5%9F%8E.gif" target="_blank" rel="noopener" data-search="全卷120张地图/089 築城人和唱歌人所居之城.gif 089 築城人和唱歌人所居之城.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/089%20%E7%AF%89%E5%9F%8E%E4%BA%BA%E5%92%8C%E5%94%B1%E6%AD%8C%E4%BA%BA%E6%89%80%E5%B1%85%E4%B9%8B%E5%9F%8E.gif" alt="089 築城人和唱歌人所居之城.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>089 築城人和唱歌人所居之城</strong>
+                  <span>GIF · 59.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/090%20%E7%8C%B6%E5%A4%A7%E4%BA%BA%E5%92%8C%E4%BE%BF%E9%9B%85%E6%86%AB%E4%BA%BA%E6%89%80%E5%B1%85%E4%B9%8B%E5%9F%8E.gif" target="_blank" rel="noopener" data-search="全卷120张地图/090 猶大人和便雅憫人所居之城.gif 090 猶大人和便雅憫人所居之城.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/090%20%E7%8C%B6%E5%A4%A7%E4%BA%BA%E5%92%8C%E4%BE%BF%E9%9B%85%E6%86%AB%E4%BA%BA%E6%89%80%E5%B1%85%E4%B9%8B%E5%9F%8E.gif" alt="090 猶大人和便雅憫人所居之城.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>090 猶大人和便雅憫人所居之城</strong>
+                  <span>GIF · 210.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/091%20%E7%B4%84%E4%BC%AF%E7%9A%84%E6%95%85%E4%BA%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/091 約伯的故事.gif 091 約伯的故事.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/091%20%E7%B4%84%E4%BC%AF%E7%9A%84%E6%95%85%E4%BA%8B.gif" alt="091 約伯的故事.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>091 約伯的故事</strong>
+                  <span>GIF · 149.7 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/092%20%E8%A9%A9%E7%AF%87%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%90%84%E5%9C%B0%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/092 詩篇中的以色列各地 .gif 092 詩篇中的以色列各地 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/092%20%E8%A9%A9%E7%AF%87%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%90%84%E5%9C%B0%20.gif" alt="092 詩篇中的以色列各地 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>092 詩篇中的以色列各地 </strong>
+                  <span>GIF · 199.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/093%20%E8%A9%A9%E7%AF%87%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/093 詩篇中的以色列地之外各地.gif 093 詩篇中的以色列地之外各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/093%20%E8%A9%A9%E7%AF%87%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" alt="093 詩篇中的以色列地之外各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>093 詩篇中的以色列地之外各地</strong>
+                  <span>GIF · 163.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/094%20%E9%9B%85%E6%AD%8C%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/094 雅歌中的以色列地各地 .gif 094 雅歌中的以色列地各地 .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/094%20%E9%9B%85%E6%AD%8C%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0%20.gif" alt="094 雅歌中的以色列地各地 .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>094 雅歌中的以色列地各地 </strong>
+                  <span>GIF · 165.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/095%20%E4%BB%A5%E8%B3%BD%E4%BA%9E%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/095 以賽亞書中的以色列地各地.gif 095 以賽亞書中的以色列地各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/095%20%E4%BB%A5%E8%B3%BD%E4%BA%9E%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" alt="095 以賽亞書中的以色列地各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>095 以賽亞書中的以色列地各地</strong>
+                  <span>GIF · 211.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/096%20%E4%BB%A5%E8%B3%BD%E4%BA%9E%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/096 以賽亞書中的以色列地之外各地.gif 096 以賽亞書中的以色列地之外各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/096%20%E4%BB%A5%E8%B3%BD%E4%BA%9E%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" alt="096 以賽亞書中的以色列地之外各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>096 以賽亞書中的以色列地之外各地</strong>
+                  <span>GIF · 247.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/097%20%E4%BA%9E%E8%BF%B0%E6%94%BB%E6%89%93%E7%8C%B6%E5%A4%A7.gif" target="_blank" rel="noopener" data-search="全卷120张地图/097 亞述攻打猶大.gif 097 亞述攻打猶大.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/097%20%E4%BA%9E%E8%BF%B0%E6%94%BB%E6%89%93%E7%8C%B6%E5%A4%A7.gif" alt="097 亞述攻打猶大.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>097 亞述攻打猶大</strong>
+                  <span>GIF · 32.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/098%20%E6%91%A9%E6%8A%BC%E5%9C%B0%E5%9C%96%20%20.gif" target="_blank" rel="noopener" data-search="全卷120张地图/098 摩押地圖  .gif 098 摩押地圖  .gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/098%20%E6%91%A9%E6%8A%BC%E5%9C%B0%E5%9C%96%20%20.gif" alt="098 摩押地圖  .gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>098 摩押地圖  </strong>
+                  <span>GIF · 87.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/099%20%E8%80%B6%E5%88%A9%E7%B1%B3%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/099 耶利米書中的以色列地各地.gif 099 耶利米書中的以色列地各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/099%20%E8%80%B6%E5%88%A9%E7%B1%B3%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" alt="099 耶利米書中的以色列地各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>099 耶利米書中的以色列地各地</strong>
+                  <span>GIF · 185.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/100%20%E8%80%B6%E5%88%A9%E7%B1%B3%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/100 耶利米書中的以色列地之外各地.gif 100 耶利米書中的以色列地之外各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/100%20%E8%80%B6%E5%88%A9%E7%B1%B3%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" alt="100 耶利米書中的以色列地之外各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>100 耶利米書中的以色列地之外各地</strong>
+                  <span>GIF · 313.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/101%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/101 以西結書中的以色列地各地.gif 101 以西結書中的以色列地各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/101%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" alt="101 以西結書中的以色列地各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>101 以西結書中的以色列地各地</strong>
+                  <span>GIF · 107.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/102%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/102 以西結書中的以色列地之外各地.gif 102 以西結書中的以色列地之外各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/102%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" alt="102 以西結書中的以色列地之外各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>102 以西結書中的以色列地之外各地</strong>
+                  <span>GIF · 296.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/103%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E9%A0%90%E8%A8%80%E4%B8%AD%E7%9A%84%E6%87%89%E8%A8%B1%E4%B9%8B%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/103 以西結預言中的應許之地.gif 103 以西結預言中的應許之地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/103%20%E4%BB%A5%E8%A5%BF%E7%B5%90%E9%A0%90%E8%A8%80%E4%B8%AD%E7%9A%84%E6%87%89%E8%A8%B1%E4%B9%8B%E5%9C%B0.gif" alt="103 以西結預言中的應許之地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>103 以西結預言中的應許之地</strong>
+                  <span>GIF · 287.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/104%20%E5%B0%8F%E5%85%88%E7%9F%A5%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/104 小先知書中的以色列地各地.gif 104 小先知書中的以色列地各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/104%20%E5%B0%8F%E5%85%88%E7%9F%A5%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E5%90%84%E5%9C%B0.gif" alt="104 小先知書中的以色列地各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>104 小先知書中的以色列地各地</strong>
+                  <span>GIF · 297.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/105%20%E5%B0%8F%E5%85%88%E7%9F%A5%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" target="_blank" rel="noopener" data-search="全卷120张地图/105 小先知書中的以色列地之外各地.gif 105 小先知書中的以色列地之外各地.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/105%20%E5%B0%8F%E5%85%88%E7%9F%A5%E6%9B%B8%E4%B8%AD%E7%9A%84%E4%BB%A5%E8%89%B2%E5%88%97%E5%9C%B0%E4%B9%8B%E5%A4%96%E5%90%84%E5%9C%B0.gif" alt="105 小先知書中的以色列地之外各地.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>105 小先知書中的以色列地之外各地</strong>
+                  <span>GIF · 191.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/106%20%E4%B8%BB%E5%89%8D%E5%9B%9B%E5%B9%B4%E5%88%B0%E4%B8%BB%E5%BE%8C%E4%B8%89%E5%8D%81%E5%B9%B4%E9%96%93%E7%9A%84%E5%B7%B4%E5%8B%92%E6%96%AF%E5%9D%A6.gif" target="_blank" rel="noopener" data-search="全卷120张地图/106 主前四年到主後三十年間的巴勒斯坦.gif 106 主前四年到主後三十年間的巴勒斯坦.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/106%20%E4%B8%BB%E5%89%8D%E5%9B%9B%E5%B9%B4%E5%88%B0%E4%B8%BB%E5%BE%8C%E4%B8%89%E5%8D%81%E5%B9%B4%E9%96%93%E7%9A%84%E5%B7%B4%E5%8B%92%E6%96%AF%E5%9D%A6.gif" alt="106 主前四年到主後三十年間的巴勒斯坦.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>106 主前四年到主後三十年間的巴勒斯坦</strong>
+                  <span>GIF · 253.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/107%20%E4%B8%BB%E8%AA%95%E7%94%9F%E5%92%8C%E5%B9%BC%E5%B9%B4.gif" target="_blank" rel="noopener" data-search="全卷120张地图/107 主誕生和幼年.gif 107 主誕生和幼年.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/107%20%E4%B8%BB%E8%AA%95%E7%94%9F%E5%92%8C%E5%B9%BC%E5%B9%B4.gif" alt="107 主誕生和幼年.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>107 主誕生和幼年</strong>
+                  <span>GIF · 342.6 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/108%20%E8%80%B6%E7%A9%8C%E5%8F%97%E6%B4%97%E5%92%8C%E5%8F%97%E8%A9%A6%E6%8E%A2%EF%BC%8C%E9%96%8B%E5%A7%8B%E5%82%B3%E9%81%93.gif" target="_blank" rel="noopener" data-search="全卷120张地图/108 耶穌受洗和受試探，開始傳道.gif 108 耶穌受洗和受試探，開始傳道.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/108%20%E8%80%B6%E7%A9%8C%E5%8F%97%E6%B4%97%E5%92%8C%E5%8F%97%E8%A9%A6%E6%8E%A2%EF%BC%8C%E9%96%8B%E5%A7%8B%E5%82%B3%E9%81%93.gif" alt="108 耶穌受洗和受試探，開始傳道.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>108 耶穌受洗和受試探，開始傳道</strong>
+                  <span>GIF · 301.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/109%20%E8%80%B6%E7%A9%8C%E8%A1%8C%E5%82%B3%E4%B9%8B%E4%BA%8C.gif" target="_blank" rel="noopener" data-search="全卷120张地图/109 耶穌行傳之二.gif 109 耶穌行傳之二.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/109%20%E8%80%B6%E7%A9%8C%E8%A1%8C%E5%82%B3%E4%B9%8B%E4%BA%8C.gif" alt="109 耶穌行傳之二.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>109 耶穌行傳之二</strong>
+                  <span>GIF · 350.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/110%20%E8%80%B6%E7%A9%8C%E8%A1%8C%E5%82%B3%E4%B9%8B%E4%B8%89.gif" target="_blank" rel="noopener" data-search="全卷120张地图/110 耶穌行傳之三.gif 110 耶穌行傳之三.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/110%20%E8%80%B6%E7%A9%8C%E8%A1%8C%E5%82%B3%E4%B9%8B%E4%B8%89.gif" alt="110 耶穌行傳之三.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>110 耶穌行傳之三</strong>
+                  <span>GIF · 271.3 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/111%20%E8%80%B6%E7%A9%8C%E8%A2%AB%E8%B3%A3%E3%80%81%E5%8F%97%E5%AF%A9%E3%80%81%E5%AE%9A%E7%BD%AA%E5%92%8C%E8%A2%AB%E9%87%9D%E5%8D%81%E5%AD%97%E6%9E%B6.gif" target="_blank" rel="noopener" data-search="全卷120张地图/111 耶穌被賣、受審、定罪和被針十字架.gif 111 耶穌被賣、受審、定罪和被針十字架.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/111%20%E8%80%B6%E7%A9%8C%E8%A2%AB%E8%B3%A3%E3%80%81%E5%8F%97%E5%AF%A9%E3%80%81%E5%AE%9A%E7%BD%AA%E5%92%8C%E8%A2%AB%E9%87%9D%E5%8D%81%E5%AD%97%E6%9E%B6.gif" alt="111 耶穌被賣、受審、定罪和被針十字架.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>111 耶穌被賣、受審、定罪和被針十字架</strong>
+                  <span>GIF · 115.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/112%20%E6%96%B0%E7%B4%84%E6%99%82%E4%BB%A3%E7%9A%84%E7%BE%85%E9%A6%AC%E5%B8%9D%E5%9C%8B.gif" target="_blank" rel="noopener" data-search="全卷120张地图/112 新約時代的羅馬帝國.gif 112 新約時代的羅馬帝國.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/112%20%E6%96%B0%E7%B4%84%E6%99%82%E4%BB%A3%E7%9A%84%E7%BE%85%E9%A6%AC%E5%B8%9D%E5%9C%8B.gif" alt="112 新約時代的羅馬帝國.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>112 新約時代的羅馬帝國</strong>
+                  <span>GIF · 348.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/113%20%E4%BA%94%E6%97%AC%E7%AF%80%E6%99%82%E7%8C%B6%E5%A4%AA%E4%BA%BA%E5%88%86%E4%BD%88%E5%90%84%E8%99%95%E6%83%85%E5%BD%A2.gif" target="_blank" rel="noopener" data-search="全卷120张地图/113 五旬節時猶太人分佈各處情形.gif 113 五旬節時猶太人分佈各處情形.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/113%20%E4%BA%94%E6%97%AC%E7%AF%80%E6%99%82%E7%8C%B6%E5%A4%AA%E4%BA%BA%E5%88%86%E4%BD%88%E5%90%84%E8%99%95%E6%83%85%E5%BD%A2.gif" alt="113 五旬節時猶太人分佈各處情形.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>113 五旬節時猶太人分佈各處情形</strong>
+                  <span>GIF · 238.9 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/114%20%E8%85%93%E5%88%A9%E5%92%8C%E5%BD%BC%E5%BE%97%E5%82%B3%E9%81%93%E7%9A%84%E6%83%85%E5%BD%A2.gif" target="_blank" rel="noopener" data-search="全卷120张地图/114 腓利和彼得傳道的情形.gif 114 腓利和彼得傳道的情形.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/114%20%E8%85%93%E5%88%A9%E5%92%8C%E5%BD%BC%E5%BE%97%E5%82%B3%E9%81%93%E7%9A%84%E6%83%85%E5%BD%A2.gif" alt="114 腓利和彼得傳道的情形.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>114 腓利和彼得傳道的情形</strong>
+                  <span>GIF · 202.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/115%20%E4%BD%BF%E5%BE%92%E5%88%B0%E7%8C%B6%E5%A4%AA%E7%9C%81%E5%A4%96%E5%82%B3%E9%81%93%EF%BC%8C%E4%BF%9D%E7%BE%85%E4%BF%A1%E4%B8%BB%E5%92%8C%E6%97%A9%E6%9C%9F%E7%9A%84%E5%B7%A5%E4%BD%9C.gif" target="_blank" rel="noopener" data-search="全卷120张地图/115 使徒到猶太省外傳道，保羅信主和早期的工作.gif 115 使徒到猶太省外傳道，保羅信主和早期的工作.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/115%20%E4%BD%BF%E5%BE%92%E5%88%B0%E7%8C%B6%E5%A4%AA%E7%9C%81%E5%A4%96%E5%82%B3%E9%81%93%EF%BC%8C%E4%BF%9D%E7%BE%85%E4%BF%A1%E4%B8%BB%E5%92%8C%E6%97%A9%E6%9C%9F%E7%9A%84%E5%B7%A5%E4%BD%9C.gif" alt="115 使徒到猶太省外傳道，保羅信主和早期的工作.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>115 使徒到猶太省外傳道，保羅信主和早期的工作</strong>
+                  <span>GIF · 268.2 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/116%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" target="_blank" rel="noopener" data-search="全卷120张地图/116 保羅第一次行傳.gif 116 保羅第一次行傳.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/116%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%B8%80%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" alt="116 保羅第一次行傳.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>116 保羅第一次行傳</strong>
+                  <span>GIF · 261.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/117%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" target="_blank" rel="noopener" data-search="全卷120张地图/117 保羅第二次行傳.gif 117 保羅第二次行傳.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/117%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%BA%8C%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" alt="117 保羅第二次行傳.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>117 保羅第二次行傳</strong>
+                  <span>GIF · 358.5 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/118%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%B8%89%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" target="_blank" rel="noopener" data-search="全卷120张地图/118 保羅第三次行傳.gif 118 保羅第三次行傳.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/118%20%E4%BF%9D%E7%BE%85%E7%AC%AC%E4%B8%89%E6%AC%A1%E8%A1%8C%E5%82%B3.gif" alt="118 保羅第三次行傳.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>118 保羅第三次行傳</strong>
+                  <span>GIF · 411.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/119%20%E4%BF%9D%E7%BE%85%E8%A2%AB%E8%A7%A3%E6%8A%BC%E5%8E%BB%E7%BE%85%E9%A6%AC.gif" target="_blank" rel="noopener" data-search="全卷120张地图/119 保羅被解押去羅馬.gif 119 保羅被解押去羅馬.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/119%20%E4%BF%9D%E7%BE%85%E8%A2%AB%E8%A7%A3%E6%8A%BC%E5%8E%BB%E7%BE%85%E9%A6%AC.gif" alt="119 保羅被解押去羅馬.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>119 保羅被解押去羅馬</strong>
+                  <span>GIF · 356.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/120%20%E5%95%9F%E7%A4%BA%E9%8C%84.gif" target="_blank" rel="noopener" data-search="全卷120张地图/120 啟示錄.gif 120 啟示錄.gif">
+                <div class="file-preview"><img src="%E5%85%A8%E5%8D%B7120%E5%BC%A0%E5%9C%B0%E5%9B%BE/120%20%E5%95%9F%E7%A4%BA%E9%8C%84.gif" alt="120 啟示錄.gif" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>120 啟示錄</strong>
+                  <span>GIF · 260.0 KB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+      <div class="empty-state" data-empty>没有找到匹配的文件。</div>
+    </div>
+  </main>
+  <footer>BibleView · 本地资料索引</footer>
+  <script>
+    const themeKey = "bibleview-theme";
+    const search = document.querySelector("[data-search]");
+    const cards = Array.from(document.querySelectorAll(".file-card"));
+    const directories = Array.from(document.querySelectorAll("[data-dir-node]"));
+    const empty = document.querySelector("[data-empty]");
+    const themeToggle = document.querySelector("[data-theme-toggle]");
+    const themeLabel = document.querySelector("[data-theme-label]");
+
+    function isDarkPreferred() {
+      const saved = localStorage.getItem(themeKey);
+      if (saved) return saved === "dark";
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    function applyTheme(isDark) {
+      document.body.classList.toggle("bv-dark", isDark);
+      themeLabel.textContent = isDark ? "深色" : "浅色";
+    }
+
+    function restoreDefaultOpen() {
+      directories.forEach((directory) => {
+        directory.open = directory.dataset.defaultOpen === "true";
+      });
+    }
+
+    function applySearch() {
+      const query = search.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      if (!query) {
+        cards.forEach((card) => card.classList.remove("is-hidden"));
+        directories.forEach((directory) => directory.classList.remove("is-hidden"));
+        restoreDefaultOpen();
+        empty.classList.remove("is-visible");
+        return;
+      }
+
+      cards.forEach((card) => {
+        const matched = card.dataset.search.includes(query);
+        card.classList.toggle("is-hidden", !matched);
+        if (matched) visibleCount += 1;
+      });
+
+      directories.forEach((directory) => {
+        const hasVisibleCard = Boolean(directory.querySelector(".file-card:not(.is-hidden)"));
+        directory.classList.toggle("is-hidden", !hasVisibleCard);
+        if (hasVisibleCard) directory.open = true;
+      });
+
+      empty.classList.toggle("is-visible", visibleCount === 0);
+    }
+
+    applyTheme(isDarkPreferred());
+    restoreDefaultOpen();
+    search.addEventListener("input", applySearch);
+    themeToggle.addEventListener("click", () => {
+      const nextIsDark = !document.body.classList.contains("bv-dark");
+      localStorage.setItem(themeKey, nextIsDark ? "dark" : "light");
+      applyTheme(nextIsDark);
+    });
+  </script>
+</body>
+</html>

@@ -19,7 +19,7 @@
     Esth: Array.from({ length: 10 }, (_, i) => i + 1),
     //Job: Array.from({ length: 42 }, (_, i) => i + 1), //智慧文学
     //Ps: Array.from({ length: 150 }, (_, i) => i + 1),
-    //Prov: Array.from({ length: 31 }, (_, i) => i + 1),
+    Prov: Array.from({ length: 31 }, (_, i) => i + 1),
     Eccl: Array.from({ length: 12 }, (_, i) => i + 1),
     Song: Array.from({ length: 8 }, (_, i) => i + 1),
     Isa: Array.from({ length: 66 }, (_, i) => i + 1), //大先知书
@@ -147,9 +147,7 @@
       desc: "Bible Pictures",
       image: "url('../../Config/sunrise.jpg')",
       links: [
-        { name: "精选", url: "https://www.jianguoyun.com/p/DZymMaoQid2iDhiK6KAGIAA" },
-        { name: "按卷", url: "https://www.jianguoyun.com/p/DTPCNQkQid2iDhiL6KAGIAA" },
-        { name: "拾穗", url: "https://www.jianguoyun.com/p/DX7OHqoQid2iDhjz56AGIAA" },
+        { name: "圣经图片", url: "Topics/Pictures/index.html" },
       ]
     },
     {
@@ -158,7 +156,7 @@
       desc: "Books Digests",
       image: "url('../../Config/oldbooks1.jpg')",
       links: [
-        { name: "推荐书籍", url: "https://www.jianguoyun.com/p/DaDHx9sQ0fWiDhiynKMGIAA" },
+        { name: "推荐书籍", url: "Topics/Books/index.html" },
       ]
     },
     {
@@ -682,7 +680,15 @@
           </span>
         </summary>
         <div class="bv-topic-links">
-          ${topic.links.map((link) => `<a href="${link.url}"><span>${escapeHtml(link.name)}</span><span>→</span></a>`).join("")}
+          ${topic.links.map((link) => `
+            <a href="${link.url}">
+              <span class="bv-topic-link-main">
+                <span class="bv-topic-link-icon" aria-hidden="true"></span>
+                <span>${escapeHtml(link.name)}</span>
+              </span>
+              <span>→</span>
+            </a>
+          `).join("")}
         </div>
       </details>
     `).join("");
@@ -701,7 +707,15 @@
           </span>
         </summary>
         <div class="bv-featured-links">
-          ${item.links.map((link) => `<a href="${link.url}"><span>${escapeHtml(link.name)}</span><span>→</span></a>`).join("")}
+          ${item.links.map((link) => `
+            <a href="${link.url}">
+              <span class="bv-topic-link-main">
+                <span class="bv-topic-link-icon" aria-hidden="true"></span>
+                <span>${escapeHtml(link.name)}</span>
+              </span>
+              <span>→</span>
+            </a>
+          `).join("")}
         </div>
       </details>
     `).join("");
