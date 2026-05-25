@@ -224,7 +224,10 @@
 
   const readerSettingsKey = "bibleview-reader-settings";
   const recentBooksKey = "bibleview-recent-books";
+  const homeStateKey = "bibleview-home-state";
   const recentBooksLimit = 6;
+  let isRestoringHomeState = false;
+  let scrollSaveTimer = 0;
   const readerDefaults = {
     fontSize: "normal",
     fontFamily: "default",
@@ -541,6 +544,94 @@
     renderRecentBooks();
   }
 
+  function getHomeState() {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(homeStateKey) || "null");
+      return saved && typeof saved === "object" ? saved : null;
+    } catch (_error) {
+      return null;
+    }
+  }
+
+  function collectDetailsState(selector) {
+    return Array.from(document.querySelectorAll(selector)).map((details) => details.open);
+  }
+
+  function applyDetailsState(selector, values) {
+    if (!Array.isArray(values)) return;
+    document.querySelectorAll(selector).forEach((details, index) => {
+      details.open = Boolean(values[index]);
+    });
+  }
+
+  function collectMenuPanelState() {
+    return Array.from(document.querySelectorAll("[data-menu-panel]")).reduce((panels, panel) => {
+      panels[panel.dataset.menuPanel] = panel.classList.contains("is-open");
+      return panels;
+    }, {});
+  }
+
+  function applyMenuPanelState(panels) {
+    if (!panels || typeof panels !== "object") return;
+    Object.entries(panels).forEach(([name, isOpen]) => setMenuPanel(name, Boolean(isOpen)));
+  }
+
+  function saveHomeState() {
+    if (isRestoringHomeState) return;
+
+    const drawer = document.querySelector("[data-drawer]");
+    const search = document.querySelector("[data-search]");
+    const nextState = {
+      panels: collectMenuPanelState(),
+      featuredOpen: collectDetailsState("[data-featured-grid] .bv-featured-card"),
+      topicOpen: collectDetailsState("[data-topic-grid] .bv-topic-group"),
+      drawerBook: drawer && drawer.getAttribute("aria-hidden") === "false" ? drawer.dataset.currentBook || "" : "",
+      query: search ? search.value : state.query,
+      scrollY: window.scrollY
+    };
+
+    try {
+      sessionStorage.setItem(homeStateKey, JSON.stringify(nextState));
+    } catch (_error) {
+      // Ignore storage failures; the homepage still works without state restore.
+    }
+  }
+
+  function scheduleScrollStateSave() {
+    window.clearTimeout(scrollSaveTimer);
+    scrollSaveTimer = window.setTimeout(saveHomeState, 120);
+  }
+
+  function restoreHomeState() {
+    const saved = getHomeState();
+    if (!saved) return;
+
+    isRestoringHomeState = true;
+
+    if (typeof saved.query === "string") {
+      state.query = saved.query;
+      const search = document.querySelector("[data-search]");
+      if (search) search.value = saved.query;
+      renderBooks();
+    }
+
+    applyMenuPanelState(saved.panels);
+    applyDetailsState("[data-featured-grid] .bv-featured-card", saved.featuredOpen);
+    applyDetailsState("[data-topic-grid] .bv-topic-group", saved.topicOpen);
+
+    if (saved.drawerBook) {
+      openDrawer(saved.drawerBook, { persist: false });
+    }
+
+    const scrollY = Number(saved.scrollY) || 0;
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, scrollY);
+        isRestoringHomeState = false;
+      });
+    });
+  }
+
   function renderBooks() {
     const renderList = (selector, type) => {
       const grid = document.querySelector(selector);
@@ -666,7 +757,8 @@
     }).join("");
   }
 
-  function openDrawer(abbr) {
+  function openDrawer(abbr, options = {}) {
+    const { persist = true } = options;
     const book = state.books.find((item) => item.abbr === abbr);
     if (!book) return;
     const readyChapters = availableChapters[book.abbr] || [];
@@ -683,12 +775,17 @@
     }).join("");
     drawer.classList.add("is-open");
     drawer.setAttribute("aria-hidden", "false");
+    drawer.dataset.currentBook = book.abbr;
+    if (persist) saveHomeState();
   }
 
-  function closeDrawer() {
+  function closeDrawer(options = {}) {
+    const { persist = true } = options;
     const drawer = document.querySelector("[data-drawer]");
     drawer.classList.remove("is-open");
     drawer.setAttribute("aria-hidden", "true");
+    delete drawer.dataset.currentBook;
+    if (persist) saveHomeState();
   }
 
   function bindEvents() {
@@ -702,6 +799,7 @@
     document.querySelector("[data-search]").addEventListener("input", (event) => {
       state.query = event.target.value;
       renderBooks();
+      saveHomeState();
     });
 
     document.querySelector("[data-reader-settings-open]").addEventListener("click", () => {
@@ -737,8 +835,15 @@
         const panel = button.closest("[data-menu-panel]");
         const isOpen = panel.classList.toggle("is-open");
         button.setAttribute("aria-expanded", String(isOpen));
+        saveHomeState();
       });
     });
+
+    document.querySelector("[data-primary-menu]").addEventListener("toggle", (event) => {
+      if (event.target.matches(".bv-featured-card, .bv-topic-group")) {
+        saveHomeState();
+      }
+    }, true);
 
     document.querySelector("[data-primary-menu]").addEventListener("click", (event) => {
       const card = event.target.closest("[data-book]");
@@ -748,10 +853,16 @@
       }
     });
 
+    document.querySelector("[data-chapters]").addEventListener("click", (event) => {
+      if (event.target.closest("a")) saveHomeState();
+    });
+
     document.querySelector("[data-close]").addEventListener("click", closeDrawer);
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") closeDrawer();
     });
+    window.addEventListener("scroll", scheduleScrollStateSave, { passive: true });
+    window.addEventListener("pagehide", saveHomeState);
   }
 
   function boot() {
@@ -763,6 +874,7 @@
     renderFeaturedItems();
     renderRecentBooks();
     bindEvents();
+    restoreHomeState();
 
     const busuanzi = document.createElement("script");
     busuanzi.async = true;
