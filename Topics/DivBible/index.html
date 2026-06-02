@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>圣经各卷 · BibleView</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bv-bg: #f5f1e8;
+      --bv-surface: rgba(255, 255, 255, 0.78);
+      --bv-surface-solid: #ffffff;
+      --bv-surface-soft: #eee8dc;
+      --bv-ink: #202225;
+      --bv-muted: #6b6f76;
+      --bv-border: rgba(42, 35, 27, 0.13);
+      --bv-brand: #9f653a;
+      --bv-brand-strong: #6d442c;
+      --bv-accent: #1f7a73;
+      --bv-accent-soft: rgba(31, 122, 115, 0.13);
+      --bv-shadow-soft: 0 14px 35px rgba(54, 43, 31, 0.1);
+      --bv-radius: 8px;
+      --bv-header: rgba(250, 247, 240, 0.82);
+      --bv-serif: "Microsoft YaHei UI Light", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+    }
+    body.bv-dark {
+      color-scheme: dark;
+      --bv-bg: #151a20;
+      --bv-surface: rgba(31, 38, 47, 0.78);
+      --bv-surface-solid: #202832;
+      --bv-surface-soft: #26313d;
+      --bv-ink: #edf0f2;
+      --bv-muted: #aeb7c2;
+      --bv-border: rgba(255, 255, 255, 0.11);
+      --bv-brand: #d6a464;
+      --bv-brand-strong: #f0c982;
+      --bv-accent: #73c5bd;
+      --bv-accent-soft: rgba(115, 197, 189, 0.14);
+      --bv-shadow-soft: 0 14px 35px rgba(0, 0, 0, 0.26);
+      --bv-header: rgba(21, 26, 32, 0.82);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 18% 5%, rgba(197, 146, 59, 0.18), transparent 28rem),
+        radial-gradient(circle at 86% 0%, rgba(31, 122, 115, 0.16), transparent 24rem),
+        linear-gradient(180deg, var(--bv-bg), var(--bv-bg));
+      color: var(--bv-ink);
+      font-family: "Inter", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", system-ui, sans-serif;
+      letter-spacing: 0;
+    }
+    a { color: inherit; }
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-bottom: 1px solid var(--bv-border);
+      background: var(--bv-header);
+      backdrop-filter: blur(18px);
+    }
+    .nav {
+      min-height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .brand {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--bv-ink);
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .brand-icon,
+    .mode-toggle {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface-solid);
+      box-shadow: var(--bv-shadow-soft);
+    }
+    .mode-toggle {
+      width: auto;
+      padding: 0 12px;
+      color: var(--bv-ink);
+      font: inherit;
+      cursor: pointer;
+    }
+    header {
+      padding: 38px 0 20px;
+      border-bottom: 1px solid var(--bv-border);
+    }
+    .kicker {
+      margin: 0 0 14px;
+      color: var(--bv-brand-strong);
+      font-size: 0.82rem;
+      font-weight: 750;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.25rem, 6vw, 5rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+    .lead {
+      max-width: 720px;
+      margin: 16px 0 0;
+      color: var(--bv-muted);
+      line-height: 1.8;
+    }
+    .toolbar {
+      padding: 16px 0;
+      border-bottom: 1px solid var(--bv-border);
+      background: var(--bv-header);
+      backdrop-filter: blur(18px);
+    }
+    .toolbar-inner {
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+    }
+    .search {
+      min-height: 46px;
+      width: 100%;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      padding: 0 14px;
+      color: var(--bv-ink);
+      background: var(--bv-surface-solid);
+      font: inherit;
+      outline: none;
+    }
+    .search:focus {
+      border-color: var(--bv-accent);
+      box-shadow: 0 0 0 4px var(--bv-accent-soft);
+    }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      color: var(--bv-muted);
+    }
+    .stats span {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--bv-border);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: var(--bv-surface);
+      white-space: nowrap;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 18px;
+      padding: 22px 0 54px;
+    }
+    .group-nav {
+      position: sticky;
+      top: 92px;
+      align-self: start;
+      display: grid;
+      gap: 8px;
+    }
+    .group-nav a {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      padding: 10px 12px;
+      text-decoration: none;
+      background: var(--bv-surface);
+      color: var(--bv-muted);
+    }
+    .group-nav a:hover { color: var(--bv-accent); }
+    .dir-node,
+    .root-files {
+      margin-bottom: 12px;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface);
+      overflow: hidden;
+      scroll-margin-top: 96px;
+    }
+    .dir-node .dir-node {
+      margin: 12px 0 0;
+      background: var(--bv-surface-solid);
+    }
+    .dir-node summary,
+    .section-head {
+      min-height: 58px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      cursor: pointer;
+      list-style: none;
+      color: var(--bv-ink);
+    }
+    .section-head { cursor: default; }
+    .dir-node summary::-webkit-details-marker { display: none; }
+    .dir-node summary::after {
+      content: "";
+      width: 9px;
+      height: 9px;
+      flex: 0 0 9px;
+      border-right: 2px solid currentColor;
+      border-bottom: 2px solid currentColor;
+      transform: rotate(45deg);
+      transition: transform 0.2s ease;
+    }
+    .dir-node[open] > summary::after { transform: rotate(225deg); }
+    .dir-node strong,
+    .section-head h2 {
+      display: block;
+      margin: 0;
+      font-size: 1.02rem;
+      font-weight: 500;
+    }
+    .dir-node small {
+      display: block;
+      margin-top: 3px;
+      color: var(--bv-muted);
+      font-size: 0.78rem;
+    }
+    .dir-count,
+    .section-head span {
+      margin-left: auto;
+      color: var(--bv-muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+    }
+    .dir-content {
+      padding: 0 12px 12px;
+      border-top: 1px solid var(--bv-border);
+    }
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(156px, 1fr));
+      gap: 10px;
+      padding-top: 12px;
+    }
+    .file-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--bv-border);
+      border-radius: var(--bv-radius);
+      background: var(--bv-surface-solid);
+      color: var(--bv-ink);
+      text-decoration: none;
+      box-shadow: var(--bv-shadow-soft);
+      display: flex;
+      flex-direction: column;
+    }
+    .file-card:hover {
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--bv-accent) 48%, var(--bv-border));
+    }
+    .file-preview {
+      height: 112px;
+      flex: 0 0 112px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      background: var(--bv-surface-soft);
+    }
+    .file-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .file-icon {
+      min-width: 58px;
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--bv-radius);
+      color: #fff;
+      background: linear-gradient(135deg, var(--bv-brand-strong), var(--bv-accent));
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+    body.bv-dark .file-icon { color: #111820; }
+    .file-info {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      padding: 10px;
+      background: var(--bv-surface-solid);
+    }
+    .file-info strong {
+      display: -webkit-box;
+      min-height: 2.7em;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      font-family: var(--bv-serif);
+      font-weight: 300;
+      line-height: 1.35;
+      font-size: 0.92rem;
+    }
+    .file-info span {
+      display: block;
+      margin-top: 7px;
+      color: var(--bv-muted);
+      font-family: var(--bv-serif);
+      font-size: 0.78rem;
+    }
+    .is-hidden { display: none !important; }
+    .empty-state {
+      display: none;
+      padding: 34px;
+      border: 1px dashed var(--bv-border);
+      border-radius: var(--bv-radius);
+      color: var(--bv-muted);
+      text-align: center;
+      background: var(--bv-surface);
+    }
+    .empty-state.is-visible { display: block; }
+    footer {
+      padding: 28px 0;
+      border-top: 1px solid var(--bv-border);
+      color: var(--bv-muted);
+      text-align: center;
+      background: var(--bv-header);
+    }
+    @media (max-width: 820px) {
+      .toolbar-inner { grid-template-columns: 1fr; }
+      .stats { justify-content: flex-start; }
+      .layout { grid-template-columns: 1fr; }
+      .group-nav {
+        position: static;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 540px) {
+      .shell { width: min(100% - 24px, 1180px); }
+      .nav { min-height: 62px; }
+      header { padding: 28px 0 16px; }
+      h1 { font-size: 2.35rem; }
+      .group-nav { grid-template-columns: 1fr; }
+      .file-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .file-preview { height: 96px; }
+      .dir-node summary,
+      .section-head {
+        min-height: 54px;
+        padding: 10px 12px;
+      }
+      .dir-content { padding: 0 8px 8px; }
+      .mode-toggle span { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <nav class="shell nav" aria-label="资料索引导航">
+      <a class="brand" href="../../index.html">
+        <span class="brand-icon">BV</span>
+        <span>返回首页</span>
+      </a>
+      <button class="mode-toggle" type="button" data-theme-toggle aria-label="切换浅色或深色模式">
+        <span data-theme-label>浅色</span>
+      </button>
+    </nav>
+  </div>
+  <header>
+    <div class="shell">
+      <p class="kicker">BibleView Study Library</p>
+      <h1>圣经各卷</h1>
+      <p class="lead">Bible Insights · Topics/DivBible</p>
+    </div>
+  </header>
+  <div class="toolbar">
+    <div class="shell toolbar-inner">
+      <input class="search" type="search" placeholder="搜索文件名或分组..." data-search>
+      <div class="stats">
+        <span>13 个文件</span>
+        <span>4 个目录</span>
+      </div>
+    </div>
+  </div>
+  <main class="shell layout">
+    <nav class="group-nav" aria-label="文件分组">
+      <a href="#dir-%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0%E6%8B%BE%E7%A9%97">使徒行传拾穗 <span>3</span></a><a href="#dir-%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF">提摩太前书背景 <span>6</span></a><a href="#dir-%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4">约书亚记点滴 <span>4</span></a>
+    </nav>
+    <div>
+
+
+        <details class="dir-node level-1" id="dir-%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0%E6%8B%BE%E7%A9%97" data-dir-node data-default-open="true" data-search="使徒行传拾穗" open>
+          <summary>
+            <span>
+              <strong>使徒行传拾穗</strong>
+            </span>
+            <span class="dir-count">3 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0%E6%8B%BE%E7%A9%97/%E4%BF%9D%E7%BD%97%E4%B8%89%E6%AC%A1%E5%B8%83%E9%81%93%E6%97%85%E8%A1%8C%E6%97%B6%E9%97%B4%E7%BA%BF.html" target="_blank" rel="noopener" data-search="使徒行传拾穗/保罗三次布道旅行时间线.html 保罗三次布道旅行时间线.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>保罗三次布道旅行时间线</strong>
+                  <span>HTML · 22.4 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0%E6%8B%BE%E7%A9%97/%E4%BF%9D%E7%BD%97%E5%8F%97%E5%AE%A1%E4%B8%8E%E8%80%B6%E7%A8%A3%E5%8F%97%E5%AE%A1%E8%AF%A6%E7%BB%86%E5%AF%B9%E6%AF%94.html" target="_blank" rel="noopener" data-search="使徒行传拾穗/保罗受审与耶稣受审详细对比.html 保罗受审与耶稣受审详细对比.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>保罗受审与耶稣受审详细对比</strong>
+                  <span>HTML · 51.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E4%BD%BF%E5%BE%92%E8%A1%8C%E4%BC%A0%E6%8B%BE%E7%A9%97/%E4%BF%9D%E7%BE%85%E7%94%9F%E5%B9%B3%E5%B9%B4%E8%A1%A8.pdf" target="_blank" rel="noopener" data-search="使徒行传拾穗/保羅生平年表.pdf 保羅生平年表.pdf">
+                <div class="file-preview"><div class="file-icon">PDF</div></div>
+                <div class="file-info">
+                  <strong>保羅生平年表</strong>
+                  <span>PDF · 154.2 KB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+
+        <details class="dir-node level-1" id="dir-%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF" data-dir-node data-default-open="true" data-search="提摩太前书背景" open>
+          <summary>
+            <span>
+              <strong>提摩太前书背景</strong>
+            </span>
+            <span class="dir-count">6 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E3%80%8A%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E3%80%8B%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D.html" target="_blank" rel="noopener" data-search="提摩太前书背景/《提摩太前书》背景介绍.html 《提摩太前书》背景介绍.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>《提摩太前书》背景介绍</strong>
+                  <span>HTML · 26.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E8%AF%A6%E5%B0%BD%E7%A0%94%E7%A9%B6%E6%8A%A5%E5%91%8A.pdf" target="_blank" rel="noopener" data-search="提摩太前书背景/详尽研究报告.pdf 详尽研究报告.pdf">
+                <div class="file-preview"><div class="file-icon">PDF</div></div>
+                <div class="file-info">
+                  <strong>详尽研究报告</strong>
+                  <span>PDF · 542.9 KB</span>
+                </div>
+              </a>
+            </div>
+
+        <details class="dir-node level-2" id="dir-%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF%2F%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA" data-dir-node data-default-open="true" data-search="提摩太前书背景/教牧书信内的历史重建" open>
+          <summary>
+            <span>
+              <strong>教牧书信内的历史重建</strong>
+            </span>
+            <span class="dir-count">4 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul.png" target="_blank" rel="noopener" data-search="提摩太前书背景/教牧书信内的历史重建/paul.png paul.png">
+                <div class="file-preview"><img src="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul.png" alt="Paul.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Paul</strong>
+                  <span>PNG · 6.5 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul2.png" target="_blank" rel="noopener" data-search="提摩太前书背景/教牧书信内的历史重建/paul2.png paul2.png">
+                <div class="file-preview"><img src="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul2.png" alt="Paul2.png" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Paul2</strong>
+                  <span>PNG · 1.7 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul3.jpg" target="_blank" rel="noopener" data-search="提摩太前书背景/教牧书信内的历史重建/paul3.jpg paul3.jpg">
+                <div class="file-preview"><img src="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/Paul3.jpg" alt="Paul3.jpg" loading="lazy"></div>
+                <div class="file-info">
+                  <strong>Paul3</strong>
+                  <span>JPG · 2.7 MB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E6%8F%90%E6%91%A9%E5%A4%AA%E5%89%8D%E4%B9%A6%E8%83%8C%E6%99%AF/%E6%95%99%E7%89%A7%E4%B9%A6%E4%BF%A1%E5%86%85%E7%9A%84%E5%8E%86%E5%8F%B2%E9%87%8D%E5%BB%BA/%E4%BF%9D%E7%BD%97%E7%AC%AC%E5%9B%9B%E6%AC%A1%E5%B8%83%E9%81%93%E6%97%85%E8%A1%8C%E8%A1%8C%E8%B8%AA.html" target="_blank" rel="noopener" data-search="提摩太前书背景/教牧书信内的历史重建/保罗第四次布道旅行行踪.html 保罗第四次布道旅行行踪.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>保罗第四次布道旅行行踪</strong>
+                  <span>HTML · 15.4 KB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+          </div>
+        </details>
+
+        <details class="dir-node level-1" id="dir-%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4" data-dir-node data-default-open="true" data-search="约书亚记点滴" open>
+          <summary>
+            <span>
+              <strong>约书亚记点滴</strong>
+            </span>
+            <span class="dir-count">4 个文件</span>
+          </summary>
+          <div class="dir-content">
+
+            <div class="file-grid">
+
+              <a class="file-card" href="%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4/Josh12_21_deepThink.html" target="_blank" rel="noopener" data-search="约书亚记点滴/josh12_21_deepthink.html josh12_21_deepthink.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>Josh12_21_deepThink</strong>
+                  <span>HTML · 41.0 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4/Josh12_21_deepThink2.html" target="_blank" rel="noopener" data-search="约书亚记点滴/josh12_21_deepthink2.html josh12_21_deepthink2.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>Josh12_21_deepThink2</strong>
+                  <span>HTML · 30.1 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4/Josh12_21_QA.pdf" target="_blank" rel="noopener" data-search="约书亚记点滴/josh12_21_qa.pdf josh12_21_qa.pdf">
+                <div class="file-preview"><div class="file-icon">PDF</div></div>
+                <div class="file-info">
+                  <strong>Josh12_21_QA</strong>
+                  <span>PDF · 591.8 KB</span>
+                </div>
+              </a>
+
+              <a class="file-card" href="%E7%BA%A6%E4%B9%A6%E4%BA%9A%E8%AE%B0%E7%82%B9%E6%BB%B4/Josh8_deepThink.html" target="_blank" rel="noopener" data-search="约书亚记点滴/josh8_deepthink.html josh8_deepthink.html">
+                <div class="file-preview"><div class="file-icon">HTML</div></div>
+                <div class="file-info">
+                  <strong>Josh8_deepThink</strong>
+                  <span>HTML · 29.4 KB</span>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </details>
+      <div class="empty-state" data-empty>没有找到匹配的文件。</div>
+    </div>
+  </main>
+  <footer>BibleView · 本地资料索引</footer>
+  <script>
+    const themeKey = "bibleview-theme";
+    const search = document.querySelector("[data-search]");
+    const cards = Array.from(document.querySelectorAll(".file-card"));
+    const directories = Array.from(document.querySelectorAll("[data-dir-node]"));
+    const empty = document.querySelector("[data-empty]");
+    const themeToggle = document.querySelector("[data-theme-toggle]");
+    const themeLabel = document.querySelector("[data-theme-label]");
+
+    function isDarkPreferred() {
+      const saved = localStorage.getItem(themeKey);
+      if (saved) return saved === "dark";
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    function applyTheme(isDark) {
+      document.body.classList.toggle("bv-dark", isDark);
+      themeLabel.textContent = isDark ? "深色" : "浅色";
+    }
+
+    function restoreDefaultOpen() {
+      directories.forEach((directory) => {
+        directory.open = directory.dataset.defaultOpen === "true";
+      });
+    }
+
+    function applySearch() {
+      const query = search.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      if (!query) {
+        cards.forEach((card) => card.classList.remove("is-hidden"));
+        directories.forEach((directory) => directory.classList.remove("is-hidden"));
+        restoreDefaultOpen();
+        empty.classList.remove("is-visible");
+        return;
+      }
+
+      cards.forEach((card) => {
+        const matched = card.dataset.search.includes(query);
+        card.classList.toggle("is-hidden", !matched);
+        if (matched) visibleCount += 1;
+      });
+
+      directories.forEach((directory) => {
+        const hasVisibleCard = Boolean(directory.querySelector(".file-card:not(.is-hidden)"));
+        directory.classList.toggle("is-hidden", !hasVisibleCard);
+        if (hasVisibleCard) directory.open = true;
+      });
+
+      empty.classList.toggle("is-visible", visibleCount === 0);
+    }
+
+    applyTheme(isDarkPreferred());
+    restoreDefaultOpen();
+    search.addEventListener("input", applySearch);
+    themeToggle.addEventListener("click", () => {
+      const nextIsDark = !document.body.classList.contains("bv-dark");
+      localStorage.setItem(themeKey, nextIsDark ? "dark" : "light");
+      applyTheme(nextIsDark);
+    });
+  </script>
+</body>
+</html>

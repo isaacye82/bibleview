@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psalms Chapter 139 | 诗篇 139章</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+        :root {
+            /* 核心主题色彩：由 AI Agent 根据经文意境动态注入 */
+            --theme-primary: #315D73;     /* 主色：用于强调、核心概念、边框标识 */
+            --theme-secondary: #7A4E6A; /* 次色：用于次级视觉区、辅助色块 */
+            --theme-accent: #D6A84F;       /* 提亮色：用于高亮卡片背景 */
+            --theme-bg: #F7F4EE;               /* 网页底色：温暖微黄或深邃灰白 */
+            --theme-text: #24313A;           /* 全局主文字色 */
+        }
+
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--theme-bg);
+            color: var(--theme-text);
+        }
+
+        .en-text {
+            font-family: 'Playfair Display', serif;
+        }
+
+        h1, h2, h3, h4, .serif {
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        /* 导航线动画控制 */
+        .nav-btn {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .active-tab {
+            color: var(--theme-primary);
+            font-weight: 700;
+        }
+        .active-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--theme-primary);
+            border-radius: 2px;
+        }
+
+        /* 经文卡片基础样式系统 */
+        .verse-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+        .verse-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-color: var(--theme-primary);
+        }
+
+        /* 动画转场特效 */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bv-motif-stage {
+    background:
+        radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--theme-accent) 80%, white), transparent 30%),
+        linear-gradient(160deg, white 0%, color-mix(in srgb, var(--theme-accent) 55%, white) 52%, color-mix(in srgb, var(--theme-secondary) 18%, white) 100%);
+    min-height: 100%;
+}
+.bv-motif-stage svg { overflow: visible; }
+.bv-motif-soft { filter: drop-shadow(0 12px 18px rgba(0,0,0,.08)); }
+.motif-symbol { transform-box: fill-box; transform-origin: center; }
+.motion-sprout .motif-grow { animation: motifGrow 4.8s ease-in-out infinite; transform-origin: bottom center; }
+.motion-rise .motif-rise { animation: motifRise 5.6s ease-in-out infinite; }
+.motion-pulse .motif-pulse { animation: motifPulse 4.2s ease-in-out infinite; transform-origin: center; }
+.motion-swing .motif-swing { animation: motifSwing 4.8s ease-in-out infinite; transform-origin: top center; }
+.motion-flow .motif-flow { stroke-dasharray: 360; stroke-dashoffset: 360; animation: motifFlow 6.8s ease-in-out infinite; }
+.motion-circle .motif-circle { animation: motifRing 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-scatter .motif-scatter { animation: motifScatter 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-gather .motif-gather { animation: motifGather 5.8s ease-in-out infinite; transform-origin: center; }
+.motion-shine .motif-shine { animation: motifShine 4.8s ease-in-out infinite; transform-origin: center; }
+@keyframes motifGrow {
+    0%, 100% { transform: scaleY(.82); opacity: .72; }
+    50% { transform: scaleY(1.08); opacity: 1; }
+}
+@keyframes motifRise {
+    0% { transform: translateY(14px); opacity: .12; }
+    45% { opacity: .76; }
+    100% { transform: translateY(-26px); opacity: .08; }
+}
+@keyframes motifSwing {
+    0%, 100% { transform: rotate(-2.5deg); }
+    50% { transform: rotate(3deg); }
+}
+@keyframes motifFlow {
+    0% { stroke-dashoffset: 360; opacity: .38; }
+    48%, 74% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -360; opacity: .38; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.94); opacity: .62; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+@keyframes motifRing {
+    0%, 100% { transform: scale(.96); opacity: .45; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifScatter {
+    0%, 100% { transform: translate(0, 0); opacity: .52; }
+    50% { transform: translate(var(--scatter-x, 10px), var(--scatter-y, -8px)); opacity: .95; }
+}
+@keyframes motifGather {
+    0%, 100% { transform: scale(.92); opacity: .5; }
+    50% { transform: scale(1.04); opacity: .95; }
+}
+@keyframes motifShine {
+    0%, 100% { transform: scale(.9); opacity: .45; }
+    50% { transform: scale(1.12); opacity: 1; }
+}
+.motif-route-line {
+    stroke-dasharray: 520;
+    stroke-dashoffset: 520;
+    animation: motifRoute 7s ease-in-out infinite;
+}
+.motif-sun { animation: motifPulse 4.8s ease-in-out infinite; transform-origin: center; }
+.motif-dust { animation: motifDust 5.2s ease-in-out infinite; }
+.motif-dust.d2 { animation-delay: .7s; }
+.motif-dust.d3 { animation-delay: 1.4s; }
+@keyframes motifRoute {
+    0% { stroke-dashoffset: 520; opacity: .35; }
+    45%, 72% { stroke-dashoffset: 0; opacity: 1; }
+    100% { stroke-dashoffset: -520; opacity: .35; }
+}
+@keyframes motifPulse {
+    0%, 100% { transform: scale(.96); opacity: .65; }
+    50% { transform: scale(1.06); opacity: 1; }
+}
+@keyframes motifDust {
+    0%, 100% { transform: translateY(10px); opacity: .25; }
+    50% { transform: translateY(-8px); opacity: .85; }
+}
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 sm:h-20">
+                <div class="flex items-center">
+                    <span class="text-xl sm:text-2xl font-bold text-stone-800 serif flex flex-col leading-tight">
+                        <span><i class="fa-solid fa-eye mr-2 text-stone-600"></i> 诗篇 139章</span>
+                        <span class="text-[10px] sm:text-xs text-stone-500 en-text font-normal ml-6 sm:ml-8">Psalms Chapter 139</span>
+                    </span>
+                </div>
+                <div class="flex space-x-4 sm:space-x-8 items-center">
+                    <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-btn active-tab px-2 py-2 text-xs sm:text-sm text-center">
+                        全景 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Overview</span>
+                    </button>
+                    <button onclick="switchView('study')" id="nav-study" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        研读 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Study</span>
+                    </button>
+                    <button onclick="switchView('methodology')" id="nav-methodology" class="nav-btn px-2 py-2 text-xs sm:text-sm text-stone-500 hover:text-stone-800 text-center">
+                        方法 <br><span class="text-[9px] sm:text-[10px] uppercase opacity-70 en-text">Methodology</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="app-content" class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        
+        <div id="view-dashboard" class="view-pane fade-in">
+            <section class="grid lg:grid-cols-[1.08fr_.92fr] gap-6 items-stretch mb-8">
+  <div class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8">
+    <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">本章核心主题 / Core Theme</p>
+    <h1 class="serif text-3xl sm:text-4xl font-bold text-stone-900 mb-3">在神面前被认识</h1>
+    <p class="en-text text-stone-500 italic mb-5">Known Before God</p>
+    <p class="text-stone-700 leading-8 text-justify mb-4">诗篇139章是一首关于神全知、全在与创造护理的祷告诗。诗人承认神深知人的坐下、起来、言语、道路，也无处不可临在；即使黑暗也不能遮蔽神的光。诗人进一步思想自己在母腹中被神奇妙塑造，因此以敬畏和赞美回应神。全诗最后转为恳切祷告，求神鉴察内心，引导自己走永生的道路。</p>
+    <p class="en-text text-sm text-stone-500 leading-7 italic text-justify">Psalm 139 is a prayer of worship before the God who knows, surrounds, and forms His people. The psalm moves from God’s searching knowledge to His inescapable presence, then to His intimate work in creation, and ends with a prayer for inner examination and guidance.</p>
+  </div>
+  <aside class="bv-motif-stage rounded-xl border border-stone-200 shadow-sm p-5 flex flex-col justify-between overflow-hidden">
+    <div>
+      <p class="text-xs font-bold uppercase tracking-[0.22em] text-stone-500 mb-2">视觉意象 / Visual Motif</p>
+      <h2 class="serif text-xl font-bold text-stone-900">鉴察的光</h2>
+      <p class="en-text text-xs text-stone-500 italic mt-1">The Searching Light</p>
+      <p class="text-sm text-stone-600 mt-2 leading-7 text-justify">以柔和却清晰的光作为中心意象，表现神认识人的深处、照亮黑暗，并引导祷告者归向真实与顺服。</p>
+      <p class="en-text text-xs text-stone-500 italic mt-2">A clear, gentle light centers the page, suggesting God’s knowledge, presence, and guidance.</p>
+
+      <p class="text-[11px] text-[var(--theme-primary)] font-bold mt-3 px-3 py-2 bg-white/70 border border-white/80 rounded-lg">光照之下的心</p>
+      <p class="en-text text-[11px] text-stone-500 italic mt-1 px-3">A heart under searching light</p>
+    </div>
+    <svg viewBox="0 0 420 250" role="img" aria-label="The Searching Light" class="w-full mt-4 bv-motif-soft motion-shine">
+
+  <path d="M44 218 H376" stroke="var(--theme-secondary)" stroke-width="3" opacity=".18" stroke-linecap="round"/>
+  <circle class="motif-pulse" cx="210" cy="126" r="60" fill="var(--theme-accent)" opacity=".22"/>
+  <g class="motif-symbol" transform="translate(130 48) scale(1.12)">
+  <path d="M42 120 C72 82 136 82 168 120 C136 158 72 158 42 120Z" fill="var(--theme-accent)" stroke="var(--theme-primary)" stroke-width="5"/><circle class="motif-pulse" cx="106" cy="120" r="18" fill="var(--theme-secondary)" opacity=".75"/>
+</g>
+  <g class="motif-symbol" transform="translate(250 118) scale(.62)">
+  <path class="motif-pulse" d="M104 172 C52 132 48 92 76 76 C92 66 104 78 104 78 C104 78 116 66 132 76 C160 92 156 132 104 172Z" fill="var(--theme-accent)" stroke="var(--theme-primary)" stroke-width="5"/>
+</g>
+
+  <text x="210" y="232" text-anchor="middle" font-size="11" fill="var(--theme-primary)" opacity=".72" class="en-text">prayer · wisdom · worship</text>
+</svg>
+  </aside>
+</section>
+<section class="mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+    <div>
+      <h2 class="serif text-2xl font-bold text-stone-900">神学概念卡片组合</h2>
+      <p class="en-text text-sm text-stone-500 italic">Key concepts for reading this chapter faithfully</p>
+    </div>
+  </div>
+  <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">神的鉴察</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">God’s Searching Knowledge</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">חָקַר / chaqar</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">诗人不是把神的认识看作冷冰冰的监督，而是承认神彻底认识人的生活、思想、言语和道路；这带来敬畏，也带来安稳。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">God’s knowledge is personal, complete, and morally searching.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">无处不在的同在</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Inescapable Presence</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">פָּנִים / presence</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">无论在高天、阴间、海极，神都在那里。对逃避神的人，这是严肃提醒；对投靠神的人，这是深切安慰。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">No place is outside God’s presence, whether in height, depth, distance, or darkness.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">奇妙受造</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Wonderfully Made</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">פָּלָא / wonderful</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">诗人从自己的受造认识神的智慧与护理，生命不是偶然的产物，而是在神面前有尊严、有目的、有回应责任。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">Human life is received from God with dignity, purpose, and accountability.</p>
+</div>
+
+<div class="bg-white p-5 rounded-xl border border-stone-200 shadow-sm flex flex-col items-center text-center hover:shadow-md transition">
+    <h4 class="font-bold text-[var(--theme-primary)] text-lg mb-1 serif">求神引导</h4>
+    <p class="text-[10px] text-stone-500 font-serif mb-1 en-text">Led in the Way Everlasting</p>
+    <p class="text-[11px] text-stone-800 font-mono mb-3 px-2 py-0.5 bg-stone-100 rounded border border-stone-200">דֶּרֶךְ עוֹלָם / everlasting way</p>
+    <p class="text-xs text-stone-600 leading-relaxed text-justify">诗篇以自我省察和顺服的祷告结束，表明真正认识神的人，会求神揭露里面的偏差，并引导自己走合神心意的道路。</p>
+    <p class="text-[11px] text-stone-400 leading-relaxed italic en-text border-t border-stone-200 pt-2 mt-3 text-justify">The psalm ends by turning God’s knowledge into a prayer for repentance and guidance.</p>
+</div>
+
+  </div>
+</section>
+        </div>
+
+        <div id="view-study" class="view-pane hidden fade-in">
+            <section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">神深知我的一切 (139:1-6)</h2>
+    <p class="en-text text-sm italic text-stone-500">God Knows Me Completely</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">139:1-6</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            耶和华啊，你已经鉴察我，认识我；我坐下，我起来，你都晓得，你从远处知道我的意念。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Lord, You have searched me and known me; You know my sitting down and rising up, and You discern my thoughts from afar.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">被神完全认识</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">经文含义的重点不只是神知道资料，而是神亲自、深入、持续地认识人。诗人日常生活的行动、未出口的言语、里面的意念，都在神面前敞开。这样的认识超越人的理解，所以诗人说这知识奇妙，是他不能测透的。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">God’s knowledge is not distant information but personal, complete, and active awareness of the whole person.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在真实中来到神面前</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用上，这段经文邀请我们停止伪装。神已经知道我们的疲惫、动机、惧怕和隐藏的挣扎。祷告不是向神提供新资讯，而是在祂面前诚实承认，并让祂的认识带来洁净、安慰和重新定位。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We can pray honestly because God already knows us. His searching knowledge calls us out of hiding and into truth.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">无处可逃的同在 (139:7-12)</h2>
+    <p class="en-text text-sm italic text-stone-500">No Place Outside His Presence</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">139:7-12</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            我往哪里去躲避你的灵？我若展开清晨的翅膀，飞到海极居住，就是在那里，你的手必引导我。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Where shall I go from Your Spirit? If I dwell in the farthest sea, even there Your hand shall lead me.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">黑暗不能遮蔽神</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">上下文观察显示，诗人用高天、阴间、海极和黑暗来表达所有可能的空间边界。结论不是人能逃离神，而是神的同在遍及一切。黑暗在神面前也如光明，因为受造界没有任何角落能限制创造主。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The psalm uses extremes of height, depth, distance, and darkness to confess that God is present everywhere.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">在孤单处被扶持</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">当人觉得自己被误解、被遗忘，或落在无人看见的黑暗处，这段经文给出安慰：神的手仍能引导，神的右手仍能扶持。我们不必把黑暗浪漫化，也不必否认痛苦；可以在痛苦中求神使祂的同在成为实际的力量。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Even in loneliness or darkness, God’s hand can lead and hold us. His presence is stronger than our sense of distance.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">在母腹中被奇妙塑造 (139:13-16)</h2>
+    <p class="en-text text-sm italic text-stone-500">Wonderfully Formed by God</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">139:13-16</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            我的肺腑是你所造的；我在母腹中，你已覆庇我。我要称谢你，因我受造奇妙可畏。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            You formed my inward parts; You knit me together in my mother’s womb. I praise You, for I am fearfully and wonderfully made.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">生命在神面前有尊严</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">字词观察中，诗人描写神像精巧的工匠，在隐密处塑造生命。这里不是抽象讨论人的价值，而是在敬拜中承认：人的存在从一开始就在神的知识和护理之中。生命的尊严来自创造主，不取决于人的成就、能力或他人评价。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">Human life is presented as personally formed by God, known by Him before public visibility or human achievement.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">以感恩承认自己的受造</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用上，这段经文帮助我们抵抗自我厌弃和骄傲。我们不是自我制造的主人，也不是没有价值的偶然存在。我们可以为身体、性格、恩赐与限制向神诚实感恩，并学习把自己的生命当作神所托付的礼物来管理。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">We receive our life as a gift, neither despising ourselves nor boasting in ourselves, but offering ourselves back to God.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">神意念的宝贵与恶人的道路 (139:17-22)</h2>
+    <p class="en-text text-sm italic text-stone-500">God’s Precious Thoughts and the Way of Wickedness</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">139:17-22</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神啊，你的意念向我何等宝贵，其数何等众多。诗人也拒绝与恨恶神、流人血的道路同流。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            How precious are Your thoughts to me, O God. The psalmist also rejects the violent way of those who oppose God.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">敬拜带来分别</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">这一段从赞叹神的意念转向对恶的拒绝。需要克制理解诗人的强烈语言：它不是鼓励个人报复，而是在敬拜中表达对神圣洁、公义和约中忠诚的认同。诗人珍视神的意念，因此不能把暴力、诡诈和背逆当作中立之事。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The psalmist’s strong language expresses covenant loyalty to God’s holiness, not permission for personal revenge.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">让爱神影响价值判断</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">今日默想可以问：我是否只想要神的安慰，却不愿让神改变我的价值判断？真正珍视神的意念，会使我们远离以恶为乐的环境、语言和选择。分别为圣不是自义，而是愿意让神塑造我们的喜爱与厌恶。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">To treasure God’s thoughts is to let His holiness reshape what we accept, admire, and pursue.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+<section class="mb-10">
+  <div class="mb-4">
+    <h2 class="serif text-2xl font-bold text-stone-900">求神鉴察并引导 (139:23-24)</h2>
+    <p class="en-text text-sm italic text-stone-500">Search Me and Lead Me</p>
+  </div>
+  <div class="verse-card mb-8">
+    
+    <div class="bg-white p-5 sm:p-6 border-b border-stone-100 relative">
+        <span class="inline-block px-2 py-0.5 bg-stone-100 text-stone-600 text-xs font-mono font-bold rounded mb-3 border border-stone-200">139:23-24</span>
+        <p class="text-stone-900 font-serif text-lg leading-relaxed mb-3 text-justify">
+            神啊，求你鉴察我，知道我的心思；试炼我，知道我的意念，看在我里面有什么恶行没有，引导我走永生的道路。
+        </p>
+        <p class="text-stone-500 font-serif text-sm italic en-text pl-4 border-l-2 border-[var(--theme-primary)] text-justify">
+            Search me, O God, and know my heart; test me and know my thoughts. Lead me in the way everlasting.
+        </p>
+    </div>
+
+    <div class="flex flex-col md:flex-row divide-y md:divide-y-0 md:divide-x divide-stone-200">
+        
+        <div class="flex-1 p-5 sm:p-6 bg-slate-50/50 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-primary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-search-plus mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">经文含义 Meaning</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">从认识神到接受神鉴察</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">诗篇首尾呼应：开头承认神已经鉴察我，结尾主动祈求神继续鉴察我。属灵意义在于，诗人没有把神的全知停留在教义层面，而是转化为悔改、更新和顺服的祷告。永生的道路指向在神面前正直、蒙引导的生命方向。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">The psalm turns doctrine into prayer: because God knows us, we ask Him to expose what is false and lead us rightly.</p>
+        </div>
+
+        <div class="flex-1 p-5 sm:p-6 bg-[var(--theme-accent)]/10 relative">
+            <div class="absolute top-0 left-0 w-1 h-full bg-[var(--theme-secondary)]"></div>
+            <div class="flex items-center mb-3 text-stone-700">
+                <i class="fas fa-praying-hands mr-2 text-xs opacity-70"></i>
+                <h4 class="text-xs font-bold uppercase tracking-widest font-mono">灵修应用 Devotional</h4>
+            </div>
+            <h5 class="font-bold text-stone-800 mb-2 text-sm sm:text-base serif">把内心交给神校正</h5>
+            <p class="text-sm text-stone-600 leading-relaxed text-justify mb-2">灵修应用很直接：每天可以用这两节作为省察祷告。求神显明焦虑背后的不信、忙碌背后的自我中心、关系中的骄傲或逃避。神的鉴察不是为了羞辱我们，而是为了引导我们离开虚假的路，走向祂所喜悦的生命。</p>
+            <p class="text-xs text-stone-400 font-serif italic en-text border-t border-stone-200 pt-2 mt-3">This prayer invites God to examine our anxieties, motives, and habits so that He may lead us in His enduring way.</p>
+        </div>
+        
+    </div>
+</div>
+</section>
+        </div>
+
+        <div id="view-methodology" class="view-pane hidden fade-in">
+            <section class="bg-white rounded-xl border border-stone-200 shadow-sm p-6 sm:p-8 mb-6">
+  <p class="text-xs font-bold uppercase tracking-[0.25em] text-[var(--theme-secondary)] mb-3">方法论 / Methodology</p>
+  <h2 class="serif text-2xl sm:text-3xl font-bold text-stone-900 mb-4">如何阅读诗篇139章</h2>
+  <p class="en-text text-sm text-stone-500 italic mb-4">How to Read Psalm 139</p>
+  <p class="text-stone-700 leading-8 text-justify mb-3">阅读本章时，要同时留意诗歌的敬拜语气和祷告方向。它不是抽象列出神的属性，而是把神的全知、全在和创造护理带进个人生命的省察、安慰与顺服。</p>
+  <p class="en-text text-sm text-stone-500 italic leading-7 text-justify">Read the psalm as worshipful prayer: God’s knowledge, presence, and creative care lead the believer into comfort, honesty, and obedience.</p>
+</section>
+<section class="grid md:grid-cols-2 gap-5">
+  <div class="bg-slate-50 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">释经轨道 / <span class="en-text text-base italic text-stone-500">Exegesis Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">观察诗篇的推进：神认识我，神无处不在，神创造我，神鉴察我。留意诗人如何用空间、黑暗、母腹和道路等意象表达神与人的关系。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Trace the movement from God’s knowledge to His presence, His forming work, and the final prayer for examination.</p>
+</div>
+<div class="bg-[var(--theme-accent)]/20 rounded-xl border border-stone-200 p-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-2">灵修轨道 / <span class="en-text text-base italic text-stone-500">Devotional Track</span></h3>
+  <p class="text-sm text-stone-600 leading-7 text-justify">把每一段转化为祷告：承认神认识我，求神在黑暗中扶持我，为受造生命感恩，拒绝恶的道路，并邀请神鉴察我的心。</p>
+  <p class="en-text text-xs text-stone-400 italic mt-3 border-t border-stone-200 pt-3">Turn each movement into prayer: honesty, trust, gratitude, moral clarity, and surrendered self-examination.</p>
+</div>
+</section>
+<section class="mt-5">
+  <h3 class="serif font-bold text-lg text-stone-900 mb-3">补充原则 / Supporting Principles</h3>
+  <ul class="grid md:grid-cols-2 gap-4"><li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">上下文观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">本章不是孤立谈论人的价值或神的无所不知，而是在整首诗的祷告结构中展开。结尾的求神鉴察解释了前文：认识神的人愿意被神更新。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">The final prayer shapes the whole psalm: to know God rightly is to welcome His transforming examination.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">字词观察</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">“鉴察”“认识”“引导”“扶持”等词反复显示神的认识不是抽象观念，而是带有关系、护理和方向的行动。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">Words like search, know, lead, and hold show that God’s knowledge is relational and active.</p>
+</li>
+<li class="bg-white/80 border border-stone-200 rounded-lg p-4">
+  <span class="font-bold text-[var(--theme-primary)]">属灵意义</span>
+  <p class="text-sm text-stone-600 leading-7 mt-2">神的光照既揭露罪，也医治恐惧。信徒可以在神面前诚实，因为被神认识不是失去盼望，而是进入真实的生命更新。</p>
+  <p class="en-text text-xs italic text-stone-400 mt-2">God’s light exposes sin and heals fear, drawing the believer into truthful renewal.</p>
+</li></ul>
+</section>
+        </div>
+
+    </main>
+
+    <footer class="bg-[#1e293b] text-slate-400 mt-auto border-t-4 border-[var(--theme-primary)]">
+        <div class="max-w-6xl mx-auto py-8 px-4 text-center">
+            <p class="text-base sm:text-lg font-serif italic text-slate-200 mb-1">"神啊，求你鉴察我，知道我的心。"</p>
+            <p class="text-xs sm:text-sm italic text-slate-500 mb-2 en-text">"Search me, O God, and know my heart."</p>
+            <p class="text-[10px] sm:text-xs opacity-70">诗篇 139章 BibleView 研读页</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchView(viewId) {
+            // 隐藏所有视窗面板
+            document.querySelectorAll('.view-pane').forEach(pane => {
+                pane.classList.add('hidden');
+            });
+            // 显示目标面板
+            document.getElementById(`view-${viewId}`).classList.remove('hidden');
+
+            // 重置所有导航按钮样式
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active-tab');
+                btn.classList.add('text-stone-500');
+            });
+            // 激活当前按钮样式
+            document.getElementById(`nav-${viewId}`).classList.add('active-tab');
+            document.getElementById(`nav-${viewId}`).classList.remove('text-stone-500');
+
+            // 滚动回顶部
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

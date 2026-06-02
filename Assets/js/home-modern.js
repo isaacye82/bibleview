@@ -10,22 +10,22 @@
     Ruth: Array.from({ length: 4 }, (_, i) => i + 1),
     "1Sam": Array.from({ length: 31 }, (_, i) => i + 1),
     "2Sam": Array.from({ length: 24 }, (_, i) => i + 1),
-    //"1Kgs": Array.from({ length: 22 }, (_, i) => i + 1),
-    //"2Kgs": Array.from({ length: 25 }, (_, i) => i + 1),
-    //"1Chr": Array.from({ length: 29 }, (_, i) => i + 1),
-    //"2Chr": Array.from({ length: 36 }, (_, i) => i + 1),
+    "1Kgs": Array.from({ length: 22 }, (_, i) => i + 1),
+    "2Kgs": Array.from({ length: 25 }, (_, i) => i + 1),
+    "1Chr": Array.from({ length: 29 }, (_, i) => i + 1),
+    "2Chr": Array.from({ length: 36 }, (_, i) => i + 1),
     Ezra: Array.from({ length: 10 }, (_, i) => i + 1),
     Neh: Array.from({ length: 13 }, (_, i) => i + 1),
     Esth: Array.from({ length: 10 }, (_, i) => i + 1),
-    //Job: Array.from({ length: 42 }, (_, i) => i + 1), //智慧文学
-    //Ps: Array.from({ length: 150 }, (_, i) => i + 1),
+    Job: Array.from({ length: 42 }, (_, i) => i + 1), //智慧文学
+    Ps: Array.from({ length: 150 }, (_, i) => i + 1),
     Prov: Array.from({ length: 31 }, (_, i) => i + 1),
     Eccl: Array.from({ length: 12 }, (_, i) => i + 1),
     Song: Array.from({ length: 8 }, (_, i) => i + 1),
     Isa: Array.from({ length: 66 }, (_, i) => i + 1), //大先知书
-    //Jer: Array.from({ length: 52 }, (_, i) => i + 1),
+    Jer: Array.from({ length: 52 }, (_, i) => i + 1),
     Lam: Array.from({ length: 5 }, (_, i) => i + 1),
-    //Ezek: Array.from({ length: 48 }, (_, i) => i + 1),
+    Ezek: Array.from({ length: 48 }, (_, i) => i + 1),
     Dan: Array.from({ length: 12 }, (_, i) => i + 1),
     Hos: Array.from({ length: 14 }, (_, i) => i + 1), //小先知书
     Joel: Array.from({ length: 3 }, (_, i) => i + 1),
@@ -142,73 +142,40 @@
 
   const topicCategories = [
     {
-      title: "圣经图片",
-      abbr: "BiblePics",
-      desc: "Bible Pictures",
+      title: "图片 | 书籍",
+      abbr: "Pictures",
+      desc: "Books",
       image: "url('../../Config/sunrise.jpg')",
       links: [
         { name: "圣经图片", url: "Topics/Pictures/index.html" },
-      ]
-    },
-    {
-      title: "推荐书籍",
-      abbr: "Books",
-      desc: "Books Digests",
-      image: "url('../../Config/oldbooks1.jpg')",
-      links: [
         { name: "推荐书籍", url: "Topics/Books/index.html" },
       ]
     },
     {
-      title: "提前背景",
-      abbr: "1Tim",
-      desc: "Background",
-      image: "url('../../Config/topics.jpg')",
+      title: "深入查考",
+      abbr: "Bible",
+      desc: "Digests",
+      image: "url('../../Config/oldbooks1.jpg')",
       links: [
-        { name: "背景介绍", url: "Topics/1Tim/1TimIntro.html" },
-        { name: "保罗行踪", url: "Topics/1Tim/PualRoute/PualRoute.html" },
-        { name: "提前后教会光景对比", url: "Topics/1Tim/CompareChurchInTimothy.pdf" }
-      ]
-    },
-    {
-      title: "使徒行传拾穗",
-      abbr: "Acts",
-      desc: "Special Topics",
-      image: "url('../../Config/sunrise.jpg')",
-      links: [
-        { name: "保罗生平年表", url: "Topics/Acts/Paul_Timeline.pdf" },
-        { name: "保罗三次布道旅行时间线", url: "Topics/Acts/PaulMinstryTimeline.html" },
-        { name: "保罗第“四”次布道旅行", url: "Topics/1Tim/PualRoute/PualRoute.html" },
-        { name: "保罗与主耶稣受审的对比", url: "Topics/Acts/Paul_vs_Jesus.html" }
-      ]
-    },
-    {
-      title: "约书亚记点滴",
-      abbr: "Josh",
-      desc: "Special Topics",
-      image: "url('../../Config/oldbooks.jpg')",
-      links: [
-        { name: "书8深度研读", url: "Topics/Josh/Josh8_deepThink.html" },
-        { name: "书12-21深度研读", url: "Topics/Josh/Josh12_21_deepThink.html" },
-        { name: "书12-21深度研读2", url: "Topics/Josh/Josh12_21_deepThink2.html" }
+        { name: "圣经各卷", url: "Topics/DivBible/index.html" },
       ]
     },
   ];
 
-  const biblePicsTopic = topicCategories.find((topic) => topic.title === "圣经图片");
-  const booksTopic = topicCategories.find((topic) => topic.title === "推荐书籍");
+  const biblePicsTopic = topicCategories.find((topic) => topic.title === "图片 | 书籍");
+  const booksTopic = topicCategories.find((topic) => topic.title === "深入查考");
 
   const featuredItems = [
     {
-      title: "圣经图片",
-      abbr: "BiblePics",
-      desc: "Bible Pictures",
+      title: "图片 | 书籍",
+      abbr: "Pictures",
+      desc: "Books",
       links: biblePicsTopic ? biblePicsTopic.links : []
     },
     {
-      title: "推荐书籍",
-      abbr: "Books",
-      desc: "Books Digests",
+      title: "深入查考",
+      abbr: "Bible",
+      desc: "Bible Digests",
       links: booksTopic ? booksTopic.links : []
     },
      
@@ -331,7 +298,7 @@
             <div class="bv-hero-copy">
               <p class="bv-kicker">BibleView Study Library</p>
               <h1 id="hero-title">圣经纵览 <span>一卷一章地看见全貌</span></h1>
-              <p class="bv-lead">将已整理的旧约、新约与专题资料放在同一个清晰入口中。搜索书卷、查看已完成章节，并快速回到正在研读的内容。</p>
+              <p class="bv-lead"> 在每章领会神的心意，从结构读出属灵亮光 </p>
               <div class="bv-actions">
                 <a class="bv-button primary" href="#library">${iconBook} 打开目录</a>
                 <a class="bv-button" href="Config/Guestbook.html">留言板</a>
